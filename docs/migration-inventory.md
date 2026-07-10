@@ -1,117 +1,125 @@
-# Video Prompt Skill v2 迁移清单
+# Video Prompt Skill v2 最终迁移清单
 
-## 1. 用途
+## 1. 状态定义
 
-记录旧结构、原始资料与 Reference Architecture v2 的迁移关系。
+- `active-v2`：v2 正式运行入口或正文真源；
+- `removed-after-validation`：有效内容已迁移并通过验证，旧文件已删除；
+- `research-only`：仅保留在研究区用于追溯，不参与运行。
 
-状态：
+## 2. 根文件与输出合同
 
-- `active-v2`：已经成为 v2 正式运行入口或真源；
-- `migrated-await-validation`：有效内容已进入新真源，等待 Phase 7 验证；
-- `split-await-validation`：旧内容按职责拆入多个新真源；
-- `merge-await-validation`：多个旧文件合并成一个新真源；
-- `legacy-delete-after-validation`：已经停止默认读取，Phase 7 验证后删除。
+| 路径 | 状态 |
+|---|---|
+| `SKILL.md` | active-v2 |
+| `references/index.md` | active-v2 |
+| `assets/README.md` | active-v2 |
+| `assets/templates/mode-quick-output-contract.md` | active-v2 |
+| `assets/templates/mode-interactive-output-contract.md` | active-v2 |
+| `assets/templates/single-shot-video-template.md` | active-v2 |
+| `assets/templates/multi-shot-video-template.md` | active-v2 |
+| `assets/templates/multimodal-reference-template.md` | active-v2 |
+| `assets/templates/model-adapted-output-template.md` | active-v2 |
 
-Phase 6 不删除旧文件；Phase 7 完成回归、断链和重复真源检查后再清理。
+## 3. 已删除旧输出与模式
 
-## 2. 根文件与输出模板
-
-| 路径 | 新状态 / 目标 | 当前状态 |
+| 旧路径 | 新真源 | 状态 |
 |---|---|---|
-| `SKILL.md` | 已完整重写并切换 v2 路由 | active-v2 |
-| `assets/README.md` | 已切换到新输出合同索引 | active-v2 |
-| `assets/templates/mode-quick-output-contract.md` | 快速模式正式输出合同 | active-v2 |
-| `assets/templates/mode-interactive-output-contract.md` | 交互模式正式输出合同 | active-v2 |
-| `assets/templates/single-shot-video-template.md` | 单镜头正式模板 | active-v2 |
-| `assets/templates/multi-shot-video-template.md` | 多镜头 / 多片段正式模板 | active-v2 |
-| `assets/templates/multimodal-reference-template.md` | 多模态职责正式模板 | active-v2 |
-| `assets/templates/model-adapted-output-template.md` | Generic / Seedance / LTX 转换模板 | active-v2 |
-| `assets/templates/single-unit-output-template.md` | 已由单镜头模板替代 | legacy-delete-after-validation |
-| `assets/templates/multi-unit-output-template.md` | 已由多镜头模板替代 | legacy-delete-after-validation |
-| `assets/templates/interactive-output-template.md` | 已由交互模式输出合同替代 | legacy-delete-after-validation |
+| `assets/templates/single-unit-output-template.md` | `single-shot-video-template.md` | removed-after-validation |
+| `assets/templates/multi-unit-output-template.md` | `multi-shot-video-template.md` | removed-after-validation |
+| `assets/templates/interactive-output-template.md` | `mode-interactive-output-contract.md` | removed-after-validation |
+| `references/mode-quick/quick-mode.md` | `SKILL.md` + quick contract | removed-after-validation |
+| `references/mode-interactive/interactive-mode.md` | `SKILL.md` + interactive contract | removed-after-validation |
 
-## 3. 模式层
+## 4. 输入迁移
 
-| 旧路径 | 新位置 | 当前状态 |
+| 旧路径 | 新真源 | 状态 |
 |---|---|---|
-| `references/mode-quick/quick-mode.md` | `SKILL.md` + `mode-quick-output-contract.md` | legacy-delete-after-validation |
-| `references/mode-interactive/interactive-mode.md` | `SKILL.md` + `mode-interactive-output-contract.md` | legacy-delete-after-validation |
+| `references/input-text-only/text-expansion.md` | `references/inputs/text-input.md` | removed-after-validation |
+| `references/input-image-ref/image-reference-analysis.md` | `references/inputs/single-image-input.md` + `multi-image-input.md` | removed-after-validation |
 
-独立模式 Reference 已停止默认读取。
+新增正式输入：
 
-## 4. 输入层
+- `video-input.md`；
+- `audio-input.md`；
+- `mixed-multimodal-input.md`。
 
-| 旧路径 | 新真源 | 当前状态 |
+## 5. 任务迁移
+
+| 旧路径 | 新真源 | 状态 |
 |---|---|---|
-| `references/input-text-only/text-expansion.md` | `references/inputs/text-input.md` | legacy-delete-after-validation |
-| `references/input-image-ref/image-reference-analysis.md` | `references/inputs/single-image-input.md` + `multi-image-input.md` | legacy-delete-after-validation |
+| `references/task-text-to-video/playbook.md` | `references/tasks/text-to-video/playbook.md` | removed-after-validation |
+| `references/task-image-to-video/image-to-video-playbook.md` | `references/tasks/image-to-video/playbook.md` | removed-after-validation |
+| `references/output-single-unit/output-spec.md` | single-shot template + quick contract | removed-after-validation |
+| `references/output-multi-unit/output-spec.md` | multi-shot template + quick contract | removed-after-validation |
 
-新增正式真源：
+新增正式任务：
 
-- `references/inputs/video-input.md`；
-- `references/inputs/audio-input.md`；
-- `references/inputs/mixed-multimodal-input.md`。
+- multimodal-reference-video；
+- video-reference-and-video-to-video；
+- video-editing；
+- video-extension；
+- audio-driven-and-beat-sync；
+- storyboard-and-multi-shot-video。
 
-## 5. 任务层
+## 6. 控制层迁移
 
-| 旧路径 | 新真源 | 当前状态 |
+| 旧路径 | 新真源 | 状态 |
 |---|---|---|
-| `references/task-text-to-video/playbook.md` | `references/tasks/text-to-video/playbook.md` | legacy-delete-after-validation |
-| `references/task-image-to-video/image-to-video-playbook.md` | `references/tasks/image-to-video/playbook.md` | legacy-delete-after-validation |
-| `references/output-single-unit/output-spec.md` | `single-shot-video-template.md` + 快速模式合同 | legacy-delete-after-validation |
-| `references/output-multi-unit/output-spec.md` | `multi-shot-video-template.md` + 快速模式合同 | legacy-delete-after-validation |
+| `references/timeline/timeline-assembly.md` | `controls/timeline-rhythm/control.md` | removed-after-validation |
+| `references/timeline/lifestyle-beat-and-landing.md` | `controls/timeline-rhythm/control.md` | removed-after-validation |
+| `references/continuity/continuity-guardrails.md` | `controls/continuity-consistency/control.md` | removed-after-validation |
+| `references/continuity/human-motion-consistency.md` | continuity + subject-motion | removed-after-validation |
+| `references/style-control/anti-ai-video-realism.md` | `controls/realism-quality/control.md` | removed-after-validation |
+| `references/style-control/camera-failure-patterns-negative.md` | `controls/camera-direction/control.md` | removed-after-validation |
 
-新增正式任务：多模态参考、视频复刻 / 转视频、视频局部编辑、视频延长、音频驱动和故事板 / 多镜头。
+新增正式控制：
 
-## 6. 控制层
+- spatial-blocking；
+- performance-expression；
+- audio-visual-sync；
+- reference-binding；
+- prompt-assembly。
 
-| 旧路径 | 新真源 | 当前状态 |
+## 7. 附录迁移
+
+| 旧路径 | 新真源 | 状态 |
 |---|---|---|
-| `references/timeline/timeline-assembly.md` | `controls/timeline-rhythm/control.md` | legacy-delete-after-validation |
-| `references/timeline/lifestyle-beat-and-landing.md` | `controls/timeline-rhythm/control.md` | legacy-delete-after-validation |
-| `references/continuity/continuity-guardrails.md` | `controls/continuity-consistency/control.md` | legacy-delete-after-validation |
-| `references/continuity/human-motion-consistency.md` | continuity + subject-motion | legacy-delete-after-validation |
-| `references/style-control/anti-ai-video-realism.md` | `controls/realism-quality/control.md` | legacy-delete-after-validation |
-| `references/style-control/camera-failure-patterns-negative.md` | `controls/camera-direction/control.md` | legacy-delete-after-validation |
+| `references/appendix/camera-movement-appendix.md` | camera-shot library + camera-direction control | removed-after-validation |
+| `references/appendix/action-beat-appendix.md` | action-motion library + subject-motion control | removed-after-validation |
+| `references/appendix/visual-style-appendix.md` | genre-patterns + styles + lighting-color | removed-after-validation |
+| `references/appendix/index.md` | v2 不再保留 appendix 分类 | removed-after-validation |
 
-新增正式控制：空间调度、表演、音画同步、参考绑定和 Prompt 组装。
+## 8. v2 正文真源
 
-## 7. 旧附录
+### Inputs
 
-| 旧路径 | 新真源 | 当前状态 |
-|---|---|---|
-| `references/appendix/camera-movement-appendix.md` | camera-shot library + camera-direction control | legacy-delete-after-validation |
-| `references/appendix/action-beat-appendix.md` | action-motion library + subject-motion control | legacy-delete-after-validation |
-| `references/appendix/visual-style-appendix.md` | genre-patterns + styles + lighting-color | legacy-delete-after-validation |
-| `references/appendix/index.md` | 无正式替代分类 | legacy-delete-after-validation |
+- 6 类，位于 `references/inputs/`。
 
-v2 不保留 `appendix/` 正式分类。
+### Tasks
 
-## 8. 资料库与风格真源
+- 8 类，位于 `references/tasks/`。
 
-### 资料库
+### Controls
 
-- `references/libraries/camera-shot/library.md`；
-- `references/libraries/action-motion/library.md`；
-- `references/libraries/performance-expression/library.md`；
-- `references/libraries/transition-effects/library.md`；
-- `references/libraries/lighting-color/library.md`；
-- `references/libraries/audio-sound/library.md`；
-- `references/libraries/genre-patterns/library.md`。
+- 10 类，位于 `references/controls/`。
 
-状态：`active-v2`。
+### Libraries
 
-### 风格
+- 7 类，位于 `references/libraries/`。
 
-- `references/styles/cinematic-live-action/style.md`；
-- `references/styles/realistic-short-drama/style.md`；
-- `references/styles/anime-animation/style.md`；
-- `references/styles/comic-motion-drama/style.md`；
-- `references/styles/commercial-advertising/style.md`；
-- `references/styles/documentary-ugc/style.md`；
-- `references/styles/experimental-visual/style.md`。
+### Styles
 
-状态：`active-v2`。
+- 7 类，位于 `references/styles/`。
+
+### Models
+
+- `generic.md`；
+- `seedance-2.md`；
+- `ltx-2-3.md`。
+
+### Diagnostics
+
+- 10 类，位于 `references/diagnostics/`。
 
 ## 9. 用户资料处理结果
 
@@ -119,38 +127,30 @@ v2 不保留 `appendix/` 正式分类。
 
 - Prompt 结构进入 tasks 与 prompt-assembly；
 - 运镜、动作、表演、光影进入 libraries 与 controls；
-- 视频 / 影视风格拆成 genre patterns 和 styles；
-- 写实短剧与 AI 漫剧进入专属 style；
-- 发型资料只提炼视频动态和一致性，不复制完整生图选择器。
+- 视频和影视风格拆成 genre patterns 与 styles；
+- 写实短剧和 AI 漫剧进入专属 style；
+- 发型资料只提炼视频动态和一致性部分。
 
-详情：`research/extraction-notes/phase4-library-style-extraction.md`。
+原始文件继续保留在 `research/incoming/user/`，状态为 `research-only`。
 
-## 10. 模型层
-
-| 真源 | 当前状态 |
-|---|---|
-| `references/models/generic.md` | active-v2 |
-| `references/models/seedance-2.md` | active-v2 |
-| `references/models/ltx-2-3.md` | active-v2 |
-| `assets/templates/model-adapted-output-template.md` | active-v2 |
-
-不建设其他模型平台。
-
-## 11. 总路由状态
-
-- `SKILL.md` 已不再引用旧模式、旧输入、旧任务、旧时间轴、旧连续性、旧附录和旧输出结构；
-- `references/index.md` 已正式路由到 v2 叶子；
-- `assets/README.md` 已正式路由到六份新输出合同；
-- 旧文件只保留用于 Phase 7 回归、断链检查和回滚。
-
-## 12. Phase 7 删除前检查
+## 10. 验证结果
 
 - [x] 新真源存在且内容完整；
-- [x] 新索引已引用唯一真源；
-- [x] `SKILL.md` 已切换并不再引用旧运行路径；
-- [ ] 十类核心测试场景通过；
-- [ ] Generic、Seedance、LTX 输出对照验证通过；
-- [ ] 仓库搜索不存在旧路径的运行期引用；
-- [ ] 删除不会造成交叉链接失效；
-- [ ] 删除后不存在重复真源和空占位目录；
-- [x] 原始资料仍可在 `research/incoming/` 追溯。
+- [x] 分类索引引用唯一真源；
+- [x] `SKILL.md` 不再引用旧运行路径；
+- [x] 十类核心场景静态回归通过；
+- [x] Generic、Seedance、LTX 输出对照通过；
+- [x] 旧运行文件已逐份核对并删除；
+- [x] 删除结果在分支对比中显示为 removed；
+- [x] v2 不存在正式 appendix 分类；
+- [x] 原始资料可追溯；
+- [x] 最终验证报告已建立。
+
+详细报告：
+
+- `docs/phase7-regression-results.md`；
+- `docs/validation-report.md`。
+
+## 11. 最终结论
+
+迁移与清理已经完成。旧结构不再承担运行职责，也不再保留重复正文。当前仓库以 Reference Architecture v2 作为唯一正式架构。
