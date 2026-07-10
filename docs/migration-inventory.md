@@ -2,175 +2,140 @@
 
 ## 1. 用途
 
-本文记录旧结构到 Reference Architecture v2 的迁移关系。
+记录旧结构、原始资料与 Reference Architecture v2 的迁移关系。
 
-状态定义：
+状态：
 
-- `keep-temporary`：迁移完成前继续保留；
-- `planned`：已确定目标但尚未实施；
-- `migrated-await-validation`：新真源已完成，等待新 `SKILL.md` 和测试验证；
-- `split-await-validation`：旧内容已拆入多个新真源，等待验证；
-- `merge-await-validation`：多个旧文件已合并成新真源，等待验证；
-- `delete-after-validation`：验证通过后删除。
+- `keep-temporary`：验证前继续保留；
+- `migrated-await-validation`：有效内容已进入新真源，等待 Phase 7 验证；
+- `split-await-validation`：旧内容按职责拆入多个新真源；
+- `merge-await-validation`：多个旧文件合并成一个新真源；
+- `delete-after-validation`：Phase 7 验证后删除。
 
-当前阶段不删除任何旧运行期文件。
-
----
+当前不删除旧运行期文件。
 
 ## 2. 根文件与输出模板
 
-| 旧路径 | 当前作用 | 目标路径 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `SKILL.md` | 旧任务、模式与加载入口 | `SKILL.md` | Phase 6 完整改写 | keep-temporary |
-| `assets/README.md` | 模板目录说明 | `assets/README.md` | 更新为新输出合同索引 | planned |
-| `assets/templates/single-unit-output-template.md` | 单片段输出 | `assets/templates/single-shot-video-template.md` | 迁移并补适配层槽位 | planned |
-| `assets/templates/multi-unit-output-template.md` | 多片段输出 | `assets/templates/multi-shot-video-template.md` | 迁移并补跨镜连续性 | planned |
-| `assets/templates/interactive-output-template.md` | 交互方向摘要 | `assets/templates/mode-interactive-output-contract.md` | 与交互模式规则合并 | planned |
-
----
+| 旧路径 | 目标 | 当前状态 |
+|---|---|---|
+| `SKILL.md` | Phase 6 完整改写并切换 v2 路由 | keep-temporary |
+| `assets/README.md` | 新输出合同索引 | keep-temporary |
+| `assets/templates/single-unit-output-template.md` | 新单镜头输出模板 | keep-temporary |
+| `assets/templates/multi-unit-output-template.md` | 新多镜头输出模板 | keep-temporary |
+| `assets/templates/interactive-output-template.md` | 交互模式输出合同 | keep-temporary |
 
 ## 3. 模式层
 
-| 旧路径 | 有效内容 | 目标位置 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `references/mode-quick/quick-mode.md` | 零打扰执行、自动补全、冲突裁决 | `SKILL.md` + `assets/templates/mode-quick-output-contract.md` | 拆分运行规则与输出合同 | keep-temporary |
-| `references/mode-interactive/interactive-mode.md` | Grill Me、单问题追问、收口条件 | `SKILL.md` + `assets/templates/mode-interactive-output-contract.md` | 拆分运行规则与输出合同 | keep-temporary |
+| 旧路径 | 新位置 | 当前状态 |
+|---|---|---|
+| `references/mode-quick/quick-mode.md` | `SKILL.md` + 快速模式输出合同 | keep-temporary |
+| `references/mode-interactive/interactive-mode.md` | `SKILL.md` + 交互模式输出合同 | keep-temporary |
 
-迁移后不再保留独立模式 Reference，避免每次执行额外加载一份模式正文。
-
----
+Phase 6 后不再默认读取独立模式 Reference。
 
 ## 4. 输入层
 
-| 旧路径 | 有效内容 | 新真源 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `references/input-text-only/text-expansion.md` | 文字扩展、首帧建立、运动补全 | `references/inputs/text-input.md` | 重写并增强 | migrated-await-validation |
-| `references/input-image-ref/image-reference-analysis.md` | 图像类型、主辅图、参考锚点 | `references/inputs/single-image-input.md` + `multi-image-input.md` | 按单图/多图拆分 | split-await-validation |
+| 旧路径 | 新真源 | 当前状态 |
+|---|---|---|
+| `input-text-only/text-expansion.md` | `inputs/text-input.md` | migrated-await-validation |
+| `input-image-ref/image-reference-analysis.md` | `inputs/single-image-input.md` + `multi-image-input.md` | split-await-validation |
 
-新增输入真源已经完成：
-
-- `references/inputs/video-input.md`
-- `references/inputs/audio-input.md`
-- `references/inputs/mixed-multimodal-input.md`
-
-旧输入文件在 Phase 7 前继续保留。
-
----
+新增真源：`video-input.md`、`audio-input.md`、`mixed-multimodal-input.md`。
 
 ## 5. 任务层
 
-| 旧路径 | 有效内容 | 新真源 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `references/task-text-to-video/playbook.md` | 文生视频主流程 | `references/tasks/text-to-video/playbook.md` | 重写并补输入、控制和适配路由 | migrated-await-validation |
-| `references/task-image-to-video/image-to-video-playbook.md` | 图生视频主流程 | `references/tasks/image-to-video/playbook.md` | 重写并区分单图、多图与运动延续 | migrated-await-validation |
-| `references/output-single-unit/output-spec.md` | 单片段交付结构 | `assets/templates/single-shot-video-template.md` | 与模板合并 | planned |
-| `references/output-multi-unit/output-spec.md` | 多片段交付结构 | `assets/templates/multi-shot-video-template.md` | 与模板合并 | planned |
+| 旧路径 | 新真源 | 当前状态 |
+|---|---|---|
+| `task-text-to-video/playbook.md` | `tasks/text-to-video/playbook.md` | migrated-await-validation |
+| `task-image-to-video/image-to-video-playbook.md` | `tasks/image-to-video/playbook.md` | migrated-await-validation |
+| `output-single-unit/output-spec.md` | Phase 6 输出合同 | keep-temporary |
+| `output-multi-unit/output-spec.md` | Phase 6 输出合同 | keep-temporary |
 
-新增任务真源已经完成：
+新增任务：多模态参考、视频复刻/转视频、局部编辑、延长、音频驱动、故事板/多镜头。
 
-- `references/tasks/multimodal-reference-video/playbook.md`
-- `references/tasks/video-reference-and-video-to-video/playbook.md`
-- `references/tasks/video-editing/playbook.md`
-- `references/tasks/video-extension/playbook.md`
-- `references/tasks/audio-driven-and-beat-sync/playbook.md`
-- `references/tasks/storyboard-and-multi-shot-video/playbook.md`
+## 6. 控制层
 
----
+| 旧路径 | 新真源 | 当前状态 |
+|---|---|---|
+| `timeline/timeline-assembly.md` | `controls/timeline-rhythm/control.md` | merge-await-validation |
+| `timeline/lifestyle-beat-and-landing.md` | `controls/timeline-rhythm/control.md` | merge-await-validation |
+| `continuity/continuity-guardrails.md` | `controls/continuity-consistency/control.md` | merge-await-validation |
+| `continuity/human-motion-consistency.md` | continuity + subject-motion | split-await-validation |
+| `style-control/anti-ai-video-realism.md` | `controls/realism-quality/control.md` | migrated-await-validation |
+| `style-control/camera-failure-patterns-negative.md` | `controls/camera-direction/control.md` | merge-await-validation |
 
-## 6. 时间轴、运动、连续性与质量控制
-
-旧文件没有按原目录逐份复制，而是按控制职责合并重构。
-
-| 旧路径 | 有效内容 | 新真源 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `references/timeline/timeline-assembly.md` | 绝对时间、主体状态、镜头状态、节拍 | `references/controls/timeline-rhythm/control.md` | 与自然收尾合并重构 | merge-await-validation |
-| `references/timeline/lifestyle-beat-and-landing.md` | 生活化节拍与自然收尾 | `references/controls/timeline-rhythm/control.md` | 与时间轴合并重构 | merge-await-validation |
-| `references/continuity/continuity-guardrails.md` | 人物、场景、道具和镜头连续性 | `references/controls/continuity-consistency/control.md` | 与人物运动连续性合并 | merge-await-validation |
-| `references/continuity/human-motion-consistency.md` | 身份、体态、重心和动作阶段 | `references/controls/continuity-consistency/control.md` + `subject-motion/control.md` | 按状态与物理运动拆分 | split-await-validation |
-| `references/style-control/anti-ai-video-realism.md` | 去漂浮感、设备感、自然动作 | `references/controls/realism-quality/control.md` | 扩展为完整真实感控制 | migrated-await-validation |
-| `references/style-control/camera-failure-patterns-negative.md` | 运镜失败与负向限制 | `references/controls/camera-direction/control.md` | 合入正向镜头决策 | migrated-await-validation |
-
-Phase 3 新增并完成的控制真源：
-
-- `references/controls/timeline-rhythm/control.md`
-- `references/controls/subject-motion/control.md`
-- `references/controls/camera-direction/control.md`
-- `references/controls/spatial-blocking/control.md`
-- `references/controls/continuity-consistency/control.md`
-- `references/controls/performance-expression/control.md`
-- `references/controls/audio-visual-sync/control.md`
-- `references/controls/reference-binding/control.md`
-- `references/controls/prompt-assembly/control.md`
-- `references/controls/realism-quality/control.md`
-
----
+新增控制：空间调度、表演、音画同步、参考绑定和 Prompt 组装。
 
 ## 7. 旧附录
 
-| 旧路径 | 有效内容 | 目标路径 | 迁移方式 | 当前状态 |
-|---|---|---|---|---|
-| `references/appendix/camera-movement-appendix.md` | 运镜选择和基础术语 | `libraries/camera-shot/` + `controls/camera-direction/control.md` | 方法已迁移，术语待 Phase 4 | split-await-validation |
-| `references/appendix/action-beat-appendix.md` | 蓄力、接触、反馈、恢复 | `controls/subject-motion/control.md` + `libraries/action-motion/` | 控制方法已迁移，详细库待 Phase 4 | split-await-validation |
-| `references/appendix/visual-style-appendix.md` | 设备层、作者气质、光影色调 | `styles/` + `libraries/genre-patterns/` | Phase 4 拆分 | planned |
-| `references/appendix/index.md` | 旧附录导航 | 无 | 新索引验证后删除 | delete-after-validation |
-
-v2 不再保留独立 `appendix/`。高价值知识必须明确归入 controls、libraries 或 styles。
-
----
-
-## 8. 总索引
-
-| 旧路径 | 当前作用 | 新状态 | 当前状态 |
-|---|---|---|---|
-| `references/index.md` | 总路由 | 已重写为 v2 总索引，并保留迁移期兼容区 | migrated-await-validation |
-| `references/controls/index.md` | 新控制分类路由 | 已路由到十份 Phase 3 叶子真源 | migrated-await-validation |
-
----
-
-## 9. 用户资料候选沉淀映射
-
-| 原始资料 | 主要候选真源 | 当前状态 |
+| 旧路径 | 新真源 | 当前状态 |
 |---|---|---|
-| `基础Prompt结构.md` | `controls/prompt-assembly/control.md` | 已提炼通用组装规则 |
-| `文生视频Prompt结构.md` | `tasks/text-to-video/` | 已提炼 |
-| `图生视频Prompt结构.md`、`图生视频.md` | `tasks/image-to-video/` + `inputs/*image*` | 已提炼 |
-| `故事版分镜到视频流程.md` | `tasks/storyboard-and-multi-shot-video/` | 已提炼 |
-| `导演级运镜术语选择器.md` | `libraries/camera-shot/` | Phase 4 |
-| `视角机位与景别选择器.md` | `libraries/camera-shot/` | Phase 4 |
-| `打击帧与动作戏结构.md` | `controls/subject-motion/` + `libraries/action-motion/` | 控制规则已提炼，资料库待建 |
-| `表情与微表情选择器.md` | `controls/performance-expression/` + `libraries/performance-expression/` | 控制规则已提炼，资料库待建 |
-| `电影光影与色调选择器.md` | `libraries/lighting-color/` | Phase 4 |
-| `电影感Prompt拆解公式.md` | `styles/cinematic-live-action/` + `controls/prompt-assembly/` | 组装规则已提炼，风格页待建 |
-| `AI视频风格选择器.md` | `libraries/genre-patterns/` + `styles/` | Phase 4 |
-| `影视风格选择器.md` | `libraries/genre-patterns/` | Phase 4 |
-| `写实电影短剧.md` | `styles/realistic-short-drama/` | Phase 4 |
-| `AI漫剧.md` | `styles/comic-motion-drama/` | Phase 4 |
-| `图像风格提取流程.md` | `inputs/single-image-input.md` + `controls/reference-binding/` | 已提炼 |
-| `角色发型选择器.md` | 只提炼动态一致性部分 | 已进入连续性控制，不完整复制资料 |
+| `appendix/camera-movement-appendix.md` | camera-shot library + camera-direction control | split-await-validation |
+| `appendix/action-beat-appendix.md` | action-motion library + subject-motion control | merge-await-validation |
+| `appendix/visual-style-appendix.md` | genre-patterns + styles + lighting-color | split-await-validation |
+| `appendix/index.md` | 无 | delete-after-validation |
 
----
+v2 不保留 `appendix/` 正式分类。
 
-## 10. 外部资料候选沉淀映射
+## 8. Phase 4 资料库真源
 
-| 来源 | 主要用途 | 候选真源 |
+| 新真源 | 主要来源 | 状态 |
 |---|---|---|
-| `dexhunter/seedance2-skill` | 模型能力、素材引用和任务模式 | `models/seedance-2.md` + 相关任务页 |
-| `awesome-seedance-2-prompts` | 高质量案例结构、音画与分时段模式 | `research/extraction-notes/`，再按主题合并 |
-| LTX-2.3 官方 Prompt Guide | Prompt 原则、I2V 运动描述、表演与音频 | `models/ltx-2-3.md` + 通用控制页 |
+| `libraries/camera-shot/library.md` | 运镜术语、机位景别、旧镜头附录 | merged-await-validation |
+| `libraries/action-motion/library.md` | 打击帧、动作戏、旧动作附录 | merged-await-validation |
+| `libraries/performance-expression/library.md` | 表情与微表情资料 | migrated-await-validation |
+| `libraries/transition-effects/library.md` | 多模态任务、社区案例结构和通用影视抽象 | migrated-await-validation |
+| `libraries/lighting-color/library.md` | 电影光影与色调资料 | migrated-await-validation |
+| `libraries/audio-sound/library.md` | 音频任务、模型资料和通用声音抽象 | migrated-await-validation |
+| `libraries/genre-patterns/library.md` | 视频风格、影视风格、短剧和漫剧资料 | merged-await-validation |
 
-社区 Prompt 不原样进入运行期 Reference，只抽象结构、节拍、变量和失败边界。
+## 9. Phase 4 风格真源
 
----
+| 新真源 | 主要来源 | 状态 |
+|---|---|---|
+| `styles/cinematic-live-action/style.md` | 电影感公式、视频风格、光影资料 | merged-await-validation |
+| `styles/realistic-short-drama/style.md` | 写实电影短剧 | migrated-await-validation |
+| `styles/anime-animation/style.md` | AI 漫剧、发型动态锚点和动画抽象 | migrated-await-validation |
+| `styles/comic-motion-drama/style.md` | AI 漫剧 | migrated-await-validation |
+| `styles/commercial-advertising/style.md` | 多模态案例结构和广告抽象 | migrated-await-validation |
+| `styles/documentary-ugc/style.md` | 设备风格、真实感控制和纪录抽象 | migrated-await-validation |
+| `styles/experimental-visual/style.md` | 转场特效与视觉规则抽象 | migrated-await-validation |
 
-## 11. 清理检查
+## 10. 用户资料处理结果
 
-旧结构删除前必须逐项检查：
+17 份用户上传资料已完成审计和正式沉淀：
+
+- Prompt 结构进入 tasks 与 prompt-assembly；
+- 运镜、动作、表演、光影进入 libraries 与 controls；
+- 视频/影视风格拆成 genre patterns 和 styles；
+- 写实短剧与 AI 漫剧进入专属 style；
+- 发型资料只提炼视频动态和一致性，不复制完整生图选择器。
+
+详情：`research/extraction-notes/phase4-library-style-extraction.md`。
+
+## 11. 模型层
+
+| 新真源 | 当前状态 |
+|---|---|
+| `models/generic.md` | 主体完成，待全链路验证 |
+| `models/seedance-2.md` | 主体完成，待全链路验证 |
+| `models/ltx-2-3.md` | 主体完成，待全链路验证 |
+
+不建设其他模型平台。
+
+## 12. Phase 6 待迁移
+
+- 快速模式和交互模式规则回收进 `SKILL.md`；
+- 统一快速、交互、单镜头、多镜头、多模态和模型适配输出合同；
+- 新 `SKILL.md` 默认路由到 inputs/tasks/controls/libraries/styles/models；
+- 旧路径只保留兼容说明，不再默认读取。
+
+## 13. Phase 7 删除前检查
 
 - [ ] 新真源存在且内容完整；
-- [ ] 新索引已引用新真源；
+- [ ] 新索引已引用唯一真源；
 - [ ] `SKILL.md` 不再引用旧路径；
-- [ ] 测试场景通过；
-- [ ] 仓库搜索不存在旧路径残留；
-- [ ] 删除不会造成交叉链接失效。
-
-Phase 3 当前只满足前两项的控制层部分，仍不得删除旧文件。
+- [ ] 核心测试场景通过；
+- [ ] 仓库搜索不存在旧路径运行引用；
+- [ ] 删除不会造成交叉链接失效；
+- [ ] 原始资料仍可在 `research/incoming/` 追溯。
