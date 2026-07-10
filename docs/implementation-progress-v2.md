@@ -6,8 +6,6 @@
 
 工作分支：`refactor/reference-architecture-v2`
 
----
-
 ## 总体状态
 
 | 阶段 | 状态 | 完成度 | 说明 |
@@ -16,51 +14,26 @@
 | Phase 1 新架构骨架与总路由 | 已完成 | 100% | 八类索引、总索引和三份模型适配页已完成 |
 | Phase 2 输入层与任务层 | 已完成 | 100% | 六类输入 Reference、八类任务 Playbook 已完成 |
 | Phase 3 核心控制层 | 已完成 | 100% | 十类核心控制真源和精确路由已完成 |
-| Phase 4 资料库与风格层 | 未开始 | 0% | 下一执行阶段 |
-| Phase 5 模型适配层 | 已提前完成主体 | 85% | Generic、Seedance、LTX 正文已完成，后续随验证微调 |
-| Phase 6 输出合同与 SKILL.md 切换 | 未开始 | 0% | 依赖资料层和测试用例 |
+| Phase 4 资料库与风格层 | 已完成 | 100% | 七类详细资料库、七种风格实现和来源提炼记录已完成 |
+| Phase 5 模型适配层 | 主体完成 | 85% | Generic、Seedance、LTX 正文已完成，等待全链路验证微调 |
+| Phase 6 输出合同与 SKILL.md 切换 | 未开始 | 0% | 下一执行阶段 |
 | Phase 7 验证与旧结构清理 | 未开始 | 0% | 最终阶段 |
-
----
 
 ## Phase 0 完成项
 
-- 创建分支 `refactor/reference-architecture-v2`。
+- 创建重构分支。
 - 建立架构决策、实施计划和迁移台账。
 - 建立 `research/` 原始资料区。
-- 导入用户提供的 17 份 Markdown 原始资料。
-- 建立来源清单和候选沉淀映射。
-- 锁定正式模型范围：Generic + Seedance 2.0 + LTX-2.3。
+- 导入 17 份用户 Markdown 原始资料。
+- 锁定 Generic + Seedance 2.0 + LTX-2.3。
 - 明确不建设其他模型空适配器。
-
----
 
 ## Phase 1 完成项
 
-### 总路由
-
 - 重写 `references/index.md` 为 v2 总索引。
-- 保留迁移期旧路径兼容区，当前 `SKILL.md` 不会提前断链。
-
-### 分类索引
-
-- `references/inputs/index.md`
-- `references/tasks/index.md`
-- `references/controls/index.md`
-- `references/libraries/index.md`
-- `references/styles/index.md`
-- `references/models/index.md`
-- `references/diagnostics/index.md`
-
-### 模型适配
-
-- `references/models/generic.md`
-- `references/models/seedance-2.md`
-- `references/models/ltx-2-3.md`
-
-模型适配层已从骨架提升为可用正文，但不复制通用导演知识。
-
----
+- 建立 inputs、tasks、controls、libraries、styles、models、diagnostics 分类索引。
+- 完成 `generic.md`、`seedance-2.md`、`ltx-2-3.md`。
+- 保留迁移期旧路径兼容区。
 
 ## Phase 2 完成项
 
@@ -73,89 +46,106 @@
 - `references/inputs/audio-input.md`
 - `references/inputs/mixed-multimodal-input.md`
 
-输入层已覆盖图片、视频、音频和混合多模态职责，以及主真源与冲突裁决。
-
 ### 任务层
 
-- `references/tasks/text-to-video/playbook.md`
-- `references/tasks/image-to-video/playbook.md`
-- `references/tasks/multimodal-reference-video/playbook.md`
-- `references/tasks/video-reference-and-video-to-video/playbook.md`
-- `references/tasks/video-editing/playbook.md`
-- `references/tasks/video-extension/playbook.md`
-- `references/tasks/audio-driven-and-beat-sync/playbook.md`
-- `references/tasks/storyboard-and-multi-shot-video/playbook.md`
-
-任务边界已经按执行差异拆分，不按题材重复建设。
-
----
+- `tasks/text-to-video/playbook.md`
+- `tasks/image-to-video/playbook.md`
+- `tasks/multimodal-reference-video/playbook.md`
+- `tasks/video-reference-and-video-to-video/playbook.md`
+- `tasks/video-editing/playbook.md`
+- `tasks/video-extension/playbook.md`
+- `tasks/audio-driven-and-beat-sync/playbook.md`
+- `tasks/storyboard-and-multi-shot-video/playbook.md`
 
 ## Phase 3 完成项
 
 ### 核心控制真源
 
-- `references/controls/timeline-rhythm/control.md`
-- `references/controls/subject-motion/control.md`
-- `references/controls/camera-direction/control.md`
-- `references/controls/spatial-blocking/control.md`
-- `references/controls/continuity-consistency/control.md`
-- `references/controls/performance-expression/control.md`
-- `references/controls/audio-visual-sync/control.md`
-- `references/controls/reference-binding/control.md`
-- `references/controls/prompt-assembly/control.md`
-- `references/controls/realism-quality/control.md`
+- `controls/timeline-rhythm/control.md`
+- `controls/subject-motion/control.md`
+- `controls/camera-direction/control.md`
+- `controls/spatial-blocking/control.md`
+- `controls/continuity-consistency/control.md`
+- `controls/performance-expression/control.md`
+- `controls/audio-visual-sync/control.md`
+- `controls/reference-binding/control.md`
+- `controls/prompt-assembly/control.md`
+- `controls/realism-quality/control.md`
 
-### 已完成的结构重组
+### 结构结果
 
-- 将旧时间轴和生活化自然收尾合并为 `timeline-rhythm` 单一真源。
-- 将基础连续性和人物运动连续性按“状态稳定”与“运动物理”拆分到连续性、主体运动两个控制页。
-- 将旧运镜负向限制合入完整的正向镜头决策，不再单独维护负面词清单。
-- 将旧去 AI 感规则扩展为设备来源、运动、光影、材质、表演和声音六层真实感控制。
-- 新增空间调度、表演、音画同步、多模态绑定和 Prompt 组装等旧架构缺失的一等控制模块。
-- 清除通用控制层中的模型专属引用语法，模型差异只留给 `references/models/`。
-- 更新 `references/controls/index.md`，每个类别均可路由到唯一叶子文件。
+- 时间轴与自然收尾合并为单一节拍真源。
+- 状态连续性与运动物理边界明确。
+- 运镜负向限制合入正向镜头决策。
+- 去 AI 感升级为设备、运动、光影、材质、表演和声音控制。
+- 通用控制层不包含模型专属语法。
 
-### Phase 3 验收结果
+## Phase 4 完成项
 
-- 每个控制页回答“如何判断与控制”，不是术语列表。
-- 同一规则有明确真源，旧文件只在迁移期兼容保留。
-- 通用控制页不承担模型专属参数和引用语法。
-- 常用任务可在最多三份控制页内形成完整控制组合。
-- 未删除任何旧运行期文件，当前 `SKILL.md` 仍可继续工作。
+### 资料库真源
 
----
+- `references/libraries/camera-shot/library.md`
+- `references/libraries/action-motion/library.md`
+- `references/libraries/performance-expression/library.md`
+- `references/libraries/transition-effects/library.md`
+- `references/libraries/lighting-color/library.md`
+- `references/libraries/audio-sound/library.md`
+- `references/libraries/genre-patterns/library.md`
+
+覆盖内容：
+
+- 景别、机位、焦段、设备和运镜组合；
+- 日常、打斗、体育、动物、物体和环境运动；
+- 表情、微表情、对白和关系表演；
+- 剪辑、遮挡、穿越、材质变化和视觉特效；
+- 九类光影、十八种色调、时间天气和动态光；
+- 对白、环境音、拟音、BGM、节拍和声音空间；
+- 短剧、漫剧、动作、悬疑、广告、纪录、科普和实验题材模板。
+
+### 风格真源
+
+- `styles/cinematic-live-action/style.md`
+- `styles/realistic-short-drama/style.md`
+- `styles/anime-animation/style.md`
+- `styles/comic-motion-drama/style.md`
+- `styles/commercial-advertising/style.md`
+- `styles/documentary-ugc/style.md`
+- `styles/experimental-visual/style.md`
+
+风格边界：
+
+- 电影化真人：摄影、空间、自然表演与声音共同成立；
+- 写实短剧：信息与人物关系快速可读；
+- 动画：角色渲染、关键姿态和分层运动；
+- 漫剧：画格、有限动画、表情和镜间承接；
+- 广告：产品外观、卖点证据、材质和品牌落点；
+- 纪录/UGC：真实设备来源和自然不完美；
+- 实验影像：单一视觉规则和分阶段升级。
+
+### 资料治理
+
+- 建立 `research/extraction-notes/phase4-library-style-extraction.md`。
+- 17 份用户资料均已审计并映射到正式真源。
+- 完整发型选择器未重复迁入，只保留视频动态和一致性部分。
+- 社区长 Prompt 未原样进入运行期 Reference。
+- `libraries/index.md` 和 `styles/index.md` 已路由到唯一叶子文件。
 
 ## 当前架构安全状态
 
 - 旧 `SKILL.md` 尚未切换。
 - 旧 Reference 尚未删除。
-- 新 `references/index.md` 包含兼容路由。
-- 新目录与旧目录并行存在。
-- 新控制层已完成，但只有 Phase 6 切换入口后才成为默认运行链路。
+- 新目录与旧目录仍并行存在。
+- 新输入、任务、控制、资料库、风格和模型层已经形成完整 v2 运行知识链。
+- Phase 6 切换前，现有 Skill 仍走兼容链路。
 
----
+## 下一执行阶段：Phase 6
 
-## 下一执行阶段：Phase 4
+Phase 5 主体已提前完成，因此下一步直接进入 Phase 6：
 
-Phase 4 将建设“可选详细知识”与“风格实现”，不再扩写控制方法。
+1. 设计快速模式和交互模式输出合同；
+2. 设计单镜头、多镜头、多模态和模型适配模板；
+3. 重写 `SKILL.md`，切换到 v2 路由；
+4. 保留旧结构兼容但停止默认读取；
+5. 建立 Phase 7 使用的测试场景与验证清单。
 
-建议顺序：
-
-1. `libraries/camera-shot/`
-   - 导演级运镜术语；
-   - 景别、机位、焦段与镜头类型。
-2. `libraries/action-motion/`
-   - 打击帧；
-   - 动作、追逐、体育和物理反馈方案。
-3. `libraries/performance-expression/`
-   - 表情、微表情、眼神、呼吸和对白表演选项。
-4. `libraries/lighting-color/`
-   - 光影类型、电影色调与主体分离。
-5. `libraries/audio-sound/` 与 `transition-effects/`
-   - 声音设计、音乐卡点、转场和视觉特效。
-6. `libraries/genre-patterns/`
-   - 写实短剧、AI 漫剧、动作、广告等题材级组合。
-7. `styles/`
-   - 电影写实、写实短剧、动画、漫剧、广告、UGC 和实验视觉的执行方式。
-
-Phase 4 仍不改写 `SKILL.md`，不删除旧 Reference。
+Phase 6 完成前不删除旧文件。
