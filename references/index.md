@@ -4,7 +4,7 @@
 
 用最少量 Reference 支撑当前任务，避免把视频 Skill 变成大而散的资料堆。
 
-v2 采用：
+当前正式运行链路：
 
 ```text
 输入理解
@@ -18,14 +18,14 @@ v2 采用：
 
 索引只负责导航，不复制叶子正文。
 
----
-
 ## 2. 默认加载预算
 
 固定读取：
 
 - `1` 份 input Reference；
-- `1` 份 task Playbook。
+- `1` 份 task Playbook；
+- `1` 份模式输出合同；
+- `1` 份主交付模板。
 
 按需读取：
 
@@ -33,12 +33,10 @@ v2 采用：
 - `0-2` 份 libraries；
 - `0-1` 份 style；
 - `0-1` 份 model adapter；
-- 失败诊断时 `0-1` 份 diagnostic；
-- `1` 份输出合同。
+- `0-1` 份多模态参考模板；
+- 失败诊断时 `0-1` 份 diagnostic。
 
 分类索引只用于导航，不计入业务 Reference 数量。
-
----
 
 ## 3. 信息优先级
 
@@ -46,153 +44,139 @@ v2 采用：
 
 ```text
 用户当前明确要求
-→ 用户指定的必须保留 / 必须修改项
+→ 必须保留 / 必须修改 / 必须禁止
 → 当前任务 Playbook
-→ 当前输入 Reference
+→ 当前输入 Reference 与素材职责
 → 已加载 controls
 → 已加载 libraries 与 style
-→ model adapter 的能力边界和语法
+→ model adapter 的能力边界和表达方式
 → 自动补全
 ```
 
-模型适配页可以限制表达方式和能力边界，但不能擅自改变用户剧情目标。
+模型适配页可以限制表达方式和能力边界，但不能擅自改变用户剧情、人物关系和核心动作。
 
----
-
-## 4. 第一步：判断输入
+## 4. 输入路由
 
 读取：`inputs/index.md`
 
-由输入索引继续路由到唯一主输入路线：
+继续路由到唯一主输入路线：
 
-- 纯文字；
-- 单张图片；
-- 多张图片；
-- 一个或多个视频；
-- 音频；
-- 图片 / 视频 / 音频混合输入。
+- 纯文字：`inputs/text-input.md`；
+- 单张图片：`inputs/single-image-input.md`；
+- 多张图片：`inputs/multi-image-input.md`；
+- 一个或多个视频：`inputs/video-input.md`；
+- 音频：`inputs/audio-input.md`；
+- 图片 / 视频 / 音频混合输入：`inputs/mixed-multimodal-input.md`。
 
 混合输入只读取 `mixed-multimodal-input.md`，不同时加载多份单模态输入页。
 
----
-
-## 5. 第二步：判断任务
+## 5. 任务路由
 
 读取：`tasks/index.md`
 
-由任务索引继续路由到唯一主任务 Playbook：
+继续路由到唯一主任务 Playbook：
 
-- 文生视频；
-- 图生视频；
-- 多模态参考视频；
-- 视频参考复刻 / 视频转视频；
-- 视频局部编辑；
-- 视频向前 / 向后延长；
-- 音频驱动与音乐卡点；
-- 故事板 / 多镜头 / 多片段到视频。
+- 文生视频：`tasks/text-to-video/playbook.md`；
+- 图生视频：`tasks/image-to-video/playbook.md`；
+- 多模态参考视频：`tasks/multimodal-reference-video/playbook.md`；
+- 视频参考复刻 / 视频转视频：`tasks/video-reference-and-video-to-video/playbook.md`；
+- 视频局部编辑：`tasks/video-editing/playbook.md`；
+- 视频向前 / 向后延长：`tasks/video-extension/playbook.md`；
+- 音频驱动与音乐卡点：`tasks/audio-driven-and-beat-sync/playbook.md`；
+- 故事板 / 多镜头 / 多片段到视频：`tasks/storyboard-and-multi-shot-video/playbook.md`。
 
-题材差异不新增任务 Playbook，优先进入 `styles/` 或 `libraries/genre-patterns/`。
+题材差异不新增任务 Playbook，进入 `styles/` 或 `libraries/genre-patterns/`。
 
----
-
-## 6. 第三步：按缺口加载控制页
+## 6. 控制路由
 
 读取：`controls/index.md`
 
-控制层主要方向：
+按当前最大缺口加载 `0-3` 份：
 
-- 时间轴与节拍；
-- 主体运动；
-- 镜头与机位；
-- 空间调度；
-- 连续性与一致性；
-- 表演与微表情；
-- 音画同步；
-- 多模态参考绑定；
-- Prompt 组装；
-- 去 AI 感和物理可信。
+- `controls/timeline-rhythm/control.md`；
+- `controls/subject-motion/control.md`；
+- `controls/camera-direction/control.md`；
+- `controls/spatial-blocking/control.md`；
+- `controls/continuity-consistency/control.md`；
+- `controls/performance-expression/control.md`；
+- `controls/audio-visual-sync/control.md`；
+- `controls/reference-binding/control.md`；
+- `controls/prompt-assembly/control.md`；
+- `controls/realism-quality/control.md`。
 
-不为了增加细节默认加载控制页。任务 Playbook 已经能解决的问题，不重复读取。
+任务 Playbook 已经能解决的问题，不重复读取控制页。
 
----
-
-## 7. 第四步：按需加载资料库
+## 7. 资料库路由
 
 读取：`libraries/index.md`
 
-资料库提供：
+按需加载 `0-2` 份：
 
-- 镜头、景别、机位和运镜术语；
-- 动作、打击帧和运动结构；
-- 表情、微表情和对白表演；
-- 转场和视觉特效；
-- 光影与色调；
-- 对白、环境音、拟音和 BGM；
-- 写实短剧、AI 漫剧、广告、动作等题材方案。
+- `libraries/camera-shot/library.md`；
+- `libraries/action-motion/library.md`；
+- `libraries/performance-expression/library.md`；
+- `libraries/transition-effects/library.md`；
+- `libraries/lighting-color/library.md`；
+- `libraries/audio-sound/library.md`；
+- `libraries/genre-patterns/library.md`。
 
 资料库回答“有哪些选择”，不代替控制规则。
 
----
-
-## 8. 第五步：按需加载风格
+## 8. 风格路由
 
 读取：`styles/index.md`
 
-只有风格真正影响实现方式时才读取一份主 style Reference：
+最多加载一份主 style Reference：
 
-- 电影化写实；
-- 写实短剧；
-- 动画；
-- AI 漫剧 / 动态漫画；
-- 商业广告；
-- 纪录 / UGC；
-- 实验视觉。
+- `styles/cinematic-live-action/style.md`；
+- `styles/realistic-short-drama/style.md`；
+- `styles/anime-animation/style.md`；
+- `styles/comic-motion-drama/style.md`；
+- `styles/commercial-advertising/style.md`；
+- `styles/documentary-ugc/style.md`；
+- `styles/experimental-visual/style.md`。
 
-不要用风格名替代主体、空间、动作、镜头和声音。
+风格必须转成镜头、表演、光影、材质、节奏和声音，不用风格名替代执行内容。
 
----
-
-## 9. 第六步：模型适配
+## 9. 模型适配路由
 
 读取：`models/index.md`
 
-正式模型范围固定为：
+正式模型范围：
 
-- `models/generic.md`：默认模型无关输出；
-- `models/seedance-2.md`：Seedance 2.0；
-- `models/ltx-2-3.md`：LTX-2.3。
+- 用户未指定模型：`models/generic.md`；
+- 用户明确使用 Seedance 2.0：`models/seedance-2.md`；
+- 用户明确使用 LTX-2.3：`models/ltx-2-3.md`。
 
-路由规则：
-
-- 用户未指定模型 → Generic；
-- 用户明确使用 Seedance 2.0 → Seedance；
-- 用户明确使用 LTX-2.3 → LTX；
-- 不创建或加载其他模型适配页。
+不创建或加载其他模型适配页。
 
 模型页只转换通用导演方案，不重新设计任务内容。
 
----
+## 10. 输出合同路由
 
-## 10. 第七步：输出合同
+模式合同二选一：
 
-根据模式和任务读取 `assets/templates/` 中的一份输出合同或模板。
+- 默认快速模式：`../assets/templates/mode-quick-output-contract.md`；
+- 用户明确共创：`../assets/templates/mode-interactive-output-contract.md`。
 
-快速模式：
+主交付模板：
 
-- 默认零追问；
-- 直接输出可复制结果；
-- 不展示内部迁移、路由和资料加载过程。
+- 单镜头：`../assets/templates/single-shot-video-template.md`；
+- 多镜头 / 多片段 / 故事板：`../assets/templates/multi-shot-video-template.md`。
 
-交互模式：
+按需补读：
 
-- 只有用户明确要求共创、讨论、逐步设计或 Grill Me 时启用；
-- 每次只问一个最关键的问题；
-- 能推断则不追问；
-- 再问只影响轻微细节时立即收口。
+- 多模态职责：`../assets/templates/multimodal-reference-template.md`；
+- 模型转换：`../assets/templates/model-adapted-output-template.md`。
 
----
+默认输出规则：
 
-## 11. 第八步：失败诊断
+- 简单任务只输出一份可直接复制 Prompt；
+- 多镜头输出必要的全局固定项和 Prompt Pack；
+- 多模态只保留执行必要的职责说明；
+- 不默认输出备选版本、自动补全项和方向摘要。
+
+## 11. 失败诊断
 
 读取：`diagnostics/index.md`
 
@@ -204,55 +188,24 @@ v2 采用：
 - Prompt 过载或要求互相矛盾；
 - 无法从单一任务页或控制页定位根因。
 
----
+正常生成不提前加载诊断层。
 
 ## 12. 运行规则
 
-- 同一轮只读取一份主 input 和一份主 task。
-- 同一叶子文件被多个入口命中时只读取一次。
-- 主体运动和镜头运动必须分开判断。
-- 多模态素材必须分配职责，禁止平均融合。
-- 一段视频必须有开始、推进和落点。
-- 负向限制只针对当前最危险的失败模式。
-- 不一次性读取整个目录。
-- 不把研究区原始资料直接作为运行期 Reference。
+- 同一轮只读取一份主 input 和一份主 task；
+- 同一叶子文件被多个入口命中时只读取一次；
+- 主体运动、镜头运动、环境变化和声音事件分别判断；
+- 多模态素材必须分配职责，禁止平均融合；
+- 一段视频必须有开始、推进和落点；
+- 全局固定项只写一次，时间轴只写变化；
+- 负向限制只针对当前最危险的失败模式；
+- 不一次性读取整个目录；
+- 不把研究区原始资料作为运行期 Reference。
 
----
+## 13. 旧结构状态
 
-## 13. 迁移期兼容路由
+Phase 6 已将 `SKILL.md` 切换到 v2。旧模式、旧输入、旧任务、旧时间轴、旧连续性、旧附录和旧输出模板不再参与默认运行。
 
-在 Phase 6 切换 `SKILL.md` 前，旧运行入口仍可能读取以下文件。这些文件暂时保留，但不再作为 v2 新增内容的真源：
+这些文件在 Phase 7 测试和断链检查完成前暂时保留，只用于回滚和迁移核对。
 
-### 旧模式
-
-- `mode-quick/quick-mode.md`
-- `mode-interactive/interactive-mode.md`
-
-### 旧输入
-
-- `input-text-only/text-expansion.md`
-- `input-image-ref/image-reference-analysis.md`
-
-### 旧任务
-
-- `task-text-to-video/playbook.md`
-- `task-image-to-video/image-to-video-playbook.md`
-
-### 旧时间轴、连续性和质量控制
-
-- `timeline/timeline-assembly.md`
-- `timeline/lifestyle-beat-and-landing.md`
-- `continuity/continuity-guardrails.md`
-- `continuity/human-motion-consistency.md`
-- `style-control/anti-ai-video-realism.md`
-- `style-control/camera-failure-patterns-negative.md`
-
-### 旧附录与输出
-
-- `appendix/`
-- `output-single-unit/output-spec.md`
-- `output-multi-unit/output-spec.md`
-
-迁移状态和目标真源见：`../docs/migration-inventory.md`。
-
-在新任务、控制、模板和 `SKILL.md` 验证完成前，不删除这些兼容文件。
+迁移状态见：`../docs/migration-inventory.md`。
