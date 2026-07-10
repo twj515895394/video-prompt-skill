@@ -6,15 +6,24 @@
 
 ## timeline-rhythm
 
+读取：
+
+- `timeline-rhythm/control.md`
+
 处理：
 
 - 绝对时间轴；
-- 开场、推进、高潮、收束；
+- 开场、推进、高潮、反馈和收束；
 - 动作与情绪节拍；
 - 镜头密度；
+- 多镜头承接；
 - 自然停顿和结尾落点。
 
 ## subject-motion
+
+读取：
+
+- `subject-motion/control.md`
 
 处理：
 
@@ -26,15 +35,24 @@
 
 ## camera-direction
 
+读取：
+
+- `camera-direction/control.md`
+
 处理：
 
 - 景别和机位如何选择；
 - 镜头为什么移动；
 - 主运镜、速度和运动路线；
 - 焦点转移；
+- 轴线和运动方向；
 - 镜头失控、漂移和炫技过载。
 
 ## spatial-blocking
+
+读取：
+
+- `spatial-blocking/control.md`
 
 处理：
 
@@ -42,18 +60,28 @@
 - 视线和朝向；
 - 前中后景；
 - 出入口和行动路线；
+- 道具状态；
 - 角色、道具和镜头之间的空间关系。
 
 ## continuity-consistency
+
+读取：
+
+- `continuity-consistency/control.md`
 
 处理：
 
 - 人物身份、脸部、发型、服装；
 - 场景结构和道具状态；
 - 动作阶段和体态重心；
+- 光影和方向连续性；
 - 跨镜、跨段和跨参考素材的一致性。
 
 ## performance-expression
+
+读取：
+
+- `performance-expression/control.md`
 
 处理：
 
@@ -65,14 +93,23 @@
 
 ## audio-visual-sync
 
+读取：
+
+- `audio-visual-sync/control.md`
+
 处理：
 
 - 对白、旁白、环境音、拟音、BGM；
 - 节拍点和视觉事件绑定；
 - 声音进入、持续、退出；
+- 口型同步；
 - 音画同步和声音空间。
 
 ## reference-binding
+
+读取：
+
+- `reference-binding/control.md`
 
 处理：
 
@@ -85,23 +122,66 @@
 
 ## prompt-assembly
 
+读取：
+
+- `prompt-assembly/control.md`
+
 处理：
 
 - 信息优先级；
 - 通用导演方案的组织顺序；
 - 时间轴与全局约束如何组合；
 - 正向描述和负向限制的比例；
-- Prompt 压缩、去重和冲突裁决。
+- Prompt 压缩、去重和冲突裁决；
+- 与模型适配层的交接边界。
 
 ## realism-quality
 
+读取：
+
+- `realism-quality/control.md`
+
 处理：
 
-- 去 AI 漂浮感；
+- 去 AI 漂浮感和动态海报感；
 - 真实设备记录感；
 - 物理可信；
 - 自然表演和微小不完美；
 - 光影、材质和环境反馈的一致性。
+
+## 常用组合
+
+### 文生视频基础
+
+- `timeline-rhythm/control.md`
+- `prompt-assembly/control.md`
+
+按缺口再补主体运动、镜头或连续性。
+
+### 图生视频基础
+
+- `reference-binding/control.md`
+- `continuity-consistency/control.md`
+
+动作复杂时补 `subject-motion/control.md`，镜头易漂时补 `camera-direction/control.md`。
+
+### 写实人物短片
+
+- `performance-expression/control.md`
+- `realism-quality/control.md`
+- `timeline-rhythm/control.md`
+
+### 动作与体育
+
+- `subject-motion/control.md`
+- `camera-direction/control.md`
+- `spatial-blocking/control.md`
+
+### 多模态与音频
+
+- `reference-binding/control.md`
+- `audio-visual-sync/control.md`
+- `prompt-assembly/control.md`
 
 ## 选择规则
 
@@ -110,3 +190,5 @@
 - 用户明确指定风格时读取 `styles/`。
 - 用户反馈生成失败且原因跨多个维度时，读取 `diagnostics/`。
 - 模型能力、参数和素材引用语法统一读取 `models/`。
+- 同一轮命中同一个控制页时只读取一次。
+- 已经读取三份控制页仍无法解决时，优先检查任务是否过载，而不是继续堆控制页。
