@@ -14,28 +14,24 @@
 | Phase 1 新架构骨架与总路由 | 已完成 | 100% | 八类索引、总索引和三份模型适配页已完成 |
 | Phase 2 输入层与任务层 | 已完成 | 100% | 六类输入 Reference、八类任务 Playbook 已完成 |
 | Phase 3 核心控制层 | 已完成 | 100% | 十类核心控制真源和精确路由已完成 |
-| Phase 4 资料库与风格层 | 已完成 | 100% | 七类详细资料库、七种风格实现和来源提炼记录已完成 |
-| Phase 5 模型适配层 | 主体完成 | 85% | Generic、Seedance、LTX 正文已完成，等待全链路验证微调 |
-| Phase 6 输出合同与 SKILL.md 切换 | 未开始 | 0% | 下一执行阶段 |
-| Phase 7 验证与旧结构清理 | 未开始 | 0% | 最终阶段 |
+| Phase 4 资料库与风格层 | 已完成 | 100% | 七类资料库、七种风格和来源治理已完成 |
+| Phase 5 模型适配层 | 已完成 | 100% | Generic、Seedance、LTX 已接入统一输出转换 |
+| Phase 6 输出合同与 SKILL.md 切换 | 已完成 | 100% | 六份输出合同、v2 SKILL 和正式总路由已启用 |
+| Phase 7 验证与旧结构清理 | 未开始 | 0% | 下一执行阶段 |
 
-## Phase 0 完成项
+## Phase 0-1：架构与路由
 
-- 创建重构分支。
-- 建立架构决策、实施计划和迁移台账。
-- 建立 `research/` 原始资料区。
-- 导入 17 份用户 Markdown 原始资料。
-- 锁定 Generic + Seedance 2.0 + LTX-2.3。
-- 明确不建设其他模型空适配器。
+已完成：
 
-## Phase 1 完成项
+- 创建重构分支；
+- 建立架构决策、实施计划和迁移台账；
+- 建立 `research/` 原始资料区；
+- 导入并登记 17 份用户资料；
+- 锁定 Generic + Seedance 2.0 + LTX-2.3；
+- 建立 inputs、tasks、controls、libraries、styles、models、diagnostics 分类索引；
+- 重写 `references/index.md` 为 v2 正式总路由。
 
-- 重写 `references/index.md` 为 v2 总索引。
-- 建立 inputs、tasks、controls、libraries、styles、models、diagnostics 分类索引。
-- 完成 `generic.md`、`seedance-2.md`、`ltx-2-3.md`。
-- 保留迁移期旧路径兼容区。
-
-## Phase 2 完成项
+## Phase 2：输入层与任务层
 
 ### 输入层
 
@@ -48,104 +44,112 @@
 
 ### 任务层
 
-- `tasks/text-to-video/playbook.md`
-- `tasks/image-to-video/playbook.md`
-- `tasks/multimodal-reference-video/playbook.md`
-- `tasks/video-reference-and-video-to-video/playbook.md`
-- `tasks/video-editing/playbook.md`
-- `tasks/video-extension/playbook.md`
-- `tasks/audio-driven-and-beat-sync/playbook.md`
-- `tasks/storyboard-and-multi-shot-video/playbook.md`
+- `references/tasks/text-to-video/playbook.md`
+- `references/tasks/image-to-video/playbook.md`
+- `references/tasks/multimodal-reference-video/playbook.md`
+- `references/tasks/video-reference-and-video-to-video/playbook.md`
+- `references/tasks/video-editing/playbook.md`
+- `references/tasks/video-extension/playbook.md`
+- `references/tasks/audio-driven-and-beat-sync/playbook.md`
+- `references/tasks/storyboard-and-multi-shot-video/playbook.md`
 
-## Phase 3 完成项
+## Phase 3：核心控制层
 
-### 核心控制真源
+已完成十类控制真源：
 
-- `controls/timeline-rhythm/control.md`
-- `controls/subject-motion/control.md`
-- `controls/camera-direction/control.md`
-- `controls/spatial-blocking/control.md`
-- `controls/continuity-consistency/control.md`
-- `controls/performance-expression/control.md`
-- `controls/audio-visual-sync/control.md`
-- `controls/reference-binding/control.md`
-- `controls/prompt-assembly/control.md`
-- `controls/realism-quality/control.md`
+- 时间轴与自然收尾；
+- 主体运动、重心、惯性和反馈；
+- 镜头任务、路线和失败约束；
+- 站位、朝向、视线和空间调度；
+- 人物、场景、道具和动作连续性；
+- 表演、微表情、对白和口型；
+- 对白、音效、音乐和音画同步；
+- 多模态素材职责和主真源；
+- Prompt 信息优先级、压缩和组装；
+- 设备来源、物理可信和去 AI 感。
 
-### 结构结果
+## Phase 4：资料库与风格层
 
-- 时间轴与自然收尾合并为单一节拍真源。
-- 状态连续性与运动物理边界明确。
-- 运镜负向限制合入正向镜头决策。
-- 去 AI 感升级为设备、运动、光影、材质、表演和声音控制。
-- 通用控制层不包含模型专属语法。
+### 七类资料库
 
-## Phase 4 完成项
+- camera-shot；
+- action-motion；
+- performance-expression；
+- transition-effects；
+- lighting-color；
+- audio-sound；
+- genre-patterns。
 
-### 资料库真源
+### 七种风格
 
-- `references/libraries/camera-shot/library.md`
-- `references/libraries/action-motion/library.md`
-- `references/libraries/performance-expression/library.md`
-- `references/libraries/transition-effects/library.md`
-- `references/libraries/lighting-color/library.md`
-- `references/libraries/audio-sound/library.md`
-- `references/libraries/genre-patterns/library.md`
+- cinematic-live-action；
+- realistic-short-drama；
+- anime-animation；
+- comic-motion-drama；
+- commercial-advertising；
+- documentary-ugc；
+- experimental-visual。
 
-覆盖内容：
+资料库回答“有哪些选项”，风格层回答“如何拍出来”，没有复制任务流程或模型语法。
 
-- 景别、机位、焦段、设备和运镜组合；
-- 日常、打斗、体育、动物、物体和环境运动；
-- 表情、微表情、对白和关系表演；
-- 剪辑、遮挡、穿越、材质变化和视觉特效；
-- 九类光影、十八种色调、时间天气和动态光；
-- 对白、环境音、拟音、BGM、节拍和声音空间；
-- 短剧、漫剧、动作、悬疑、广告、纪录、科普和实验题材模板。
+## Phase 5：模型适配层
 
-### 风格真源
+已完成：
 
-- `styles/cinematic-live-action/style.md`
-- `styles/realistic-short-drama/style.md`
-- `styles/anime-animation/style.md`
-- `styles/comic-motion-drama/style.md`
-- `styles/commercial-advertising/style.md`
-- `styles/documentary-ugc/style.md`
-- `styles/experimental-visual/style.md`
+- `references/models/generic.md`：默认模型无关输出；
+- `references/models/seedance-2.md`：`@图片 / @视频 / @音频` 职责绑定、编辑、延长和卡点；
+- `references/models/ltx-2-3.md`：自然语言导演段落、连续表演、对白和音画表达；
+- `assets/templates/model-adapted-output-template.md`：统一三种适配的最终输出转换。
 
-风格边界：
+当前只支持以上三种正式输出协议，不建设其他模型占位层。
 
-- 电影化真人：摄影、空间、自然表演与声音共同成立；
-- 写实短剧：信息与人物关系快速可读；
-- 动画：角色渲染、关键姿态和分层运动；
-- 漫剧：画格、有限动画、表情和镜间承接；
-- 广告：产品外观、卖点证据、材质和品牌落点；
-- 纪录/UGC：真实设备来源和自然不完美；
-- 实验影像：单一视觉规则和分阶段升级。
+## Phase 6：输出合同与运行入口
 
-### 资料治理
+### 新输出合同
 
-- 建立 `research/extraction-notes/phase4-library-style-extraction.md`。
-- 17 份用户资料均已审计并映射到正式真源。
-- 完整发型选择器未重复迁入，只保留视频动态和一致性部分。
-- 社区长 Prompt 未原样进入运行期 Reference。
-- `libraries/index.md` 和 `styles/index.md` 已路由到唯一叶子文件。
+- `assets/templates/mode-quick-output-contract.md`
+- `assets/templates/mode-interactive-output-contract.md`
+- `assets/templates/single-shot-video-template.md`
+- `assets/templates/multi-shot-video-template.md`
+- `assets/templates/multimodal-reference-template.md`
+- `assets/templates/model-adapted-output-template.md`
+
+### 关键决策
+
+- 快速模式默认零追问并直接交付；
+- 交互模式仅在用户明确共创时启用；
+- 交互模式每次只问一个关键问题并给出推荐答案；
+- 简单任务默认只输出一份最终 Prompt；
+- 多镜头只展开必要的全局固定项和 Prompt Pack；
+- 多模态只保留执行必要的素材职责；
+- 不默认输出备选版本、自动补全项和内部分析；
+- 未指定模型时使用 Generic；
+- 指定 Seedance 或 LTX 时读取唯一对应适配页。
+
+### 入口切换
+
+- `SKILL.md` 已完整重写并切换到 v2；
+- `references/index.md` 已移除默认兼容路由，正式指向 v2 叶子；
+- `assets/README.md` 已切换到新模板索引；
+- 旧模式、旧任务、旧时间轴、旧附录和旧输出模板不再参与默认运行；
+- 旧文件暂时保留，等待 Phase 7 回归测试和断链检查后删除。
 
 ## 当前架构安全状态
 
-- 旧 `SKILL.md` 尚未切换。
-- 旧 Reference 尚未删除。
-- 新目录与旧目录仍并行存在。
-- 新输入、任务、控制、资料库、风格和模型层已经形成完整 v2 运行知识链。
-- Phase 6 切换前，现有 Skill 仍走兼容链路。
+- 新 v2 链路已经成为工作分支默认运行入口；
+- 旧文件尚未删除，可用于回滚和迁移核对；
+- 主分支未被修改；
+- Phase 7 前不合并、不清理旧结构；
+- 输出合同、模型适配和 Reference 加载预算已经统一。
 
-## 下一执行阶段：Phase 6
+## 下一执行阶段：Phase 7
 
-Phase 5 主体已提前完成，因此下一步直接进入 Phase 6：
+Phase 7 将完成：
 
-1. 设计快速模式和交互模式输出合同；
-2. 设计单镜头、多镜头、多模态和模型适配模板；
-3. 重写 `SKILL.md`，切换到 v2 路由；
-4. 保留旧结构兼容但停止默认读取；
-5. 建立 Phase 7 使用的测试场景与验证清单。
-
-Phase 6 完成前不删除旧文件。
+1. 建立并执行十类测试场景；
+2. 建设诊断层叶子文件；
+3. 检查所有新路径和交叉链接；
+4. 验证 Generic、Seedance、LTX 输出差异；
+5. 检查重复真源和旧路径残留；
+6. 删除已满足条件的旧模式、旧输入、旧任务、旧时间轴、旧连续性、旧附录和旧模板；
+7. 形成 `docs/validation-report.md`。
