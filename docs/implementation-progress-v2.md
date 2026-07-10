@@ -15,10 +15,10 @@
 | Phase 0 范围冻结与迁移盘点 | 已完成 | 100% | 范围、模型、研究区和迁移台账已落地 |
 | Phase 1 新架构骨架与总路由 | 已完成 | 100% | 八类索引、总索引和三份模型适配页已完成 |
 | Phase 2 输入层与任务层 | 已完成 | 100% | 六类输入 Reference、八类任务 Playbook 已完成 |
-| Phase 3 核心控制层 | 未开始 | 0% | 下一执行阶段 |
-| Phase 4 资料库与风格层 | 未开始 | 0% | 依赖资料提炼和 Phase 3 边界 |
-| Phase 5 模型适配层 | 已提前完成主体 | 85% | Generic、Seedance、LTX 正文已完成，后续随任务验证微调 |
-| Phase 6 输出合同与 SKILL.md 切换 | 未开始 | 0% | 依赖控制层和资料层 |
+| Phase 3 核心控制层 | 已完成 | 100% | 十类核心控制真源和精确路由已完成 |
+| Phase 4 资料库与风格层 | 未开始 | 0% | 下一执行阶段 |
+| Phase 5 模型适配层 | 已提前完成主体 | 85% | Generic、Seedance、LTX 正文已完成，后续随验证微调 |
+| Phase 6 输出合同与 SKILL.md 切换 | 未开始 | 0% | 依赖资料层和测试用例 |
 | Phase 7 验证与旧结构清理 | 未开始 | 0% | 最终阶段 |
 
 ---
@@ -26,9 +26,7 @@
 ## Phase 0 完成项
 
 - 创建分支 `refactor/reference-architecture-v2`。
-- 建立 `docs/reference-architecture-v2.md`。
-- 建立 `docs/implementation-plan-v2.md`。
-- 建立 `docs/migration-inventory.md`。
+- 建立架构决策、实施计划和迁移台账。
 - 建立 `research/` 原始资料区。
 - 导入用户提供的 17 份 Markdown 原始资料。
 - 建立来源清单和候选沉淀映射。
@@ -60,11 +58,7 @@
 - `references/models/seedance-2.md`
 - `references/models/ltx-2-3.md`
 
-模型适配层已从“骨架”提升为可用正文：
-
-- Generic：模型无关导演输出协议；
-- Seedance：多模态职责绑定、视频参考、编辑、延长、音频与卡点；
-- LTX：详细自然语言、表演节拍、I2V 运动描述、对白和音频。
+模型适配层已从骨架提升为可用正文，但不复制通用导演知识。
 
 ---
 
@@ -79,13 +73,7 @@
 - `references/inputs/audio-input.md`
 - `references/inputs/mixed-multimodal-input.md`
 
-输入层已覆盖：
-
-- 首帧、尾帧、角色、场景和关键帧；
-- 主图、辅助图和禁止平均融合；
-- 视频动作、运镜、节奏、特效和声音职责；
-- 音频对白、口型、BGM、节拍和环境音；
-- 混合多模态主真源与冲突裁决。
+输入层已覆盖图片、视频、音频和混合多模态职责，以及主真源与冲突裁决。
 
 ### 任务层
 
@@ -98,14 +86,42 @@
 - `references/tasks/audio-driven-and-beat-sync/playbook.md`
 - `references/tasks/storyboard-and-multi-shot-video/playbook.md`
 
-任务边界已明确：
+任务边界已经按执行差异拆分，不按题材重复建设。
 
-- 从零生成与从图片起动分离；
-- 多模态参考独立管理素材职责；
-- 视频参考复刻与局部编辑分离；
-- 视频延长独立管理接点连续性；
-- 音频驱动独立管理声音时间骨架；
-- 故事板任务管理镜间和跨包承接。
+---
+
+## Phase 3 完成项
+
+### 核心控制真源
+
+- `references/controls/timeline-rhythm/control.md`
+- `references/controls/subject-motion/control.md`
+- `references/controls/camera-direction/control.md`
+- `references/controls/spatial-blocking/control.md`
+- `references/controls/continuity-consistency/control.md`
+- `references/controls/performance-expression/control.md`
+- `references/controls/audio-visual-sync/control.md`
+- `references/controls/reference-binding/control.md`
+- `references/controls/prompt-assembly/control.md`
+- `references/controls/realism-quality/control.md`
+
+### 已完成的结构重组
+
+- 将旧时间轴和生活化自然收尾合并为 `timeline-rhythm` 单一真源。
+- 将基础连续性和人物运动连续性按“状态稳定”与“运动物理”拆分到连续性、主体运动两个控制页。
+- 将旧运镜负向限制合入完整的正向镜头决策，不再单独维护负面词清单。
+- 将旧去 AI 感规则扩展为设备来源、运动、光影、材质、表演和声音六层真实感控制。
+- 新增空间调度、表演、音画同步、多模态绑定和 Prompt 组装等旧架构缺失的一等控制模块。
+- 清除通用控制层中的模型专属引用语法，模型差异只留给 `references/models/`。
+- 更新 `references/controls/index.md`，每个类别均可路由到唯一叶子文件。
+
+### Phase 3 验收结果
+
+- 每个控制页回答“如何判断与控制”，不是术语列表。
+- 同一规则有明确真源，旧文件只在迁移期兼容保留。
+- 通用控制页不承担模型专属参数和引用语法。
+- 常用任务可在最多三份控制页内形成完整控制组合。
+- 未删除任何旧运行期文件，当前 `SKILL.md` 仍可继续工作。
 
 ---
 
@@ -115,33 +131,31 @@
 - 旧 Reference 尚未删除。
 - 新 `references/index.md` 包含兼容路由。
 - 新目录与旧目录并行存在。
-- 当前改造不会要求主分支立即使用未验证的新链路。
+- 新控制层已完成，但只有 Phase 6 切换入口后才成为默认运行链路。
 
 ---
 
-## 下一执行阶段：Phase 3
+## 下一执行阶段：Phase 4
 
-建议按以下顺序实施核心控制页：
+Phase 4 将建设“可选详细知识”与“风格实现”，不再扩写控制方法。
 
-1. `controls/timeline-rhythm/`
-   - 时间轴组装
-   - 自然节拍和落点
-2. `controls/subject-motion/`
-   - 主体运动与镜头运动分离
-   - 动作阶段、重心、惯性和反馈
-3. `controls/camera-direction/`
-   - 镜头主任务
-   - 运镜强度和失败约束
-4. `controls/continuity-consistency/`
-   - 人物、动作、场景和道具连续性
-5. `controls/reference-binding/`
-   - 多模态主真源和冲突处理
-6. `controls/prompt-assembly/`
-   - 信息优先级、压缩和最终组装
-7. 继续补齐：
-   - spatial-blocking
-   - performance-expression
-   - audio-visual-sync
-   - realism-quality
+建议顺序：
 
-Phase 3 完成前不改写 `SKILL.md`，不删除旧 Reference。
+1. `libraries/camera-shot/`
+   - 导演级运镜术语；
+   - 景别、机位、焦段与镜头类型。
+2. `libraries/action-motion/`
+   - 打击帧；
+   - 动作、追逐、体育和物理反馈方案。
+3. `libraries/performance-expression/`
+   - 表情、微表情、眼神、呼吸和对白表演选项。
+4. `libraries/lighting-color/`
+   - 光影类型、电影色调与主体分离。
+5. `libraries/audio-sound/` 与 `transition-effects/`
+   - 声音设计、音乐卡点、转场和视觉特效。
+6. `libraries/genre-patterns/`
+   - 写实短剧、AI 漫剧、动作、广告等题材级组合。
+7. `styles/`
+   - 电影写实、写实短剧、动画、漫剧、广告、UGC 和实验视觉的执行方式。
+
+Phase 4 仍不改写 `SKILL.md`，不删除旧 Reference。
