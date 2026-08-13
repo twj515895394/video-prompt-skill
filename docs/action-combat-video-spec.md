@@ -311,7 +311,32 @@ Quick Mode 用户未指定时自动从剧情推断，不追问。
 
 主导权不能无铺垫翻转。每次显著变化都必须由明确事件触发，例如攻击落空、格挡成功、借环境换位、兵器脱手、受伤、失衡或距离变化。
 
-## 21. Quick / Interactive 模式
+## 21. Advantage Turning Event
+
+确认：**Beat 之间的明显主导权转移必须经过明确的 Turning Event（主导权转折事件）。**
+
+一个 Beat 原则上最多只发生一次主要主导权变化，避免整场打斗退化成机械的“你打一拳、我打一拳”。
+
+Turning Event 可以来自：
+
+- 关键攻击落空；
+- 成功格挡 / 拆招；
+- 一方身体失衡；
+- 攻防距离被重新建立；
+- 兵器被压制、偏转或脱手；
+- 借环境完成换位；
+- 明确受伤或体力下降；
+- 第三人介入；
+- 一方被逼入死角；
+- 成功脱离后重新建立距离。
+
+主导权变化应遵循：
+
+> **原优势状态 → Turning Event → 优势来源改变 → 新优势状态**
+
+若没有明确 Turning Event，则默认延续上一 Beat 的主导权趋势，而不是无理由翻转。
+
+## 22. Quick / Interactive 模式
 
 Combat 不改变现有模式原则。
 
@@ -322,6 +347,7 @@ Combat 不改变现有模式原则。
 - 自动选择合理强度；
 - 自动拆 Beat；
 - 自动维护 Advantage State；
+- 自动识别 Turning Event；
 - 自动控制动作复杂度；
 - 自动协同动作与镜头；
 - 直接输出可复制 Prompt。
@@ -330,7 +356,7 @@ Combat 不改变现有模式原则。
 
 只有用户明确要求讨论 / Grill Me 时启用，并继续遵守“一次只问一个关键问题 + 给推荐答案”。
 
-## 22. 与现有 v2 架构的候选关系
+## 23. 与现有 v2 架构的候选关系
 
 正式实现前必须先审计现有真源，避免重复。
 
@@ -356,7 +382,7 @@ references/controls/combat-spatial-continuity/control.md
 
 新增前优先审计现有 `motion-discontinuity`、`camera-chaos`、`spatial-teleportation`、`anatomy-contact-failure`、`physics-and-weightlessness`、`prompt-overload-and-conflict`。
 
-## 23. 已确认决策记录
+## 24. 已确认决策记录
 
 | # | 决策 | 结论 |
 |---|---|---|
@@ -382,21 +408,21 @@ references/controls/combat-spatial-continuity/control.md
 | 20 | Beat 与 Shot | 解耦，不强制 1:1 |
 | 21 | Combat Intent | 显式核心变量，Quick Mode 自动推断 |
 | 22 | Combat Advantage State | 显式维护优势状态、来源和转折原因 |
+| 23 | 主导权转移 | 必须经过 Turning Event；每 Beat 原则上最多一次主要反转 |
 
-## 24. 尚待继续 Grill Me 的主要设计树
+## 25. 尚待继续 Grill Me 的主要设计树
 
-1. Beat 之间攻守主导权如何转移；
-2. 现代格斗与武侠各自的默认 Beat 节奏画像；
-3. 兵器距离与空手距离切换规则；
-4. 角色受伤 / 疲劳 / 呼吸状态是否跨 Beat 累积；
-5. 1vN 的目标切换与镜头重新建图规则；
-6. 连续长镜头打斗与多切镜动作戏的模式差异；
-7. Prompt 最终交付格式与现有 single-shot / multi-shot 模板如何组合；
-8. 现有 controls / libraries / styles / diagnostics 哪些扩展、哪些新增；
-9. Combat 专项静态回归测试场景；
-10. 后续枪战如何复用 Combat Core。
+1. 现代格斗与武侠各自的默认 Beat 节奏画像；
+2. 兵器距离与空手距离切换规则；
+3. 角色受伤 / 疲劳 / 呼吸状态是否跨 Beat 累积；
+4. 1vN 的目标切换与镜头重新建图规则；
+5. 连续长镜头打斗与多切镜动作戏的模式差异；
+6. Prompt 最终交付格式与现有 single-shot / multi-shot 模板如何组合；
+7. 现有 controls / libraries / styles / diagnostics 哪些扩展、哪些新增；
+8. Combat 专项静态回归测试场景；
+9. 后续枪战如何复用 Combat Core。
 
-## 25. 禁止倾向
+## 26. 禁止倾向
 
 - 不把打斗写成招式名词堆砌；
 - 不默认一个 Beat 塞大量动作；
@@ -410,4 +436,5 @@ references/controls/combat-spatial-continuity/control.md
 - 不让流派名成为装饰标签；
 - 不默认把电影武侠扩成仙侠；
 - 不允许战斗主导权无原因突然翻转；
+- 不允许一个 Beat 内连续多次大幅反转主导权；
 - 不复制现有 v2 通用真源。
