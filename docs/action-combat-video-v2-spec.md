@@ -977,3 +977,110 @@ V2 在第一次真实交互与成片测试后进入“基于成片反馈继续�
 当前最需要继续确认的是 Camera Mobility Coupling：如何保持复杂动作的可读性，同时让镜头真正跟随人物的空间战斗，而不是退化成静态观察。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
+
+## 43. V2-37：Camera Mobility Coupling / 镜头运动耦合
+
+真实成片确认了一个此前被 `Camera Readability Budget` 掩盖的实现风险：为了避免高密度动作中的 Camera Chaos，系统会主动降低 Camera Complexity，但运行时很容易把“降低复杂度”错误执行成“镜头尽量不动”。当人物本身又存在 Kinetic Underfill 时，最终会形成“人物原地上半身交手 + Camera 近似固定”的双重锁死。
+
+因此正式把 **Camera Complexity** 与 **Camera Mobility** 拆成两个独立维度：
+
+```text
+Camera Complexity
+→ 镜头方案有多少并行变化：切镜、环绕、焦段变化、机位重建、复杂组合运动
+
+Camera Mobility
+→ 摄影机是否随着人物真实 Position / Range / Axis / Route 变化持续移动与重构构图
+```
+
+两者不等价。
+
+### 43.1 Stable ≠ Static
+
+正式原则：
+
+> **Stable Camera ≠ Static Camera.**  
+> **稳定镜头不等于固定镜头。**
+
+高 Coverage / 高 Exchange Depth / 高 Kinetic Scope 场景可以使用 **Low Camera Complexity + Medium / High Camera Mobility**：镜头运动方式保持简单、连续、可预测，但摄影机仍要主动跟随战斗空间变化。
+
+典型可用行为包括：
+
+- lateral tracking：双方沿空间横向切位时平稳侧跟；
+- dolly back / forward：人物持续压进或拉开 Range 时随动；
+- small arc：双方换角 / 改变身体轴线时小幅弧线移动；
+- reframe：Position / Level / Primary Interaction 改变后及时重构画面；
+- controlled push-in：Phrase Payoff / Signature Moment 需要时短促靠近；
+- recovery to readable medium-wide：复杂交换恢复后重新建立双方完整身体关系。
+
+这些不意味着必须全部使用；Camera Mobility 由当前战斗空间与动作因果触发。
+
+### 43.2 Camera Mobility Coupling
+
+Camera 不独立炫技，而与 Combat Kinetic Scope 耦合：
+
+```text
+Whole-body / Spatial / Range / Axis Change
+        ↓
+产生新的观察关系
+        ↓
+Camera 以简单连续路径 Track / Dolly / Arc / Reframe
+        ↓
+保持 Contact、脚步、重心与双方空间关系可读
+```
+
+当战斗真实发生明显 Position / Range / Axis 变化时，Camera 长时间停留在近似同一机位，不应因为“镜头稳定”而自动判为可读性优先。
+
+反过来，如果当前 Phrase 本身是局部、重型、短时 Contact，人物空间变化很小，则 Camera 也不需要为了“有运镜”强行移动。
+
+### 43.3 Camera Mobility Underfill
+
+新增 Failure Signature：
+
+> **Camera Mobility Underfill**
+
+典型触发：
+
+- Kinetic Scope 已规划明显换位，但 Camera 长时间近似固定；
+- Prompt 使用“稳定 / 平稳 / 清楚”为由，把原本应发生的 tracking / reframe 全部压掉；
+- 人物从桌侧打向通道、改变 Range 或绕位，但镜头只小幅摇摄甚至完全不跟；
+- Camera 为维持固定构图，反向促使人物长期停在画面中央小区域；
+- 高动作场景最终只有静态中景观察，没有真实电影摄影跟随感。
+
+Preflight 中若发现上述情况，应优先调整 Camera Mobility，而不是先增加切镜、Shake 或复杂环绕。
+
+### 43.4 与 Camera Readability Budget 的关系
+
+Camera Readability Budget 继续成立，但需要修改理解方式：
+
+```text
+高动作 / 空间复杂度
+→ 降低无必要 Camera Complexity
+≠ 降低 Camera Mobility
+
+高 Kinetic Scope
+→ 需要相匹配的 Camera Mobility
+→ 但运动方式尽量简单、连续、可读
+```
+
+因此动作越复杂，不代表镜头越静止；真正目标是：
+
+> **减少不必要的镜头语言变化，同时保留跟随真实战斗空间所必需的摄影机运动。**
+
+### 43.5 与 Final Preflight / Benchmark 的关系
+
+Final Preflight 新增 Camera Mobility 检查：
+
+- Kinetic Scope 明显较高但 Camera Mobility 明显不足，判不通过；
+- `stable / readable` 不得作为长期 static framing 的充分理由；
+- 优先通过一条简单连续 Camera Path 保持可读，而不是通过固定机位迫使动作缩小；
+- 若目标模型对复杂运镜承载较弱，优先减少 Camera Complexity，而不是默认把 Mobility 降到 Low。
+
+Golden Combat Benchmark 增加 **Camera Mobility Realization** 观察项，记录计划的空间换位与成片 Camera 跟随是否匹配。
+
+### 43.6 已确认决策增量
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-37 | Camera Mobility Coupling | Camera Complexity 与 Camera Mobility 正式分离；Stable ≠ Static；高 Kinetic Scope 可采用低复杂度但中高 Mobility 的简单连续 Track / Dolly / Arc / Reframe，并用 Camera Mobility Underfill 拦截“人物换位但镜头长期不跟” |
+
+本节确认后，§41 / §42 中“Camera Mobility Coupling 待确认”的旧状态由 V2-37 正式取代。下一项优先验证 **Temporal Action Packing**：是否需要把长时间窗的宏动作叙述改为更连续、更具因果密度的动作时间编码。
