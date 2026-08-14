@@ -379,7 +379,75 @@ Active Combat Coverage 不能只停留在 Low / Medium / High 的总比例，还
 - 最后一轮 Action Phrase 可以延伸进入 Ending，使“最后一拍才停住”成为默认倾向；
 - Coverage 检查必须发生在最终 Prompt 组装前，防止时间轴完整但有效交战不足。
 
-## 12. V2 设计原则补充
+## 12. 已确认决策九：Exchange Depth 动态控制 Action Phrase 复杂度
+
+新增 **Exchange Depth / 攻防交换深度**，用于控制一个 Action Phrase 内部到底发生多少层有因果关系的攻防回应。
+
+Exchange Depth 不统计“招式数量”或动作动词数量，而关注：
+
+> **一次主动发起之后，双方发生了多少层连续的 Defense → Counter → Re-counter → Continuation，以及这些动作是否由前一动作自然制造。**
+
+因此必须明确：
+
+> **Exchange Depth ≠ Action Verb Count**
+
+例如“出拳、踢腿、肘击、膝击、抱摔”并不因为动作名很多就自动形成高 Exchange Depth；如果彼此没有攻防因果，仍然只是招式堆叠。
+
+### 与 Action Exchange Rhythm 的动态映射
+
+Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Action Exchange Rhythm + Action Phrase 可用时长 + Choreography Profile + Combat Character Identity** 自动决定。
+
+#### 重击型
+
+- 默认低～中 Exchange Depth；
+- 倾向约 1–2 轮主要攻防回应；
+- 将更多时间预算分配给蓄力、重击、环境碰撞、明显失衡、受力和恢复；
+- 重点是每次交换有重量，而不是动作数量。
+
+#### 均衡型
+
+- 默认中等 Exchange Depth；
+- 倾向约 2–3 轮有明确因果的 Response / Counter；
+- 之后进入一个清晰 Phrase Payoff；
+- 兼顾连续性、重量和节奏推进。
+
+#### 高手高速交换型
+
+- 默认高 Exchange Depth；
+- 倾向约 3–5 轮短促 Attack / Defense / Counter / Re-counter；
+- 单次反馈可以更短，但不能删除真实的接触、闪避、受力或空间因果；
+- 目标是让高手感来自连续读取对方动作并立刻形成下一层反制，而不是简单提高播放速度。
+
+#### 混合型
+
+混合型不要求一个 Phrase 内同时包含所有节奏，而是在多个 Phrase 之间形成节奏反差，例如：
+
+```text
+高 Exchange Depth 的短促连续 Phrase
+→ 低 / 中 Depth 的重型 Payoff Phrase
+→ 再进入高 Exchange Depth Phrase
+```
+
+这种组织方式用于避免全片同速，同时保证短时长动作片仍拥有足够有效交换。
+
+### 软预算原则
+
+以上“1–2 / 2–3 / 3–5 轮”只作为内部编舞倾向，不得变成固定模板或硬计数器。
+
+实际 Exchange Depth 必须受以下变量共同影响：
+
+- Action Phrase 时长；
+- Active Combat Coverage；
+- Choreography Profile；
+- 角色能力差与 Combat Character Identity；
+- 当前 Range / Advantage / Condition；
+- 环境复杂度；
+- Camera Complexity；
+- 视频模型可执行性。
+
+当动作过载时，优先降低单个 Phrase 的 Exchange Depth、缩短支线动作或拆分 Phrase，而不是退回“所有战斗统一 2–4 个动作节点”的全局保守上限。
+
+## 13. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -396,8 +464,10 @@ Active Combat Coverage 不能只停留在 Low / Medium / High 的总比例，还
 11. **Interactive Mode 的上游选择必须驱动下游推荐，而不是参数问卷式逐项询问。**
 12. **Active Combat Feedback 与 Downtime 必须区分。** 只要反馈直接推动下一次攻防，就仍属于有效交战。
 13. **收尾预算服务最后一拍，不应提前终止战斗。**
+14. **Exchange Depth 衡量攻防因果深度，不衡量动作词数量。**
+15. **不同 Rhythm 应动态改变 Phrase 内部交换深度，而不是统一套一个动作数量上限。**
 
-## 13. 已确认决策记录
+## 14. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -409,26 +479,26 @@ Active Combat Coverage 不能只停留在 Low / Medium / High 的总比例，还
 | V2-06 | 整场动作观感 | 新增 Cinematic Choreography Profile；不放入一级视觉 Styles |
 | V2-07 | Interactive Mode | 建立 Combat 专属决策链；Choreography Profile 位于 Coverage / Rhythm 之前；上游选择驱动下游推荐 |
 | V2-08 | Coverage 时间预算 | 新增 Setup / Active Exchange / Combat Downtime / Ending 四类预算；High Coverage 限制非交战时间 |
+| V2-09 | Action Phrase 复杂度 | 新增 Exchange Depth；由 Rhythm、Phrase 时长等动态决定，不采用固定招式数 |
 
-## 14. 尚待继续 Grill Me 的设计树
+## 15. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. 不同 Exchange Rhythm 下，一个 Action Phrase 的默认复杂度与节奏如何动态变化；
-2. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
-3. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
-4. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-5. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-6. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-7. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
-8. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-9. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-10. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-11. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-12. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-13. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
+2. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
+3. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
+4. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+5. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+6. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
+7. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+8. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+9. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+10. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+11. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+12. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 15. 当前阶段结论
+## 16. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、编舞弱”倾向。
 
