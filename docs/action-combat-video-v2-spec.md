@@ -472,9 +472,70 @@ Model Capability Contract 只回答“**如何稳定实现已经确定的导演�
 > **模型能力影响实现路径，不偷偷改写导演意图。**  
 > **能力合同应由真实成片 Benchmark 持续校准，而不是依赖一次性主观印象。**
 
+## 33. V2-31：Shared Combat Planning Graph / Quick 与 Interactive 共享同一规划图
+
+Quick Mode 与 Interactive Mode 正式共享**同一套 Combat Planning Graph、同一套 Combat Choreography Engine、同一套质量标准和同一套最终验证逻辑**。两者唯一的本质区别，是哪些决策由系统静默完成、哪些高影响分叉暴露给用户。
+
+统一规划图：
+
+```text
+理解 Combat Intent / 观看目标
+→ 判断 Combat Branch
+→ Cinematic Choreography Profile
+→ Active Combat Coverage
+→ Action Exchange Rhythm
+→ Combat Character Identity
+→ Contact Modality / Environment Affordance
+→ Camera Intent
+→ Model Combat Capability Contract
+→ Action Execution / Camera Readability Budget
+→ Signature Moment
+→ Action Phrase / Battle Beat
+→ V1 State / Continuity Validation
+→ Final Prompt Action Externalization
+```
+
+### Quick Mode：完整规划，静默决策
+
+Quick Mode 不是简化版 Combat Engine。用户即使只给一句简短需求，系统仍完整推导 Coverage、Rhythm、Character Identity、Environment、Contact Solidity、Signature Moment、Camera、Model Capability 与执行预算；只是对高置信度、低风险决策自动完成，不逐项询问。
+
+> **Quick = Full Planning + Silent Resolution.**
+
+Quick Mode 不能因为输入简短而默认降低动作丰富度、Contact Solidity、Signature Moment 设计或质量检查标准。
+
+### Interactive Mode：同一规划图，选择性暴露决策
+
+Interactive Mode 不建立另一套更复杂的动作生成逻辑，而是在同一 Planning Graph 上执行 **Decision Exposure Policy / 决策暴露策略**：
+
+```text
+用户已经明确
+→ 直接继承
+
+高置信度 + 低风险
+→ 自动补全
+
+存在多个明显不同、都会显著改变成片的方向
++ 当前置信度不足
+→ 向用户暴露一个最关键分叉
+```
+
+典型应暴露的决策包括：Modern vs Wuxia 等一级动作方向、明显不同的观看目标 / Choreography Profile、用户未明确但会彻底改变成片的武器 / 战斗结果等。
+
+不应暴露为固定问题的内容包括 Contact Solidity、连续性检查、Action Sufficiency Check 等基本质量机制。
+
+### 模式切换与增量修改
+
+用户可从 Quick 结果直接进入更深控制，例如“男方更凶狠”“改成刀战”“镜头更稳定”。系统只更新对应 Planning Node 及其 downstream 节点，不需要切换到另一套 Combat 系统或从零重做全部逻辑。
+
+因此模式区别是**控制权与交互深度**，不是质量等级：
+
+> **Quick 与 Interactive 应有相同的成片质量上限；Interactive 只是让用户在重要分叉上拥有更多显式控制权。**
+
+这也意味着 V2 的 Static Regression、Golden Combat Benchmark 与 Failure Contract 默认评价同一套核心动作规划能力；若需比较两种模式，测试重点是决策暴露与用户控制行为，不是两套动作引擎的质量差异。
+
 ---
 
-## 33. V2 设计原则汇总
+## 34. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -496,9 +557,10 @@ Model Capability Contract 只回答“**如何稳定实现已经确定的导演�
 18. Golden Scenario 采用 Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor，锁质量不锁创意；
 19. Combat Core 只定义跨战斗形式稳定成立的机制 / 质量合同；Modern / Wuxia / Weapon 等专项层负责具体表现，不允许专项反向污染 Core；
 20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行；
-21. Model Combat Capability Contract 为动作 / 镜头 / 多人 / 接触复杂度预算提供模型侧输入；模型能力只能改变实现路径，不能擅自降低已确定的 Combat Intent / Coverage / 观看目标，并由 Golden Benchmark 持续校准。
+21. Model Combat Capability Contract 为动作 / 镜头 / 多人 / 接触复杂度预算提供模型侧输入；模型能力只能改变实现路径，不能擅自降低已确定的 Combat Intent / Coverage / 观看目标，并由 Golden Benchmark 持续校准；
+22. Quick 与 Interactive 共享同一 Combat Planning Graph、质量标准与验证链；Quick 完整规划但静默解决低风险决策，Interactive 只暴露高影响、低置信度的真实分叉。
 
-## 34. 已确认决策记录
+## 35. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -532,17 +594,17 @@ Model Capability Contract 只回答“**如何稳定实现已经确定的导演�
 | V2-28 | Core / 专项边界 | Combat Core 定义通用机制与质量合同；Modern / Wuxia / Weapon 等专项层实例化动作语言、物理尺度、节奏和 Contact 表现，禁止专项反向污染 Core |
 | V2-29 | Runtime Reference Loading | 两阶段按需加载：Core / 专项 Playbook / 轻量索引先形成 Combat Planning Context，再按默认约 2 个主要 Library Detail Slot 展开最需要的叶子知识；专业执行知识优先于创意增强知识 |
 | V2-30 | Model Combat Capability Contract | Model Adapter 用统一轻量能力合同向 Choreography Engine 提供 Motion / Multi-character / Contact / Spatial / Camera / Temporal 能力与 Known Risks；用于调整执行复杂度而不偷改用户导演意图，并由 Golden Benchmark 实测持续校准 |
+| V2-31 | Quick / Interactive 统一规划 | Quick 与 Interactive 共享同一 Combat Planning Graph、动作引擎、质量标准与验证链；Quick 完整规划并静默解决低风险决策，Interactive 只把高影响、低置信度分叉暴露给用户，模式不同不代表质量等级不同 |
 
-## 35. 全局复盘后待继续 Grill Me 的设计树
+## 36. 全局复盘后待继续 Grill Me 的设计树
 
-1. **Quick / Interactive 的运行闭环**：Interactive 已有决策链，Quick Mode 的自动推导顺序、两种模式是否共享同一规划图仍需确认；
-2. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
-3. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
+1. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
+2. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
 
-## 36. 当前阶段结论
+## 37. 当前阶段结论
 
-V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界、两阶段按需加载策略，以及可由真实 Benchmark 校准的模型战斗能力接口。
+V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界、两阶段按需加载策略、模型战斗能力接口，以及 Quick / Interactive 共享规划图的统一运行闭环。
 
-下一步应确认 **Quick / Interactive 是否共享同一套 Combat Planning Graph，仅在决策暴露方式上不同**，再进入 Audio 协同和最终实现归属。
+下一步应确认 **Action / Camera / Audio 三线在 V2 中是否已经平衡，Audio 是否需要独立的 Combat 专项增强**，随后再进入最终实现层归属与 V2 设计收口。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
