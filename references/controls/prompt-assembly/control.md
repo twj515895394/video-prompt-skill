@@ -45,7 +45,7 @@
 3. 全局稳定项；
 4. 场景、人物与初始状态；
 5. 动作 / 时间流；
-6. Camera / 表演 / Audio；
+6. Camera Coverage / 表演 / Audio；
 7. 风格与质感；
 8. 少量高价值限制；
 9. Model Adapter 交接。
@@ -103,13 +103,44 @@ First Contact（软时间锚点）
 严格时间戳只在以下情况使用：
 
 - 用户明确要求逐秒；
-- 多镜头 Shot 边界；
+- 需要精确 Shot 边界；
 - Audio / Dialogue / 外部事件精确同步；
 - Model Adapter 有实测证据表明严格时间轴更稳定。
 
 即使使用 Hard Time Blocks，也必须写清跨块 Motion Handoff。
 
-### 3.3 Temporal Packing + Motion Handoff
+### 3.3 Action Continuity ≠ Shot Continuity
+
+> **Continuous Action Spine 约束战斗动作与状态，不约束摄影必须一镜到底。**
+
+Combat Final Prompt 可以动态使用：
+
+- Master / Relationship Shot；
+- Medium / Medium-wide；
+- Contact / Weapon / Footwork Close-up；
+- Extreme Close-up / Insert；
+- Reaction / Impact Shot；
+- Re-establish。
+
+关键不是 Cut 数量，而是 Cut 的信息价值和动作继承。
+
+跨镜必须尽量继承：
+
+```text
+Position / Left-Right
++ Action Direction
++ Contact
++ Momentum
++ Body / Weapon Axis
++ Range
++ 当前动作后果
+```
+
+局部特写之后，如果观众可能丢失双方位置 / Range，应安排 Re-establish；禁止 Cut 后人物回到默认站位、默认距离或重新起架。
+
+不要把“动作可读”组装成全程中全景 / 中景 + 轻微 tracking，也不要反向规定固定数量的特写。
+
+### 3.4 Temporal Packing + Motion Handoff
 
 不要用“高速”代替动作密度。
 
@@ -126,7 +157,7 @@ First Contact（软时间锚点）
 
 压缩时必须保留至少一类 Motion Handoff：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position。
 
-### 3.4 Kinetic Scope Externalization
+### 3.5 Kinetic Scope Externalization
 
 如果内部规划存在明显 Whole-body / Position / Range / Axis 变化，Final Prompt 必须把它们写出来。
 
@@ -141,7 +172,7 @@ First Contact（软时间锚点）
 
 不要求固定动作配额；只要求最终动作语言真实兑现当前 Kinetic Scope。
 
-### 3.5 Visible Advantage / Initiative
+### 3.6 Visible Advantage / Initiative
 
 不要写“男方占优 / 女方逆转”作为主要表达。
 
@@ -154,7 +185,7 @@ First Contact（软时间锚点）
 
 角色抢主动方式应符合 Character Identity，不把双方都写成同一种 Counter 模板。
 
-### 3.6 Combat Intensity
+### 3.7 Combat Intensity
 
 Continuous 不等于全程同速。
 
@@ -162,17 +193,29 @@ Continuous 不等于全程同速。
 
 局部降速可以仍然很强，只要 Combat Pressure 没有消失。
 
-### 3.7 Camera Mobility Coupling
+### 3.8 Camera Mobility + Editorial Coverage
 
-> **Stable ≠ Static。**
+> **Stable ≠ Static；Mobile ≠ One-take。**
 
-高动作复杂度可以降低 Camera Complexity，但人物出现明显 Position / Range / Axis / Route 变化时，Camera 应使用简单连续 tracking / dolly / small arc / reframe 跟随。
+Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Route；Shot Scale / Editorial Coverage 描述整段 Combat 如何选择观察距离和 Cut。
 
-优先目标常是：
+高动作复杂度可以降低无必要 Camera Complexity，但不能自动变成：
 
-> **Low Camera Complexity + Medium / High Camera Mobility。**
+- 全程一个机位；
+- 全程中全景；
+- 只允许 tracking / dolly；
+- 禁止 Close-up / Insert / Impact / Reaction。
 
-不要用固定构图反向迫使人物缩小空间运动。
+推荐根据当前动作信息动态组织：
+
+```text
+空间关系清楚时用 Master / Relationship
+→ 关键 Contact / Weapon / Footwork 用局部 Shot 强化
+→ Advantage / Reaction 需要时短促靠近
+→ 空间关系可能丢失时 Re-establish
+```
+
+不设置 Shot 数量或景别配额。
 
 ---
 
@@ -208,6 +251,7 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - Motion Handoff；
 - 关键 Range / Position / Axis 变化；
 - Major Reversal / Signature 前后的因果；
+- 跨 Shot 的 Action Direction / Contact / Momentum 继承；
 - Ending 的真实收束。
 
 > **Clarity Through Structure, Not Action Reduction。**
@@ -244,14 +288,17 @@ Prompt Assembly 交付前至少检查：
 - Kinetic Scope 是否在最终文字中可见；
 - Character Identity / Advantage / Initiative 是否通过动作外显；
 - Camera 是否 Stable 但不是 Static；
+- 是否把 Continuous Action Spine 错写成 one-take / 单一 Camera Path；
+- 是否长期只有中全景 / 中景，缺少有信息价值的 Shot Scale Variation；
+- Cut 后 Position / Direction / Contact / Momentum / Axis / Range 是否连续；
 - Contact → Reaction → Consequence 是否可见；
 - Negative 是否少而有针对性。
 
-不通过时先内部重写 Action Spine / Camera Path / 压缩结构，再交付。
+不通过时先内部重写 Action Spine / Camera Coverage / 压缩结构，再交付。
 
 ---
 
-## 8. 单片段组装骨架
+## 8. 单视频单元组装骨架
 
 ```text
 视频目标：
@@ -259,11 +306,11 @@ Prompt Assembly 交付前至少检查：
 场景 / 人物初始关系：
 连续动作主链（Combat 时为主体）：
 关键软时间锚点 / Turning Point：
-Camera Path / Audio：
+Camera Coverage / Audio：
 必要连续性与高风险限制：
 ```
 
-Combat 不要求机械拆成每 1–2 秒一个独立小段。
+Combat 不要求机械拆成每 1–2 秒一个独立小段，也不要求整段摄影一镜到底。
 
 ---
 
@@ -287,7 +334,7 @@ Segment 2：
 Model Adapter 入口：
 ```
 
-多镜头 Shot 边界可以精确，但一个 Shot 内的 Combat 仍优先连续动作流。
+多镜头 Shot 边界可以精确，但 Combat Action State 必须跨镜继承。
 
 ---
 
@@ -299,11 +346,13 @@ Model Adapter 入口：
 - High Coverage 与大段站立 / Ending Pose 冲突；
 - 高 Exchange Depth + 高 Camera Complexity 超出模型承载；
 - “稳定镜头”被误实现为“静态镜头”；
+- “动作连续”被误实现为“不能 Cut”；
+- 高密度 Combat 被锁成全程中全景 / 中景；
 - 用户要求连续高手战，但时间结构是多个独立动作槽。
 
-Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、核心动作因果、战斗结果。
+Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、核心动作因果、战斗结果。
 
-模型能力较弱时优先：降低无必要 Camera Complexity → 降低单 Phrase 同时复杂度 → 拆成无缝 Phrase → 简化次要分支；不能直接把高手持续对决改成两三次简单交换。
+模型能力较弱时优先：降低无必要 Camera Complexity → 保留高价值局部 Coverage → 降低单 Phrase 同时复杂度 → 拆成无缝 Phrase → 简化次要分支；不能直接把高手持续对决改成两三次简单交换。
 
 ---
 
