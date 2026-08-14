@@ -1,6 +1,6 @@
 # Action Combat Video V2 Regression & Quality Benchmark
 
-> 状态：Phase 7 静态回归进行中；Generated Video Quality Benchmark 框架已建立，真实成片结果待执行
+> 状态：✅ Phase 7 Static / Structural Regression 通过；Generated Video Quality Benchmark 框架已建立；真实成片 Phase 8 待执行
 >
 > 设计依据：`docs/action-combat-video-v2-spec.md`
 >
@@ -53,73 +53,84 @@ Level 2｜Generated Video Quality Regression
 
 | 检查项 | 预期 | 当前结果 |
 |---|---|---|
-| Combat Router 存在 | `action-combat-video/index.md` | 待最终检查 |
-| Core / Choreography 文件职责拆分 | State vs Choreography | 待最终检查 |
-| Modern / Wuxia 只做专项实例化 | 不复制 Core / Choreography | 待最终检查 |
-| SKILL Combat 路由 | `index + core + choreography + 1 specialist` | 待最终检查 |
-| Quick / Interactive 共用 Planning Graph | 模式只差 Decision Exposure | 待最终检查 |
-| Two-stage Loading | Planning Context → 少量 Detail | 待最终检查 |
+| Combat Router 存在 | `action-combat-video/index.md` | ✅ PASS |
+| Core / Choreography 文件职责拆分 | State vs Choreography | ✅ PASS |
+| Modern / Wuxia 只做专项实例化 | 不复制 Core / Choreography | ✅ PASS |
+| SKILL Combat 路由 | `index + core + choreography + 1 specialist` | ✅ PASS |
+| Quick / Interactive 共用 Planning Graph | 模式只差 Decision Exposure | ✅ PASS |
+| Two-stage Loading | Planning Context → 少量 Detail | ✅ PASS |
+
+证据摘要：
+
+- Task 目录已真实存在 `core-playbook.md`、`choreography-playbook.md`、`modern-combat-playbook.md`、`cinematic-wuxia-playbook.md`；
+- `tasks/index.md`、`references/index.md`、`SKILL.md` 均已同步新运行链；
+- Combat Choreography 没有被拆成独立全局 Control。
 
 ### 3.2 Choreography
 
 | 检查项 | 预期 | 当前结果 |
 |---|---|---|
-| Active Combat Coverage | Low / Medium / High | 待最终检查 |
-| Action Phrase | Pair → Phrase → Beat → Sequence | 待最终检查 |
-| Exchange Depth | 因果深度，不是动词数量 | 待最终检查 |
-| Character Identity | 动态推导 | 待最终检查 |
-| Tactical Interaction | 可选内部因果层 | 待最终检查 |
-| Environment Affordance | 改变战术 / 空间 | 待最终检查 |
-| Contact Solidity | 多 Contact Modality | 待最终检查 |
-| Signature Moment | Sequence 级少量记忆点 | 待最终检查 |
-| Action Execution Budget | 控同窗口复杂度，不控 Beat 总动作数 | 待最终检查 |
-| Action Sufficiency Check | 防 Combat Underfill | 待最终检查 |
-| Camera Readability Budget | Camera 服务 Choreography | 待最终检查 |
-| Combat Audio Choreography | 声音证明动作，不替动作表演 | 待最终检查 |
+| Active Combat Coverage | Low / Medium / High | ✅ PASS |
+| Action Phrase | Pair → Phrase → Beat → Sequence | ✅ PASS |
+| Exchange Depth | 因果深度，不是动词数量 | ✅ PASS |
+| Character Identity | 动态推导 | ✅ PASS |
+| Tactical Interaction | 可选内部因果层 | ✅ PASS |
+| Environment Affordance | 改变战术 / 空间 | ✅ PASS |
+| Contact Solidity | 多 Contact Modality | ✅ PASS |
+| Signature Moment | Sequence 级少量记忆点 | ✅ PASS |
+| Action Execution Budget | 控同窗口复杂度，不控 Beat 总动作数 | ✅ PASS |
+| Action Sufficiency Check | 防 Combat Underfill | ✅ PASS |
+| Camera Readability Budget | Camera 服务 Choreography | ✅ PASS |
+| Combat Audio Choreography | 声音证明动作，不替动作表演 | ✅ PASS |
 
 ### 3.3 废弃规则检查
 
-必须确认运行期不再存在以下上位规则：
+运行期 V2 已确认：
 
-- `1 个主攻防目标 + 2–4 个连续攻防交互节点 + 1 个结束状态` 作为 Battle Beat 默认动作数量；
-- `宁少而清晰` 作为动作戏上位原则；
-- occupation → fixed Fighting Profile；
-- Quick = 简化 Combat；
-- Combat Final Prompt 默认输出大量 State Table；
-- 通用 Negative Boilerplate；
-- “模型能力未知 → 自动减少动作”。
+- ✅ 不再把 `1 个主攻防目标 + 2–4 个连续攻防交互节点 + 1 个结束状态` 作为 Battle Beat 默认动作数量；
+- ✅ 不再使用 `宁少而清晰` 作为动作戏上位原则；
+- ✅ 明确 `职业 ≠ Character Identity ≠ Fighting Profile`；
+- ✅ Quick 不是简化 Combat，而是 Full Planning + Silent Resolution；
+- ✅ Combat Final Prompt 不默认输出 State Table；
+- ✅ Negative Constraint 使用 Positive-first、风险驱动策略；
+- ✅ 模型能力未知时使用 `Unverified`，不会因此自动减少动作。
+
+说明：V1 历史文档可以保留旧设计记录，但现行运行期真源以 V2 Task / Controls / Libraries / Models / Diagnostics 为准。
 
 ### 3.4 Knowledge / Loading
 
-检查：
+| 检查项 | 当前结果 |
+|---|---|
+| `combat-choreography-profiles` 存在 | ✅ PASS |
+| `signature-moment-patterns/index.md` 存在 | ✅ PASS |
+| Pattern 按机制而非影视标题组织 | ✅ PASS |
+| Runtime Pattern / Source Case 职责分离 | ✅ PASS |
+| Fighting / Martial / Weapon / Environment 只负责专业知识 | ✅ PASS |
+| 不存在 Combat Character Identity / occupation portrait Library | ✅ PASS |
+| 默认约 2 个主要 Library Detail Slot | ✅ PASS |
+| `source-cases/` 不作为默认运行时 Reference | ✅ PASS |
 
-- `combat-choreography-profiles` 存在；
-- `signature-moment-patterns/index.md` 存在；
-- Pattern 按机制而不是影视标题组织；
-- Runtime Pattern 与 Source Case 研究层职责分离；
-- Fighting / Martial / Weapon / Environment 只负责专业知识；
-- 不存在 Combat Character Identity / occupation portrait Library；
-- 正常任务约 2 个主要 Library Detail Slot；
-- `source-cases/` 不作为默认运行时 Reference。
+当前 Seed Pattern 暂不强行绑定具体影视 Source Case；这是刻意避免未经核实的案例事实进入生产知识。后续只有在可靠来源核实后才补研究档案。
 
 ### 3.5 Final Prompt
 
-检查：
+检查原则：
 
 > **State Machine Internalized, Choreography Externalized.**
 
-Final Prompt 应满足：
+当前实现：
 
-- Action Phrase / Reaction / Contact / Consequence 是语义主体；
-- Position / Range / Environment 通过动作变化表达；
-- Camera / Audio 做支持；
-- 状态术语少量 / 不直接 Dump；
-- Negative 只针对当前真实高风险；
-- 压缩时先删 Meta / 重复 Constraint，再考虑次要有效动作。
+- ✅ Action Phrase / Reaction / Contact / Consequence 设为最高语义优先级；
+- ✅ Position / Range / Environment 优先转译为可见动作变化；
+- ✅ Camera / Audio 明确作为支持层；
+- ✅ State Table 不作为默认输出；
+- ✅ Negative 只针对真实高风险；
+- ✅ Prompt 压缩时先删 Meta / 重复 Constraint，再考虑次要有效动作；
+- ✅ 明确禁止无依据的 `no visible weapons` 等任意限制。
 
 ### 3.6 Model Adapter
 
-检查统一 Contract：
+统一 Contract 已实现：
 
 - Motion Complexity Capacity；
 - Multi-character Stability；
@@ -128,11 +139,13 @@ Final Prompt 应满足：
 - Camera Complexity Capacity；
 - Temporal / Prompt Following。
 
-没有可靠证据时必须 `Unverified`，禁止伪造 High / Medium / Low。
+当前 Generic / Seedance 2.0 / LTX-2.3 的 Combat 专项等级在缺少真实 Benchmark 时均使用 `Unverified`，未伪造 High / Medium / Low。
+
+模型能力只影响执行路径，不得改变 Combat Intent / Coverage / 观看目标。
 
 ### 3.7 Diagnostics
 
-Combat 三类主诊断：
+Combat 三类主诊断已接入：
 
 ```text
 打得不对 / 接不上
@@ -146,6 +159,8 @@ Combat 三类主诊断：
 ```
 
 人体穿模、普遍失重、Camera Chaos 等继续使用通用 Diagnostic。
+
+目录与 `diagnostics/index.md`、`references/index.md`、`SKILL.md` 已同步。
 
 ---
 
@@ -577,12 +592,60 @@ V2 最终不能只以静态回归完成作为“实施完成”。
 
 ---
 
-## 18. 当前状态
+## 18. Phase 7 Static Regression Result
 
-- Golden Scenario Contract：已建立；
-- 8 个首批 Golden Scenario：已定义；
-- Generated Video Metric：已定义；
-- Result Record Schema：已定义；
-- V1 / V2 对比方法：已定义；
-- Static Regression：待本轮仓库检查后写入最终结果；
-- Actual Generated Video Runs：**尚未执行，不得伪造 PASS。**
+### 18.1 结果
+
+> **PASS — V2 运行期架构、动作导演规则、知识层、输出层、模型合同和诊断路由已完成静态接线。**
+
+### 18.2 本轮发现并修复的问题
+
+静态 Gate 首次检查发现两个接线遗漏：
+
+1. `references/tasks/index.md` 仍是 V1 式 `core + specialist` 描述，没有登记 `choreography-playbook.md`；
+2. `references/index.md` / `SKILL.md` 尚未完整登记新 Choreography Library、Signature Pattern 与两个新 Diagnostic。
+
+以上均已在 Phase 7 内修复后重新检查。
+
+### 18.3 确定性目录检查
+
+- Combat Task：存在 Core / Choreography / Modern / Wuxia；
+- Combat Libraries：存在 `combat-choreography-profiles` 与 `signature-moment-patterns`；
+- Diagnostics：存在 `combat-state-continuity-failure`、`combat-choreography-underfill`、`combat-contact-solidity-failure`；
+- Controls：没有新增 `combat-choreography` 全局 Control；
+- Model Layer：Generic / Seedance 2.0 / LTX-2.3 均接入统一 Combat Capability Contract。
+
+### 18.4 正文检查
+
+- Core 明确 `Battle Beat 不是固定动作数量容器`；
+- Choreography 明确 `Active Combat Coverage`、`Action Phrase`、`Action Sufficiency`、`Contact Solidity`、`Clarity Through Structure`；
+- Character Identity 明确动态推导，职业不能自动等于 Tactical Close Combat；
+- Prompt Assembly 明确 Action-first、Positive-first；
+- Models 无证据时明确 `Unverified`；
+- Quick / Interactive 使用同一 Planning Graph。
+
+### 18.5 尚未验证的内容
+
+Static PASS **不能证明真实成片质量 PASS**。
+
+尚未完成：
+
+- 8 个 Golden Scenario 的实际视频生成；
+- V1 / V2 同模型 / 同参数对照；
+- Active Combat Coverage 实测；
+- Contact Solidity 成片评分；
+- Model Combat Capability High / Medium / Low 实测校准。
+
+这些属于 Phase 8。
+
+---
+
+## 19. 当前状态
+
+- Golden Scenario Contract：✅ 已建立；
+- 8 个首批 Golden Scenario：✅ 已定义；
+- Generated Video Metric：✅ 已定义；
+- Result Record Schema：✅ 已定义；
+- V1 / V2 对比方法：✅ 已定义；
+- Static Regression：✅ PASS；
+- Actual Generated Video Runs：⏳ **尚未执行，不得伪造 PASS。**
