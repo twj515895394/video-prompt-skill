@@ -6,9 +6,12 @@
 
 - 每次只选择 `1` 份主诊断叶子；
 - 先确认最明显、最能解释整体失败的主因；
-- 次要问题通过相关 controls 修复，不同时加载全部诊断；
+- 次要问题通过相关 controls / task playbook 修复，不同时加载全部诊断；
 - 诊断输出应包含：失败现象、主因、证据、最小修复、重写方向；
-- 不以追加大量负向词代替结构修复。
+- 不以追加大量负向词代替结构修复；
+- Combat 中先区分“打得不对”“打得太少”“接触发软”三类主因。
+
+---
 
 ## 精确路由
 
@@ -38,15 +41,19 @@
 
 ### anatomy-contact-failure
 
-现象：肢体、手部、接触点、双人互动或受力关系错误。
+现象：肢体、手部、接触点、双人互动穿模、抓握位置或人体结构错误。
 
 读取：`anatomy-contact-failure/diagnostic.md`
 
+当 Contact 点结构正确但受力 / 压力 / 兵器线路 / 后果发软时，不使用本页，改用 `combat-contact-solidity-failure`。
+
 ### physics-and-weightlessness
 
-现象：人物、服装、头发、物体、环境或镜头缺乏重量、惯性和反馈。
+现象：人物、服装、头发、物体、环境或镜头普遍缺乏重量、惯性和反馈。
 
 读取：`physics-and-weightlessness/diagnostic.md`
+
+如果整体物理基本成立，只是 Combat Contact 的模态 / 受力链失败，优先 `combat-contact-solidity-failure`。
 
 ### lip-sync-and-dialogue-failure
 
@@ -72,13 +79,66 @@
 
 读取：`reference-role-conflict/diagnostic.md`
 
+---
+
+## Combat 专项 Diagnostics
+
 ### combat-state-continuity-failure
 
-现象：复杂战斗中单个动作看似连续，但 Advantage、Condition、Target、Weapon State 或 Beat End / Start State 前后矛盾。
+现象：动作本身看似连续，但 Advantage、Condition、Target、Weapon State 或 Beat End / Start State 前后矛盾。
 
 读取：`combat-state-continuity-failure/diagnostic.md`
 
+主问题：**打得不对 / 接不上。**
+
 只在现有 motion / spatial / anatomy / physics / camera / audio 诊断无法解释“Combat 状态链整体断裂”时使用。
+
+### combat-choreography-underfill
+
+现象：状态和连续性大体成立，但真正 Active Combat 太少；Coverage 未兑现；高手 / Mixed / 高速对决只有两三次有效攻防；大量时间被对峙、reset pose、静态抓控或提前 Ending 占用。
+
+读取：`combat-choreography-underfill/diagnostic.md`
+
+主问题：**打得太少 / 不够丰富。**
+
+该页检查 Coverage、Active Exchange Budget、Action Phrase、Exchange Depth 和无价值 Downtime，不用固定动作数量作为判定标准。
+
+### combat-contact-solidity-failure
+
+现象：动作数量足够、空间大体成立，但拳脚 / 抓控 / 摔投 / 兵器 / 环境接触缺乏 Commitment → Transfer → Reaction → Consequence，或使用错误 Contact Modality。
+
+读取：`combat-contact-solidity-failure/diagnostic.md`
+
+主问题：**打到了，但打不实。**
+
+该页不处理手指 / 肢体穿模，也不把 Camera Shake、Boom 或 Slow-mo 当成真实 Contact 修复。
+
+---
+
+## Combat 三分路由
+
+```text
+战斗效果差
+→ 先问：主要失败是什么？
+
+状态 / 空间 / Target / Weapon 前后无法成立
+→ combat-state-continuity-failure
+
+真正交战时间太少、交换太浅、长时间不打
+→ combat-choreography-underfill
+
+接触发生了，但受力 / 压力 / 兵器 / 材质后果不可信
+→ combat-contact-solidity-failure
+```
+
+若主因更基础：
+
+- 人体接触穿模 → anatomy-contact-failure；
+- 整体运动漂浮 → physics-and-weightlessness；
+- Camera 本身不可读 → camera-chaos；
+- Prompt 多维冲突 → prompt-overload-and-conflict。
+
+---
 
 ## 诊断流程
 
@@ -99,17 +159,21 @@
 - 镜头乱导致主体不可读：优先 camera-chaos；
 - 人和道具位置跳变：优先 spatial-teleportation；
 - 接触穿模或手部错误：优先 anatomy-contact-failure；
-- 动作漂浮无重量：优先 physics-and-weightlessness；
+- 所有运动普遍漂浮无重量：优先 physics-and-weightlessness；
 - 台词和嘴部错误：优先 lip-sync-and-dialogue-failure；
 - 卡点或声音错位：优先 audio-visual-mismatch；
 - Prompt 本身互相矛盾：优先 prompt-overload-and-conflict；
 - 多素材混合错误：优先 reference-role-conflict；
-- 战斗的 Advantage / Condition / Target / Weapon / Beat State 前后无法同时成立：优先 combat-state-continuity-failure。
+- Combat Advantage / Condition / Target / Weapon / Beat State 前后无法同时成立：优先 combat-state-continuity-failure；
+- Combat Coverage / Exchange Richness 明显不足：优先 combat-choreography-underfill；
+- Combat Contact 有动作但无可信受力 / 压力 / 兵器后果：优先 combat-contact-solidity-failure。
 
 ## 输出边界
 
 - 诊断页不重新复制完整资料库；
-- 术语选项从 libraries 获取；
-- 判断和协调规则从 controls 获取；
+- 术语 / 专业知识从 libraries 获取；
+- 通用判断和协调规则从 controls 获取；
+- Combat Choreography 问题回到 `action-combat-video/choreography-playbook.md` 修复；
 - 模型语法从 models 获取；
-- 输出仍遵循当前 quick / interactive contract。
+- 输出仍遵循当前 quick / interactive contract；
+- 每次只选一个主 Diagnostic，不把三类 Combat Diagnostic 同时全量加载。
