@@ -17,6 +17,20 @@
 - 多模态输入先自动分配素材职责，禁止平均融合；
 - 不因缺少非必要细节而中断交付。
 
+### Combat Quick Mode
+
+Action Combat 的 Quick Mode 不是简化版动作引擎：
+
+> **Quick = Full Planning + Silent Resolution.**
+
+内部仍完整运行：Combat Intent、Branch、Choreography Profile、Coverage、Rhythm、Character Identity、Environment Affordance、Contact Solidity、Signature Moment、Action Execution / Camera Readability Budget、Battle Beat 与 State / Continuity Validation。
+
+这些内部状态不默认展示；最终只交付用户可直接使用的完整 Prompt。
+
+Quick Mode 不得因为用户输入简短而自动降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准。
+
+---
+
 ## 默认交付原则
 
 > 只输出用户实际需要使用的最终内容，不强制展示过程字段。
@@ -37,6 +51,8 @@ Prompt 内应按需合并：
 - 光影与风格；
 - 收尾状态；
 - 当前高风险连续性和失败限制。
+
+Action Combat 中，Prompt 主体必须是可见的 Action Phrase、对手响应、Contact / Reaction / Consequence 与空间变化，不把内部 Range / Advantage / Condition 状态表直接输出。
 
 ### 多镜头或多片段任务
 
@@ -70,12 +86,18 @@ Shot 02｜...-...
 
 将“必须保留、必须修改、允许变化、禁止变化”或“接点状态、延长方向、新增发展、最终落点”直接写入最终可复制 Prompt，不在 Prompt 外重复解释。
 
+---
+
 ## 模型适配
 
 - 用户未指定模型：按 Generic 输出；
 - 用户指定 Seedance 2.0：使用明确的 `@图片N / @视频N / @音频N` 职责绑定；
 - 用户指定 LTX-2.3：默认输出连贯、具体、现在时的自然语言导演段落；
 - 不输出本项目未正式支持模型的伪造语法或参数。
+
+Model Adapter 可以改变序列化 / 表达方式和执行复杂度，但不能偷改已确定的 Combat Intent、Coverage、人物关系或战斗结果。
+
+---
 
 ## 不默认输出
 
@@ -84,6 +106,8 @@ Shot 02｜...-...
 - 备选版本；
 - 已自动补全项；
 - 方向决策摘要；
+- Combat Planning Context；
+- Range / Advantage / Condition 状态表；
 - Reference 加载清单；
 - 模型能力科普；
 - 使用教程；
@@ -114,6 +138,8 @@ Shot 02｜...-...
 → 最小风险默认值
 ```
 
+Combat 中“最小风险”不等于“动作最少”。高信息密度动作应通过 Phrase、Camera Readability 和 Execution Budget 组织清楚。
+
 ## 禁止事项
 
 - 禁止把简单任务输出成冗长方案书；
@@ -121,4 +147,7 @@ Shot 02｜...-...
 - 禁止在 Prompt 外重复已经写入 Prompt 的限制；
 - 禁止以“信息不足”为由追问可自动补全的变量；
 - 禁止用“电影感、大片感、丝滑运镜”等空泛词替代动作、镜头、光影和声音；
-- 禁止暴露内部目录、迁移状态和知识真源。
+- 禁止暴露内部目录、迁移状态和知识真源；
+- Combat 禁止把 Quick Mode 退化成低 Coverage / 少交换版本；
+- Combat 禁止为了“清晰”默认削减有效攻防；
+- Combat 禁止用大量内部状态标签和 Negative Boilerplate 挤占动作描述。
