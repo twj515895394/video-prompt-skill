@@ -47,7 +47,7 @@ Combat Choreography Intent
 → V1 State / Continuity Validation
 → Camera Readability Budget / Camera Coordination
 → Audio Coordination
-→ Final Prompt Compression
+→ Final Prompt Action Externalization
 ```
 
 核心原则：
@@ -308,13 +308,13 @@ Commitment
 > **清晰优先，但不以削减有效攻防换取清晰。**  
 > **宁可少冗余，不可少有效攻防。**
 
-“动作多”本身不是错误。真正需要控制的是：
+进一步确认：**“宁少而清晰”与优秀动作戏的本质并不相符，不能继续作为动作视频的上位设计原则。** 一段优秀打斗天然就是高信息密度内容，同时包含攻击、反应、防守、反制、受力、重心、空间、环境、镜头、声音、节奏、人物状态和战术关系。问题不在“元素多”，而在这些元素是否被组织成清楚的因果层级、是否在同一窗口内可读、是否能被模型稳定执行。
 
-- 动作之间缺少因果；
-- 同一时间窗口塞入过多独立信息；
-- 镜头无法看清动作关系；
-- 模型无法稳定执行；
-- 动作虽然多但只是重复或装饰，不改变战斗关系。
+因此 V2 对动作戏的目标不是“少元素”，而是：
+
+> **高信息密度，但低混乱度。**
+
+“动作多”本身不是错误。真正需要控制的是：动作之间缺少因果、同一时间窗口塞入过多独立信息、镜头无法看清动作关系、模型无法稳定执行、动作虽然多但只是重复或装饰且不改变战斗关系。
 
 当出现可读性 / 模型执行风险时，默认处理顺序：
 
@@ -339,11 +339,68 @@ Clarity Through Structure
 优先通过结构、Phrase 切分和镜头收敛解决复杂度
 ```
 
-因此未来 Core Playbook 中不再保留“拿不准就少写动作”的隐含倾向。只要 Coverage、Phrase 因果、Exchange Depth、Contact Solidity、Camera Readability 和模型可执行性能够成立，较长高手 Battle Beat 可以拥有丰富且连续的有效攻防。
+因此未来 Core Playbook 中不再保留“拿不准就少写动作”的隐含倾向。只要 Coverage、Phrase 因果、Exchange Depth、Contact Solidity、Camera Readability 和模型可执行性能够成立，较长高手 Battle Beat 应允许丰富、连续、高信息密度的有效攻防。
+
+## 27. V2-25：State Machine Internalized, Choreography Externalized
+
+正式确立 Final Prompt 的输出原则：
+
+> **State Machine Internalized, Choreography Externalized.**  
+> **状态机内化，动作编排外显。**
+
+V1 / V2 内部仍完整运行 Range、Advantage、Condition、Combat State、Exchange Depth、Tactical Interaction、Combat Contact Solidity、Environment Affordance、Camera Readability Budget 等机制，用于规划、校验和状态继承；但 Final Prompt 不应大量暴露这些抽象术语，而应把它们转译成视频模型能直接执行、观众能直接看到的动作事实。
+
+例如内部状态：
+
+```text
+Range: close
+Advantage: A slight advantage
+Condition: B balance compromised
+Contact Weight: Solid
+Tactical Interaction: Counter-to-Counter
+```
+
+最终应外显为类似：
+
+```text
+A 贴身压进；B 侧身卸开第一击并立即反切线路；A 像预判到这个反制一样改变攻击侧，短促截击在近身完成明确接触。B 上身被冲击带偏，脚下急调半步稳住重心，并从新的站位立刻接回下一轮攻防。
+```
+
+内部状态没有丢失，而是被动作化。
+
+### Final Prompt 信息优先级
+
+Combat Final Prompt 的主体信息按以下优先级组织：
+
+1. **正向可见动作**：Action Phrase、Attack / Defense / Counter / Re-counter、Contact、Reaction、Continuation；
+2. **空间与环境动作**：换位、距离变化、路线、Environment Affordance、站位后果；
+3. **动作质感**：速度、重量、节奏、Contact Solidity、Signature Moment；
+4. **Camera / Audio**：只服务动作可读性、空间理解和冲击；
+5. **必要连续性 / Negative Constraints**：只保留当前场景真正高风险、且正向动作语言无法充分解决的少量约束。
+
+### Action Language Dominance / 动作语言主导
+
+新增内部检查思想：Final Prompt 的主体篇幅和语义重心应该明显落在实际发生的 Action Phrase、Reaction、Contact Consequence 和空间变化上，而不是被状态解释、连续性规范或通用禁止清单淹没。
+
+这不是固定百分比规则，但如果一段 Combat Prompt 中“不要……、保持……、确保……”等规范语言明显压过“谁如何动、如何接触、如何回应、如何继续”，应视为输出结构异常并重新压缩。
+
+### Negative Constraint 最小化
+
+Negative Constraint 不再默认追加通用防错清单，也不得擅自添加用户没有提出、场景也没有证据支持的限制，例如无根据地写“no visible weapons”。
+
+只有满足以下至少一个条件时才保留：
+
+- 当前模型在该场景存在高概率、严重的生成错误；
+- 正向动作语言无法充分约束；
+- 错误一旦发生会破坏人物身份、空间连续性、武器状态、关键物理关系或用户明确要求。
+
+因此 V2 的 Final Prompt 应做到：
+
+> **内部严谨，外部生动；状态负责校验，动作负责表达。**
 
 ---
 
-## 27. V2 设计原则汇总
+## 28. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -356,27 +413,28 @@ Clarity Through Structure
 9. Active Combat Feedback 与 Downtime 必须区分；
 10. Ending 不应提前终止战斗；
 11. Exchange Depth 衡量因果深度，不衡量动作词数量；
-12. Tactical Interaction 负责攻防为何进入下一层，不能与 Exchange Depth 混为一谈；
-13. 战术博弈按角色能力和场景动态触发，不要求每个 Phrase 都有；
+12. Tactical Interaction 负责攻防为何进入下一层；
+13. 战术博弈动态触发，不要求每个 Phrase 都有；
 14. 环境先作为动作机会参与设计，再由 V1 继承状态；
 15. Choreography Profile 只维护少量稳定原型；
 16. 15 秒短动作片默认只有少量 Signature Moment；
 17. 经典影视参考用于抽象动作设计规律，不用于复制完整动作段落；
 18. Pattern 是知识主体，作品只作为来源案例；
 19. Pattern Library 必须通过轻量索引按需加载；
-20. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
+20. Pattern 与 Source Case 正式分层；
 21. Camera Complexity 与动作 / 空间复杂度共享有限执行预算；
-22. 高动作复杂度优先镜头可读性，Payoff / 环境换位 / Signature Moment 再释放表现力；
+22. 高动作复杂度优先镜头可读性；
 23. Battle Beat 不再使用固定 `2–4` 节点作为动作数量锚点；
 24. Action Sufficiency Check 负责防止动作不足；
 25. Combat Contact Solidity 适用于所有主要接触形式；
 26. 不同 Contact Modality 使用不同实感证据；
 27. 有效接触必须产生可见、可继承的身体 / 兵器 / 空间 / 状态后果；
-28. 清晰优先，但不通过默认削减有效攻防获得清晰；
+28. 优秀动作戏追求高信息密度而非少元素；清晰来自层级、因果、Phrase 结构和镜头组织；
 29. 复杂度问题优先通过去冗余、Phrase 结构化、降低 Camera Complexity 和连续 Phrase 切分解决；
-30. 最终 Prompt 应外显精彩动作、战术博弈和关键接触后果，内部状态规范尽量压缩。
+30. State Machine Internalized, Choreography Externalized：状态机内化、动作编排外显；
+31. Final Prompt 以正向可见动作、接触后果和空间变化为主体，状态规范与 Negative Constraint 只保留真正必要部分。
 
-## 28. 已确认决策记录
+## 29. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -403,22 +461,22 @@ Clarity Through Structure
 | V2-21 | Camera Readability Budget | Camera Complexity 与动作 / 空间复杂度共享执行预算 |
 | V2-22 | Action Execution Budget | 废除 Battle Beat 全局 `2–4` 交互节点锚点；改为 Phrase 级动态执行预算，并增加 Action Sufficiency Check |
 | V2-23 | Combat Contact Solidity | 全战斗接触共享 Commitment → Contact → Transfer → Reaction → Consequence → Continuation 实感链，并按 Contact Modality 适配 |
-| V2-24 | Clarity Through Structure | 正式替换“宁少而清晰”；清晰通过去冗余、Phrase 结构化、镜头收敛和连续切分获得，不默认削减有效攻防 |
+| V2-24 | Clarity Through Structure | 正式替换“宁少而清晰”；优秀动作戏允许高信息密度，清晰通过层级、因果、Phrase 结构、镜头收敛和连续切分获得，不默认削减有效攻防 |
+| V2-25 | Final Prompt 输出原则 | State Machine Internalized, Choreography Externalized；内部状态完整运行，最终 Prompt 以正向可见动作、受力、空间变化和连续攻防为主体，最小化状态术语与 Negative Constraints |
 
-## 29. 尚待继续 Grill Me 的设计树
+## 30. 尚待继续 Grill Me 的设计树
 
-1. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-2. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
-3. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
+1. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
+2. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
 
-## 30. 当前阶段结论
+## 31. 当前阶段结论
 
 V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
 
-> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感、有可信接触实感，并拥有真正值得记住的动作时刻；同时通过 Action Sufficiency Check 防止动作不足，通过 Action Execution Budget 与 Camera Readability Budget 控制模型负载，通过结构化而不是动作通缩保证清晰。**
+> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感、有可信接触实感，并拥有真正值得记住的动作时刻；同时通过 Action Sufficiency Check 防止动作不足，通过 Action Execution Budget 与 Camera Readability Budget 控制模型负载，通过结构化而不是动作通缩保证清晰，并在 Final Prompt 中把严谨内部状态转译成高信息密度、可见、可执行的动作语言。**
 
 可进一步概括为：
 
-> **打得够久 + 打得够丰富 + 打得够实 + 看得够清楚。**
+> **打得够久 + 打得够丰富 + 打得够实 + 看得够清楚 + 写得够动作化。**
 
 本文件继续作为 V2 Grill Me 的单一设计记录。后续每确认一个关键决策，同步更新已确认决策与待讨论设计树，直到 V2 设计收口。
