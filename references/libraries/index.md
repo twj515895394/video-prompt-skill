@@ -95,6 +95,38 @@
 - 科普、美食、旅行、奇幻、恐怖、喜剧和实验影像；
 - 题材级节拍、镜头、表演、声音和收尾组合。
 
+## combat-fighting-profiles
+
+读取：
+
+- `combat-fighting-profiles/library.md`
+
+包含现代格斗动作语言：Boxing、Muay Thai、Sanda、MMA、Wrestling / Grappling、Tactical Close Combat，以及主 / 辅 Profile 的混合边界。
+
+## combat-martial-profiles
+
+读取：
+
+- `combat-martial-profiles/library.md`
+
+包含武术 / 武侠空手动作语言：咏春、八极、太极借力、长拳、南拳，以及电影武侠身法选项。
+
+## combat-weapon-profiles
+
+读取：
+
+- `combat-weapon-profiles/library.md`
+
+包含刀、剑、枪、棍的距离、轨迹、持握、格挡 / 偏转、不同兵器换距和 Weapon State 连续性。
+
+## combat-environment-patterns
+
+读取：
+
+- `combat-environment-patterns/library.md`
+
+包含走廊、墙面 / 门框、桌椅、柱体、楼梯、栏杆、车辆、竹林、屋顶和高低差空间等战斗环境互动模式。
+
 ## 常用组合
 
 ### 写实短剧
@@ -102,10 +134,32 @@
 - `genre-patterns/library.md`
 - `performance-expression/library.md`
 
-### 动作或体育
+### 普通动作或体育
 
 - `action-motion/library.md`
 - `camera-shot/library.md`
+
+### 复杂现代格斗
+
+优先：
+
+- `combat-fighting-profiles/library.md`
+
+按缺口再选：
+
+- `combat-environment-patterns/library.md` 或 `camera-shot/library.md`
+
+### 电影武侠
+
+空手优先：
+
+- `combat-martial-profiles/library.md`
+
+兵器场景优先：
+
+- `combat-weapon-profiles/library.md`
+
+强环境互动时再选 `combat-environment-patterns/library.md`，仍遵守每次 `0-2` 份 Library 预算。
 
 ### 产品广告
 
@@ -125,6 +179,7 @@
 ## 使用边界
 
 - 资料库回答“可以选什么”，控制层回答“为什么选、如何协调”。
+- Combat Libraries 提供动作语言 / 兵器语言 / 环境模式，不定义 Battle Beat、状态机或任务流程。
 - 一次不要读取整个资料库；当前任务有明确选项时不额外读取。
 - 同一术语和详细资料只在一个 library 正文真源出现。
 - 社区长 Prompt 不作为资料库正文，只保留结构、变量、适用条件和失败边界。

@@ -83,9 +83,10 @@
 - 视频局部编辑：`tasks/video-editing/playbook.md`；
 - 视频向前 / 向后延长：`tasks/video-extension/playbook.md`；
 - 音频驱动与音乐卡点：`tasks/audio-driven-and-beat-sync/playbook.md`；
-- 故事板 / 多镜头 / 多片段到视频：`tasks/storyboard-and-multi-shot-video/playbook.md`。
+- 故事板 / 多镜头 / 多片段到视频：`tasks/storyboard-and-multi-shot-video/playbook.md`；
+- 复杂动作格斗 / 电影武侠：`tasks/action-combat-video/index.md`，再读取 `core-playbook.md` + 一个专项分支。
 
-题材差异不新增任务 Playbook，进入 `styles/` 或 `libraries/genre-patterns/`。
+题材差异通常不新增任务 Playbook。Action Combat 只因存在明显独立执行流程（Battle Beat、Combat State、Target Handoff、兵器连续性和三线同步）而作为一级专项任务；简单动作仍留在原主任务 + `action-motion`。
 
 ## 6. 控制路由
 
@@ -104,7 +105,7 @@
 - `controls/prompt-assembly/control.md`；
 - `controls/realism-quality/control.md`。
 
-任务 Playbook 已经能解决的问题，不重复读取控制页。
+Combat 第一版不新增专属 Control，优先复用以上真源。任务 Playbook 已经能解决的问题，不重复读取控制页。
 
 ## 7. 资料库路由
 
@@ -118,9 +119,13 @@
 - `libraries/transition-effects/library.md`；
 - `libraries/lighting-color/library.md`；
 - `libraries/audio-sound/library.md`；
-- `libraries/genre-patterns/library.md`。
+- `libraries/genre-patterns/library.md`；
+- `libraries/combat-fighting-profiles/library.md`；
+- `libraries/combat-martial-profiles/library.md`；
+- `libraries/combat-weapon-profiles/library.md`；
+- `libraries/combat-environment-patterns/library.md`。
 
-资料库回答“有哪些选择”，不代替控制规则。
+Combat Libraries 只提供动作语言、兵器语言与环境模式，不定义 Combat 工作流。资料库回答“有哪些选择”，不代替控制规则。
 
 ## 8. 风格路由
 
@@ -136,6 +141,8 @@
 - `styles/documentary-ugc/style.md`；
 - `styles/experimental-visual/style.md`。
 
+Combat 不新增一级 Style；现代动作片 / 武侠的“怎么打”由 Combat Playbook 和 Profile 决定，“画面长什么样”继续由现有 Style 决定。
+
 风格必须转成镜头、表演、光影、材质、节奏和声音，不用风格名替代执行内容。
 
 ## 9. 模型适配路由
@@ -150,7 +157,7 @@
 
 不创建或加载其他模型适配页。
 
-模型页只转换通用导演方案，不重新设计任务内容。
+模型页只转换通用导演方案，不重新设计任务内容。对于 Combat，Generic Professional Prompt 本身就是完整最终产品，模型 adapter 只做必要的轻量转换。
 
 ## 10. 输出合同路由
 
@@ -169,9 +176,12 @@
 - 多模态职责：`../assets/templates/multimodal-reference-template.md`；
 - 模型转换：`../assets/templates/model-adapted-output-template.md`。
 
+Combat 不建立独立 single-shot / multi-shot 模板：内部 Combat Blueprint 先判断单 / 多镜头，再将动作、镜头、声音、连续性和专项 Negative Constraints 注入现有输出合同。
+
 默认输出规则：
 
 - 简单任务只输出一份可直接复制 Prompt；
+- Combat Quick / Interactive 最终都必须给详细、完整、专业、可直接复制 Prompt；
 - 多镜头输出必要的全局固定项和 Prompt Pack；
 - 多模态只保留执行必要的职责说明；
 - 不默认输出备选版本、自动补全项和方向摘要。
@@ -188,6 +198,8 @@
 - Prompt 过载或要求互相矛盾；
 - 无法从单一任务页或控制页定位根因。
 
+复杂战斗中，如果主问题是 Advantage / Condition / Target / Weapon / Beat State Contract 前后无法同时成立，可读取 `diagnostics/combat-state-continuity-failure/diagnostic.md`。
+
 正常生成不提前加载诊断层。
 
 ## 12. 运行规则
@@ -195,6 +207,7 @@
 - 同一轮只读取一份主 input 和一份主 task；
 - 同一叶子文件被多个入口命中时只读取一次；
 - 主体运动、镜头运动、环境变化和声音事件分别判断；
+- Combat 内部 Action / Camera / Audio 同一 Beat 同步编排，但最终应融合为自然可执行时间线；
 - 多模态素材必须分配职责，禁止平均融合；
 - 一段视频必须有开始、推进和落点；
 - 全局固定项只写一次，时间轴只写变化；
@@ -202,7 +215,17 @@
 - 不一次性读取整个目录；
 - 不把研究区原始资料作为运行期 Reference。
 
-## 13. 旧结构状态
+## 13. 创作自由与约束边界
+
+尤其在 Combat 中遵守：
+
+> **约束错误，不约束创作。**
+
+固定的是因果、连续性、物理、状态继承和输出完整度；Battle Beat 数量、具体招式、镜头组合、环境利用、速度变化和回归样例都不是死模板。
+
+用户已有明确创意时，优先保留用户设计，只修正不可执行、无因果、空间断裂、物理矛盾和 Prompt 过载部分。
+
+## 14. 旧结构状态
 
 Phase 6 已将 `SKILL.md` 切换到 v2。旧模式、旧输入、旧任务、旧时间轴、旧连续性、旧附录和旧输出模板不再参与默认运行。
 

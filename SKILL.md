@@ -1,6 +1,6 @@
 ---
 name: video-prompt-skill
-description: 当用户需要根据文字、图片、视频或音频生成文生视频、图生视频、多模态参考视频、视频复刻、编辑、延长、音频驱动、故事板或多镜头视频 Prompt 时，应使用此技能。
+description: 当用户需要根据文字、图片、视频或音频生成文生视频、图生视频、多模态参考视频、视频复刻、编辑、延长、音频驱动、故事板、多镜头视频或复杂动作格斗/电影武侠 Prompt 时，应使用此技能。
 ---
 
 # Video Prompt Skill
@@ -34,6 +34,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 视频向前或向后延长；
 - 音频驱动、对白驱动和音乐卡点；
 - 故事板、分镜、多镜头和多片段视频；
+- 复杂现代格斗、1vN 动作戏、电影武侠和常见冷兵器战斗；
 - Generic、Seedance 2.0、LTX-2.3 视频 Prompt 适配；
 - 视频 Prompt 失败诊断和重写。
 
@@ -54,6 +55,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 多模态素材必须分配职责；每个关键维度只能有一个主真源，禁止平均融合。
 - 同一知识只保留一个正文真源；索引可以多处引用，但禁止复制正文。
 - Reference 可以很多，但每次只读取当前任务真正需要的一条或几条路线。
+- 复杂战斗遵循“约束错误，不约束创作”：固定因果、连续性和物理底线，不固定招式、Beat 数量或镜头模板。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
 
 ## 第一步：判断输入
@@ -184,7 +186,21 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 - `references/tasks/storyboard-and-multi-shot-video/playbook.md`
 
-题材不同不新增任务路线。写实短剧、漫剧、广告、动作、悬疑、纪录等进入 `styles/` 或 `libraries/genre-patterns/`。
+### 9. 复杂动作格斗 / 电影武侠
+
+当核心难点是攻防因果、Battle Beat、Range / Advantage / Condition、1vN Target Handoff、兵器连续性或 Action / Camera / Audio 三线同步时，读取：
+
+- `references/tasks/action-combat-video/index.md`
+- `references/tasks/action-combat-video/core-playbook.md`
+
+然后只选择一个专项分支：
+
+- 现代格斗：`references/tasks/action-combat-video/modern-combat-playbook.md`
+- 电影武侠：`references/tasks/action-combat-video/cinematic-wuxia-playbook.md`
+
+简单挥拳、跑跳、追逐、体育动作不进入 Combat 专项，继续使用原主任务 + `action-motion`。
+
+题材不同通常不新增任务路线；Action Combat 只因执行流程显著不同而作为一级专项任务。
 
 ## 第三步：判断模式
 
@@ -205,6 +221,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 信息不足时自动使用最小风险默认值；
 - 冲突时自行裁决，只保留最符合主目标的路线；
 - 直接输出一份可复制 Prompt 或必要的 Prompt Pack。
+
+Combat Quick Mode 也必须直接输出详细、完整、专业、可复制 Prompt；内部 Spatial Map、Range / Advantage / Condition 和 Beat State Contract 不默认展示。
 
 只有以下情况可以在快速模式中提出一个必要问题：
 
@@ -232,6 +250,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 能从输入和上下文推断的内容不追问；
 - 用户要求收口，或剩余问题只影响轻微细节时立即生成最终结果。
 
+Combat Interactive Mode 可以按需展示 Combat Blueprint / Beat Sheet，但最终仍必须再汇总成一份可直接复制给视频模型使用的完整 Prompt。
+
 ## 第四步：按缺口读取控制页
 
 读取 `references/controls/index.md`，按需加载 `0-3` 份控制页。
@@ -249,7 +269,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `prompt-assembly/control.md`：信息优先级、去重、压缩和最终组装；
 - `realism-quality/control.md`：真实设备感、物理可信和去 AI 漂浮感。
 
-任务 Playbook 已能解决的问题，不额外加载控制页。
+Combat 第一版不新增专属 Control，优先复用现有通用真源。任务 Playbook 已能解决的问题，不额外加载控制页。
 
 ## 第五步：按需读取资料库
 
@@ -263,9 +283,13 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `transition-effects/library.md`：剪辑、转场和视觉特效；
 - `lighting-color/library.md`：光源、光影、色调和动态光；
 - `audio-sound/library.md`：对白、环境音、拟音、BGM 和声音空间；
-- `genre-patterns/library.md`：短剧、漫剧、广告、动作、悬疑、纪录等题材模板。
+- `genre-patterns/library.md`：短剧、漫剧、广告、动作、悬疑、纪录等题材模板；
+- `combat-fighting-profiles/library.md`：现代格斗动作语言；
+- `combat-martial-profiles/library.md`：武术 / 武侠空手动作语言；
+- `combat-weapon-profiles/library.md`：刀 / 剑 / 枪 / 棍动作语言与兵器连续性；
+- `combat-environment-patterns/library.md`：战斗环境互动模式。
 
-资料库回答“可以选什么”，控制页回答“为什么选、如何协调”。
+资料库回答“可以选什么”，控制页回答“为什么选、如何协调”。Combat Playbook 回答“怎么编排”，Combat Libraries 不复制状态机。
 
 ## 第六步：按需读取风格
 
@@ -278,6 +302,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `commercial-advertising/style.md`；
 - `documentary-ugc/style.md`；
 - `experimental-visual/style.md`。
+
+Combat 不新增一级 Style；“怎么打”由 Combat Playbook + Profile 决定，“画面长什么样”继续由现有 Style 决定。
 
 用户只说“电影感、广告感、短剧感”时，必须把风格拆成镜头、表演、光影、材质、节奏和声音，不直接把抽象标签当成执行方案。
 
@@ -292,6 +318,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `references/models/generic.md`
 
 使用模型无关、语义清楚的自然语言，不伪造平台语法或参数。
+
+对于 Combat，Generic Professional Prompt 本身就是完整最终产品，不要求先指定平台。
 
 ### Seedance 2.0
 
@@ -339,6 +367,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 - `assets/templates/model-adapted-output-template.md`
 
+Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / 多镜头，再把动作、镜头、声音、连续性、物理约束和专项 Negative Constraints 注入现有模板。
+
 简单任务默认只输出一份最终 Prompt。多镜头任务输出必要的全局固定项和镜头 Prompt Pack。备选版本、自动补全项和方向摘要均不默认输出。
 
 ## Reference 加载预算
@@ -358,6 +388,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `0-1` 份 model adapter；
 - `0-1` 份多模态模板；
 - 失败诊断时 `0-1` 份 diagnostic。
+
+Combat 的 `index + core + 一个专项分支` 视为同一主 Task 路线，不同时加载现代与武侠两个分支。
 
 索引文件只用于导航，不计入业务 Reference 数量。
 
@@ -395,6 +427,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 多素材冲突时，为每个关键维度选择唯一主真源；
 - 主体动作强时减弱镜头幅度，镜头动作强时简化主体动作；
 - 互斥风格只保留最符合核心观看目标的一种；
+- Combat 缺少流派时选择最符合剧情和距离关系的低风险动作语言，不强行堆叠多流派；
+- Combat 缺少音乐时按场景决定弱 BGM、无 BGM 或节奏音乐，不为了“完整”机械加音乐；
 - 不擅自增加新角色、新剧情线、大世界观或强情绪反转。
 
 ## Prompt 组装原则
@@ -408,6 +442,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 每段视频只保留一个主镜头任务；
 - 多镜头必须写镜间承接和跨镜稳定项；
 - 图生视频减少静态画面复述，重点写从当前状态如何运动；
+- Combat 先保证 Action–Reaction 因果、Range / Target / Condition 连续，再增加华丽动作和镜头；
+- Combat 的 Audio 与 Action / Camera 同时间线设计，场景需要时包含环境声、拟音、兵器声、呼吸和音乐策略；
 - 负向限制只针对当前最危险的失败模式，通常保留 `3-8` 项；
 - 最后一拍必须可自然停住。
 
@@ -427,6 +463,20 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 动作阶段、重心、接触和反馈是否成立；
 - 镜头是否有起点、方向、速度和停止点；
 - 空间、站位、朝向和道具状态是否连续。
+
+### Combat 专项
+
+如果当前是 Action Combat：
+
+- Range 变化是否有动作因果；
+- 重要打击是否有接触、受力和恢复；
+- Advantage 变化是否有 Turning Event；
+- Condition 是否影响后续动作；
+- 1vN Target 切换是否有 Handoff；
+- Weapon State 是否连续；
+- 相邻 Beat 的结束 / 起始状态是否可衔接；
+- Action / Camera / Audio 是否互相服务而不是互相竞争；
+- 是否避免把默认 Beat 或回归案例当固定模板。
 
 ### 表演与音画
 
@@ -450,6 +500,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 - `references/diagnostics/index.md`
 
+Combat 中如果单个动作并非主问题，而是 Advantage / Condition / Target / Weapon / Beat State Contract 前后无法同时成立，可使用 `combat-state-continuity-failure`。
+
 正常生成任务不提前加载诊断层。
 
 ## 严禁事项
@@ -464,4 +516,6 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 不默认展示“已自动补全项”；
 - 不伪造未支持模型的参数和语法；
 - 不把研究区原始资料直接作为最终知识；
+- Combat 不把招式示例、Beat 数量、回归场景或默认节奏写成死框架；
+- Combat 不建立独立 single-shot / multi-shot 模板副本；
 - 不暴露内部 Reference、目录、迁移和维护说明。
