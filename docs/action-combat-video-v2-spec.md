@@ -298,24 +298,50 @@ Camera / Audio Coordination
 Final Prompt
 ```
 
-## 10. Interactive Mode 当前确认方向
+## 10. 已确认决策七：Combat Interactive Mode 专属决策链
 
-Combat Interactive Mode 后续需要形成自己的上游决策树，但仍遵守全局 Interactive Contract：
+Combat Interactive Mode 不再直接套用通用文生视频的“核心观看目标 → 开场 → 主体动作 → 镜头 → 节拍 → 收尾”顺序，而采用 Combat 专属的上游决策链。
+
+确认顺序：
+
+```text
+核心战斗目的 / 观看目标
+→ Cinematic Choreography Profile
+→ Active Combat Coverage
+→ Action Exchange Rhythm
+→ Combat Character Identity
+→ 环境参与程度
+→ Camera Mode
+→ 战斗结果 / 收尾
+```
+
+其中 **Cinematic Choreography Profile 位于 Coverage / Rhythm 之前**，因为整场编舞观感应先决定后续推荐倾向。例如：
+
+- “高手连续编舞型”通常更适合推荐 High Coverage + 混合型 / 高速交换 Rhythm；
+- “重型硬派型”可能更适合 Medium / High Coverage + 重击型或混合型 Rhythm；
+- “写实战术型”可以保持较低动作数量，但仍需根据用户的观看目标判断是否需要较高 Active Combat Coverage。
+
+### 上游选择驱动下游推荐
+
+Interactive Mode 不要求机械地把链路中每一项都问一遍。
+
+规则：
+
+- 上游选择应主动缩小下游候选范围；
+- 每个下游问题都应给出基于已确认上游条件的推荐；
+- 如果某项可以高置信度从已确认信息推断，且不会明显改变成片，则允许自动补全而不追问；
+- 只有会实质改变编舞、持续交战、角色打法、环境利用、Camera Mode 或最终落点的变量才继续询问；
+- 始终遵守“一次只问一个最关键问题”。
+
+例如用户确认“高手连续编舞型 + High Coverage + 混合型 Rhythm”后，后续 Combat Character Identity 的推荐应主动服务于角色打法差异，而不是重新从全部 Fighting Profile 无差别询问。
+
+该决策链仍服从全局 Interactive Contract：
 
 - 每次只问一个最影响结果的问题；
 - 每个问题给出推荐答案；
 - 已确认项不重复追问；
 - 能推断的低风险内容不追问；
 - 用户要求收口时立即生成最终 Prompt。
-
-当前已确认，Interactive Mode 在适用场景下可以向用户确认：
-
-1. Active Combat Coverage；
-2. Action Exchange Rhythm；
-3. Combat Character Identity；
-4. Cinematic Choreography Profile。
-
-这些问题的最终依赖顺序尚未完全收口，后续继续 Grill Me。
 
 ## 11. V2 设计原则补充
 
@@ -331,6 +357,7 @@ Combat Interactive Mode 后续需要形成自己的上游决策树，但仍遵�
 8. **V2 不通过增加大量 Negative Constraints 解决动作不足问题。** 优先增强正向动作编排。
 9. **最终 Prompt 应外显精彩动作，内部状态检查应尽量压缩。**
 10. **不因追求可读性而默认把短动作片压缩成少数几次控制动作。**
+11. **Interactive Mode 的上游选择必须驱动下游推荐，而不是参数问卷式逐项询问。**
 
 ## 12. 已确认决策记录
 
@@ -342,26 +369,26 @@ Combat Interactive Mode 后续需要形成自己的上游决策树，但仍遵�
 | V2-04 | 动作编排核心单位 | 新增 Action Phrase，位于 Action–Reaction Pair 与 Battle Beat 之间 |
 | V2-05 | 角色打法 | 新增角色级 Combat Character Identity |
 | V2-06 | 整场动作观感 | 新增 Cinematic Choreography Profile；不放入一级视觉 Styles |
+| V2-07 | Interactive Mode | 建立 Combat 专属决策链；Choreography Profile 位于 Coverage / Rhythm 之前；上游选择驱动下游推荐 |
 
 ## 13. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Combat Interactive Mode 的完整决策顺序；
-2. Active Combat Coverage 如何映射到具体时间预算与收尾预算；
-3. 不同 Exchange Rhythm 下，一个 Action Phrase 的默认复杂度与节奏如何动态变化；
-4. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
-5. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
-6. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-7. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-8. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-9. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
-10. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-11. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-12. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-13. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-14. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-15. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. Active Combat Coverage 如何映射到具体时间预算与收尾预算；
+2. 不同 Exchange Rhythm 下，一个 Action Phrase 的默认复杂度与节奏如何动态变化；
+3. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
+4. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
+5. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
+6. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+7. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+8. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
+9. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+10. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+11. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+12. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+13. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+14. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
 ## 14. 当前阶段结论
 
