@@ -1,6 +1,6 @@
 # Action Combat Video V2 Implementation Plan
 
-> 状态：**V2-01～34 初版实施已完成；V2-35～当前实测反馈增量已进入 Traceability Rework。上一轮 Runtime 修改视为候选实现，必须经过本计划 Phase 10～12 重新验收。**
+> 状态：**V2-01～34 初版实施已完成；V2-35～45 已完成 Traceability Re-baseline；Phase 11 Runtime Mandatory-path Rewire 已完成并通过静态接线检查；当前进入 Phase 12 Prompt-level G01 Regression。**
 >
 > 设计真源：`docs/action-combat-video-v2-spec.md`
 >
@@ -20,7 +20,7 @@ V2 不推翻 V1 Combat State / Continuity Engine，而是在 `action-combat-vide
 
 - Coverage 真正兑现；
 - Action Phrase 足够丰富、连续、有因果；
-- Character Identity 可见且不按职业 / 性别 / 年龄 / 体型模板化；
+- Character Identity 可见且不按职业 / 性别 / 年龄 / 外貌 / 体型模板化；
 - Kinetic Scope 能体现全身与空间运动；
 - Contact / Environment / Signature Moment 有真实作用；
 - 高手交换不是“一招一停 / 轮流出招”。
@@ -95,7 +95,7 @@ Phase 0～9 对应 V2-01～34，已建立：
 
 > **“Reference 中存在规则”不等于“运行时必经并执行规则”。**
 
-因此从 Phase 10 起，旧 Static PASS 不再覆盖新增 V2-35～当前反馈增量。
+因此旧 Static PASS 不覆盖 V2-35～45 的新增设计与接线要求。
 
 ---
 
@@ -111,20 +111,20 @@ Phase 0～9 对应 V2-01～34，已建立：
 - V2-40 Continuous Action Spine + Soft Time Anchors；
 - V2-41 Combat Intensity Curve；
 - V2-42 Visible Advantage Dynamics；
-- V2-43 Initiative Handoff。
+- V2-43 Initiative Handoff；
+- V2-44 Initiative Handoff × Combat Character Identity；
+- V2-45 Runtime Consolidation / Anti-overdesign Policy。
 
-此外对话已确认：
+同时确认：
 
-- Initiative Handoff 的表现应受 Character Identity 约束，但不新增大型状态机；
-- 暂停继续纵向细化 Combat 概念，进入横向 Design Tree Audit；
+- 暂停继续纵向细化 Combat 一级概念；
 - 动作本体一级机制暂时冻结，重点转向 Concrete Choreography Knowledge；
-- Runtime 实现采用 Consolidation，避免“一个失败现象 = 一个新模块”。
-
-这些结论必须先写回 Spec，再执行 Phase 11。
+- Failure Signature 主要服务 Preflight / Diagnostic / Benchmark，不自动升级成独立模块；
+- Runtime 采用少数高杠杆执行合同，避免模型被大量 Meta 术语占用。
 
 ---
 
-## 5. Phase 10｜Spec / Traceability Re-baseline — 🚧 当前阶段
+## 5. Phase 10｜Spec / Traceability Re-baseline — ✅ 完成
 
 ### 目标
 
@@ -145,36 +145,35 @@ Spec Decision
 - 第一次真实视频反馈
 - 第二次 Interactive → Final Prompt 失败样本
 
-### 必做
+### 已完成
 
-1. 补齐 Spec 中已确认但尚未记录的后续决策；
-2. 把 V2-35～当前确认点纳入正式 Implementation Mapping；
-3. 逐文件标记：`Modify / Keep / No Change Required / Roll Back`；
-4. 判断通用 Controls / Templates 是否会覆盖 Combat 专项规则；
-5. 检查上一轮 5 个 Runtime 提交，禁止直接视为完成；
-6. 明确 Prompt-level Regression Gate。
+1. Spec 已补齐 V2-44 / V2-45；
+2. V2-35～45 已纳入正式 Implementation Mapping；
+3. 关键文件已标记 `Modify / Keep / No Change Required / Re-evaluate`；
+4. 已确认通用 Single-shot Template 与 V2-40 存在覆盖冲突；
+5. 上一轮 Runtime 5 个提交已重新定义为“保留 / 重审 / 收敛”，不再直接视为最终完成；
+6. 新增 Prompt-level Regression Gate；
+7. 第二次失败 Prompt 已作为 Traceability Evidence。
 
 ### Phase 10 Gate
 
-只有以下条件都满足才能进入 Phase 11：
-
-- Spec 与 Plan 没有已知遗漏；
-- 每个新增设计至少有一个明确 Runtime 落点或明确 `No Runtime Change` 理由；
-- 每个 Runtime 修改至少能追踪到 Spec；
-- 已知模板冲突已经进入 File Mapping；
-- 没有因为 Failure Signature 数量增加而计划创建同等数量独立模块。
+- ✅ Spec 与 Plan 没有当前已知遗漏；
+- ✅ 每个新增设计都有明确 Runtime 落点或合并策略；
+- ✅ 每个 Runtime 修改都能追踪到 Spec；
+- ✅ 模板冲突已进入实施映射；
+- ✅ 没有按 Failure Signature 数量创建同等数量新模块。
 
 ---
 
-## 6. Phase 11｜Runtime Mandatory-path Rewire
+## 6. Phase 11｜Runtime Mandatory-path Rewire — ✅ Static PASS
 
 ### 核心目标
 
-解决当前最大根因：**Combat 可以读到 Choreography，却绕过 Final Prompt Assembly / Preflight。**
+解决此前最大根因：**Combat 可以读到 Choreography，却绕过 Final Prompt Assembly / Preflight。**
 
 ### 11.1 必经运行链
 
-目标运行链必须明确为：
+当前目标运行链已接线为：
 
 ```text
 Input / Task Routing
@@ -185,6 +184,7 @@ Input / Task Routing
 → Stage-2 Execution Knowledge
 → Action Phrase / State Validation
 → 必要 Camera / Spatial / Motion Coordination
+→ 读取 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
 → Combat Final Preflight
 → FAIL: 内部重写并重跑
@@ -194,107 +194,127 @@ Input / Task Routing
 
 关键点：**Prompt Assembly / Final Preflight 是 Combat 必经出口，不再属于“可能不读的 0–3 Controls”。**
 
-### 11.2 Affected Files
+### 11.2 已修改文件
 
-#### A. 必须修改
+#### `SKILL.md`
 
-`SKILL.md`
+已完成：
 
-- Combat 路由增加 mandatory final assembly / preflight；
-- 不能让 `prompt-assembly` 继续完全依赖通用 0–3 Control 预算；
-- Combat 输出前自查补 V2-35～43 的合并 Gate，而不是列几十个术语。
+- Combat 路由明确 final assembly / preflight 必经；
+- `prompt-assembly` 在 Combat 中固定读取，不占通用 `0-3 Controls` 预算；
+- Combat 输出前自查收敛成 7 个高价值 Gate，而不是几十个术语；
+- 高动作 Combat 不再自动使用固定机位；Kinetic Scope 有空间移动时优先简单连续 Camera Mobility；
+- Character Identity 不允许职业 / 性别 / 年龄 / 外貌 / 体型快捷映射；
+- 高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors。
 
-`references/tasks/action-combat-video/index.md`
+#### `references/tasks/action-combat-video/index.md`
+
+已完成：
 
 - Runtime Structure 增加 Final Assembly / Preflight 强制出口；
-- 输出模板只能承载结果，不能覆盖 Combat Choreography 的时间序列化规则。
+- 明确 `FAIL → internal rewrite → recheck → PASS → template`；
+- 输出模板只能承载结果，不能覆盖 Combat Choreography 的时间序列化规则；
+- Final Preflight 使用少数合并 Gate；
+- Prompt Assembly 在 Combat 中不占普通 Control Slot。
 
-`assets/templates/single-shot-video-template.md`
+#### `assets/templates/single-shot-video-template.md`
 
-- 增加 Combat Override：高密度 Combat 不因“时长较长 + 3 个阶段”自动切绝对时间块；
+已完成：
+
+- 增加 Action Combat Override；
+- 高密度 Combat 不因“时长较长 + 3 个阶段”自动切绝对时间块；
 - 如果 Combat Task 已提供 Continuous Action Spine，则模板必须继承；
-- Hard Timeline 仅在用户 / Model / 同步需求明确时使用。
+- Hard Timeline 仅在用户 / Model / 同步需求明确时使用；
+- Hard Timeline 仍必须保持跨块 Motion Handoff；
+- `Stable Camera ≠ Static Camera` 在 Combat Template Override 中生效。
 
-`docs/action-combat-video-v2-regression.md`
+#### `assets/templates/mode-interactive-output-contract.md`
 
-- 加入 Prompt-level G01 Gate；
-- 第二次失败 Prompt 作为 Regression Evidence。
+已完成：
 
-#### B. 保留但重新验收
+- 保留“不优先问谁赢”；
+- 增加 Character Identity Recommendation Guard；
+- 明确禁止人口属性快捷映射打法；
+- Interactive 收口后仍必须执行 Prompt Assembly + Final Preflight。
+
+#### `docs/action-combat-video-v2-regression.md`
+
+已完成：
+
+- 增加 Level 0 Prompt-level Regression；
+- 第二次失败 Prompt 作为正式 Failure Evidence；
+- Phase 11 Mandatory-path 静态 Gate 已记录 PASS；
+- G01 增加 Prompt-level Quality / Failure Contract；
+- Phase 12 / 13 验收边界明确。
+
+### 11.3 保留但重新验收
 
 `references/tasks/action-combat-video/choreography-playbook.md`
 
 - 保留把 V2-35～43 收敛成少数 Runtime Contract 的方向；
-- 检查是否存在重复概念 / Checklist 膨胀；
-- 确保 Character Identity 不按体型直接模板化。
+- 不再继续增加新机制；
+- 由 Phase 12 实际 Prompt 判断其规则是否真正被 Final Assembly 执行。
 
 `references/controls/prompt-assembly/control.md`
 
-- 当前 Continuous Action Spine / Soft Time Anchors / Kinetic Scope Externalization / Negative Discipline 方向保留；
-- 重点解决“是否必读”，不是继续增加规则。
-
-`assets/templates/mode-interactive-output-contract.md`
-
-- 保留“不优先问谁赢”等修复；
-- 增加 Decision Recommendation 不能偷偷把性别 / 年龄 / 体型转换成固定打法。
+- 保留 Continuous Action Spine / Soft Time Anchors / Kinetic Scope Externalization / Negative Discipline；
+- 本阶段解决的是“是否必读”，不继续增加规则。
 
 `references/diagnostics/combat-choreography-underfill/diagnostic.md`
 
 - 保留集中式 Failure Signature；
 - 不拆成多个新 Diagnostic。
 
-#### C. 必须评估是否修改
+### 11.4 仍待 Phase 12 结果决定的文件
+
+以下文件本阶段不提前修改，以避免把接线问题误诊成知识问题：
 
 `references/tasks/action-combat-video/modern-combat-playbook.md`
 
-- Kinetic Scope / Camera Mobility / Continuous Phrase 的现代动作实现是否足够具体。
+- Phase 12 若仍出现 Kinetic / Continuous Phrase 不足，再审计现代动作实例化。
 
 `references/libraries/combat-fighting-profiles/library.md`
 
-- 当前更多是 Profile 概述；需要审计是否缺乏可组合 Concrete Choreography Knowledge。
+- Phase 12 若接线正确但动作仍贫乏，再进入 Concrete Choreography Knowledge Audit。
 
 `references/controls/camera-direction/control.md`
-
-- 判断 `Stable ≠ Static` 是否需要通用化；若只服务 Combat，则不复制 Combat 正文。
-
 `references/controls/timeline-rhythm/control.md`
-
-- 判断是否存在 Hard Timeline 默认规则与 V2-40 冲突。
-
 `references/controls/subject-motion/control.md`
 `references/controls/spatial-blocking/control.md`
 
-- 判断是否需要提供 Kinetic Scope 所依赖的通用全身 / 空间表达能力。
+- 只有 Phase 12 证明通用 Control 仍覆盖 / 削弱 Combat Task 时才修改。
 
 `references/models/generic.md`
 `references/models/seedance-2.md`
 `references/models/ltx-2-3.md`
 
-- 模型序列化不得擅自把 Continuous Spine 重切成 Hard Timeline；
-- Camera 降载优先降低 Complexity，不默认降低 Mobility。
+- 只有 Phase 12 / 13 证明 Model Serialization 重新切碎 Continuous Spine 或压低 Mobility 时才修改。
 
-#### D. 当前无证据修改
+### 11.5 当前无证据修改
 
 `core-playbook.md`
 
-- 本次主要失败不是 Range / Advantage / Condition 真源本身；只有后续 Traceability 发现状态合同缺口才修改。
+- 本次主要失败不是 Range / Advantage / Condition 真源本身。
 
 `cinematic-wuxia-playbook.md`
 
 - 本次失败样本为 Modern Combat，不以单个现代样本修改 Wuxia。
 
-### 11.3 Phase 11 Gate
+### 11.6 Phase 11 Gate
 
-Static Traceability 必须证明：
+Static Traceability 已证明：
 
-- 高密度 Combat 无法绕过 Prompt Assembly；
-- single-shot template 无法覆盖 V2-40；
-- Final Preflight 具有失败→重写→再检查路径；
-- Runtime 没有新增不必要的独立概念系统。
+- ✅ 高密度 Combat 无法在规范运行链中绕过 Prompt Assembly；
+- ✅ Single-shot Template 已有明确 Combat Override，不能再以通用“3+ 阶段”规则覆盖 V2-40；
+- ✅ Final Preflight 存在失败→重写→再检查路径；
+- ✅ Interactive 推荐不能再合法使用人口属性快捷打法；
+- ✅ Runtime 没有新增不必要的独立概念系统。
+
+> **Phase 11 Static PASS。注意：该 PASS 只证明接线和优先级，不能证明下一份 Prompt 质量已经 PASS。**
 
 ---
 
-## 7. Phase 12｜Prompt-level G01 Regression
+## 7. Phase 12｜Prompt-level G01 Regression — 🚧 当前阶段
 
 真实视频生成前先执行 Prompt-level Gate。
 
@@ -376,15 +396,16 @@ Concrete Choreography Knowledge
 
 执行规则：
 
-- V2-38 Temporal Packing、V2-39 Motion Handoff、V2-40 Continuous Spine 可共同归入 `Temporal / Continuity Flow Contract`；
-- V2-41 Intensity、V2-42 Visible Advantage、V2-43 Initiative 可作为 Choreography 的压力 / 控制子检查，不建设三套新引擎；
+- V2-38 Temporal Packing、V2-39 Motion Handoff、V2-40 Continuous Spine 共同归入 `Temporal / Continuity Flow Contract`；
+- V2-41 Intensity、V2-42 Visible Advantage、V2-43 Initiative 作为 Choreography 的压力 / 控制子检查，不建设三套新引擎；
+- V2-44 只连接 Character Identity 与 Initiative，不新增状态机；
 - Failure Signature 主要服务 Preflight / Diagnostic / Benchmark；
 - 新术语只有在它改变规划或输出行为时才值得留在 Runtime；
 - 角色打法差异最终要落到 Concrete Action Selection，而不是越来越多 Meta 状态。
 
 ---
 
-## 10. Concrete Choreography Knowledge 审计（Phase 13 后优先）
+## 10. Concrete Choreography Knowledge 审计（Phase 12 / 13 后按证据进入）
 
 动作本体一级机制暂时冻结。
 
@@ -409,25 +430,19 @@ Fighting / Martial / Weapon Profile
 | 0–7 | ✅ 初版完成 | 对应 V2-01～34 |
 | 8 | ⚠️ 已产生真实失败反馈 | 证明旧 Static PASS 不足 |
 | 9 | ✅ 初版收口 | 仅代表当时仓库状态 |
-| 10 | 🚧 进行中 | Spec / Plan / File Mapping / Regression 重新对齐 |
-| 11 | ⏸ 待 Phase 10 | Runtime Mandatory-path Rewire |
-| 12 | ⏸ 待 Phase 11 | Prompt-level G01 Regression |
+| 10 | ✅ 完成 | Spec V2-35～45 / Plan / File Mapping / Regression 已重新对齐 |
+| 11 | ✅ Static PASS | Mandatory Final Assembly / Preflight / Template Override / Identity Guard 已接线 |
+| 12 | 🚧 当前阶段 | 用同一办公室输入重新跑 Prompt-level G01 |
 | 13 | ⏸ 待 Phase 12 | 真实视频重跑 / Model Calibration |
-
-当前不能再使用：
-
-> `Implementation Complete + Static Regression PASS + Generated Video Validation Pending`
-
-作为完整状态描述。
 
 当前准确状态是：
 
-> **Post-feedback Traceability Rework In Progress；上一轮 Runtime 实现尚未完成正式一致性验收。**
+> **Post-feedback Runtime Rewire Complete；Prompt-level Regression In Progress；Generated Video Re-validation Pending。**
 
 ## 12. 当前下一步
 
-1. 完成 Spec 已确认遗漏项收口；
-2. 按 `action-combat-video-v2-traceability-audit.md` 完成 Phase 10 File Mapping；
-3. 进入 Phase 11 修强制运行链；
-4. Phase 12 用同一办公室输入重新跑 Prompt；
-5. Prompt-level PASS 后再生成真实视频。
+1. 使用第二次失败样本同一办公室输入重新跑 Interactive；
+2. 核对实际 Read 列表必须包含 `prompt-assembly/control.md`；
+3. 对 Final Prompt 执行 G01 Prompt-level Quality Contract；
+4. 若 FAIL，优先修 Runtime / Template / Concrete Knowledge，不新增一级抽象机制；
+5. Prompt-level PASS 后才进入 Phase 13 真实视频重跑。
