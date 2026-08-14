@@ -589,9 +589,73 @@ Camera Readability Budget 必须同时考虑目标视频模型的可执行性。
 
 > **镜头为动作服务；复杂动作先保证看清，简单爆点再释放镜头表现力。**
 
+## 24. V2-22：Action Execution Budget / 动作执行复杂度预算
+
+正式废除 V1 中 `1 个主攻防目标 + 2–4 个连续攻防交互节点 + 1 个结束状态` 作为 Battle Beat 的全局默认动作数量锚点。
+
+该数字虽然原本只是“可读性参考”，但在 V2 的实测问题背景下容易被 Agent 保守执行，导致一个较长 Battle Beat 也只发生两三次有效交换。
+
+V2 改为 **Action Execution Budget / 动作执行复杂度预算**：
+
+> **限制的是同一时间窗口内模型需要理解和执行的复杂信息量，不是整段 Battle Beat 最多允许多少动作。**
+
+### Phrase 级动态预算
+
+Battle Beat 不再设置统一动作数量上限。一个 Beat 可以包含 1～多个无缝连续的 Action Phrase；每个 Phrase 的 Exchange Depth 和动作负载由以下变量共同决定：
+
+- Beat / Phrase 可用时长；
+- Active Combat Coverage 与 Active Exchange Budget；
+- Action Exchange Rhythm；
+- Exchange Depth；
+- Tactical Interaction；
+- Cinematic Choreography Profile；
+- Combat Character Identity；
+- Range / Advantage / Condition；
+- Environment Action Affordance 与空间复杂度；
+- Camera Readability Budget；
+- 目标视频模型可执行性。
+
+因此一个较长的高手连续攻防 Beat 可以自然包含多个 Phrase 和明显超过 4 次的有效攻防交换，而一个短促重击 Phrase 仍然可以只承担少数关键交互。
+
+### 防止“取消上限后反而太少”：Action Sufficiency Check
+
+取消全局动作数量上限，不代表取消最低动作充分性检查。V2 在 Phrase / Beat 规划完成后增加 **Action Sufficiency Check / 动作充分性检查**，用于识别 Combat Underfill。
+
+以下情况应视为动作可能不足并触发重新规划：
+
+- High / Medium Coverage 下仍存在大段未被 Active Exchange 使用的时间；
+- 选择“高手高速交换型 / 混合型”但实际 Phrase 内 Exchange Depth 明显偏低；
+- 一个有足够时长的 Battle Beat 只有极少有效攻防，却没有重击、环境、剧情或状态理由；
+- Phrase 之间存在长时间站立、观察、重新摆姿势等无直接攻防目的的空档；
+- 用户明确要求持续对打、高手对决、拳拳到肉等观感，但计划仍主要由控制、僵持、摆位占据。
+
+Action Sufficiency 不采用新的固定“最低几招”数字，而是检查：
+
+```text
+Coverage 是否兑现
++ Rhythm 是否兑现
++ Exchange Depth 是否符合当前 Phrase
++ Active Exchange Budget 是否真正被使用
++ 是否存在无价值 Downtime
+```
+
+如果不满足，则优先补足有效 Action Phrase / 攻防因果，而不是通过增加空洞动作词数量凑数。
+
+### 信息过载时的处理顺序
+
+当动作计划超过模型可执行预算时，优先按以下顺序处理：
+
+1. 删除不改变战斗关系的附属 / 装饰动作；
+2. 降低单个 Phrase 的 Exchange Depth 或 Tactical Interaction 复杂度；
+3. 降低 Camera Complexity；
+4. 将一个过载 Phrase 拆成两个仍然无缝连续的 Phrase；
+5. 只有战术目标、Advantage、关键 Condition 或阶段真正改变时，才拆 Battle Beat。
+
+> **拆 Phrase 不等于停下来。** Phrase 之间可以保持持续交战，不自动产生 Downtime。
+
 ---
 
-## 24. V2 设计原则汇总
+## 25. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -617,9 +681,11 @@ Camera Readability Budget 必须同时考虑目标视频模型的可执行性。
 22. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
 23. Camera Complexity 与动作 / 空间复杂度共享有限执行预算，不能同时无上限拉高；
 24. 高动作复杂度默认优先镜头可读性，重型 Payoff / 环境换位 / Signature Moment 再有目的地释放镜头表现力；
-25. 最终 Prompt 应外显精彩动作与可见战术博弈，内部状态规范尽量压缩。
+25. Battle Beat 不再使用固定 `2–4` 交互节点作为动作数量锚点；动作复杂度在 Phrase 级动态预算；
+26. 取消动作数量上限后必须执行 Action Sufficiency Check，既防止过载，也防止动作不足；
+27. 最终 Prompt 应外显精彩动作与可见战术博弈，内部状态规范尽量压缩。
 
-## 25. 已确认决策记录
+## 26. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -644,19 +710,20 @@ Camera Readability Budget 必须同时考虑目标视频模型的可执行性。
 | V2-19 | Pattern / Source Case 分层 | `patterns/` 存生产知识；`source-cases/` 存影视事实、核实来源和研究笔记；运行时默认只加载 Pattern |
 | V2-20 | Tactical Interaction | 假动作、试探、诱导、预判、Counter-to-Counter 等作为 Phrase 可选战术因果层；动态触发，不做用户参数、暂不建大型独立 Library |
 | V2-21 | Camera Readability Budget | Camera Complexity 与动作 / 空间复杂度共享执行预算；高动作复杂度优先可读性，Payoff / 环境换位 / Signature Moment 再有目的释放镜头表现力 |
+| V2-22 | Action Execution Budget | 废除 Battle Beat 全局 `2–4` 交互节点锚点；改为 Phrase 级动态执行预算，并增加 Action Sufficiency Check 防止动作不足 |
 
-## 26. 尚待继续 Grill Me 的设计树
+## 27. 尚待继续 Grill Me 的设计树
 
-1. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+1. 打击重量 / Impact Solidity 如何设计，防止命中软绵绵、缺少“拳拳到肉”实感；
 2. V1 “宁少而清晰”如何重述，避免动作预算通缩；
 3. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
 4. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
 5. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
 
-## 27. 当前阶段结论
+## 28. 当前阶段结论
 
 V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
 
-> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感，并拥有真正值得记住的动作时刻；同时通过索引化知识结构控制运行时 Token 成本，并通过 Camera Readability Budget 确保复杂动作真正看得清、执行得出来。**
+> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感，并拥有真正值得记住的动作时刻；同时通过 Action Sufficiency Check 防止动作不足，通过 Action Execution Budget 与 Camera Readability Budget 控制模型负载。**
 
 本文件继续作为 V2 Grill Me 的单一设计记录。后续每确认一个关键决策，同步更新已确认决策与待讨论设计树，直到 V2 设计收口。
