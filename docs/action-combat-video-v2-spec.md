@@ -326,20 +326,7 @@ Commitment
 5. 只有仍然无法执行时，才削减次要有效攻防
 ```
 
-这与 V2-22 的 Action Sufficiency Check 共同形成双向约束：
-
-```text
-Action Sufficiency Check
-防止“太少”
-        ↕
-Action Execution Budget
-防止“同一窗口过载”
-        ↕
-Clarity Through Structure
-优先通过结构、Phrase 切分和镜头收敛解决复杂度
-```
-
-因此未来 Core Playbook 中不再保留“拿不准就少写动作”的隐含倾向。只要 Coverage、Phrase 因果、Exchange Depth、Contact Solidity、Camera Readability 和模型可执行性能够成立，较长高手 Battle Beat 应允许丰富、连续、高信息密度的有效攻防。
+这与 V2-22 的 Action Sufficiency Check 共同形成双向约束。
 
 ## 27. V2-25：State Machine Internalized, Choreography Externalized
 
@@ -350,51 +337,15 @@ Clarity Through Structure
 
 V1 / V2 内部仍完整运行 Range、Advantage、Condition、Combat State、Exchange Depth、Tactical Interaction、Combat Contact Solidity、Environment Affordance、Camera Readability Budget 等机制，用于规划、校验和状态继承；但 Final Prompt 不应大量暴露这些抽象术语，而应把它们转译成视频模型能直接执行、观众能直接看到的动作事实。
 
-例如内部状态：
+Combat Final Prompt 的主体信息优先级：
 
-```text
-Range: close
-Advantage: A slight advantage
-Condition: B balance compromised
-Contact Weight: Solid
-Tactical Interaction: Counter-to-Counter
-```
+1. 正向可见动作：Action Phrase、Attack / Defense / Counter / Re-counter、Contact、Reaction、Continuation；
+2. 空间与环境动作：换位、距离变化、路线、Environment Affordance、站位后果；
+3. 动作质感：速度、重量、节奏、Contact Solidity、Signature Moment；
+4. Camera / Audio：只服务动作可读性、空间理解和冲击；
+5. 必要连续性 / Negative Constraints：只保留当前场景真正高风险、且正向动作语言无法充分解决的少量约束。
 
-最终应外显为类似：
-
-```text
-A 贴身压进；B 侧身卸开第一击并立即反切线路；A 像预判到这个反制一样改变攻击侧，短促截击在近身完成明确接触。B 上身被冲击带偏，脚下急调半步稳住重心，并从新的站位立刻接回下一轮攻防。
-```
-
-内部状态没有丢失，而是被动作化。
-
-### Final Prompt 信息优先级
-
-Combat Final Prompt 的主体信息按以下优先级组织：
-
-1. **正向可见动作**：Action Phrase、Attack / Defense / Counter / Re-counter、Contact、Reaction、Continuation；
-2. **空间与环境动作**：换位、距离变化、路线、Environment Affordance、站位后果；
-3. **动作质感**：速度、重量、节奏、Contact Solidity、Signature Moment；
-4. **Camera / Audio**：只服务动作可读性、空间理解和冲击；
-5. **必要连续性 / Negative Constraints**：只保留当前场景真正高风险、且正向动作语言无法充分解决的少量约束。
-
-### Action Language Dominance / 动作语言主导
-
-新增内部检查思想：Final Prompt 的主体篇幅和语义重心应该明显落在实际发生的 Action Phrase、Reaction、Contact Consequence 和空间变化上，而不是被状态解释、连续性规范或通用禁止清单淹没。
-
-这不是固定百分比规则，但如果一段 Combat Prompt 中“不要……、保持……、确保……”等规范语言明显压过“谁如何动、如何接触、如何回应、如何继续”，应视为输出结构异常并重新压缩。
-
-### Negative Constraint 最小化
-
-Negative Constraint 不再默认追加通用防错清单，也不得擅自添加用户没有提出、场景也没有证据支持的限制，例如无根据地写“no visible weapons”。
-
-只有满足以下至少一个条件时才保留：
-
-- 当前模型在该场景存在高概率、严重的生成错误；
-- 正向动作语言无法充分约束；
-- 错误一旦发生会破坏人物身份、空间连续性、武器状态、关键物理关系或用户明确要求。
-
-因此 V2 的 Final Prompt 应做到：
+Final Prompt 的主体篇幅和语义重心应该明显落在实际发生的 Action Phrase、Reaction、Contact Consequence 和空间变化上。Negative Constraint 不再默认追加通用防错清单，也不得擅自添加用户没有提出、场景也没有证据支持的限制。
 
 > **内部严谨，外部生动；状态负责校验，动作负责表达。**
 
@@ -408,100 +359,74 @@ Negative Constraint 不再默认追加通用防错清单，也不得擅自添加
 
 ### Level 1：Static / Structural Regression
 
-继续保留 V1 已有的静态回归，用于检查：
-
-- 必要规则、Playbook、Library、Contract 是否被正确路由 / 加载；
-- Coverage / Rhythm / Exchange Depth / Phrase / State Contract 等规划变量是否存在且没有明显逻辑冲突；
-- Range / Advantage / Condition / Target / Environment / Camera Axis 等连续性是否满足约束；
-- Final Prompt 是否完成状态机内化、动作语言外显；
-- 是否出现无根据的 Negative Constraint、动作预算通缩或 Combat Underfill。
+继续保留 V1 已有的静态回归，用于检查规则、路由、状态连续性、Final Prompt 动作化、Negative Constraints 和 Combat Underfill 等。
 
 ### Level 2：Generated Video Quality Regression
 
-对真实生成的视频成片进行质量评价。第一版维护一个小而稳定的 **Golden Combat Scenarios / 黄金测试场景集**，建议约 6–10 个，覆盖不同动作难点，而不是只依赖单一办公室案例。
-
-候选覆盖维度包括：
-
-- 办公室高手近身对决：High Coverage / 高 Exchange Depth / Tactical Interaction；
-- 力量型 vs 灵活型：Combat Character Identity 差异；
-- 狭窄走廊 / 受限空间：Environment Action Affordance 与换位；
-- 硬派拳脚：Combat Contact Solidity / Strike；
-- 短兵器 / 刀战：Range、危险线路、Blade / Parry Solidity；
-- 长兵器：Weapon Distance Transition；
-- 抓控 / 摔投：Grapple / Takedown Solidity；
-- 多人战：Target Handoff、Spatial Continuity、Camera Readability。
-
-Golden Scenarios 应保持输入稳定，便于同一规则版本、不同 Prompt 版本、不同模型适配器之间重复对比。
-
-### 成片核心评价维度
+第一版维护约 6–10 个小而稳定的 Golden Combat Scenarios，覆盖高手近身、力量差、受限空间、硬派拳脚、短兵器、长兵器、抓控摔投、多人战等不同难点。
 
 实际生成视频至少评价：
 
-- **Active Combat Coverage Realization**：真实交战时间是否兑现规划目标；
-- **Exchange Richness / Choreography Richness**：是否有足够且有因果的连续攻防，而不是轮流做动作；
-- **Character Distinction**：双方打法是否能被观众区分；
-- **Tactical Interaction Realization**：高手场景中的试探、诱导、预判、Counter / Re-counter 是否真正可见；
-- **Combat Contact Solidity**：拳脚、摔控、武器、环境等接触是否有可信投入、传递、受力和后果；
-- **Environment Integration**：环境是否真正改变路线、距离、优势或 Phrase Payoff；
-- **Signature Moment**：是否形成少数真正可记住的动作节点，而不是只有动作数量；
-- **Camera Readability**：观众是否看得清双方身体关系、接触与空间变化；
-- **Spatial / Physical Continuity**：位置、方向、Range、身体受力、兵器和环境状态是否连续可信；
-- **Rhythm Variation**：高速交换、重型 Payoff、短暂停顿与再切入是否有节奏层次。
+- Active Combat Coverage Realization；
+- Exchange / Choreography Richness；
+- Character Distinction；
+- Tactical Interaction Realization；
+- Combat Contact Solidity；
+- Environment Integration；
+- Signature Moment；
+- Camera Readability；
+- Spatial / Physical Continuity；
+- Rhythm Variation。
 
-### Prompt Intent → Generated Result Gap
+同时显式记录 **Prompt Intent → Generated Result Gap**，不能把“Prompt 写了某条规则”等同于“成片兑现了该规则”。
 
-V2 需要显式记录 **Prompt Intent → Generated Result Gap / 计划意图到成片结果的执行差距**。
-
-例如：
-
-```text
-Prompt 规划 High Coverage ≈ 80%
-        ↓
-实际成片只有约 30% 时间处于有效交战
-        ↓
-Coverage Execution Gap 过大
-```
-
-这种情况即使 Prompt 文本中已经写了 High Coverage，也应判定质量回归失败，并进一步分析问题来自：Prompt 表达、动作执行预算、Camera 抢占、模型能力、时间规划、动作语言优先级或模型适配器。
-
-因此回归不只检查“规则是否出现”，还检查“规则是否在成片中被兑现”。
-
-### 运行记录
-
-为了让成片对比有意义，每次实际生成测试至少记录：
-
-- Golden Scenario ID；
-- Skill / Spec / Prompt 版本；
-- 目标视频模型与版本 / Adapter；
-- 关键生成参数与时长；
-- 实际使用的 Final Prompt；
-- 成片评价结果；
-- 主要 Failure Signature；
-- 相比上一稳定版本的改善 / 退化。
-
-这样后续可以区分“规则变差”与“模型 / 参数变化导致结果变化”。
-
-### 双层判定关系
-
-```text
-Static Regression Pass
-        ↓
-Generated Video Quality Regression
-        ↓
-若成片失败
-→ 回溯 Prompt Intent → Result Gap
-→ 定位 Choreography / State / Camera / Model Adapter / Prompt Expression 问题
-→ 调整规则
-→ 再生成验证
-```
+每次实际生成测试至少记录 Golden Scenario ID、Skill / Spec / Prompt 版本、目标视频模型与版本 / Adapter、关键生成参数与时长、Final Prompt、成片评价、Failure Signature 与版本改善 / 退化。
 
 > **Prompt 写得对，只能说明系统内部设计没有明显违规；视频真正打得好，才说明 Combat V2 达到目标。**
 
-Golden Scenario 的“期望结果到底锁具体动作答案，还是锁质量目标 / Failure Contract”仍待下一轮单独确认。
+## 29. V2-27：Golden Combat Scenario 使用质量合同，不锁固定动作答案
+
+Golden Combat Scenario 正式采用：
+
+```text
+Fixed Input
++ Quality Contract
++ Failure Contract
++ Optional Test Anchor
+```
+
+不保存、也不要求模型复现某一套固定“标准动作序列”。Golden Benchmark 测试的是动作导演能力与成片质量，而不是是否背出同一套动作答案。
+
+### Fixed Input
+
+固定用于可重复对比的测试前提，例如人物、场景、时长、战斗目的、必要武器 / 环境条件、目标模型与关键生成参数。
+
+### Quality Contract
+
+定义该场景必须兑现的质量目标，例如 High Coverage、足够连续攻防、角色打法差异、可信 Contact Solidity、环境真正参与、主要 Signature Moment、Camera Readability 与 Ending 时机等。
+
+### Failure Contract
+
+定义必须避免的退化模式，例如长时间对峙、只有两三次攻防、大量无意义僵持、接触无受力、双方打法同质、随机环境破坏、运镜掩盖动作、提前数秒摆 Pose 等。
+
+### Optional Test Anchor
+
+只有当某个 Golden Scenario 专门验证某项能力时，才增加抽象能力锚点，例如：
+
+- 环境测试：环境必须至少一次改变攻击线路 / Range / Advantage；
+- 刀战测试：至少一次由兵器线路偏转导致下一拍主动权变化；
+- Tactical Interaction 测试：至少出现一次可见的诱导 / 预判 / Counter-to-Counter 机制。
+
+Test Anchor 只规定“能力必须出现”，不规定必须用哪一招、哪件物体、哪套镜头实现。
+
+原则：
+
+> **Benchmark 锁质量，不锁创意。**  
+> **固定输入保证可比性，质量 / 失败合同保证验收稳定，动作编排本身继续保留创造空间。**
 
 ---
 
-## 29. V2 设计原则汇总
+## 30. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -535,9 +460,10 @@ Golden Scenario 的“期望结果到底锁具体动作答案，还是锁质量�
 30. State Machine Internalized, Choreography Externalized：状态机内化、动作编排外显；
 31. Final Prompt 以正向可见动作、接触后果和空间变化为主体，状态规范与 Negative Constraint 只保留真正必要部分；
 32. Combat 回归必须同时包含静态结构回归与真实成片质量回归；最终生成视频质量是首要验收目标；
-33. 回归必须评价 Prompt Intent → Generated Result Gap，不能把“Prompt 写了某条规则”等同于“成片兑现了该规则”。
+33. 回归必须评价 Prompt Intent → Generated Result Gap；
+34. Golden Combat Scenario 通过 Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor 定义，锁质量而不锁固定动作答案。
 
-## 30. 已确认决策记录
+## 31. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -567,20 +493,23 @@ Golden Scenario 的“期望结果到底锁具体动作答案，还是锁质量�
 | V2-24 | Clarity Through Structure | 正式替换“宁少而清晰”；优秀动作戏允许高信息密度，清晰通过层级、因果、Phrase 结构、镜头收敛和连续切分获得，不默认削减有效攻防 |
 | V2-25 | Final Prompt 输出原则 | State Machine Internalized, Choreography Externalized；内部状态完整运行，最终 Prompt 以正向可见动作、受力、空间变化和连续攻防为主体，最小化状态术语与 Negative Constraints |
 | V2-26 | Combat Quality Benchmark | 建立“静态结构回归 + 真实成片质量回归”双层体系；维护 Golden Combat Scenarios，评价 Coverage、动作丰富度、角色差异、战术博弈、接触实感、环境、Signature Moment、Camera Readability、连续性与 Prompt→成片执行差距 |
+| V2-27 | Golden Scenario Contract | Golden Scenario 不锁固定动作答案，采用 Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor，保证可比性同时保留动作编排创造空间 |
 
-## 31. 尚待继续 Grill Me 的设计树
+## 32. 全局复盘后待继续 Grill Me 的设计树
 
-1. Golden Combat Scenario 的期望结果如何定义：锁具体动作答案，还是锁质量目标 / Failure Contract；
-2. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
+在进入实现文件映射之前，需要先回到 V2 / V1 / Reference Architecture 全局层面重新审查以下一级问题：
 
-## 32. 当前阶段结论
+1. **能力适用范围与分支一致性**：V2 当前大量增强来自现代近身格斗案例，但 V1 正式范围同时包含现代格斗、电影武侠、拳脚、抓控与兵器；需要确认 V2 哪些机制是 Combat Core 通用能力，哪些需要 Modern / Wuxia / Weapon 分支适配，避免现代格斗逻辑反向污染武侠与兵器动作；
+2. **运行时编排与 Reference 加载预算**：Reference Architecture 要求每次只加载 1 task、0–3 controls、0–2 libraries 等；V2 新增 Choreography Profile、Signature Moment Pattern、Environment Affordance、Fighting / Martial / Weapon Profile 等知识，需要设计实际按需路由链，避免理论能力完整但运行时全量加载；
+3. **模型能力如何正式进入动作预算**：V2 多处依赖“目标视频模型可执行性”，但尚未定义模型适配层如何向 Choreography Engine 提供可用的 Action / Camera / Multi-character / Contact Complexity 能力信息；需要确认是否形成轻量 Model Capability Contract；
+4. **Quick / Interactive 的运行闭环**：Interactive 已有专属决策链，但 Quick Mode 对 Profile、Coverage、Rhythm、Identity、Environment、Signature Moment、Contact Solidity 等变量的自动推导顺序与默认闭环仍需全局确认；
+5. **Action / Camera / Audio 三线在 V2 的职责平衡**：V1 把三线同步作为核心能力，V2 目前重点增强 Action 与 Camera，Audio 更多作为 Contact Accent 存在；需要确认 Audio 是否仅继承 V1，还是 V2 还缺少动作节奏 / Contact / Signature Moment 的声音编排升级；
+6. **实现层归属**：最终需要确认哪些内容属于 Task Playbook，哪些属于 Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否真的需要新增独立 Control；应在前述全局问题收口后再做，避免先按文件结构反推动作设计。
 
-V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
+## 33. 当前阶段结论
 
-> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感、有可信接触实感，并拥有真正值得记住的动作时刻；同时通过 Action Sufficiency Check 防止动作不足，通过 Action Execution Budget 与 Camera Readability Budget 控制模型负载，通过结构化而不是动作通缩保证清晰，在 Final Prompt 中把严谨内部状态转译成高信息密度、可见、可执行的动作语言，并最终通过真实生成视频验证这些设计是否真正兑现。**
+V1 已能够较好地“把战斗写对”；V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt 与成片验证”等核心质量层。
 
-可进一步概括为：
+当前不宜继续下钻单条 Pattern 或测试字段，而应回到全局设计树，优先确认 **V2 Combat Core 与 Modern / Wuxia / Weapon 等分支之间的边界**，然后再依次解决运行时加载、模型能力输入、模式闭环、音画协同和最终实现归属。
 
-> **打得够久 + 打得够丰富 + 打得够实 + 看得够清楚 + 写得够动作化 + 成片真的兑现。**
-
-本文件继续作为 V2 Grill Me 的单一设计记录。后续每确认一个关键决策，同步更新已确认决策与待讨论设计树，直到 V2 设计收口。
+本文件继续作为 V2 Grill Me 的单一设计记录。
