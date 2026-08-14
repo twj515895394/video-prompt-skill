@@ -224,12 +224,22 @@ V1 Fighting Profile 主要回答 Boxing、Muay Thai、Sanda、MMA、Tactical Clo
 - **Attack Character**：速度、力量、精准、欺骗、控制等倾向；
 - **Defense / Counter Character**：闪避反击、硬格挡、截击、抓控、借力换位等。
 
+这些维度属于动态推导时的判断框架，不是固定标签全集，也不要求把所有角色映射到预设职业模板。
+
 角色身份高于具体 Fighting Profile：
 
 ```text
-Combat Character Identity
-→ 选择适合该角色的 Fighting / Martial Profile
-→ Action Phrase 动作编排
+人物设定 / 体型能力 / 性格
++ Combat Intent
++ 当前环境
++ 对手关系
++ Cinematic Choreography Profile
+        ↓
+动态推导 Combat Character Identity
+        ↓
+选择适合该角色的 Fighting / Martial Profile
+        ↓
+Action Phrase 动作编排
 ```
 
 这用于避免“职业杀手 = Tactical Close Combat = 双方抓腕控制”的同质化结果。
@@ -518,7 +528,60 @@ Phrase 数量由 Beat 可用时长、Active Combat Coverage、Exchange Rhythm、
 
 后续新增 V2 文档内容统一遵守这一中文术语规则。
 
-## 15. V2 设计原则补充
+## 15. 已确认决策十二：Combat Character Identity 动态推导，不建角色画像库
+
+确认 **不建立 Combat Character Identity 角色画像库，也不建立“杀手 / 军人 / 警察 / 拳手”等职业到固定打法的模板映射**。
+
+原因：
+
+- 角色类型、职业、年龄、体型、能力、性格和情境组合近乎无限，预设画像库无法合理覆盖；
+- 固定职业模板会再次形成“职业 → 固定打法”的过拟合，重复 V1 中“职业杀手 → Tactical Close Combat”的问题；
+- 同一职业的不同人物，本就可能拥有完全不同的动作倾向；
+- Combat Character Identity 的价值在于当前场景中的角色差异，而不是人物分类本身。
+
+因此 Combat Character Identity 定位为 **当前 Combat Sequence 的动态推导结果**，不是 Library 条目。
+
+建议推导输入：
+
+```text
+人物明确设定
++ 体型 / 能力 / 经验（若已知）
++ 性格与行为倾向（若已知）
++ Combat Intent
++ 当前环境与空间限制
++ 对手的打法与双方差异
++ Cinematic Choreography Profile
++ 当前 Range / Advantage / Condition
+        ↓
+Combat Character Identity
+```
+
+如果用户没有给足人物细节，系统可以为了形成可见打法差异进行低风险补全，但不得把职业标签自动等同于某个固定 Fighting Profile。
+
+### 与 Library 的职责边界
+
+Library 继续只保存相对稳定、可复用的专业动作知识，例如：
+
+- Boxing；
+- Muay Thai；
+- Sanda；
+- MMA；
+- Wrestling / Grappling；
+- Tactical Close Combat；
+- 咏春、八极、太极借力等 Martial Profile；
+- 兵器动作画像。
+
+这些 Profile 回答“某类动作语言通常如何工作”，而不是“某个角色必须怎么打”。
+
+因此关系确认如下：
+
+```text
+动态 Combat Character Identity
+→ 按需选择 / 混合稳定的 Fighting / Martial / Weapon Profile
+→ Action Phrase 动作编排
+```
+
+## 16. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -539,8 +602,9 @@ Phrase 数量由 Beat 可用时长、Active Combat Coverage、Exchange Rhythm、
 15. **不同 Rhythm 应动态改变 Phrase 内部交换深度，而不是统一套一个动作数量上限。**
 16. **Phrase 与 Beat 不绑定 1:1。** Phrase 负责局部连续攻防，Beat 负责更高层战术阶段。
 17. **Combat 中文术语统一使用“动作编排 / 动作导演”，不再用“编舞”作为主要中文翻译。**
+18. **Combat Character Identity 是动态推导结果，不是职业或角色类型画像库。**
 
-## 16. 已确认决策记录
+## 17. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -555,24 +619,24 @@ Phrase 数量由 Beat 可用时长、Active Combat Coverage、Exchange Rhythm、
 | V2-09 | Action Phrase 复杂度 | 新增 Exchange Depth；由 Rhythm、Phrase 时长等动态决定，不采用固定招式数 |
 | V2-10 | Beat / Phrase 关系 | 动态一对多；Phrase 按局部攻防组织，Beat 只在战术状态实质变化时切换 |
 | V2-11 | 中文术语 | 英文保留 Choreography；中文统一“动作编排 / 动作导演”，不再使用“编舞”作为主要翻译 |
+| V2-12 | Combat Character Identity 来源 | 不建角色 / 职业画像库；根据人物、环境、对手、Intent、状态和动作编排风格动态推导 |
 
-## 17. 尚待继续 Grill Me 的设计树
+## 18. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
-2. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-3. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-4. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-5. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
-6. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-7. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-8. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-9. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-10. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-11. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
+2. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+3. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+4. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
+5. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+6. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+7. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+8. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+9. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+10. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 18. 当前阶段结论
+## 19. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、动作编排弱”倾向。
 
