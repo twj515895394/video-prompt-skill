@@ -1665,4 +1665,76 @@ Golden Combat Benchmark 增加 **Initiative Handoff Realization** 与 **Turn-tak
 |---|---|---|
 | V2-43 | Initiative Handoff | Initiative 与 Advantage 分离；高手连续攻防中的主动权优先在动作尚未结束时通过 Interception、Forced Response、Line / Axis Control、Range Capture、Contact Handoff、Recovery Window 等方式转移；用 Turn-taking Combat / Initiative Segmentation 拦截“你打一段、我打一段”的轮流式战斗 |
 
-V2-43 确认后，下一项优先验证 **Initiative Handoff 是否必须受 Combat Character Identity 约束**：不同角色应以不同方式抢夺 / 维持主动权，避免所有高手都被写成同一种“格挡后反击 / 截断后抢攻”逻辑。
+## 55. V2-44：Initiative Handoff 受 Combat Character Identity 约束
+
+确认：Initiative Handoff 不应让所有高手都使用同一种“格挡后反击 / 截断后抢攻”逻辑。角色抢夺、维持或夺回主动权的方式，应受当前 Combat Character Identity 约束。
+
+可见差异可以来自：
+
+- 侧切 / 角度截断；
+- 封线 / 路线压迫；
+- Range Capture；
+- Contact Control；
+- Forced Response；
+- 节奏破坏；
+- 诱导反应；
+- Recovery Window 利用。
+
+这些只是动态动作倾向，不建立封闭字段或职业模板。
+
+特别禁止：仅凭性别、年龄、外貌或体型直接映射打法。例如“年轻女性 = 速度 / 闪避”“矮胖年长男性 = 力量 / 抓控”都不能作为默认 Character Identity 结论。体型与年龄可以作为能力 / 运动约束输入，但必须与 Combat Intent、经验、对手、环境和 Profile 一起推导，且应允许完全不同但仍合理的打法。
+
+V2-44 不新增独立 Initiative State Machine，也不新增 Interactive 固定问题；它是 V2-05 Character Identity 与 V2-43 Initiative Handoff 的连接规则。
+
+Failure Signature 可使用：
+
+> **Homogeneous Initiative Style / Identity-by-Demographic Shortcut**
+
+当双方长期使用同一种抢主动方式，或角色打法主要由性别 / 年龄 / 体型快捷映射时，Final Preflight 应重写具体动作选择。
+
+## 56. V2-45：Runtime Consolidation / Anti-overdesign Policy
+
+真实交互与成片反馈同时暴露另一类风险：持续为每一种局部失败新增一级机制、状态字段、问卷或独立模块，会显著增加 Runtime 认知负担，并可能让模型把更多注意力花在 Meta 规则而不是具体动作构造上。
+
+因此正式确认 **Runtime Consolidation / Anti-overdesign Policy**：
+
+- 暂停继续纵向增加 Combat 一级抽象机制；
+- V2-35～V2-44 在 Runtime 中优先合并成少数高杠杆执行合同，而不是一项设计对应一个子系统；
+- Failure Signature 主要服务 Preflight / Diagnostic / Benchmark，不等于每个 Failure 都创建独立 Diagnostic / Control / State；
+- Action Combat 的 A. 动作本体机制层暂时冻结；
+- 下一阶段若接线已经正确但动作仍贫乏，优先审计 **Concrete Choreography Knowledge**：Fighting / Martial / Weapon 是否能提供丰富、可组合、全身化、跨 Range / Transition 的具体动作知识；
+- 新术语只有在它能改变 Planning、Action Phrase 或 Final Prompt 行为时才进入 Runtime 真源；
+- 如果一个新增规则只能产生更多解释文字而不能改善实际 Prompt / 成片，应合并、降级为检查项或删除。
+
+推荐的 Runtime 合并方向：
+
+```text
+Temporal / Continuity Flow Contract
+→ Temporal Packing + Motion Handoff + Continuous Action Spine
+
+Pressure / Control Choreography Check
+→ Intensity + Visible Advantage + Initiative
+
+Action Sufficiency
+→ Coverage + Exchange Depth + Kinetic Scope
+```
+
+这些是实现组织建议，不重新定义各设计概念的语义边界。
+
+原则：
+
+> **机制可以在 Spec 中细分，运行时概念必须保持少而高杠杆。**  
+> **设计服务动作生成，不让模型为设计术语服务。**
+
+## 57. 实测反馈增量决策记录（六）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-44 | Initiative × Character Identity | Initiative 抢夺 / 维持方式受 Character Identity 约束；禁止按性别 / 年龄 / 体型快捷映射固定打法；作为连接规则，不新增大型状态机或固定问卷 |
+| V2-45 | Runtime Consolidation / Anti-overdesign | 暂停纵向扩展一级机制；Failure Signature 不等于独立模块；动作本体机制层暂时冻结，后续优先做 Concrete Choreography Knowledge 与强制运行链审计 |
+
+当前阶段正式从“继续 Grill 新机制”切换为：
+
+> **Spec → Implementation Plan → File Mapping → Prompt-level Regression → Generated Video Benchmark**
+
+在该链条重新打通前，不继续新增 Combat 一级抽象设计。
