@@ -33,7 +33,7 @@
 
 ## 时间轴使用条件
 
-满足以下任一条件时，可在 Prompt 内使用绝对时间：
+普通单镜头任务满足以下任一条件时，可在 Prompt 内使用绝对时间：
 
 - 时长较长且有三个以上清晰动作阶段；
 - 存在对白与动作同步；
@@ -50,6 +50,45 @@ Y-结束：动作完成；表演停顿；镜头与声音落点。
 ```
 
 不要为了显得专业把一个简单动作机械拆成过多小段。
+
+### Action Combat Override
+
+当当前主任务是 `action-combat-video`，且属于 High / Medium-high Coverage、高手连续攻防、追击 / 反追击或其他高密度 Combat 时，上面的“时长较长 + 3 个以上阶段”**不能自动触发 Hard Timeline**。
+
+Combat 默认继承 Task / Prompt Assembly 已确定的：
+
+> **Continuous Action Spine + Soft Time Anchors**
+
+也就是大部分 Active Exchange 作为一条连续动作主链书写，只在以下位置使用少量软时间锚点：
+
+- Setup / First Contact；
+- Major Advantage Reversal；
+- Signature Moment / Major Payoff；
+- Ending；
+- 用户明确要求或模型 / 音画同步真正需要的关键时点。
+
+禁止为了套模板自动生成：
+
+```text
+0–1.5s：动作 A
+1.5–4s：动作 B
+4–7s：动作 C
+7–10s：动作 D
+...
+```
+
+如果这些块把同一场连续搏斗切成“完成一组 → 停 / 归位 → 下一组”，则模板使用失败。
+
+只有以下情况可以在高密度 Combat 中恢复 Hard Time Blocks：
+
+- 用户明确要求逐秒动作；
+- 多镜头 Shot 边界；
+- 对白 / 音乐 / 外部事件精确同步；
+- Model Adapter 有真实 Benchmark 证据表明严格时间轴更稳定。
+
+即使恢复 Hard Time Blocks，块与块之间仍必须继承 Contact / Momentum / Footwork / Axis / Range / Position 等 Motion Handoff；**时间块边界不能成为 Neutral Reset。**
+
+> **Combat 专项时间序列化规则优先于通用单镜头模板默认时间轴规则。**
 
 ## 图生视频补充
 
@@ -73,13 +112,15 @@ Y-结束：动作完成；表演停顿；镜头与声音落点。
 
 ## 动作镜头补充
 
-动作戏优先写：
+普通动作镜头优先写：
 
 ```text
 准备 / 蓄力 → 推进 → 接触或爆点 → 受力反馈 → 恢复或新平衡
 ```
 
-主体动作强时减弱镜头幅度；镜头动作强时保持主体动作清楚。
+对于 Action Combat，不把这条普通动作骨架机械重复到每一个 Phrase；应优先服从 Combat Task 的 Action Phrase、Motion Handoff、Kinetic Scope 和 Continuous Action Spine，使新的平衡 / 受力状态直接成为后续动作入口。
+
+主体动作强时通常降低无必要 Camera Complexity；**不等于让 Camera 静止**。如果人物发生明显 Position / Range / Axis / Route 变化，应继承 Combat Task 的 Camera Mobility 计划进行简单连续跟随。
 
 ## 输出检查
 
@@ -90,4 +131,6 @@ Y-结束：动作完成；表演停顿；镜头与声音落点。
 - 环境反馈是否有物理来源；
 - 最后一拍是否自然停住；
 - 是否删除了无关备选和自动补全说明；
-- 是否已经按 Generic、Seedance 或 LTX 正确转换。
+- 是否已经按 Generic、Seedance 或 LTX 正确转换；
+- 如果是高密度 Action Combat，是否没有被本模板重新切成多个无必要 Hard Time Blocks；
+- 如果 Combat Task 已提供 Continuous Action Spine / Camera Mobility，模板是否完整继承而没有覆盖。
