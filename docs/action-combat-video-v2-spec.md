@@ -1738,3 +1738,137 @@ Action Sufficiency
 > **Spec → Implementation Plan → File Mapping → Prompt-level Regression → Generated Video Benchmark**
 
 在该链条重新打通前，不继续新增 Combat 一级抽象设计。
+
+## 58. V2-46：Action Continuity ≠ Shot Continuity / 动作连续性与镜头连续性解耦
+
+第二轮 Prompt-level 回归暴露出 Camera 侧新的横向问题：为修复“高密度动作看不清、Camera 近似静止”，Runtime 逐渐形成了“中全景 / 中景 + 简单连续 tracking”为默认安全方案。该方向能提升空间可读性，但如果进一步把 `Continuous Action Spine` 误解为“摄影镜头也必须连续”，会让真正动作电影常见的近景、特写、脚步 / 手部 / 武器 Insert、Impact Shot、Reaction Shot 与快速连续剪辑被压掉，最终形成 Camera 风格固化。
+
+因此正式确认：
+
+> **Action Continuity ≠ Shot Continuity.**  
+> **动作连续不等于摄影镜头必须连续。**
+
+`Continuous Action Spine` 只保证战斗动作、状态、Contact、Momentum、Position / Range / Axis 与因果不断线；它不要求整段使用一条物理连续 Camera Path，也不要求 15 秒 Combat 必须一镜到底。
+
+### 58.1 Combat Camera Coverage 是动态观察策略
+
+电影化 Combat 可以根据当前动作信息动态使用：
+
+- Master / Establishing Shot：交代双方位置、Range、空间与动作方向；
+- Medium / Medium-wide Relationship Shot：展示主要攻防关系与身体动作；
+- Close-up / Extreme Close-up：拳脚、武器、接触点、眼神、受击 / 反应等关键局部；
+- Insert Shot：脚步、支撑脚、手部、握持、刀锋、枪械、环境物件等动作信息；
+- Reaction Shot：角色对关键 Contact、Threat、Advantage Reversal 的即时反应；
+- Impact Shot：关键 Contact / Phrase Payoff / Signature Moment 的短促冲击视角；
+- Re-establish Shot：局部特写或复杂 Cut 后重新确认 Position / Range / Axis。
+
+以上不是固定镜头清单，更不建立“每场必须几个特写 / 几个全景”的配额。实际 Coverage 由动作内容、空间复杂度、Contact Modality、Weapon / Environment 信息、情绪重点与模型能力动态决定。
+
+### 58.2 Cut 可以存在，Action State 不能 Reset
+
+跨镜剪辑时，必须继承动作状态：
+
+```text
+Position / Left-Right Relationship
++ Action Direction
++ Contact State
++ Momentum
++ Body / Weapon Axis
++ Range
++ Initiative / Advantage Consequence
+```
+
+例如：
+
+```text
+中全景：A 侧切，B 封线
+→ CUT：前臂 Contact 特写
+→ CUT：低机位脚步 Insert，B 前脚封住出口
+→ CUT：中近景，A 肩轴被迫转开
+→ CUT：双人中景，A 顺转轴完成 Counter
+```
+
+摄影发生 Cut，但战斗仍是一条连续 Action Spine；禁止 Cut 后双方回到默认距离、默认站姿或重新起手。
+
+### 58.3 Camera Readability 不等于少用特写
+
+Camera Readability 的目标是：**观众始终能理解动作因果与空间关系**，而不是强制完整身体全程可见。
+
+局部特写本身不是问题；失败发生在：
+
+- 长时间只拍局部，观众失去双方位置 / Range；
+- Cut 前后 Action Direction / Axis 不连续；
+- 特写把 Contact 与真实身体发力拆开，形成“假打”；
+- 过度 Insert / Reaction 使 Active Combat 被剪碎；
+- 为了防止上述问题反向禁止特写与镜头切换。
+
+因此正确策略是：
+
+> **允许局部强化，但用 Master / Relationship / Re-establish 保持空间锚点。**
+
+### 58.4 与 Camera Complexity / Camera Mobility 的关系
+
+V2-37 继续成立，但不再把 Combat Camera 默认收敛为单一连续跟拍：
+
+```text
+Camera Mobility
+→ 单个 Shot 内摄影机如何跟随真实战斗空间
+
+Shot Scale / Editorial Coverage
+→ 整段 Combat 用哪些观察距离与 Cut 来强调动作信息
+```
+
+高动作复杂度时仍应限制无必要 Camera Chaos，但“降低 Camera Complexity”不能等价为：
+
+- 全程中全景；
+- 全程一个机位；
+- 全程只有 tracking / dolly；
+- 禁止 Close-up / Insert / Cut。
+
+可以出现 **低到中等 Camera Complexity + 有目的的 Shot Scale Variation / Editorial Coverage**。
+
+### 58.5 `single-shot-video` 的语义边界
+
+`single-shot-video-template` 在本 Skill 中表示“单一视频生成单元 / 单一主要观看任务”，不自动表示电影剪辑术语中的“一镜到底”。
+
+除非用户明确要求 long take / one-take / 一镜到底，或目标模型 / 输入形式要求严格单镜头连续摄影，否则单段 15 秒 Combat 可以包含内部 Cut / Insert / Reaction / Impact Coverage。
+
+### 58.6 Failure Signature
+
+新增 Camera 侧 Failure Signature：
+
+> **Combat Camera Coverage Lock / Medium-wide Overconstraint**
+
+典型触发：
+
+- 高密度 Combat 全程几乎只有中全景 / 中景；
+- 为保证动作可读性，系统性排斥 Contact / Weapon / Footwork / Reaction 特写；
+- 所有镜头变化只剩轻微 push / track / arc，没有真正的 Shot Scale Variation；
+- `Continuous Action Spine` 被错误解释成“不能 Cut”；
+- Prompt 明显具有动作电影目标，却仍采用近似观察纪录式的单一景别覆盖。
+
+Preflight 发现该问题时，应优先重新设计 **Camera Coverage**，而不是增加无意义镜头数量。
+
+### 58.7 Benchmark / 实施边界
+
+Prompt-level Regression 增加：
+
+- Action Continuity 与 Shot Continuity 是否被正确区分；
+- Camera 是否根据动作信息允许适量 Shot Scale Variation；
+- Close-up / Insert / Reaction / Impact Shot 是否有明确动作信息价值；
+- Cut 后 Position / Direction / Contact / Momentum / Axis 是否连续；
+- 是否触发 Combat Camera Coverage Lock。
+
+该决策属于 Camera 横向缺口修正，不推翻 V2-45 的 Anti-overdesign：Runtime 应优先把它并入既有 Camera Readability / Mobility / Prompt Assembly 合同，而不是建立新的 Combat Camera 引擎。
+
+原则：
+
+> **动作必须连续，镜头可以剪。**  
+> **可读性来自空间锚点和剪辑连续性，不来自全程中全景。**  
+> **真正的电影动作摄影可以在 Master、Relationship、Close-up、Insert、Impact、Reaction 与 Re-establish 之间动态切换。**
+
+## 59. 实测反馈增量决策记录（七）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-46 | Action Continuity ≠ Shot Continuity | Continuous Action Spine 只约束战斗动作 / 状态 / 因果不断线，不要求摄影机物理路径或单镜头连续；Combat 可动态使用 Master / Medium / Close-up / Extreme Close-up / Insert / Reaction / Impact / Re-establish 与 Cut，跨镜必须继承 Position / Direction / Contact / Momentum / Axis / Range；取消高密度 Combat 默认“中全景连续跟拍”为唯一安全解法 |
