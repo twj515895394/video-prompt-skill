@@ -45,7 +45,8 @@ Combat 追问前先内部检查：
 - 是否遗漏与场景明显相关的 Choreography Profile；
 - Character Identity 是否需要用户参与决定，还是可以动态推导；
 - 当前问题是否比尚未解决的 Character Identity / Rhythm / Profile 更重要；
-- 是否把 Contact Solidity、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制误做成问卷。
+- 是否把 Contact Solidity、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制误做成问卷；
+- 当前推荐是否把职业、性别、年龄、外貌或体型直接转换成固定打法。
 
 如果当前问题只是系统应该自己做好的质量机制，不问用户。
 
@@ -69,11 +70,38 @@ Combat 追问前先内部检查：
 - **不要过早先问“谁赢”**，除非胜负本身就是用户的核心观看目标或会彻底改变前面所有设计；
 - 高手对决若“高手连续攻防型”明显相关，不能因为选项设计漏掉它；
 - Camera 通常可以在动作与空间计划后自动推导，不应为了问 Camera 跳过更高价值的 Character Identity；
-- Character Identity 不按职业 / 年龄 / 体型直接套打法；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件。
 
-例如：用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Choreography Profile 或双方打法差异，而不是让用户回答十几个内部参数。
+### Character Identity Recommendation Guard
+
+Character Identity 必须动态推导。推荐答案中不得出现以下快捷逻辑：
+
+```text
+职业 → 固定流派 / 固定打法
+性别 → 固定速度 / 力量 / 防守偏好
+年龄 → 固定迟缓 / 经验 / 力量偏好
+体型 → 固定压迫 / 抓控 / 闪避偏好
+外貌 → 固定动作风格
+```
+
+这些信息可以影响运动能力、Reach、惯性、支撑、恢复速度或视觉对比，但**不能单独决定打法**。
+
+例如用户给出“22 岁女性 + 55 岁矮胖男性 + 两人都是职业杀手”，推荐不能自动写成：
+
+- 女方 = 速度、角度、闪避；
+- 男方 = 体重、力量、抓控。
+
+除非用户已经明确这些打法，否则应先由 Combat Intent、Choreography Profile、经验、对手关系、空间、Range 与当前 State 推导；若多个打法方向都合理且差异会显著改变成片，才把“双方打法差异”作为当前一个交互问题。
+
+推荐答案应描述**动作逻辑**而不是人口属性刻板映射，例如：
+
+- 一方偏主动侧切、抢角度、连续截断；
+- 另一方偏路线封锁、短距离打断、节奏破坏；
+
+但这些也只是当前场景的可选设计，不是某类人的固定模板。
+
+例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Choreography Profile 或双方打法差异，而不是让用户回答十几个内部参数。
 
 ---
 
@@ -155,9 +183,12 @@ Action Combat 收口后，系统内部继续执行：
 - State / Continuity；
 - Contact / Kinetic / Temporal Continuity；
 - Camera Mobility Coupling；
-- Final Preflight Gate；
+- **Combat-aware Prompt Assembly；**
+- **Final Preflight Gate；**
 
-但不把这些内部机制作为大段 Meta 说明输出给用户。
+Final Preflight FAIL 时先内部重写并重新检查，不允许因为交互已经结束就直接交付；也不把失败自动转成新的用户问题。
+
+这些内部机制不作为大段 Meta 说明输出给用户。
 
 ---
 
