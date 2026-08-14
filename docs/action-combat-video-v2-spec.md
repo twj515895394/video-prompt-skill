@@ -1491,3 +1491,87 @@ Golden Combat Benchmark 增加 **Combat Intensity Curve Realization** 与 **Flat
 | V2-41 | Combat Intensity Curve | 连续 Combat 内必须存在动态但非模板化的强度波形；强度由交换频率、Contact Weight、Advantage Pressure、Kinetic Scope、战术复杂度、环境、Camera / Audio 等共同形成；约 15 秒电影化高手战默认至少形成一次明确 Intensity Turning Point，并用 Flat Combat Intensity 拦截“全程同速、同密度、同压力” |
 
 V2-41 确认后，下一项优先验证 **Advantage 是否应成为 Intensity Curve 的主要驱动之一**：不能只在内部 State 标记“男方占优 / 女方翻转”，而应让优势变化通过谁在逼迫、谁被迫换位、谁控制 Range / Axis / Environment 等可见压力变化真实表现出来。
+
+## 51. V2-42：Visible Advantage Dynamics / 可见优势动态
+
+真实成片与 Prompt 复盘进一步确认：Combat State / Continuity Engine 即使正确维护了 `Advantage`，如果最终动作只表现成“这一轮男方出招、下一轮女方出招”，观众仍然看不到谁真正控制了局势。优势不能只存在于内部 State 标签里，也不能只靠“男方占据上风 / 女方完成逆转”这样的叙述说明。
+
+因此正式新增 **Visible Advantage Dynamics / 可见优势动态**。`Advantage` 继续由 State Engine 维护，但主要优势变化必须通过可见的动作压力与空间控制外显。
+
+### 51.1 Advantage 的可见证据
+
+可见优势至少可以通过以下一种或多种方式表现：
+
+- **Attack Initiative**：谁更持续地主动发起、迫使对手响应，而不是轮流各打一招；
+- **Forced Defense**：谁让对方连续进入格挡、闪避、撤步、恢复或被迫重新构形；
+- **Range Control**：谁决定当前距离，是压入、拉开、卡在危险距离还是迫使对方无法进入理想 Range；
+- **Angle / Axis Control**：谁通过脚步、身体轴线、Threat Line、兵器路线等控制更有利角度；
+- **Route / Position Control**：谁迫使对方沿特定路线移动、压缩退路、封住出口或控制核心空间；
+- **Environment Control**：谁更有效利用桌边、墙体、通道、家具、地形等限制 / 打开动作路线；
+- **Recovery Burden**：谁迫使对方花更多动作去恢复重心、重新站位、解除控制或重新获得攻击窗口。
+
+这些不是固定打分项；不同 Combat Branch / Profile / Weapon / Grapple 场景可以用不同组合体现优势。
+
+### 51.2 Advantage Reversal 必须改变主动关系
+
+Major Advantage Reversal 不能只写成“女方扭转局势”。它至少应使一种可见控制关系发生真实变化，例如：
+
+```text
+男方持续压缩 Range / Route
+→ 女方制造 Forced Response
+→ 男方身体轴线或位置被迫改变
+→ 女方第一次重新获得主动攻击窗口
+→ 男方从连续逼迫转为被迫防守 / 后退 / 重新抢位
+```
+
+逆转后的下一组 Action Phrase 应继承新的 Advantage State，而不是双方马上回到对称中性站位。
+
+### 51.3 Advantage 与 Combat Intensity Curve
+
+`Advantage Pressure` 是 Combat Intensity Curve 的主要驱动之一，但不是唯一驱动。
+
+- 一方持续控制 Initiative / Range / Route 时，即使动作速度下降，强度仍可因为压力上升而提高；
+- Advantage Reversal 往往适合作为 Intensity Turning Point；
+- Signature Moment 可以建立在优势长期积累后的突然翻转，也可以建立在优势方进一步扩大控制后的高峰；
+- 禁止把每次 Advantage 变化都做成相同的强度峰值，避免模板化。
+
+### 51.4 Invisible Advantage / Nominal Reversal
+
+新增 Failure Signature：
+
+> **Invisible Advantage / Nominal Reversal / 不可见优势 / 名义逆转**
+
+典型触发：
+
+- Prompt 写“男方占优 / 女方逆转”，但 Attack Initiative、Range、Position、Route、Environment 等关系没有明显改变；
+- 双方只是轮流出招，谁都没有真正迫使对方做出被动响应；
+- Advantage State 在内部频繁变化，但成片看起来始终势均力敌或始终无压力差；
+- 所谓 Reversal 只是一方终于打中一次，并没有改变后续主动权；
+- 逆转后双方立即回到默认距离 / 默认站位，前面的状态变化没有继承；
+- Camera / Audio 通过强调“假装逆转”，但动作本身没有控制权变化。
+
+Final Preflight 发现上述问题时，应重写 Advantage 前后的 Action Phrase 与 Motion Handoff，优先让主动权、Range / Route / Position / Environment Control 的变化真实可见，而不是增加“局势逆转”说明文字。
+
+### 51.5 与 Preflight / Benchmark 的关系
+
+Final Preflight 增加：
+
+- 主要 Advantage State 是否拥有至少一种可见控制证据；
+- Major Reversal 是否真实改变主动关系；
+- Advantage 变化是否通过后续 Motion Handoff 被继承；
+- 是否触发 Invisible Advantage / Nominal Reversal。
+
+Golden Combat Benchmark 增加 **Visible Advantage Dynamics Realization** 与 **Nominal Reversal** Failure Contract。
+
+原则：
+
+> **优势不是“谁下一招轮到攻击”，而是谁正在迫使对方按自己的节奏、距离和路线作战。**  
+> **Reversal 不是一句“局势翻转”，而是控制权发生了观众能看见的转移。**
+
+## 52. 实测反馈增量决策记录（四）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-42 | Visible Advantage Dynamics | Advantage 必须通过 Attack Initiative、Forced Defense、Range / Angle / Route / Position / Environment Control、Recovery Burden 等动作事实外显；Major Advantage Reversal 必须真实改变至少一类战斗控制权，并用 Invisible Advantage / Nominal Reversal 拦截“文字说逆转、动作压力没变化” |
+
+V2-42 确认后，下一项优先验证 **Initiative Handoff / 主动权交接**：避免 Visible Advantage 最后仍被实现成“轮流各出一招”，需要进一步明确主动权如何在 Counter / Re-counter / Forced Response 中被抢夺、维持和转移。
