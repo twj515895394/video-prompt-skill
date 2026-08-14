@@ -392,9 +392,89 @@ V2-29 服从全局 Reference Architecture 的 `1 task + 少量 controls + 少量
 > **能力很多，不等于每次加载很多。**  
 > **先用索引和 Core 做判断，再为当前动作计划购买少量高价值知识上下文。**
 
+## 32. V2-30：Model Combat Capability Contract / 模型战斗能力合同
+
+正式新增轻量 **Model Combat Capability Contract**，作为 Model Adapter 与 Combat Choreography Engine 之间的标准能力接口。
+
+它不复制 Combat Core 规则，也不把模型特有知识写进 Core；Model Adapter 只负责提供“该模型在 Combat 场景下当前能稳定承载什么、哪些组合存在高风险”的能力摘要。
+
+```text
+Model Adapter
+        ↓
+Model Combat Capability Contract
+        ↓
+Combat Planning Context
+        ↓
+Exchange Depth / Phrase Complexity
+Action Execution Budget
+Camera Readability Budget
+Multi-character / Contact / Spatial Complexity
+```
+
+### 第一版能力维度
+
+第一版只维护真正会改变动作执行方案的少量维度，避免伪精确：
+
+- **Motion Complexity Capacity**：连续、高速、多层动作因果的承载能力；
+- **Multi-character Stability**：多人同时运动、身份保持、Target Handoff 的稳定性；
+- **Contact / Interaction Fidelity**：拳脚、抓控、武器交击、环境接触等真实互动的执行可信度；
+- **Spatial Continuity**：人物位置、方向、Range、环境关系的保持能力；
+- **Camera Complexity Capacity**：复杂动作与复杂运镜同时存在时的承载能力；
+- **Temporal / Prompt Following**：时长、事件顺序、关键动作要求与时间分配的兑现能力。
+
+第一版优先使用 `High / Medium / Low + capability notes + known risks`，不使用 7.8 / 6.4 等缺乏可靠测量依据的伪精确评分。
+
+### 能力来源与校准
+
+Contract 的初始判断可以来自模型官方能力说明、已知限制与内部测试，但后续应优先由 **Golden Combat Benchmark 实测结果持续校准**。
+
+例如若模型在静态能力上看似很强，但 Golden Benchmark 持续发现“高 Exchange Depth + aggressive camera movement 导致动作大量丢失”，Adapter 应记录类似：
+
+```text
+Motion Complexity: High
+Camera Complexity under dense combat: Medium
+Known Risk:
+dense action + aggressive camera movement causes execution loss
+```
+
+Choreography Engine 应据此优先降低 Camera Complexity、拆分 Phrase 或减少同一时间窗口的独立复杂信息，而不是直接把整场有效交战压缩掉。
+
+### Intent Preservation / 导演意图保护
+
+Model Capability Contract 只回答“**如何稳定实现已经确定的导演目标**”，不能成为偷偷修改用户意图的上位决策器。
+
+当用户已明确 High Coverage、高手高速连续对决、特定武器风格或观看目标时，模型能力不足应优先通过以下方式降载：
+
+```text
+保留核心 Combat Intent / Coverage / 观看目标
+        ↓
+降低无必要 Camera Complexity
+        ↓
+降低单个 Phrase 的同时复杂度
+        ↓
+拆成多个连续但不停战的 Phrase
+        ↓
+简化次要 Environment / Tactical 分支
+        ↓
+只在仍无法稳定执行时缩减次要动作细节
+```
+
+禁止因为模型能力偏弱就把“高手持续对决”自动改成“两三次简单交换”，也禁止用模型适配器覆盖用户明确指定的 Combat 结果或核心动作观感。
+
+### 与 V2-22 / V2-21 的关系
+
+- `Action Execution Budget` 决定当前时间窗口能承载多少执行复杂度；
+- `Camera Readability Budget` 决定动作与镜头如何共享有限感知 / 执行预算；
+- `Model Combat Capability Contract` 提供上述预算所需的**模型侧能力输入**。
+
+因此它是执行层反馈接口，不是新的创作风格系统，也不占 Fighting / Signature Moment 等 Library Detail Slot。
+
+> **模型能力影响实现路径，不偷偷改写导演意图。**  
+> **能力合同应由真实成片 Benchmark 持续校准，而不是依赖一次性主观印象。**
+
 ---
 
-## 32. V2 设计原则汇总
+## 33. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -415,9 +495,10 @@ V2-29 服从全局 Reference Architecture 的 `1 task + 少量 controls + 少量
 17. Combat 回归同时包含静态结构与真实成片质量回归，并评价 Prompt Intent → Generated Result Gap；
 18. Golden Scenario 采用 Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor，锁质量不锁创意；
 19. Combat Core 只定义跨战斗形式稳定成立的机制 / 质量合同；Modern / Wuxia / Weapon 等专项层负责具体表现，不允许专项反向污染 Core；
-20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行。
+20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行；
+21. Model Combat Capability Contract 为动作 / 镜头 / 多人 / 接触复杂度预算提供模型侧输入；模型能力只能改变实现路径，不能擅自降低已确定的 Combat Intent / Coverage / 观看目标，并由 Golden Benchmark 持续校准。
 
-## 33. 已确认决策记录
+## 34. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -450,18 +531,18 @@ V2-29 服从全局 Reference Architecture 的 `1 task + 少量 controls + 少量
 | V2-27 | Golden Scenario Contract | Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor；锁质量不锁创意 |
 | V2-28 | Core / 专项边界 | Combat Core 定义通用机制与质量合同；Modern / Wuxia / Weapon 等专项层实例化动作语言、物理尺度、节奏和 Contact 表现，禁止专项反向污染 Core |
 | V2-29 | Runtime Reference Loading | 两阶段按需加载：Core / 专项 Playbook / 轻量索引先形成 Combat Planning Context，再按默认约 2 个主要 Library Detail Slot 展开最需要的叶子知识；专业执行知识优先于创意增强知识 |
+| V2-30 | Model Combat Capability Contract | Model Adapter 用统一轻量能力合同向 Choreography Engine 提供 Motion / Multi-character / Contact / Spatial / Camera / Temporal 能力与 Known Risks；用于调整执行复杂度而不偷改用户导演意图，并由 Golden Benchmark 实测持续校准 |
 
-## 34. 全局复盘后待继续 Grill Me 的设计树
+## 35. 全局复盘后待继续 Grill Me 的设计树
 
-1. **模型能力如何正式进入动作预算**：是否形成轻量 Model Capability Contract，为 Exchange Depth、Action Execution Budget、Camera Complexity、多人 / 接触复杂度等提供能力输入；
-2. **Quick / Interactive 的运行闭环**：Interactive 已有决策链，Quick Mode 的自动推导顺序仍需确认；
-3. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
-4. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
+1. **Quick / Interactive 的运行闭环**：Interactive 已有决策链，Quick Mode 的自动推导顺序、两种模式是否共享同一规划图仍需确认；
+2. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
+3. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
 
-## 35. 当前阶段结论
+## 36. 当前阶段结论
 
-V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界与两阶段按需加载策略。
+V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界、两阶段按需加载策略，以及可由真实 Benchmark 校准的模型战斗能力接口。
 
-下一步应确认 **模型能力如何以轻量、稳定的方式进入 Choreography Engine 的复杂度预算**，再进入 Quick / Interactive 闭环、Audio 协同和最终实现归属。
+下一步应确认 **Quick / Interactive 是否共享同一套 Combat Planning Graph，仅在决策暴露方式上不同**，再进入 Audio 协同和最终实现归属。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
