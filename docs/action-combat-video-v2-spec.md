@@ -343,7 +343,43 @@ Interactive Mode 不要求机械地把链路中每一项都问一遍。
 - 能推断的低风险内容不追问；
 - 用户要求收口时立即生成最终 Prompt。
 
-## 11. V2 设计原则补充
+## 11. 已确认决策八：Coverage 四类时间预算
+
+Active Combat Coverage 不能只停留在 Low / Medium / High 的总比例，还需要进一步映射为 **Combat Sequence 时间预算结构**。
+
+新增四类内部时间预算：
+
+1. **Setup Budget**：真正开打前用于建立人物、空间、冲突和第一攻击触发点的时间；
+2. **Active Exchange Budget**：持续 Attack / Defense / Counter / Re-counter、追击、换位、缠斗和直接服务下一次攻防的反馈过程；
+3. **Combat Downtime Budget**：交战过程中暂时退出有效攻防的观察、纯喘息、长僵持、无攻防目的的绕圈或等待；
+4. **Ending Budget**：最后收招、结果确认、悬念姿态或自然停止所需时间。
+
+必须区分 **Active Combat Feedback** 与 **Downtime**：
+
+> 受击反馈、失衡、快速恢复、闪避后重新切入、短暂缠斗、推开后立即追击等，只要直接制造下一次攻防窗口，仍属于 Active Exchange，而不是 Downtime。
+
+真正的 Downtime 是双方明显退出当前攻防链、没有直接制造下一动作机会的停顿。
+
+### High Coverage 默认预算倾向
+
+对于类似“15 秒、高手 1v1、High Coverage”的短动作片，可采用以下内部参考，而不是硬秒表：
+
+- Setup：约 0.5–1.5 秒；
+- Active Exchange：约 11–13 秒；
+- 累计 Combat Downtime：尽量不超过约 1–2 秒，并优先拆散在 Action Phrase 之间；
+- 纯 Ending Pose / 静止落点：约 0.5–1 秒。
+
+具体数值必须根据总时长、Choreography Profile、Exchange Rhythm、战斗结果和模型能力动态调整，不得把上述区间实现为固定模板。
+
+### 预算约束原则
+
+- High Coverage 尤其限制过长 Setup；
+- Downtime 不能被“电影感”“重新站稳”“互相观察”之类描述无意扩张；
+- Ending 不应提前数秒让人物停止交锋；
+- 最后一轮 Action Phrase 可以延伸进入 Ending，使“最后一拍才停住”成为默认倾向；
+- Coverage 检查必须发生在最终 Prompt 组装前，防止时间轴完整但有效交战不足。
+
+## 12. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -358,8 +394,10 @@ Interactive Mode 不要求机械地把链路中每一项都问一遍。
 9. **最终 Prompt 应外显精彩动作，内部状态检查应尽量压缩。**
 10. **不因追求可读性而默认把短动作片压缩成少数几次控制动作。**
 11. **Interactive Mode 的上游选择必须驱动下游推荐，而不是参数问卷式逐项询问。**
+12. **Active Combat Feedback 与 Downtime 必须区分。** 只要反馈直接推动下一次攻防，就仍属于有效交战。
+13. **收尾预算服务最后一拍，不应提前终止战斗。**
 
-## 12. 已确认决策记录
+## 13. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -370,27 +408,27 @@ Interactive Mode 不要求机械地把链路中每一项都问一遍。
 | V2-05 | 角色打法 | 新增角色级 Combat Character Identity |
 | V2-06 | 整场动作观感 | 新增 Cinematic Choreography Profile；不放入一级视觉 Styles |
 | V2-07 | Interactive Mode | 建立 Combat 专属决策链；Choreography Profile 位于 Coverage / Rhythm 之前；上游选择驱动下游推荐 |
+| V2-08 | Coverage 时间预算 | 新增 Setup / Active Exchange / Combat Downtime / Ending 四类预算；High Coverage 限制非交战时间 |
 
-## 13. 尚待继续 Grill Me 的设计树
+## 14. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Active Combat Coverage 如何映射到具体时间预算与收尾预算；
-2. 不同 Exchange Rhythm 下，一个 Action Phrase 的默认复杂度与节奏如何动态变化；
-3. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
-4. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
-5. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-6. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-7. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-8. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
-9. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-10. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-11. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-12. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-13. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-14. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. 不同 Exchange Rhythm 下，一个 Action Phrase 的默认复杂度与节奏如何动态变化；
+2. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
+3. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
+4. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
+5. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+6. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+7. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
+8. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+9. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+10. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+11. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+12. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+13. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 14. 当前阶段结论
+## 15. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、编舞弱”倾向。
 
