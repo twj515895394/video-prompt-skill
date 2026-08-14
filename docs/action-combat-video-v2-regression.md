@@ -1,14 +1,19 @@
 # Action Combat Video V2 Regression & Quality Benchmark
 
-> 状态：V2 运行规则已按第一次真实成片反馈重新实现；**新的静态接线需复核，真实成片 Phase 8 必须重新生成，不得沿用旧 PASS。**
+> 状态：**Phase 11 Mandatory-path Rewire 已完成静态接线；Phase 12 Prompt-level G01 待重新生成 Prompt 验收；真实成片必须在 Phase 13 重新生成，不得沿用旧 PASS。**
 >
 > 设计依据：`docs/action-combat-video-v2-spec.md`
 >
 > 实施计划：`docs/action-combat-video-v2-implementation-plan.md`
+>
+> Traceability Audit：`docs/action-combat-video-v2-traceability-audit.md`
 
 ## 1. 验证原则
 
 ```text
+Level 0｜Prompt-level Regression
+→ Final Prompt 是否真的执行了当前 Spec，而不是只“读过规则”
+
 Level 1｜Static / Structural Regression
 → 规则、路由、序列化、Gate 是否真正接线
 
@@ -16,7 +21,7 @@ Level 2｜Generated Video Quality Regression
 → 成片是否真正连续打起来
 ```
 
-> **静态规则正确只是必要条件；真实成片质量是最终验收。**
+> **静态规则正确只是必要条件；Prompt 本身不合格时禁止直接进入真实视频；真实成片质量是最终验收。**
 
 本轮特别避免一个错误：如果成片仍不好，不优先继续增加更多抽象概念，而先检查 Concrete Choreography、Final Prompt Externalization、Model Capability 与现有规则是否真正兑现。
 
@@ -46,61 +51,142 @@ Timeline-induced Action Segmentation
 Camera Mobility Underfill
 Turn-taking Combat / Initiative Segmentation
 Invisible Advantage / Nominal Reversal
-Homogeneous Initiative Style
+Homogeneous Initiative Style / Identity-by-Demographic Shortcut
 Flat Combat Intensity
 ```
 
-这些属于少数统一运行合同下的观察结果，不代表必须建立九个独立运行模块。
+这些属于少数统一运行合同下的观察结果，不代表必须建立同等数量独立运行模块。
 
 ---
 
-## 3. Static Regression Gate（本轮）
+## 3. 第二次 Interactive → Prompt 失败证据
 
-### 3.1 Choreography Runtime
+### 3.1 输入
 
-必须确认：
+- 15 秒；
+- 中国女性 + 中国男性；
+- 普通职场服装；
+- 两人都是敌对杀手组织的职业杀手；
+- 办公室；
+- 用户明确要求“贴身搏斗，不要隔着办公桌”；
+- Interactive Mode。
 
-- [ ] Planning Gate 位于具体 Phrase 设计前；
-- [ ] Coverage / Exchange Depth / Kinetic Scope 三个充分性维度并列存在；
-- [ ] Temporal Action Packing 已接线；
-- [ ] Motion Handoff / Neutral Reset Discipline 已接线；
-- [ ] Continuous Action Spine + Soft Time Anchors 已成为高密度 Combat 默认；
-- [ ] Combat Intensity Curve 已接线但不是固定三段式；
-- [ ] Visible Advantage / Initiative Handoff 已转成动作原则；
-- [ ] Character Identity 影响抢主动方式，但没有职业模板；
-- [ ] Camera Complexity 与 Camera Mobility 正式分离；
-- [ ] Final Preflight Gate 可以否决并内部重写。
+### 3.2 实际运行读取
 
-### 3.2 Prompt Assembly
+实际读取了：
 
-必须确认：
+- `SKILL.md`；
+- input / task indexes；
+- action-combat `index / core / choreography / modern`；
+- interactive contract；
+- single-shot template；
+- choreography profiles / fighting profiles；
+- subject-motion / camera-direction / spatial-blocking；
+- cinematic style；
+- generic model。
 
-- [ ] Action Language Dominance；
-- [ ] High-density Combat 默认不机械使用 1–3 秒硬时间盒；
-- [ ] Hard Timeline 只有明确理由才使用；
-- [ ] Kinetic Scope 被外显为全身 / 空间动作；
-- [ ] Advantage / Initiative 不主要通过 Meta 说明；
-- [ ] Stable Camera 不被序列化成 Static Camera；
-- [ ] Negative Constraints 少而有针对性；
-- [ ] Prompt Assembly 失败时先重写，而不是直接交付。
+**没有读取 `prompt-assembly/control.md`。**
 
-### 3.3 Interactive
+因此当时的 Runtime 合法绕过了 V2-40 / Final Assembly / Negative Discipline。
 
-必须确认：
+### 3.3 最终 Prompt 典型结构
 
-- [ ] 不过早默认先问“谁赢”；
-- [ ] 高手连续对决不会漏掉相关 Choreography Profile；
-- [ ] Character Identity 的高价值分叉优先于可自动推导 Camera 问卷；
-- [ ] Kinetic / Contact / Packing / Handoff / Sufficiency / Preflight 不成为固定问题；
-- [ ] 用户要求收口时立即执行完整内部规划并交付。
+```text
+0–1.5s：对峙 / 进入
+1.5–4s：男方压迫，女方偏开反击
+4–7s：男方抓控，女方脱离
+7–10s：男方重新压迫，女方防守
+10–13.5s：男方抱控，女方反转
+13.5–15s：控制收尾
+```
 
-### 3.4 Diagnostic
+### 3.4 Prompt-level 判定
 
-`combat-choreography-underfill` 应统一识别 Coverage、Kinetic、Temporal、Motion Handoff、Camera Mobility、Initiative / Advantage、Intensity 等 Under-realization，而不是新增大量重复 Diagnostic。
+- **V2-35 Final Preflight：FAIL** — Hard Timeline、无依据 Negative 等没有被 Gate 否决；
+- **V2-36 Kinetic Scope：PARTIAL/FAIL** — 上肢 / 抓控仍占主体；
+- **V2-37 Camera Mobility：PARTIAL** — 只有“低幅度稳定侧跟”，没有真正形成 fight-space Camera Path；
+- **V2-38 Temporal Packing：FAIL** — 多个 2.5–3.5 秒窗口仍只承载一个宏事件；
+- **V2-39 Motion Handoff：PARTIAL/FAIL** — 宏观仍是“一方做一组，另一方解决”；
+- **V2-40 Continuous Spine：FAIL** — 直接输出六个 Hard Time Blocks；
+- **V2-41 Intensity Curve：PARTIAL** — 有局部压力变化，但被硬块割裂；
+- **V2-42 Visible Advantage：PARTIAL/PASS** — 门框 / 墙面压迫有一定可见优势证据；
+- **V2-43 Initiative Handoff：FAIL** — 主要仍是轮流式宏动作；
+- **V2-44 Character Identity Guard：FAIL（反例）** — 推荐直接把年轻女性推成“速度 / 角度 / 闪避”，把年长矮胖男性推成“体重 / 力量 / 抓控”；
+- **Negative Discipline：FAIL** — 用户未要求禁止武器，却自动加入“武器或枪械”等剧情限制；
+- **Range Initialization：FAIL / 用户意图偏离** — 用户明确“贴身搏斗”，Prompt 却从约 2.5 米 + 1.5 秒对峙开始。
+
+### 3.5 根因结论
+
+此失败样本不能简单归因于 Choreography Rule 不足。主要根因按优先级是：
+
+```text
+A. Prompt Assembly / Final Preflight 不是必经路径
+→ B. Single-shot 通用时间轴规则覆盖 V2-40
+→ C. Character Identity 推荐存在人口属性快捷映射
+→ D. Concrete Choreography 仍偏上肢 / 抓控
+→ E. 最后才是模型执行能力
+```
+
+Phase 11 只修 A / B / C；D 留到 Phase 12 Prompt-level 结果之后再决定是否进入 Concrete Knowledge Audit。
 
 ---
 
-## 4. Golden Scenario Contract
+## 4. Static Regression Gate（Phase 11）
+
+### 4.1 Mandatory Runtime Path
+
+- [x] `SKILL.md` 明确 Action Combat 最终固定读取 `prompt-assembly/control.md`；
+- [x] Combat Prompt Assembly 不再占普通 `0-3 Controls` 可选预算；
+- [x] `action-combat-video/index.md` 明确 `Final Assembly → Final Preflight → FAIL rewrite → PASS template` 必经链；
+- [x] Output Template 只能承载结果，不能覆盖 Combat Task 的时间序列化规则；
+- [x] Quick / Interactive 均不能跳过 Final Assembly / Preflight。
+
+### 4.2 Choreography Runtime
+
+- [x] Planning Gate 位于具体 Phrase 设计前；
+- [x] Coverage / Exchange Depth / Kinetic Scope 三个充分性维度并列存在；
+- [x] Temporal Action Packing 已接线；
+- [x] Motion Handoff / Neutral Reset Discipline 已接线；
+- [x] Continuous Action Spine + Soft Time Anchors 已成为高密度 Combat 默认；
+- [x] Combat Intensity Curve 已接线但不是固定三段式；
+- [x] Visible Advantage / Initiative Handoff 已转成动作原则；
+- [x] Initiative Handoff 受 Character Identity 约束但没有新增状态机；
+- [x] Camera Complexity 与 Camera Mobility 正式分离；
+- [x] Final Preflight Gate 可以否决并内部重写。
+
+### 4.3 Prompt Assembly / Template
+
+- [x] Action Language Dominance；
+- [x] High-density Combat 默认不机械使用 1–3 秒硬时间盒；
+- [x] Hard Timeline 只有用户 / 同步 / Model Benchmark 等明确理由才使用；
+- [x] Single-shot Template 已增加 Action Combat Override；
+- [x] Kinetic Scope 被要求外显为全身 / 空间动作；
+- [x] Stable Camera 不被序列化成 Static Camera；
+- [x] Negative Constraints 少而有针对性；
+- [x] Prompt Assembly / Preflight 失败时先内部重写，而不是直接交付。
+
+### 4.4 Interactive
+
+- [x] 不过早默认先问“谁赢”；
+- [x] 高手连续对决不会漏掉相关 Choreography Profile；
+- [x] Character Identity 的高价值分叉优先于可自动推导 Camera 问卷；
+- [x] Character Identity Recommendation Guard 明确禁止职业 / 性别 / 年龄 / 外貌 / 体型直接映射打法；
+- [x] Kinetic / Contact / Packing / Handoff / Sufficiency / Preflight 不成为固定问题；
+- [x] 用户要求收口时立即执行完整内部规划、Assembly 与 Preflight。
+
+### 4.5 Diagnostic
+
+`combat-choreography-underfill` 继续统一识别 Coverage、Kinetic、Temporal、Motion Handoff、Camera Mobility、Initiative / Advantage、Intensity 等 Under-realization，不新增大量重复 Diagnostic。
+
+### Phase 11 Static Gate
+
+> **PASS — Mandatory-path / Template Override / Interactive Identity Guard 已完成静态接线。**
+
+注意：该 PASS 只证明“现在必须走这条路”，**不证明下一次 Final Prompt 一定已经达到质量要求。Phase 12 必须用同一 G01 输入重新跑 Prompt。**
+
+---
+
+## 5. Golden Scenario Contract
 
 每个 Golden Scenario 使用：
 
@@ -115,19 +201,36 @@ Fixed Input
 
 ---
 
-## 5. G01｜15 秒办公室高手近身对决（当前主回归）
+## 6. G01｜15 秒办公室高手近身对决（当前主回归）
 
 ### Fixed Input
 
 - 时长：约 15 秒；
-- 场景：下班后的普通办公室；
+- 场景：下班后的普通办公室开放区域；
 - 人物：中国女性 + 中国男性，普通职场服装；
 - 隐藏身份：敌对组织的专业杀手；
 - 风格：现实基础上的电影化近身格斗；
+- 用户额外约束：贴身搏斗，不隔着办公桌；
 - 目标：高手连续攻防，而不是两三次孤立动作；
-- Ending：按当前测试版本锁定，不允许 Ending 提前吞掉 Active Exchange。
+- Ending：不允许 Ending 提前吞掉 Active Exchange。
 
-### Quality Contract
+### Prompt-level Quality Contract
+
+在进入真实视频前，Final Prompt 本身必须先满足：
+
+- 不把“贴身搏斗”初始化成明显远距离 + 长 Setup；
+- 不默认使用多个 1–3 秒 Hard Time Blocks；
+- Active Exchange 主要是一条 Continuous Action Spine；
+- 一个较长动作窗口不能只有一个宏动作；
+- 动作链存在可见 Motion Handoff，不能主要靠“然后 / 随后”；
+- Whole-body / Footwork / Hip / Torso / Center-of-mass / Position / Range / Axis 至少按当前动作形式合理外显；
+- Character Identity 不由人口属性快捷映射；
+- Counter / Re-counter 不是双方轮流完成完整攻击段；
+- Camera 有简单连续 Mobility，跟随实际 fight-space；
+- Negative 只保留当前真实高风险，不自行禁止用户未提及的剧情元素；
+- Ending 只占短收束。
+
+### Generated-video Quality Contract
 
 必须观察：
 
@@ -158,15 +261,17 @@ Fixed Input
 - A 打一段、B 打一段的轮流表演；
 - Prompt 说“逆转”但控制关系不变；
 - 两人抢主动方式完全同质；
+- Character Identity 被职业 / 性别 / 年龄 / 体型快捷模板化；
 - Camera 长期近似固定；
 - 全程同速同压力；
 - 长时间静态 Control；
 - Camera Shake / Audio 代替真实 Contact；
-- 最后数秒提前 Pose。
+- 最后数秒提前 Pose；
+- 用户未要求的剧情禁止项被写进 Negative。
 
 ---
 
-## 6. 其余 Golden Scenarios
+## 7. 其余 Golden Scenarios
 
 保留原 V2 八类覆盖面，具体动作答案不锁死：
 
@@ -182,7 +287,7 @@ Fixed Input
 
 ---
 
-## 7. Generated Video Quality Metrics
+## 8. Generated Video Quality Metrics
 
 ### M01｜Active Combat Coverage Realization
 真正有效交战时间。
@@ -219,7 +324,7 @@ Position / Range / Condition / Weapon / Environment State 连续性。
 
 ---
 
-## 8. Prompt Intent → Generated Result Gap
+## 9. Prompt Intent → Generated Result Gap
 
 每次必须记录“计划”和“成片实际”之间的差距，例如：
 
@@ -241,7 +346,7 @@ Prompt 写了某条规则不等于成片兑现。
 
 ---
 
-## 9. Benchmark Run Record
+## 10. Benchmark Run Record
 
 ```text
 Benchmark Run ID:
@@ -269,9 +374,39 @@ Next Adjustment:
 
 ---
 
-## 10. Phase 8 当前验收口径
+## 11. Phase 12 Prompt-level G01 Gate
 
-本轮实现完成后必须重新生成 G01；旧视频只能作为 Failure Evidence，不能作为新版本 PASS 证据。
+使用与第二次失败样本相同或等价的办公室输入，重新跑 Interactive → Final Prompt。
+
+### 必须记录
+
+- 实际 Read 列表；
+- 是否读取 `prompt-assembly/control.md`；
+- Interactive 问题与推荐；
+- Final Prompt；
+- Prompt-level Quality Contract 每项 PASS / PARTIAL / FAIL；
+- 与第二次失败 Prompt 的结构差异。
+
+### Phase 12 Pass 条件
+
+至少满足：
+
+- `prompt-assembly` 确实进入 Read / Runtime；
+- 不再自动输出六个类似 Hard Time Blocks；
+- 不再从人口属性直接推打法；
+- 不再从 2.5m + 1.5s 对峙开始违反“贴身搏斗”；
+- Action Spine 内明显比旧 Prompt 有更高 Temporal Packing / Motion Handoff；
+- Whole-body / Spatial Movement 比旧 Prompt 更明显；
+- Camera Mobility 与 fight-space 对应；
+- Negative 没有无依据剧情限制。
+
+如果 Phase 12 FAIL：先修 Runtime / Template / Concrete Knowledge，**不进入真实视频生成，也不继续新增一级抽象机制。**
+
+---
+
+## 12. Phase 13 Generated Video 验收口径
+
+Phase 12 Prompt-level PASS 后才重新生成 G01；旧视频只能作为 Failure Evidence，不能作为新版本 PASS 证据。
 
 G01 至少需要看到相对旧结果的明确改善：
 
@@ -294,12 +429,14 @@ G01 至少需要看到相对旧结果的明确改善：
 
 ---
 
-## 11. 当前状态
+## 13. 当前状态
 
-- V2-35～V2-43 相关真实成片反馈：✅ 已映射进运行规则；
-- Choreography Playbook：✅ 已收敛实现；
-- Prompt Assembly：✅ 已更新连续动作序列化；
-- Interactive Contract：✅ 已修正规划 / 追问顺序；
-- Underfill Diagnostic：✅ 已扩展综合 Failure Signatures；
-- 新版 Static Regression：⏳ 需要基于当前 commit 再检查；
-- 新版 G01 Actual Generated Video：⏳ **未执行，不得宣称质量 PASS。**
+- V2-35～V2-45 Spec / Traceability：✅ 已重新对齐；
+- Phase 11 Mandatory Final Assembly / Preflight：✅ Static PASS；
+- Single-shot Combat Override：✅ Static PASS；
+- Interactive Character Identity Guard：✅ Static PASS；
+- Choreography Playbook Consolidation：✅ 保留，待 Prompt-level 验证；
+- Prompt Assembly：✅ 已成为 Combat 必经出口；
+- Underfill Diagnostic：✅ 集中式保留；
+- Phase 12 Prompt-level G01：⏳ **待执行**；
+- Phase 13 G01 Actual Generated Video：⏳ **未执行，不得宣称质量 PASS。**
