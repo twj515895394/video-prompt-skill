@@ -1,483 +1,433 @@
 # Action Combat Video V2 Implementation Plan
 
-> 状态：**仓库侧 Phase 0–7、Phase 9 已完成；Phase 8 真实成片质量回归待外部视频生成端执行**
+> 状态：**V2-01～34 初版实施已完成；V2-35～当前实测反馈增量已进入 Traceability Rework。上一轮 Runtime 修改视为候选实现，必须经过本计划 Phase 10～12 重新验收。**
 >
 > 设计真源：`docs/action-combat-video-v2-spec.md`
 >
+> Traceability Audit：`docs/action-combat-video-v2-traceability-audit.md`
+>
 > 回归真源：`docs/action-combat-video-v2-regression.md`
 >
-> V1 基线：`docs/action-combat-video-spec.md` / `docs/action-combat-video-implementation-plan.md`
->
-> 核心验收原则：**真实成片质量优先于静态规则覆盖；静态正确只是必要条件。**
+> 核心验收原则：**真实成片质量优先于静态规则覆盖；但任何 Runtime 修改必须先能从 Spec 追踪到 Implementation Plan，再追踪到具体文件与 Regression。**
 
 ## 1. 实施目标
 
-V2 不推翻 V1 的 Combat State / Continuity Engine，而是在同一个 `action-combat-video` Task 内正式落地 **Combat Choreography Engine / 动作编排引擎**。
+V2 不推翻 V1 Combat State / Continuity Engine，而是在 `action-combat-video` Task 内增强 Combat Choreography，并确保新增设计真正成为运行必经路径。
 
-目标：
+目标分三层：
 
-- Combat Coverage 真正兑现，而不是 Timeline 写满但实际不打；
-- 有效攻防足够丰富、连续、有因果；
-- Combat Character Identity 能从动作看出差异；
-- Environment 真正改变战术 / 空间；
-- Strike / Grapple / Throw / Weapon / Environment Contact 有可信 Solidity；
-- 少量 Signature Moment 真正形成视觉记忆；
-- Camera / Audio 服务动作可读性、节奏和实感；
-- Final Prompt 由正向可见动作语言主导；
-- Quick / Interactive 共用同一 Combat Planning Graph；
-- Model Combat Capability 只反馈执行路径，不偷改导演意图；
-- 回归升级为 Static + Generated Video Quality 双层体系。
+### Layer A｜Combat 设计质量
 
-实施总原则：
+- Coverage 真正兑现；
+- Action Phrase 足够丰富、连续、有因果；
+- Character Identity 可见且不按职业 / 性别 / 年龄 / 体型模板化；
+- Kinetic Scope 能体现全身与空间运动；
+- Contact / Environment / Signature Moment 有真实作用；
+- 高手交换不是“一招一停 / 轮流出招”。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、丰富、好看、有实感”；专项 Playbook 负责“这种战斗具体怎么表现”。**
->
-> **Clarity Through Structure, Not Action Reduction.**
->
-> **State Machine Internalized, Choreography Externalized.**
+### Layer B｜Prompt 序列化与执行质量
+
+- Final Prompt 由正向可见动作主导；
+- 高密度 Combat 默认使用 Continuous Action Spine + Soft Time Anchors；
+- Hard Timeline 不能成为 Neutral Reset；
+- Camera Complexity 与 Camera Mobility 分离；
+- Negative Constraint 少而有依据；
+- Prompt Assembly + Final Preflight 成为 Combat 必经出口，而不是可选 Reference。
+
+### Layer C｜工程治理
+
+- Spec → Plan → Runtime → Regression 可追踪；
+- Failure Signature 不自动等于独立 Runtime 模块；
+- 机制膨胀必须通过 Consolidation 控制；
+- 新规则必须证明能改变实际生成行为；
+- Prompt-level Gate 未通过时，不直接进入真实视频 Benchmark。
 
 ---
 
-## 2. 分批顺序
+## 2. 总体实施顺序
 
 ```text
-Phase 0 设计冻结与基线
-→ Phase 1 Task 运行骨架
-→ Phase 2 Choreography Engine 与专项 Playbook
-→ Phase 3 Combat Libraries
-→ Phase 4 Final Prompt / Output Contracts
-→ Phase 5 Model Capability Contract
-→ Phase 6 Diagnostics
-→ Phase 7 Static Regression + Golden Benchmark Framework
-→ Phase 8 Generated Video Quality Benchmark
-→ Phase 9 文档 / 索引收口
+Phase 0  V2-01～34 设计冻结与基线
+→ Phase 1  Task 运行骨架
+→ Phase 2  Choreography + Specialist
+→ Phase 3  Combat Libraries
+→ Phase 4  Final Prompt / Output Contracts
+→ Phase 5  Model Capability
+→ Phase 6  Diagnostics
+→ Phase 7  Static Regression + Golden Framework
+→ Phase 8  Generated Video Benchmark（第一轮暴露失败）
+→ Phase 9  初版文档 / 索引收口
+
+第一次真实反馈后新增：
+
+→ Phase 10 Spec / Traceability Re-baseline
+→ Phase 11 Runtime Mandatory-path Rewire
+→ Phase 12 Prompt-level G01 Regression
+→ Phase 13 Generated Video Re-run + Model Calibration
 ```
 
-每阶段原则：独立职责、独立 Gate、可定位回归；不为“模块化”复制正文，不重新引入固定动作数量模板或职业 → 固定打法映射。
+原则：
+
+> **先修接线，再修规则；先验证 Prompt 是否执行 Spec，再判断是否需要增加新设计。**
 
 ---
 
-## 3. Phase 0｜设计冻结与基线 — ✅ 完成
+## 3. Phase 0～9｜初版 V2 实施基线
 
-### 产物
+Phase 0～9 对应 V2-01～34，已建立：
 
-- `docs/action-combat-video-v2-spec.md`
-- `docs/action-combat-video-v2-implementation-plan.md`
+- Core / Choreography / Modern / Wuxia 文件职责；
+- Active Combat Coverage / Rhythm / Action Phrase / Exchange Depth；
+- Character Identity / Tactical Interaction / Environment Affordance；
+- Contact Solidity / Signature Moment；
+- Action Execution Budget + Action Sufficiency；
+- Camera Readability / Combat Audio；
+- Two-stage On-demand Loading；
+- Combat Choreography Profile / Signature Pattern；
+- Prompt Action-first / Positive-first；
+- Model Combat Capability Contract；
+- Combat Underfill / Contact Solidity Diagnostics；
+- 8 个 Golden Scenario Framework。
 
-### 已完成
+### 历史状态说明
 
-- V2-01 ～ V2-34 一级设计全部确认；
-- Combat Choreography Engine 确认属于 `action-combat-video` Task；
-- 确认新增 `choreography-playbook.md`；
-- 不新增 Combat Choreography 全局 Control；
-- 确认 Static + Generated Video Quality 双层回归；
-- Golden Scenario 采用 `Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor`。
+原 Implementation Plan 将 V2-01～34 的 Static Regression 标记 PASS。第一次和第二次真实运行证明：
 
-### Gate
+> **“Reference 中存在规则”不等于“运行时必经并执行规则”。**
 
-一级设计树已冻结；实现期只允许为落地 / 回归做局部校正。
-
----
-
-## 4. Phase 1｜Task 运行骨架 — ✅ 完成
-
-### 文件
-
-```text
-references/tasks/action-combat-video/index.md
-references/tasks/action-combat-video/core-playbook.md
-references/tasks/action-combat-video/choreography-playbook.md
-SKILL.md
-```
-
-### 已完成
-
-- 新增 `choreography-playbook.md`；
-- `core-playbook.md` 回归 State / Continuity / Battle Runtime Skeleton；
-- Battle Beat 明确不是固定动作数量容器；
-- 删除 V1 `2–4` 全局动作锚点的运行期职责；
-- Router 改为 `core + choreography + 1 specialist`；
-- Two-stage On-demand Loading 接入；
-- 建立轻量 `Combat Planning Context`；
-- Quick = Full Planning + Silent Resolution；
-- Interactive = 同一 Planning Graph + Decision Exposure Policy；
-- SKILL 入口同步。
-
-### Gate
-
-✅ Core / Choreography 职责分离；Quick 不绕过 Choreography；Modern / Wuxia 仍只选一个专项分支。
+因此从 Phase 10 起，旧 Static PASS 不再覆盖新增 V2-35～当前反馈增量。
 
 ---
 
-## 5. Phase 2｜Choreography + 专项实现 — ✅ 完成
+## 4. 第一次真实反馈形成的设计增量
 
-### 文件
+本轮增量设计从 **V2-35** 开始：
 
-```text
-references/tasks/action-combat-video/choreography-playbook.md
-references/tasks/action-combat-video/modern-combat-playbook.md
-references/tasks/action-combat-video/cinematic-wuxia-playbook.md
-```
+- V2-35 Combat Planning / Final Preflight Gate；
+- V2-36 Combat Kinetic Scope；
+- V2-37 Camera Mobility Coupling；
+- V2-38 Temporal Action Packing；
+- V2-39 Combat Action Interlock / Motion Handoff；
+- V2-40 Continuous Action Spine + Soft Time Anchors；
+- V2-41 Combat Intensity Curve；
+- V2-42 Visible Advantage Dynamics；
+- V2-43 Initiative Handoff。
 
-### 已完成
+此外对话已确认：
 
-Choreography 主链已覆盖：
+- Initiative Handoff 的表现应受 Character Identity 约束，但不新增大型状态机；
+- 暂停继续纵向细化 Combat 概念，进入横向 Design Tree Audit；
+- 动作本体一级机制暂时冻结，重点转向 Concrete Choreography Knowledge；
+- Runtime 实现采用 Consolidation，避免“一个失败现象 = 一个新模块”。
 
-- Choreography Profile；
-- Active Combat Coverage + 时间预算；
-- Rhythm；
-- Action Phrase / Exchange Depth；
-- Combat Character Identity；
-- Tactical Interaction；
-- Environment Action Affordance；
-- Contact Solidity；
-- Signature Moment；
-- Action Execution Budget + Action Sufficiency Check；
-- Camera Readability Budget；
-- Combat Audio Choreography；
-- Clarity Through Structure；
-- Final Prompt Action Externalization；
-- Model Capability 输入边界。
-
-Modern 已明确：
-
-- 职业不直接映射 Tactical Close Combat；
-- 高手连续攻防 / Mixed Rhythm / Contact Solidity 的现代实现；
-- Strike / Grapple / Takedown / Environment 不同反馈；
-- Camera / Audio 只做专项表现。
-
-Wuxia 已明确：
-
-- 保持电影武侠物理尺度；
-- Blade / Weapon Clash / 长兵器距离采用正确 Contact / Range 逻辑；
-- 身法必须有起点 / 路径 / 落地；
-- 不被现代“重拳反馈”污染。
-
-### Gate
-
-✅ Core 质量合同一致，Modern / Wuxia 表现语法不同；专项层不反向重定义 Core / Choreography。
+这些结论必须先写回 Spec，再执行 Phase 11。
 
 ---
 
-## 6. Phase 3｜Combat Libraries 与按需知识 — ✅ 完成
-
-### 新增
-
-```text
-references/libraries/combat-choreography-profiles/library.md
-references/libraries/signature-moment-patterns/index.md
-references/libraries/signature-moment-patterns/patterns/constrained-space-reversal.md
-references/libraries/signature-moment-patterns/patterns/environment-assisted-counter.md
-references/libraries/signature-moment-patterns/patterns/rapid-counter-recounter.md
-references/libraries/signature-moment-patterns/patterns/weapon-distance-transition.md
-references/libraries/signature-moment-patterns/patterns/false-opening-trap.md
-references/libraries/signature-moment-patterns/patterns/momentum-redirection.md
-references/libraries/signature-moment-patterns/patterns/dominance-reversal.md
-```
-
-### 修改
-
-```text
-references/libraries/combat-fighting-profiles/library.md
-references/libraries/combat-martial-profiles/library.md
-references/libraries/combat-weapon-profiles/library.md
-references/libraries/combat-environment-patterns/library.md
-references/libraries/index.md
-```
-
-### 已完成
-
-- 6 个稳定 Choreography Profile Seed；
-- 7 个 Signature Moment Pattern Seed；
-- Signature Pattern 按动作机制组织，不按影视标题组织；
-- Runtime Pattern 与 Source Case 研究职责分离；
-- 当前未伪造 / 强绑未经核实的影视 Source Case；
-- Fighting 明确 `职业 ≠ Character Identity ≠ Fighting Profile`；
-- Martial / Weapon 增加正确 Contact Modality / Range / Initiative；
-- Environment 改成 Affordance 驱动；
-- 默认约 2 个主要 Library Detail Slot；
-- 专业正确性优先于 Signature 创意增强；
-- 不建设 Combat Character Identity / occupation portrait Library。
-
-### Gate
-
-✅ 能力增加但单次 Runtime Reference 仍保持小而有针对性；`source-cases/` 不进入默认运行。
-
----
-
-## 7. Phase 4｜Final Prompt / Output Contracts — ✅ 完成
-
-### 文件
-
-```text
-references/controls/prompt-assembly/control.md
-assets/templates/mode-quick-output-contract.md
-assets/templates/mode-interactive-output-contract.md
-assets/templates/model-adapted-output-template.md
-```
-
-### 已完成
-
-- Action-first Semantic Priority；
-- `State Machine Internalized, Choreography Externalized`；
-- Final Prompt 由 Action Phrase / Reaction / Contact / Spatial Change 主导；
-- Positive-first Constraint Strategy；
-- Negative 只用于正向表达不足以解决的真实高风险；
-- 禁止无根据的 `no visible weapons` 等任意限制；
-- 压缩时优先删 Meta / 重复 Constraint，不优先删有效攻防；
-- Quick / Interactive 最终质量标准一致；
-- Model Adapter 只能改变序列化和执行路径。
-
-### Gate
-
-✅ Final Prompt 不再由 State Table / Negative Boilerplate 主导。
-
----
-
-## 8. Phase 5｜Model Combat Capability Contract — ✅ 完成（待 Phase 8 校准等级）
-
-### 文件
-
-```text
-references/models/index.md
-references/models/generic.md
-references/models/seedance-2.md
-references/models/ltx-2-3.md
-```
-
-### 统一维度
-
-- Motion Complexity Capacity；
-- Multi-character Stability；
-- Contact / Interaction Fidelity；
-- Spatial Continuity；
-- Camera Complexity Capacity；
-- Temporal / Prompt Following。
-
-### 已完成
-
-- 统一 Capability Contract；
-- 只有可靠证据才允许 High / Medium / Low；
-- 无实测时明确 `Unverified`；
-- Generic / Seedance 2.0 / LTX-2.3 当前 Combat 专项能力均不伪造等级；
-- Known Risks 与正式 Capability Rating 分开；
-- 降载顺序：Camera → 同窗口复杂度 → Phrase 拆分 → 次要分支；
-- 禁止因模型能力弱直接把 High Coverage 变成低动作量。
-
-### Gate
-
-✅ Contract 架构完成；⚠️ 真实能力等级必须在 Phase 8 基于 Golden Benchmark 再校准。
-
----
-
-## 9. Phase 6｜Combat Diagnostics — ✅ 完成
-
-### 新增
-
-```text
-references/diagnostics/combat-choreography-underfill/diagnostic.md
-references/diagnostics/combat-contact-solidity-failure/diagnostic.md
-```
-
-### 三类主诊断
-
-```text
-打得不对 / 接不上
-→ combat-state-continuity-failure
-
-打得太少 / 不够丰富
-→ combat-choreography-underfill
-
-打到了但打不实
-→ combat-contact-solidity-failure
-```
-
-### 已完成
-
-- Underfill 检查 Coverage / Active Exchange / Phrase / Exchange Depth / Downtime；
-- Solidity Failure 检查 Contact Modality 与 Commitment → Transfer → Reaction → Consequence；
-- Anatomy / Physics / Camera / Audio 等基础问题继续走原有 Diagnostic；
-- `diagnostics/index.md`、`references/index.md`、`SKILL.md` 已接线。
-
-### Gate
-
-✅ Diagnostic 主因分工明确，不用一个“大而全 Combat Diagnostic”重复所有问题。
-
----
-
-## 10. Phase 7｜Static Regression + Golden Framework — ✅ 完成
-
-### 文件
-
-`docs/action-combat-video-v2-regression.md`
-
-### 已完成
-
-- Task / Runtime 静态回归；
-- Choreography 机制检查；
-- 废弃规则检查；
-- Knowledge / Loading 检查；
-- Final Prompt Action-first 检查；
-- Model Contract 检查；
-- Diagnostic 路由检查；
-- 首批 8 个 Golden Scenario；
-- Quality / Failure / Optional Test Anchor；
-- Generated Video 10 项质量指标；
-- Prompt Intent → Generated Result Gap；
-- V1 / V2 对照方法；
-- Benchmark Run Record Schema。
-
-### 本阶段发现并修复
-
-静态 Gate 首次发现：
-
-- `references/tasks/index.md` 未登记 Choreography；
-- `references/index.md` / `SKILL.md` 对新 Library / Diagnostic 接线不完整。
-
-均已修复并重新检查。
-
-### Gate
-
-✅ **Static / Structural Regression PASS。**
-
-Static PASS 不等于成片质量 PASS。
-
----
-
-## 11. Phase 8｜Generated Video Quality Benchmark — ⏳ 待真实生成端执行
+## 5. Phase 10｜Spec / Traceability Re-baseline — 🚧 当前阶段
 
 ### 目标
 
-用真实生成视频验证 V2 是否真正优于 V1。
-
-### Golden Scenarios
-
-1. 15 秒办公室高手近身对决；
-2. 力量型 vs 灵活型；
-3. 狭窄走廊 / 受限空间；
-4. 硬派拳脚 Contact Solidity；
-5. 短兵器刀战；
-6. 长兵器距离切换；
-7. Grapple / Takedown；
-8. 1vN Target Handoff。
-
-### 必记字段
+重新建立：
 
 ```text
-Golden Scenario ID
-Skill / Commit
-Prompt Version
-Model / Model Version
-Generation Parameters
-Seed（if supported）
-Final Prompt
-Output Video
-Metric Scores / Notes
-Prompt Intent → Generated Result Gap
-Failure Signature
-Pass / Partial / Fail
+Spec Decision
+→ Runtime Requirement
+→ Affected Files
+→ Implementation Strategy
+→ Regression Evidence
 ```
 
-### 成片指标
+### 输入
 
-- Active Combat Coverage Realization；
-- Exchange / Choreography Richness；
-- Character Distinction；
-- Tactical Interaction；
-- Combat Contact Solidity；
-- Environment Integration；
-- Signature Moment；
-- Camera Readability；
-- Spatial / Physical Continuity；
-- Rhythm Variation。
+- `docs/action-combat-video-v2-spec.md`
+- `docs/action-combat-video-v2-traceability-audit.md`
+- 第一次真实视频反馈
+- 第二次 Interactive → Final Prompt 失败样本
 
-### 当前边界
+### 必做
 
-当前 ChatGPT 工具环境没有可直接调用的目标视频生成器，因此**不能诚实地产生 Phase 8 成片和评分**。
+1. 补齐 Spec 中已确认但尚未记录的后续决策；
+2. 把 V2-35～当前确认点纳入正式 Implementation Mapping；
+3. 逐文件标记：`Modify / Keep / No Change Required / Roll Back`；
+4. 判断通用 Controls / Templates 是否会覆盖 Combat 专项规则；
+5. 检查上一轮 5 个 Runtime 提交，禁止直接视为完成；
+6. 明确 Prompt-level Regression Gate。
 
-不得：
+### Phase 10 Gate
 
-- 用静态 Prompt 代替成片结论；
-- 伪造 Seedance / LTX 生成结果；
-- 给 Model Capability 编造 High / Medium / Low。
+只有以下条件都满足才能进入 Phase 11：
 
-Phase 8 应在真实 Seedance / LTX / 目标平台上执行，再把结果回写：
+- Spec 与 Plan 没有已知遗漏；
+- 每个新增设计至少有一个明确 Runtime 落点或明确 `No Runtime Change` 理由；
+- 每个 Runtime 修改至少能追踪到 Spec；
+- 已知模板冲突已经进入 File Mapping；
+- 没有因为 Failure Signature 数量增加而计划创建同等数量独立模块。
 
-- `docs/action-combat-video-v2-regression.md`；
-- 对应 `references/models/<adapter>.md` Capability Contract。
+---
+
+## 6. Phase 11｜Runtime Mandatory-path Rewire
+
+### 核心目标
+
+解决当前最大根因：**Combat 可以读到 Choreography，却绕过 Final Prompt Assembly / Preflight。**
+
+### 11.1 必经运行链
+
+目标运行链必须明确为：
+
+```text
+Input / Task Routing
+→ Combat Core
+→ Combat Choreography
+→ 1 Specialist
+→ Planning Gate
+→ Stage-2 Execution Knowledge
+→ Action Phrase / State Validation
+→ 必要 Camera / Spatial / Motion Coordination
+→ Combat-aware Final Prompt Assembly
+→ Combat Final Preflight
+→ FAIL: 内部重写并重跑
+→ PASS: Output Template / Model Serialization
+→ Delivery
+```
+
+关键点：**Prompt Assembly / Final Preflight 是 Combat 必经出口，不再属于“可能不读的 0–3 Controls”。**
+
+### 11.2 Affected Files
+
+#### A. 必须修改
+
+`SKILL.md`
+
+- Combat 路由增加 mandatory final assembly / preflight；
+- 不能让 `prompt-assembly` 继续完全依赖通用 0–3 Control 预算；
+- Combat 输出前自查补 V2-35～43 的合并 Gate，而不是列几十个术语。
+
+`references/tasks/action-combat-video/index.md`
+
+- Runtime Structure 增加 Final Assembly / Preflight 强制出口；
+- 输出模板只能承载结果，不能覆盖 Combat Choreography 的时间序列化规则。
+
+`assets/templates/single-shot-video-template.md`
+
+- 增加 Combat Override：高密度 Combat 不因“时长较长 + 3 个阶段”自动切绝对时间块；
+- 如果 Combat Task 已提供 Continuous Action Spine，则模板必须继承；
+- Hard Timeline 仅在用户 / Model / 同步需求明确时使用。
+
+`docs/action-combat-video-v2-regression.md`
+
+- 加入 Prompt-level G01 Gate；
+- 第二次失败 Prompt 作为 Regression Evidence。
+
+#### B. 保留但重新验收
+
+`references/tasks/action-combat-video/choreography-playbook.md`
+
+- 保留把 V2-35～43 收敛成少数 Runtime Contract 的方向；
+- 检查是否存在重复概念 / Checklist 膨胀；
+- 确保 Character Identity 不按体型直接模板化。
+
+`references/controls/prompt-assembly/control.md`
+
+- 当前 Continuous Action Spine / Soft Time Anchors / Kinetic Scope Externalization / Negative Discipline 方向保留；
+- 重点解决“是否必读”，不是继续增加规则。
+
+`assets/templates/mode-interactive-output-contract.md`
+
+- 保留“不优先问谁赢”等修复；
+- 增加 Decision Recommendation 不能偷偷把性别 / 年龄 / 体型转换成固定打法。
+
+`references/diagnostics/combat-choreography-underfill/diagnostic.md`
+
+- 保留集中式 Failure Signature；
+- 不拆成多个新 Diagnostic。
+
+#### C. 必须评估是否修改
+
+`references/tasks/action-combat-video/modern-combat-playbook.md`
+
+- Kinetic Scope / Camera Mobility / Continuous Phrase 的现代动作实现是否足够具体。
+
+`references/libraries/combat-fighting-profiles/library.md`
+
+- 当前更多是 Profile 概述；需要审计是否缺乏可组合 Concrete Choreography Knowledge。
+
+`references/controls/camera-direction/control.md`
+
+- 判断 `Stable ≠ Static` 是否需要通用化；若只服务 Combat，则不复制 Combat 正文。
+
+`references/controls/timeline-rhythm/control.md`
+
+- 判断是否存在 Hard Timeline 默认规则与 V2-40 冲突。
+
+`references/controls/subject-motion/control.md`
+`references/controls/spatial-blocking/control.md`
+
+- 判断是否需要提供 Kinetic Scope 所依赖的通用全身 / 空间表达能力。
+
+`references/models/generic.md`
+`references/models/seedance-2.md`
+`references/models/ltx-2-3.md`
+
+- 模型序列化不得擅自把 Continuous Spine 重切成 Hard Timeline；
+- Camera 降载优先降低 Complexity，不默认降低 Mobility。
+
+#### D. 当前无证据修改
+
+`core-playbook.md`
+
+- 本次主要失败不是 Range / Advantage / Condition 真源本身；只有后续 Traceability 发现状态合同缺口才修改。
+
+`cinematic-wuxia-playbook.md`
+
+- 本次失败样本为 Modern Combat，不以单个现代样本修改 Wuxia。
+
+### 11.3 Phase 11 Gate
+
+Static Traceability 必须证明：
+
+- 高密度 Combat 无法绕过 Prompt Assembly；
+- single-shot template 无法覆盖 V2-40；
+- Final Preflight 具有失败→重写→再检查路径；
+- Runtime 没有新增不必要的独立概念系统。
+
+---
+
+## 7. Phase 12｜Prompt-level G01 Regression
+
+真实视频生成前先执行 Prompt-level Gate。
+
+### Fixed Input
+
+15 秒办公室，普通职场服装，中国男女，两人实际为敌对组织职业杀手，贴身搏斗，不隔办公桌。
+
+### Prompt-level Quality Contract
+
+必须至少满足：
+
+- Setup 很短，贴身 Combat 很快开始；
+- 不默认从 2.5m 距离 + 1.5s 对峙起步；
+- 高密度主体采用 Continuous Action Spine；
+- 没有 5～6 个默认 Hard Time Blocks；
+- Action Phrase 内有 Motion Handoff；
+- 不以“男胖年长 = 力量抓控 / 女年轻漂亮 = 速度闪避”直接推导打法；
+- Kinetic Scope 不被肩 / 前臂 / 手腕 / 抓控长期占领；
+- Camera 跟随真实 Route / Range / Axis；
+- Major Reversal 有可见 Advantage / Initiative 变化；
+- Negative 不加入无依据的 no weapon / no gun 等限制；
+- Ending 不提前停止主要交战。
+
+### Prompt-level Failure Contract
+
+出现任一高风险模式即 FAIL / REWRITE：
+
+- `0–1.5 / 1.5–4 / 4–7 / 7–10 ...` 默认硬时间盒；
+- 每一段只有一个宏动作；
+- 长时间上肢架手 / 抓腕；
+- 一方完成一段后另一方再开始；
+- Camera 因“稳定”几乎不移动；
+- 角色打法主要由性别 / 年龄 / 体型直接映射；
+- 长 Negative 清单；
+- Final Prompt 明显违反已经加载的 Choreography Contract。
 
 ### Gate
 
-至少核心 Golden Scenarios 证明 V2 在 Coverage / Exchange / Solidity 等主要问题上优于 V1，且没有明显牺牲 Continuity / Camera Readability。
+Prompt-level PASS 后才值得投入真实视频生成成本。
 
 ---
 
-## 12. Phase 9｜文档与索引收口 — ✅ 仓库侧完成
+## 8. Phase 13｜Generated Video Re-run + Model Calibration
 
-### 已更新
+使用通过 Phase 12 的 G01 Prompt 重新生成真实视频。
+
+观察：
+
+- Active Combat Coverage Realization；
+- Exchange / Choreography Richness；
+- Kinetic Scope Realization；
+- Temporal Packing Realization；
+- Action Interlock / Motion Continuity；
+- Camera Mobility Realization；
+- Character Distinction；
+- Visible Advantage / Initiative；
+- Contact Solidity；
+- Rhythm / Intensity Variation；
+- Spatial / Physical Continuity。
+
+如果 Prompt-level 已满足但视频仍退化，优先检查：
 
 ```text
-SKILL.md
-references/index.md
-references/tasks/index.md
-references/tasks/action-combat-video/index.md
-references/libraries/index.md
-references/diagnostics/index.md
-references/models/index.md
-docs/action-combat-video-v2-regression.md
+Concrete Choreography Knowledge
+→ Model Temporal / Motion Capability
+→ Model-specific Serialization
+→ Camera / Action simultaneous capacity
 ```
 
-### 收口状态
-
-- ✅ 运行期职责边界一致；
-- ✅ Index 与真实目录一致；
-- ✅ V2 静态回归 PASS；
-- ✅ Golden Benchmark Framework 可重复；
-- ✅ 没有新增 Combat Choreography Control；
-- ✅ 没有建立职业 / Character Identity 画像库；
-- ✅ Pattern / Profile / Golden Scenario 未固化为动作答案；
-- ⚠️ 唯一剩余总 Gate：Phase 8 真实成片验证。
+而不是继续新增 Combat 一级抽象机制。
 
 ---
 
-## 13. 关键新增文件
+## 9. Anti-overdesign / Consolidation 实施原则
+
+从 Phase 10 起正式采用：
+
+> **Mechanisms may be many in Spec; Runtime concepts must stay few.**
+
+执行规则：
+
+- V2-38 Temporal Packing、V2-39 Motion Handoff、V2-40 Continuous Spine 可共同归入 `Temporal / Continuity Flow Contract`；
+- V2-41 Intensity、V2-42 Visible Advantage、V2-43 Initiative 可作为 Choreography 的压力 / 控制子检查，不建设三套新引擎；
+- Failure Signature 主要服务 Preflight / Diagnostic / Benchmark；
+- 新术语只有在它改变规划或输出行为时才值得留在 Runtime；
+- 角色打法差异最终要落到 Concrete Action Selection，而不是越来越多 Meta 状态。
+
+---
+
+## 10. Concrete Choreography Knowledge 审计（Phase 13 后优先）
+
+动作本体一级机制暂时冻结。
+
+重点审计：
 
 ```text
-references/tasks/action-combat-video/choreography-playbook.md
-references/libraries/combat-choreography-profiles/library.md
-references/libraries/signature-moment-patterns/index.md
-references/libraries/signature-moment-patterns/patterns/*.md
-references/diagnostics/combat-choreography-underfill/diagnostic.md
-references/diagnostics/combat-contact-solidity-failure/diagnostic.md
-docs/action-combat-video-v2-implementation-plan.md
-docs/action-combat-video-v2-regression.md
+Fighting / Martial / Weapon Profile
+→ 是否只描述风格倾向
+→ 是否能提供可组合动作构造知识
+→ 是否覆盖 Whole-body / Footwork / Range / Transition / Defense / Counter / Grapple / Environment
+→ 是否能生成多种 Action Phrase，而不是反复抓腕 / 前臂格挡 / 推墙
 ```
 
-当前不为了目录完整而创建空 `source-cases/` 文件；只有核实可靠影视来源后再补研究档案。
+该工作只有在 Phase 12 / 13 证明“接线已正确但具体动作仍差”时进入，避免把架构接线问题误诊为知识库不足。
 
 ---
 
-## 14. 当前实施状态
+## 11. 当前实施状态
 
 | Phase | 状态 | 说明 |
 |---|---|---|
-| Phase 0 | ✅ 完成 | V2 设计冻结、实施计划建立 |
-| Phase 1 | ✅ 完成 | Task 运行骨架 / Core-Choreography 解耦 |
-| Phase 2 | ✅ 完成 | Choreography 与 Modern / Wuxia 专项实现 |
-| Phase 3 | ✅ 完成 | Combat Libraries / Signature Patterns / Two-stage Loading |
-| Phase 4 | ✅ 完成 | Final Prompt / Output Action-first |
-| Phase 5 | ✅ 架构完成 | Capability Contract 已接入；等级待 Phase 8 实测校准 |
-| Phase 6 | ✅ 完成 | Combat Underfill / Solidity Diagnostics |
-| Phase 7 | ✅ PASS | Static Regression + 8 个 Golden Scenario Framework |
-| Phase 8 | ⏳ 待执行 | 真实视频生成 + V1/V2 成片质量对照 |
-| Phase 9 | ✅ 仓库侧完成 | Index / SKILL / Docs 已收口；最终完成依赖 Phase 8 |
+| 0–7 | ✅ 初版完成 | 对应 V2-01～34 |
+| 8 | ⚠️ 已产生真实失败反馈 | 证明旧 Static PASS 不足 |
+| 9 | ✅ 初版收口 | 仅代表当时仓库状态 |
+| 10 | 🚧 进行中 | Spec / Plan / File Mapping / Regression 重新对齐 |
+| 11 | ⏸ 待 Phase 10 | Runtime Mandatory-path Rewire |
+| 12 | ⏸ 待 Phase 11 | Prompt-level G01 Regression |
+| 13 | ⏸ 待 Phase 12 | 真实视频重跑 / Model Calibration |
 
-## 15. 当前下一步
+当前不能再使用：
 
-**唯一剩余工作是 Phase 8：在真实视频模型上跑 Golden Combat Benchmark。**
+> `Implementation Complete + Static Regression PASS + Generated Video Validation Pending`
 
-Phase 8 完成前，V2 状态应称为：
+作为完整状态描述。
 
-> **Implementation Complete + Static Regression PASS + Generated Video Validation Pending**
+当前准确状态是：
 
-而不是“最终质量验证完成”。
+> **Post-feedback Traceability Rework In Progress；上一轮 Runtime 实现尚未完成正式一致性验收。**
+
+## 12. 当前下一步
+
+1. 完成 Spec 已确认遗漏项收口；
+2. 按 `action-combat-video-v2-traceability-audit.md` 完成 Phase 10 File Mapping；
+3. 进入 Phase 11 修强制运行链；
+4. Phase 12 用同一办公室输入重新跑 Prompt；
+5. Prompt-level PASS 后再生成真实视频。
