@@ -58,6 +58,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 复杂战斗遵循“约束错误，不约束创作”：固定因果、连续性和物理底线，不固定招式、Beat 数量或镜头模板。
 - 复杂战斗同时遵循 **Clarity Through Structure, Not Action Reduction**：高信息密度允许存在，但必须用 Action Phrase、状态连续性、镜头可读性和执行预算组织清楚。
 - Combat Final Prompt 遵循 **State Machine Internalized, Choreography Externalized**：状态机制在内部运行，最终由可见动作、接触、受力和空间变化主导。
+- Action Combat 的 `prompt-assembly/control.md + Combat Final Preflight` 是最终交付必经出口，不属于普通可选 Control。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
 
 ## 第一步：判断输入
@@ -138,7 +139,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 ### 9. 复杂动作格斗 / 电影武侠
 
-当核心难点是持续攻防、动作编排、Battle Beat、Range / Advantage / Condition、1vN Target Handoff、兵器连续性、接触实感或 Action / Camera / Audio 三线同步时，读取：
+当核心难点是持续攻防、动作编排、Battle Beat、Range / Advantage / Condition、1vN Target Handoff、兵器连续性、接触实感或 Action / Camera / Audio 三线同步时，固定读取：
 
 - `references/tasks/action-combat-video/index.md`
 - `references/tasks/action-combat-video/core-playbook.md`
@@ -149,13 +150,20 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 现代格斗：`references/tasks/action-combat-video/modern-combat-playbook.md`
 - 电影武侠：`references/tasks/action-combat-video/cinematic-wuxia-playbook.md`
 
+并在最终输出前固定读取：
+
+- `references/controls/prompt-assembly/control.md`
+
+再执行 Combat Final Preflight。该文件在 Action Combat 中属于**必经 Final Assembly**，不占普通 `0-3` Controls 的可选预算。
+
 简单挥拳、跑跳、追逐、体育动作不进入 Combat 专项，继续使用原主任务 + `action-motion`。
 
 Combat 内部职责：
 
 - `core-playbook.md`：State / Continuity / Battle Runtime Skeleton；
-- `choreography-playbook.md`：Coverage / Rhythm / Action Phrase / Character Identity / Tactical Interaction / Contact Solidity / Signature Moment / Execution Budget / Camera Readability / Combat Audio；
-- 专项 Playbook：Modern / Wuxia 的具体动作语言与物理尺度。
+- `choreography-playbook.md`：Coverage / Rhythm / Action Phrase / Character Identity / Tactical Interaction / Contact Solidity / Signature Moment / Execution Budget / Kinetic / Temporal / Camera Mobility / Final Preflight Criteria；
+- 专项 Playbook：Modern / Wuxia 的具体动作语言与物理尺度；
+- `prompt-assembly/control.md`：把内部动作设计转成最终连续、Action-first、可执行的 Prompt，并执行 Negative / Temporal / Kinetic 外显检查。
 
 Combat 不新增独立 `combat-choreography` 全局 Control。
 
@@ -179,7 +187,7 @@ Combat 不新增独立 `combat-choreography` 全局 Control。
 
 Combat Quick Mode 必须执行 **Full Planning + Silent Resolution**：内部仍推导 Combat Intent、Branch、Choreography Profile、Coverage、Rhythm、Character Identity、Environment、Contact Solidity、Signature Moment、Action / Camera Execution Budget、Battle Beat 与 State Contract；这些内部状态不默认展示。
 
-Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准。
+Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准；也不得跳过 Combat Final Assembly / Final Preflight。
 
 只有以下情况可以在快速模式中提出一个必要问题：
 
@@ -221,7 +229,7 @@ Combat Interactive Mode 与 Quick Mode 共用同一 Combat Planning Graph 和质
 - `performance-expression/control.md`：表演、微表情、呼吸、停顿和口型；
 - `audio-visual-sync/control.md`：对白、音效、BGM、节拍和音画同步；
 - `reference-binding/control.md`：多模态素材职责、主真源和冲突处理；
-- `prompt-assembly/control.md`：信息优先级、去重、压缩和最终组装；
+- `prompt-assembly/control.md`：普通任务按需用于信息优先级、去重、压缩和最终组装；**Action Combat 固定读取，不计入本节 `0-3` 可选预算**；
 - `realism-quality/control.md`：真实设备感、物理可信和去 AI 漂浮感。
 
 Combat Choreography Engine 属于 Task；通用 Controls 继续只提供跨任务能力。
@@ -310,7 +318,7 @@ Combat Model Adapter 可提供：
 
 没有可靠资料 / Benchmark 时标记 `Unverified`，不得伪造 High / Medium / Low。
 
-Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / 观看目标。
+Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / 观看目标。模型若需要降载，优先降低 Camera Complexity / 单窗口并行复杂度，不默认降低 Camera Mobility、Kinetic Scope 或把连续战斗稀释成少量动作。
 
 ## 第八步：选择输出模板
 
@@ -332,7 +340,9 @@ Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / �
 
 按需读取：`assets/templates/model-adapted-output-template.md`
 
-Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / 多镜头，再把动作、镜头、声音、连续性和少量高风险约束注入现有模板。
+Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / 多镜头，再执行 Combat-aware Prompt Assembly + Final Preflight，**通过后**才把动作、镜头、声音、连续性和少量高风险约束注入现有模板。
+
+输出模板只负责承载，不得覆盖 Combat Task 已确定的时间序列化和动作连续性规则。高密度 Combat 默认 `Continuous Action Spine + Soft Time Anchors`；通用模板不能仅因为“15 秒 / 3+ 阶段”自动改回 Hard Timeline。
 
 ## Reference 加载预算
 
@@ -351,6 +361,10 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 - `0-1` 份 model adapter；
 - `0-1` 份多模态模板；
 - 失败诊断时 `0-1` 份 diagnostic。
+
+Action Combat 额外固定读取：
+
+- `prompt-assembly/control.md`，作为 Final Assembly / Preflight 必经 Reference；**不占 `0-3 controls` 配额。**
 
 Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Task 路线，不同时加载现代与武侠两个分支。
 
@@ -371,6 +385,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 → 必须保留 / 必须修改 / 必须禁止
 → 当前任务 Playbook
 → 当前输入 Reference 和素材职责
+→ Combat Final Assembly / Preflight（当前为 Combat 时）
 → 已加载 controls
 → 已加载 libraries 与 style
 → model adapter 的能力边界和表达方式
@@ -382,13 +397,14 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 ## 自动补全与冲突裁决
 
 - 缺少时长时，按任务复杂度选择足以完成动作且不过载的最小合理时长；
-- 缺少镜头时，优先使用固定机位、轻微推进或短距离跟拍；
+- 缺少镜头时，普通任务优先使用固定机位、轻微推进或短距离跟拍；**Action Combat 则先看 Kinetic Scope：人物发生明显 Position / Range / Axis / Route 变化时，优先简单连续跟随，不把“稳定”自动解释为固定镜头**；
 - 缺少收尾时，为动作、视线、重心、镜头和声音补自然落点；
 - 缺少声音时，只补有明确画面来源的环境音或拟音；
 - 多素材冲突时，为每个关键维度选择唯一主真源；
-- 主体动作强时减弱镜头幅度，镜头动作强时简化主体动作；
+- 主体动作强时通常降低无必要 Camera Complexity；**Action Combat 不因此自动降低 Camera Mobility**；
 - 互斥风格只保留最符合核心观看目标的一种；
 - Combat 缺少流派时选择最符合 Character Identity、剧情和距离关系的低风险动作语言，不按职业强行套 Profile；
+- Combat Character Identity 不根据性别、年龄、外貌、体型直接套打法；这些只能作为能力 / 物理约束输入之一；
 - Combat 缺少音乐时按场景决定弱 BGM、无 BGM 或节奏音乐，不为了“完整”机械加音乐；
 - 不擅自增加新角色、新剧情线、大世界观或强情绪反转。
 
@@ -396,17 +412,18 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 - 先写任务和时长，再写素材职责；
 - 先建立初始状态，再写运动；
-- 时间轴中分别写主体状态、镜头状态、表演 / 声音和结束状态；
+- 普通任务需要时间轴时分别写主体状态、镜头状态、表演 / 声音和结束状态；
 - 全局固定项只写一次，本段只写变化；
 - 抽象情绪改写成眼神、呼吸、眉眼、嘴角、姿态和小动作；
 - 光影和声音必须有场景来源；
 - 每段视频只保留一个主镜头任务；
 - 多镜头必须写镜间承接和跨镜稳定项；
 - 图生视频减少静态画面复述，重点写从当前状态如何运动；
-- Combat 先由 Core 保证 Action–Reaction、Range / Advantage / Condition / Target / Weapon / Environment 状态连续，再由 Choreography 保证 Coverage、Action Phrase、角色打法、Contact Solidity、动作充分性与 Camera Readability；
+- Combat 先由 Core 保证 Action–Reaction、Range / Advantage / Condition / Target / Weapon / Environment 状态连续，再由 Choreography 保证 Coverage、Action Phrase、角色打法、Contact Solidity、Kinetic Scope、Temporal / Motion Continuity 与 Camera Mobility；
+- 高密度 Combat 默认使用 `Continuous Action Spine + Soft Time Anchors`，不把 Active Exchange 机械拆成每 1–3 秒一个独立动作盒；
 - Combat Final Prompt 由正向动作语言主导，状态术语尽量转译为可见动作、受力和空间后果；
-- Combat Audio 与 Action / Camera 同时间线设计，但 Audio Accent Density 不等于 Action Density；
-- Negative 只针对当前最危险失败模式，不默认追加通用禁止清单；
+- Combat Audio 与 Action / Camera 同一连续事件流设计，但 Audio Accent Density 不等于 Action Density；
+- Negative 只针对当前最危险失败模式，不默认追加通用禁止清单，也不添加用户未要求的剧情限制；
 - 最后一拍必须可自然停住。
 
 ## 输出前自查
@@ -428,25 +445,17 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 ### Combat 专项
 
-如果当前是 Action Combat：
+如果当前是 Action Combat，最终交付前必须完成一个**合并 Gate**，而不是只确认文件“读过”：
 
-- Active Combat Coverage 是否与观看目标相符，是否存在无价值长对峙 / 站立 / 提前 Pose；
-- 是否形成足够的连续 Action Phrase，而不是少量孤立交互；
-- Rhythm / Exchange Depth 是否符合角色能力与 Choreography Profile；
-- Combat Character Identity 是否能从实际动作看出差异；
-- Range 变化是否有动作因果；
-- 重要 Contact 是否有 Commitment、接触、受力 / 压力传递、Reaction 与 Persistent Consequence；
-- Advantage 变化是否有 Turning Event；
-- Condition 是否影响后续动作；
-- 1vN Target 切换是否有 Handoff；
-- Weapon State 是否连续；
-- Environment 是否真正改变战术 / 空间而非随机装饰；
-- Signature Moment 是否由前后 Action Phrase 因果支撑；
-- 相邻 Beat 的结束 / 起始状态是否可衔接；
-- Action / Camera / Audio 是否互相服务而不是互相竞争；
-- 是否避免把 Beat、Profile、Pattern 或 Golden Scenario 当固定模板；
-- 是否没有为了“清晰”无理由削减有效攻防；
-- Final Prompt 是否由动作语言主导而非状态 / Negative 语言主导。
+1. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标相符，是否仍有长对峙、上半身锁死、动作被时间摊薄；
+2. **动作是否连续**：Action Phrase 是否通过 Contact / Momentum / Footwork / Axis / Range / Position 等继承，是否仍是一招一停、轮流出招；
+3. **角色是否合理区分**：Combat Character Identity 是否能从动作看出差异，且没有职业 / 性别 / 年龄 / 外貌 / 体型快捷映射；
+4. **接触与状态是否成立**：Contact 是否有 Commitment、受力 / 压力、Reaction 与 Persistent Consequence；Range / Position / Advantage / Environment 是否影响下一拍；
+5. **镜头是否跟得上**：Camera Complexity 与 Camera Mobility 是否分离；高 Kinetic Scope 是否仍被长期近固定镜头锁死；
+6. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；
+7. **Prompt 是否 Action-first**：是否由可见动作主导，Negative 是否少而有依据。
+
+任一关键项 FAIL：内部重写对应 Action Phrase / Character Identity / Prompt Assembly，重新执行 Gate，通过后才允许交付。
 
 ### 表演与音画
 
@@ -472,7 +481,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 Combat 主诊断：
 
 - Advantage / Condition / Target / Weapon / Beat State 前后无法同时成立 → `combat-state-continuity-failure`；
-- Active Combat Coverage / Exchange Richness 明显不足 → `combat-choreography-underfill`；
+- Active Combat Coverage / Exchange Richness / Kinetic / Temporal / Motion Continuity 明显不足 → `combat-choreography-underfill`；
 - Contact 已发生但受力 / 压力 / 兵器 / 材质后果不可信 → `combat-contact-solidity-failure`。
 
 手 / 肢体穿模、整体失重、Camera Chaos、音画错位继续使用对应通用 Diagnostic。
@@ -494,7 +503,8 @@ Combat 主诊断：
 - Combat 不把招式示例、Beat 数量、回归场景、Profile、Pattern 或默认节奏写成死框架；
 - Combat 不使用固定 `2-4` / `2–4` 交互节点作为 Battle Beat 全局动作数量上限；
 - Combat 不为了“清晰”默认减少有效攻防；
-- Combat 不把职业直接映射固定 Fighting Profile；
+- Combat 不把职业、性别、年龄、外貌或体型直接映射固定打法；
 - Combat 不用 Camera Shake / 大音效代替真实 Contact；
+- Combat 不因通用单镜头模板自动把高密度连续战斗切成多个 Hard Time Blocks；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
 - 不暴露内部 Reference、目录、迁移和维护说明。
