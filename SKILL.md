@@ -56,6 +56,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 同一知识只保留一个正文真源；索引可以多处引用，但禁止复制正文。
 - Reference 可以很多，但每次只读取当前任务真正需要的一条或几条路线。
 - 复杂战斗遵循“约束错误，不约束创作”：固定因果、连续性和物理底线，不固定招式、Beat 数量或镜头模板。
+- 复杂战斗同时遵循“通过结构获得清晰，而不是通过动作通缩获得清晰”：高信息密度允许存在，但必须用 Action Phrase、状态连续性、镜头可读性和执行预算组织清楚。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
 
 ## 第一步：判断输入
@@ -188,10 +189,11 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 ### 9. 复杂动作格斗 / 电影武侠
 
-当核心难点是攻防因果、Battle Beat、Range / Advantage / Condition、1vN Target Handoff、兵器连续性或 Action / Camera / Audio 三线同步时，读取：
+当核心难点是持续攻防、动作编排、Battle Beat、Range / Advantage / Condition、1vN Target Handoff、兵器连续性、接触实感或 Action / Camera / Audio 三线同步时，读取：
 
 - `references/tasks/action-combat-video/index.md`
 - `references/tasks/action-combat-video/core-playbook.md`
+- `references/tasks/action-combat-video/choreography-playbook.md`
 
 然后只选择一个专项分支：
 
@@ -201,6 +203,12 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 简单挥拳、跑跳、追逐、体育动作不进入 Combat 专项，继续使用原主任务 + `action-motion`。
 
 题材不同通常不新增任务路线；Action Combat 只因执行流程显著不同而作为一级专项任务。
+
+Combat 内部职责：
+
+- `core-playbook.md` 负责 State / Continuity / Battle Runtime Skeleton；
+- `choreography-playbook.md` 负责 Coverage / Rhythm / Action Phrase / Character Identity / Contact Solidity / Signature Moment / Execution Budget 等动作导演逻辑；
+- 专项 Playbook 负责 Modern / Wuxia 的具体动作语言与物理尺度。
 
 ## 第三步：判断模式
 
@@ -222,7 +230,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 冲突时自行裁决，只保留最符合主目标的路线；
 - 直接输出一份可复制 Prompt 或必要的 Prompt Pack。
 
-Combat Quick Mode 也必须直接输出详细、完整、专业、可复制 Prompt；内部 Spatial Map、Range / Advantage / Condition 和 Beat State Contract 不默认展示。
+Combat Quick Mode 必须执行**完整 Combat Planning，但静默解决低风险决策**：内部仍推导 Combat Intent、Branch、Coverage、Rhythm、Character Identity、Environment、Contact Solidity、Signature Moment、Action / Camera Execution Budget、Battle Beat 与 State Contract；这些内部状态不默认展示，最终直接输出详细、完整、专业、可复制 Prompt。
 
 只有以下情况可以在快速模式中提出一个必要问题：
 
@@ -250,7 +258,7 @@ Combat Quick Mode 也必须直接输出详细、完整、专业、可复制 Prom
 - 能从输入和上下文推断的内容不追问；
 - 用户要求收口，或剩余问题只影响轻微细节时立即生成最终结果。
 
-Combat Interactive Mode 可以按需展示 Combat Blueprint / Beat Sheet，但最终仍必须再汇总成一份可直接复制给视频模型使用的完整 Prompt。
+Combat Interactive Mode 与 Quick Mode 共用同一 Combat Planning Graph 和质量标准，只把高影响、低置信度、确实存在明显分叉的决策暴露给用户；可以按需展示 Combat Blueprint / Beat Sheet，但最终仍必须再汇总成一份可直接复制给视频模型使用的完整 Prompt。
 
 ## 第四步：按缺口读取控制页
 
@@ -269,7 +277,7 @@ Combat Interactive Mode 可以按需展示 Combat Blueprint / Beat Sheet，但�
 - `prompt-assembly/control.md`：信息优先级、去重、压缩和最终组装；
 - `realism-quality/control.md`：真实设备感、物理可信和去 AI 漂浮感。
 
-Combat 第一版不新增专属 Control，优先复用现有通用真源。任务 Playbook 已能解决的问题，不额外加载控制页。
+Combat 不新增 `combat-choreography` 专属 Control。Combat Choreography Engine 属于 `action-combat-video` Task；通用 Controls 继续只提供跨任务能力。任务 Playbook 已能解决的问题，不额外加载控制页。
 
 ## 第五步：按需读取资料库
 
@@ -290,6 +298,8 @@ Combat 第一版不新增专属 Control，优先复用现有通用真源。任�
 - `combat-environment-patterns/library.md`：战斗环境互动模式。
 
 资料库回答“可以选什么”，控制页回答“为什么选、如何协调”。Combat Playbook 回答“怎么编排”，Combat Libraries 不复制状态机。
+
+Combat V2 采用 Two-stage On-demand Loading：先用 Task Core / Choreography / 当前专项与轻量索引形成 `Combat Planning Context`，再只展开当前动作计划真正需要的少量 Library Detail；正常情况下仍控制在约 `0-2` 份主要 Library Detail。
 
 ## 第六步：按需读取风格
 
@@ -389,7 +399,7 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 - `0-1` 份多模态模板；
 - 失败诊断时 `0-1` 份 diagnostic。
 
-Combat 的 `index + core + 一个专项分支` 视为同一主 Task 路线，不同时加载现代与武侠两个分支。
+Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Task 路线，不同时加载现代与武侠两个分支。
 
 索引文件只用于导航，不计入业务 Reference 数量。
 
@@ -442,7 +452,7 @@ Combat 的 `index + core + 一个专项分支` 视为同一主 Task 路线，不
 - 每段视频只保留一个主镜头任务；
 - 多镜头必须写镜间承接和跨镜稳定项；
 - 图生视频减少静态画面复述，重点写从当前状态如何运动；
-- Combat 先保证 Action–Reaction 因果、Range / Target / Condition 连续，再增加华丽动作和镜头；
+- Combat 先由 Core 保证 Action–Reaction、Range / Advantage / Condition / Target / Weapon / Environment 状态连续，再由 Choreography 保证 Coverage、Action Phrase、角色打法、接触实感、动作充分性与镜头可读性；
 - Combat 的 Audio 与 Action / Camera 同时间线设计，场景需要时包含环境声、拟音、兵器声、呼吸和音乐策略；
 - 负向限制只针对当前最危险的失败模式，通常保留 `3-8` 项；
 - 最后一拍必须可自然停住。
@@ -468,15 +478,21 @@ Combat 的 `index + core + 一个专项分支` 视为同一主 Task 路线，不
 
 如果当前是 Action Combat：
 
+- Active Combat Coverage 是否与用户观看目标相符，是否存在无价值长对峙 / 站立 / 提前 Pose；
+- 是否形成足够的连续 Action Phrase，而不是只有少量孤立交互；
+- Rhythm / Exchange Depth 是否符合角色能力与 Choreography Profile；
+- Combat Character Identity 是否能从实际动作看出差异；
 - Range 变化是否有动作因果；
-- 重要打击是否有接触、受力和恢复；
+- 重要 Contact 是否有接触、受力 / 压力传递、Reaction 与 Consequence；
 - Advantage 变化是否有 Turning Event；
 - Condition 是否影响后续动作；
 - 1vN Target 切换是否有 Handoff；
 - Weapon State 是否连续；
+- 环境参与是否真正改变战术 / 空间而非随机装饰；
 - 相邻 Beat 的结束 / 起始状态是否可衔接；
 - Action / Camera / Audio 是否互相服务而不是互相竞争；
-- 是否避免把默认 Beat 或回归案例当固定模板。
+- 是否避免把默认 Beat、Profile、Pattern 或回归案例当固定模板；
+- 是否没有为了“清晰”无理由削减有效攻防。
 
 ### 表演与音画
 
@@ -517,5 +533,7 @@ Combat 中如果单个动作并非主问题，而是 Advantage / Condition / Tar
 - 不伪造未支持模型的参数和语法；
 - 不把研究区原始资料直接作为最终知识；
 - Combat 不把招式示例、Beat 数量、回归场景或默认节奏写成死框架；
+- Combat 不使用固定 `2-4` 交互节点作为 Battle Beat 全局动作数量上限；
+- Combat 不为了“清晰”默认减少有效攻防；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
 - 不暴露内部 Reference、目录、迁移和维护说明。
