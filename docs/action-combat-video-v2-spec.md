@@ -40,11 +40,12 @@ Combat Choreography Intent
 → Combat Character Identity
 → Environment Action Affordance
 → Action Phrase Design
-→ Tactical Interaction
+→ Tactical Interaction（按需）
 → Signature Moment Planning
 → Battle Beat
 → V1 State / Continuity Validation
-→ Camera / Audio Coordination
+→ Camera Readability Budget / Camera Coordination
+→ Audio Coordination
 → Final Prompt Compression
 ```
 
@@ -67,7 +68,6 @@ Combat Choreography Intent
 - Action Phrase 组织；
 - 节奏变化；
 - 环境动作机会；
-- Tactical Interaction；
 - Signature Moment；
 - 可读性与模型可执行性的动态平衡。
 
@@ -463,54 +463,21 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 一般不读取 source-cases/
 ```
 
-该设计遵守 V2 总体的按需加载原则，避免 Pattern 数量增长后造成 Token 膨胀。
-
 ## 21. V2-19：`patterns/` 与 `source-cases/` 正式职责分离
 
-确认将 **运行时动作设计知识** 与 **影视案例研究证据** 正式拆成两个独立层，不把完整影视案例 metadata 和研究笔记塞入 Pattern 文件。
-
-职责明确如下：
+确认将 **运行时动作设计知识** 与 **影视案例研究证据** 正式拆成两个独立层。
 
 ### `patterns/`
 
-用于 Agent 正常生成时按需加载，只保存可迁移的动作设计知识：
-
-- Pattern Intent；
-- Trigger Conditions；
-- Core Mechanism；
-- Action Causality Skeleton；
-- Environment Role；
-- Rhythm / Exchange Fit；
-- Camera Readability Hint；
-- Adaptation Variables；
-- Do Not Copy；
-- `source_case_ids` 与极短案例备注。
+用于 Agent 正常生成时按需加载，只保存可迁移的动作设计知识，包括 Pattern Intent、Trigger Conditions、Core Mechanism、Action Causality Skeleton、Environment Role、Rhythm / Exchange Fit、Camera Readability Hint、Adaptation Variables、Do Not Copy，以及 `source_case_ids` 和极短案例备注。
 
 ### `source-cases/`
 
-作为研究 / 核实层，保存：
-
-- 作品与场景标识；
-- 角色 / 对战双方；
-- 名场面事实摘要；
-- 公开资料核实来源；
-- 案例为什么支持某个 Pattern 的分析笔记；
-- 事实可信度 / 待核实项；
-- 可关联的 Pattern IDs。
-
-运行时原则：
+作为研究 / 核实层，保存作品与场景标识、角色 / 对战双方、名场面事实摘要、公开资料核实来源、案例分析笔记、事实可信度 / 待核实项和关联 Pattern IDs。
 
 > **Pattern 是生产知识；Source Case 是研究证据。**
 
-正常 Prompt 生成只通过 `index.md → patterns/<id>.md` 路由，不因为 Pattern 引用了 source_case_id 就自动加载案例文件。只有维护、核实、用户明确点名作品 / 名场面等情形才进入 `source-cases/`。
-
-这样可以同时保证：
-
-- Agent 运行上下文精简；
-- 影视事实和动作设计抽象可独立维护；
-- Pattern 不被某个具体作品的细节污染；
-- 后续更换 / 增补案例时不需要重写 Pattern 主体；
-- 可以追溯 Pattern 的案例依据，但不把证据层变成运行时依赖。
+正常生成只走 `index.md → patterns/<id>.md`，不因存在 source_case_id 就自动加载案例文件。
 
 ## 22. V2-20：Tactical Interaction / 攻防博弈机制
 
@@ -521,82 +488,110 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 - **Exchange Depth**：回答“一轮连续攻防有多深”；
 - **Tactical Interaction**：回答“为什么会自然进入下一层攻防”。
 
-例如同样是高 Exchange Depth：
+基础机制第一版只在 Playbook 中维护少量稳定类型，不建设大型独立 Library：
 
-```text
-打 → 挡 → 打 → 闪 → 打 → 挡
-```
+- Feint / 假动作；
+- Probe & Read / 试探与读取；
+- Bait / 诱导；
+- Anticipation / 预判；
+- Counter-to-Counter / 反制对反制；
+- Pattern Break / 模式打破；
+- Forced Response / 强迫反应。
 
-可能只是高频动作交换；而 Tactical Interaction 更强调：
+这些机制只描述战术因果，不是固定招式模板。
 
-```text
-试探
-→ 读取对方习惯
-→ 重复相似入口诱导预判
-→ 改变时机 / 角度
-→ 惩罚对方预期反应
-→ 对方识破后再反制
-```
-
-### 基础机制
-
-第一版只在 Playbook 中维护少量稳定的战术机制，不建设大型独立 Library，例如：
-
-- **Feint / 假动作**：制造错误判断后改变真实攻击线路；
-- **Probe & Read / 试探与读取**：通过小风险动作观察对手反应习惯；
-- **Bait / 诱导**：主动暴露或制造攻击窗口，引导对方进入预期路线；
-- **Anticipation / 预判**：根据已知节奏或动作习惯提前准备反制；
-- **Counter-to-Counter / 反制对反制**：A 已预期 B 的 Counter，并让 Continuation 专门攻击 B Counter 后的位置 / 状态；
-- **Pattern Break / 模式打破**：先建立重复节奏 / 习惯，再突然改变时机、方向或动作选择；
-- **Forced Response / 强迫反应**：通过空间、压力或动作威胁迫使对方做出某类可预测回应。
-
-这些机制不是固定招式模板，只描述战术因果关系。
-
-### 动态触发
-
-Tactical Interaction **不作为用户必须选择的参数，也不要求每个 Phrase 都启用**。是否使用及复杂度主要由以下因素动态判断：
-
-- Combat Character Identity 中的经验、冷静度、欺骗 / 读取倾向；
-- 双方能力是否接近；
-- Cinematic Choreography Profile；
-- Exchange Depth；
-- Action Exchange Rhythm；
-- 当前 Range / Advantage / Condition；
-- 当前 Phrase 的可用时长；
-- 视频模型可执行性与动作可读性。
+是否使用及复杂度主要由 Character Identity、双方能力关系、Choreography Profile、Exchange Depth、Rhythm、Range / Advantage / Condition、Phrase 可用时长、模型可执行性和动作可读性动态判断。
 
 典型倾向：
 
-- **高手连续攻防型 + 高 Exchange Depth + 双方实力接近**：明显提高 Tactical Interaction 使用概率；
-- **写实战术型**：可以使用较短、直接的 Probe / Feint / Forced Response；
-- **重型硬派型 / 普通人互殴**：默认降低复杂战术博弈，不把所有角色都写成高度预判型高手。
+- 高手连续攻防型 + 高 Exchange Depth + 双方实力接近：明显提高使用概率；
+- 写实战术型：适合短、直接的 Probe / Feint / Forced Response；
+- 重型硬派型 / 普通人互殴：默认降低复杂战术博弈。
 
-### 与 Action Phrase 的关系
+最终 Prompt 不应堆角色心理解释，而应通过可见动作、时机、线路和反应外显博弈。
+
+## 23. V2-21：Camera Readability Budget / 镜头可读性预算
+
+新增 **Camera Readability Budget / 镜头可读性预算**，用于协调动作复杂度、空间复杂度和 Camera Complexity，防止 V2 提高动作密度后出现“动作很多但观众和模型都看不清”的新问题。
+
+核心判断：
 
 ```text
-Character Identity
-+ Choreography Profile
-+ Exchange Rhythm / Depth
-+ 当前战术状态
-        ↓
-判断是否需要 Tactical Interaction
-        ↓
-选择 0～少量战术机制
-        ↓
-融入 Action Phrase 的动作因果链
-        ↓
-由 V1 State / Continuity 验证动作与空间结果
+Action Complexity
++ Spatial Complexity
++ Camera Complexity
+≈ 有限的 Perceptual / Execution Budget
 ```
 
-原则：
+因此 Camera Complexity 不能脱离动作本身独立拉满。
 
-> **高手感不只来自动作快和动作多，还来自“下一步为什么发生”体现双方正在互相读取与欺骗。**
+### 与 Camera Mode 的边界
 
-Tactical Interaction 不能为了显得聪明而过度解释角色心理；最终 Prompt 仍应尽量通过可见动作、时机、线路和反应把博弈外显出来。
+- **Camera Mode**：回答用户希望采用什么观看方式 / 镜头观感；
+- **Camera Complexity**：回答当前动作在保证可读性和模型可执行性的前提下，实际承受得住多复杂的运镜、切镜和构图变化。
+
+即使用户要求“动态电影镜头”，也不能自动解释为全程快速环绕、频繁推拉、连续切镜和极近特写。
+
+### 默认联动原则
+
+当以下因素同时较高时，应默认降低 Camera Complexity：
+
+- Active Combat Coverage 高；
+- Exchange Depth 高；
+- Tactical Interaction 复杂；
+- 双角色高速换位；
+- Environment Action Affordance 参与较多；
+- 空间关系本身复杂。
+
+这时优先使用能够保留双方身体关系和动作因果的中景 / 中全景、稳定跟随、有限切镜或其他清晰观看方式。
+
+> **动作复杂度上升时，默认优先减少无必要的 Camera Complexity，而不是为了镜头炫技牺牲动作可读性。**
+
+该原则是默认倾向，**不是机械反比公式**。
+
+### 可以释放 Camera Complexity 的时机
+
+动作导演层可以在动作复杂度暂时下降、需要强化单一视觉信息时，有目的地释放镜头表现力，例如：
+
+- **重型 Phrase Payoff**：动作链短暂收束，可使用一次短促推进、近侧角度或明确切镜强化重量；
+- **环境换位 / 空间关系变化**：适当扩宽或调整角度，让观众看清路线和位置变化；
+- **Signature Moment**：获得最高的“可读性优先级”，选择最能看清核心机制和冲击力的观看角度；
+- **短暂战术停顿 / 重建距离**：若不损害 Coverage，可用有限镜头变化建立下一轮空间关系。
+
+Signature Moment 不要求最复杂镜头。很多情况下，一个干净、清晰的中景或侧面角度比多次快速切镜更有效。
+
+### Phrase 级 Camera Readability Budget
+
+Camera 不再只在 Sequence 级设一个固定模式，而应根据 Phrase 动作负载动态分配复杂度：
+
+```text
+高速高 Depth Phrase
+→ Camera 稳定、保持双方关系可见
+
+重型 Payoff Phrase
+→ 允许一次有目的的镜头强化
+
+环境换位 Phrase
+→ 优先交代空间变化
+
+Signature Moment
+→ 优先最清晰、最具冲击力的角度
+
+重新进入高速交换
+→ Camera 再次收敛复杂度
+```
+
+### 与模型能力的关系
+
+Camera Readability Budget 必须同时考虑目标视频模型的可执行性。模型越难同时稳定处理多人、高速动作、复杂空间与复杂运镜，越应优先保留动作和空间信息，削减装饰性镜头复杂度。
+
+因此 V2 的 Camera 原则不是“动作片必须镜头更炫”，而是：
+
+> **镜头为动作服务；复杂动作先保证看清，简单爆点再释放镜头表现力。**
 
 ---
 
-## 23. V2 设计原则汇总
+## 24. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -620,9 +615,11 @@ Tactical Interaction 不能为了显得聪明而过度解释角色心理；最�
 20. Pattern Library 必须通过轻量索引按需加载；
 21. 正常生成加载设计知识，不加载影视调研证据层；
 22. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
-23. 最终 Prompt 应外显精彩动作与可见战术博弈，内部状态规范尽量压缩。
+23. Camera Complexity 与动作 / 空间复杂度共享有限执行预算，不能同时无上限拉高；
+24. 高动作复杂度默认优先镜头可读性，重型 Payoff / 环境换位 / Signature Moment 再有目的地释放镜头表现力；
+25. 最终 Prompt 应外显精彩动作与可见战术博弈，内部状态规范尽量压缩。
 
-## 24. 已确认决策记录
+## 25. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -645,21 +642,21 @@ Tactical Interaction 不能为了显得聪明而过度解释角色心理；最�
 | V2-17 | Pattern 数据结构 | 抽象因果骨架 + 适用条件 + 可变化参数 + 案例证据，不存完整动作复刻 |
 | V2-18 | Pattern 加载架构 | 轻量 `index.md` → 按需加载 1–3 个 Pattern → source-cases 默认不加载 |
 | V2-19 | Pattern / Source Case 分层 | `patterns/` 存生产知识；`source-cases/` 存影视事实、核实来源和研究笔记；运行时默认只加载 Pattern |
-| V2-20 | Tactical Interaction | 假动作、试探、诱导、预判、Counter-to-Counter 等作为 Phrase 可选战术因果层；由角色能力、Profile、Rhythm、Exchange Depth 和当前状态动态触发，不做用户参数、暂不建大型独立 Library |
+| V2-20 | Tactical Interaction | 假动作、试探、诱导、预判、Counter-to-Counter 等作为 Phrase 可选战术因果层；动态触发，不做用户参数、暂不建大型独立 Library |
+| V2-21 | Camera Readability Budget | Camera Complexity 与动作 / 空间复杂度共享执行预算；高动作复杂度优先可读性，Payoff / 环境换位 / Signature Moment 再有目的释放镜头表现力 |
 
-## 25. 尚待继续 Grill Me 的设计树
+## 26. 尚待继续 Grill Me 的设计树
 
-1. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-2. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-3. V1 “宁少而清晰”如何重述，避免动作预算通缩；
-4. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-5. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
-6. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
+1. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+2. V1 “宁少而清晰”如何重述，避免动作预算通缩；
+3. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+4. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
+5. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
 
-## 26. 当前阶段结论
+## 27. 当前阶段结论
 
 V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
 
-> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感，并拥有真正值得记住的动作时刻，同时通过索引化知识结构控制运行时 Token 成本。**
+> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感，并拥有真正值得记住的动作时刻；同时通过索引化知识结构控制运行时 Token 成本，并通过 Camera Readability Budget 确保复杂动作真正看得清、执行得出来。**
 
 本文件继续作为 V2 Grill Me 的单一设计记录。后续每确认一个关键决策，同步更新已确认决策与待讨论设计树，直到 V2 设计收口。
