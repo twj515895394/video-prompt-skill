@@ -72,6 +72,14 @@
 
 读取：`reference-role-conflict/diagnostic.md`
 
+### combat-state-continuity-failure
+
+现象：复杂战斗中单个动作看似连续，但 Advantage、Condition、Target、Weapon State 或 Beat End / Start State 前后矛盾。
+
+读取：`combat-state-continuity-failure/diagnostic.md`
+
+只在现有 motion / spatial / anatomy / physics / camera / audio 诊断无法解释“Combat 状态链整体断裂”时使用。
+
 ## 诊断流程
 
 ```text
@@ -95,7 +103,8 @@
 - 台词和嘴部错误：优先 lip-sync-and-dialogue-failure；
 - 卡点或声音错位：优先 audio-visual-mismatch；
 - Prompt 本身互相矛盾：优先 prompt-overload-and-conflict；
-- 多素材混合错误：优先 reference-role-conflict。
+- 多素材混合错误：优先 reference-role-conflict；
+- 战斗的 Advantage / Condition / Target / Weapon / Beat State 前后无法同时成立：优先 combat-state-continuity-failure。
 
 ## 输出边界
 
