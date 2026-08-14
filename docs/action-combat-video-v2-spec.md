@@ -493,22 +493,76 @@ V1 State / Continuity 验证因果和状态继承
 
 Signature Moment 默认由系统内部规划，不作为 Combat Interactive Mode 的固定追问项；只有用户明确指定某个标志动作、特技或名场面参考时，才直接锁定或进一步询问。
 
-### 经典影视打斗参考方向（候选，待后续确认结构）
+### 经典影视打斗参考方向
 
 可以整理电影 / 电视剧中的经典打斗名场面，抽取其中“为什么这一动作时刻能被记住”的设计模式，作为 Signature Moment 的参考来源。
 
-这里的目标不是复制具体影视动作，而是抽象出可复用的动作设计规律，例如：
+目标不是复制具体影视动作，而是抽象可复用动作设计规律，例如：
 
 - 空间限制如何制造独特反制；
-- 环境物体如何参与一次真正有意义的动作转折；
-- 强弱差、体型差如何形成动作视觉记忆点；
+- 环境物体如何参与真正有意义的动作转折；
+- 强弱差、体型差如何形成视觉记忆点；
 - Counter / Re-counter 如何形成高潮；
-- 兵器、距离、轴线如何制造一个清晰动作画面；
+- 兵器、距离、轴线如何制造清晰动作画面；
 - 节奏如何在 Signature Moment 前后形成对比。
 
-该参考体系是否独立建立 Library、如何分类、记录到什么粒度，继续 Grill Me 后再确认。
+## 19. 已确认决策十六：经典影视 Signature Moment 参考库按动作设计模式组织
 
-## 19. V2 设计原则补充
+确认建立 **经典影视 Signature Moment 参考体系**，但其一级组织方式不是电影 / 电视剧作品，而是 **可复用的动作设计模式（Signature Moment Pattern）**。
+
+作品名场面只作为 Pattern 的来源案例与 metadata，用于解释和验证模式，不作为 Skill 运行时的主检索入口。
+
+推荐结构示意：
+
+```text
+signature-moment-patterns/
+├─ constrained-space-reversal
+│  └─ 狭窄空间反制
+├─ environment-assisted-counter
+│  └─ 环境辅助反击
+├─ size-difference-payoff
+│  └─ 体型 / 力量差视觉爆点
+├─ rapid-counter-recounter
+│  └─ 高速 Counter / Re-counter
+├─ weapon-distance-transition
+│  └─ 兵器距离切换
+├─ false-opening-trap
+│  └─ 假破绽诱导反制
+├─ momentum-redirection
+│  └─ 动量 / 冲势借力改变
+└─ dominance-reversal
+   └─ 主导权瞬间翻转
+```
+
+该列表只是首批 Pattern 示例，不是固定全集。
+
+### 组织原则
+
+- **Pattern 是知识主体**：回答“这一类标志性动作时刻为什么成立、什么时候适用”；
+- **作品案例是来源证据 / 灵感样本**：记录作品、人物、场景等 metadata，但不按作品建立一级目录；
+- 同一个 Pattern 可以挂多个影视案例；
+- 同一个影视名场面如果包含多个真正独立的设计机制，也可以成为多个 Pattern 的案例来源；
+- 新增影视案例不应自动导致新增 Pattern；只有抽取出稳定、可复用、与现有模式有实质差异的设计机制时，才新增 Pattern。
+
+### Skill 使用方式
+
+```text
+当前场景 / 空间条件
++ Combat Character Identity
++ Choreography Profile
++ Environment Action Affordance
++ Rhythm / Exchange Depth
+        ↓
+匹配 Signature Moment Pattern
+        ↓
+吸收设计机制，而不是复制案例动作
+        ↓
+重新生成当前 Combat Sequence 独有的 Signature Moment
+```
+
+因此该参考体系的目标不是“模仿某部电影”，而是让动作导演层拥有一套由经典案例反向提炼出的 **动作设计模式知识**。
+
+## 20. V2 设计原则补充
 
 1. **时间轴写满不代表动作写满。** 必须检查 Active Combat Coverage。
 2. **持续交战不代表动作丰富。** 必须检查 Action Exchange Rhythm 与 Action Phrase。
@@ -532,8 +586,9 @@ Signature Moment 默认由系统内部规划，不作为 Combat Interactive Mode
 20. **环境先作为动作机会参与设计，再由 V1 状态层验证和继承。**
 21. **短时长动作片应有少量真正值得记忆的 Signature Moment，而不是所有地方同时高潮。**
 22. **经典影视动作参考用于抽象动作设计规律，不用于复制某个作品的完整动作段落。**
+23. **Signature Moment 参考体系以 Pattern 为知识主体，影视作品只作为来源案例，不以作品目录驱动生成。**
 
-## 20. 已确认决策记录
+## 21. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -552,12 +607,13 @@ Signature Moment 默认由系统内部规划，不作为 Combat Interactive Mode
 | V2-13 | Choreography Profile Library | 新增 `combat-choreography-profiles`；少量稳定基础原型 |
 | V2-14 | Environment Action Affordance | 环境从被动状态修改器升级为 Action Phrase 前的动态动作机会 |
 | V2-15 | Signature Moment | 作为 Combat Sequence 级显式动作设计目标；15 秒默认 1 个主记忆点；经典影视名场面可作为抽象设计参考来源 |
+| V2-16 | Signature Moment 参考库组织 | 以可复用“动作设计模式”为一级组织；影视作品只作为 Pattern 下的来源案例 / metadata |
 
-## 21. 尚待继续 Grill Me 的设计树
+## 22. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. 经典影视打斗 Signature Moment 参考体系是否独立建 Library，以及应按“作品”还是按“动作设计模式”组织；
+1. Signature Moment Pattern 单条知识应记录哪些字段、抽象到什么粒度，既能检索又避免照搬影视动作；
 2. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
 3. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
 4. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
@@ -566,7 +622,7 @@ Signature Moment 默认由系统内部规划，不作为 Combat Interactive Mode
 7. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
 8. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 22. 当前阶段结论
+## 23. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、动作编排弱”倾向。
 
