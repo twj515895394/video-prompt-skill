@@ -269,12 +269,12 @@ Action Phrase 动作编排
 
 原因：现有 Style 继续回答“画面长什么样”，例如 cinematic-live-action、documentary、anime 等；Cinematic Choreography Profile 回答的是“动作怎么被编排”。
 
-当前推荐落位方向：
+当前落位方向：
 
-- Combat Playbook：负责选择与协调 Choreography Profile；
-- Combat Library：负责提供可选动作编排画像。
+- Combat Playbook：负责选择、组合与协调 Choreography Profile；
+- `combat-choreography-profiles` Library：提供少量稳定、可复用的电影动作编排基础原型。
 
-是否最终新增 `combat-choreography-profiles` Library，待后续设计树继续确认。
+Library 只负责“有哪些稳定的动作编排语法与倾向”，不替代 Playbook 的动态判断，也不替代角色级 Combat Character Identity。
 
 ## 9. 当前 V2 核心层级
 
@@ -581,7 +581,56 @@ Library 继续只保存相对稳定、可复用的专业动作知识，例如：
 → Action Phrase 动作编排
 ```
 
-## 16. V2 设计原则补充
+## 16. 已确认决策十三：建立小型 combat-choreography-profiles Library
+
+确认正式新增 **`combat-choreography-profiles` Library**，用于保存少量稳定、可复用的电影动作编排基础原型。
+
+该 Library 与 Combat Character Identity 的动态推导不同：
+
+- Combat Character Identity 面向“当前角色怎么打”，不建角色模板库；
+- Cinematic Choreography Profile 面向“整场动作戏采用什么动作编排语法”，可以沉淀少量稳定原型。
+
+第一版建议只维护约 5–7 个基础 Profile，例如：
+
+- 写实战术型；
+- 凌厉电影动作型；
+- 高手连续攻防型；
+- 重型硬派型；
+- 环境技巧型；
+- 其他确有稳定差异、实施阶段验证后值得保留的少量原型。
+
+每个 Profile 应主要描述可复用的动作编排倾向，例如：
+
+- Active Combat Coverage 推荐倾向；
+- Action Exchange Rhythm 倾向；
+- Exchange Depth 倾向；
+- 动作重量与受力反馈强度；
+- Range 变化方式；
+- 环境利用程度；
+- Phrase 节奏组织方式；
+- Camera Complexity 建议；
+- 与哪些角色打法或 Combat Intent 容易形成冲突。
+
+### 边界原则
+
+- 不建设“所有动作电影风格百科”；
+- 不因遇到一个新角色、新职业或单个案例就新增 Profile；
+- Profile 必须表达稳定、可复用的动作编排语法差异，而不是仅仅换名字；
+- 允许 Playbook 在基础 Profile 上动态混合少量辅助倾向；
+- 角色打法仍由 Combat Character Identity 动态推导，不能由 Choreography Profile 取代；
+- 用户明确提出特殊动作观感时，允许模型基于基础原型动态扩展，而不是必须先新增 Library 条目。
+
+关系确认如下：
+
+```text
+Combat Intent / 用户观看目标
+→ Playbook 选择或组合少量 Cinematic Choreography Profile
+→ 推荐 Coverage / Rhythm / Exchange Depth / Camera Complexity
+→ 与动态 Combat Character Identity 协同
+→ Action Phrase 动作编排
+```
+
+## 17. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -603,8 +652,9 @@ Library 继续只保存相对稳定、可复用的专业动作知识，例如：
 16. **Phrase 与 Beat 不绑定 1:1。** Phrase 负责局部连续攻防，Beat 负责更高层战术阶段。
 17. **Combat 中文术语统一使用“动作编排 / 动作导演”，不再用“编舞”作为主要中文翻译。**
 18. **Combat Character Identity 是动态推导结果，不是职业或角色类型画像库。**
+19. **Cinematic Choreography Profile 只沉淀少量稳定基础原型，禁止演化为无限扩张的风格百科。**
 
-## 17. 已确认决策记录
+## 18. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -620,23 +670,23 @@ Library 继续只保存相对稳定、可复用的专业动作知识，例如：
 | V2-10 | Beat / Phrase 关系 | 动态一对多；Phrase 按局部攻防组织，Beat 只在战术状态实质变化时切换 |
 | V2-11 | 中文术语 | 英文保留 Choreography；中文统一“动作编排 / 动作导演”，不再使用“编舞”作为主要翻译 |
 | V2-12 | Combat Character Identity 来源 | 不建角色 / 职业画像库；根据人物、环境、对手、Intent、状态和动作编排风格动态推导 |
+| V2-13 | Choreography Profile Library | 正式新增 `combat-choreography-profiles`；仅维护少量稳定基础原型，Playbook 动态选择 / 组合，不做无限风格百科 |
 
-## 18. 尚待继续 Grill Me 的设计树
+## 19. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-2. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-3. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-4. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
-5. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-6. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-7. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-8. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-9. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-10. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+2. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+3. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
+4. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+5. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+6. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+7. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+8. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+9. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 19. 当前阶段结论
+## 20. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、动作编排弱”倾向。
 
