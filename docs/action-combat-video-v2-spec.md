@@ -1084,3 +1084,187 @@ Golden Combat Benchmark 增加 **Camera Mobility Realization** 观察项，记�
 | V2-37 | Camera Mobility Coupling | Camera Complexity 与 Camera Mobility 正式分离；Stable ≠ Static；高 Kinetic Scope 可采用低复杂度但中高 Mobility 的简单连续 Track / Dolly / Arc / Reframe，并用 Camera Mobility Underfill 拦截“人物换位但镜头长期不跟” |
 
 本节确认后，§41 / §42 中“Camera Mobility Coupling 待确认”的旧状态由 V2-37 正式取代。下一项优先验证 **Temporal Action Packing**：是否需要把长时间窗的宏动作叙述改为更连续、更具因果密度的动作时间编码。
+
+## 44. V2-38：Temporal Action Packing / 动作时间压缩密度
+
+真实成片与 Prompt 复盘进一步确认：即使 Active Combat Coverage 较高，如果 Final Prompt 用 3–4 秒时间窗只描述一个宏动作，视频模型仍可能把这个宏事件慢慢铺满整个时间窗，形成“文字说高速，成片却是一两秒一个动作”的 **Temporal Combat Stretch / Action Underpacking**。
+
+因此正式增加 **Temporal Action Packing / 动作时间压缩密度**，作为 Action Phrase 到 Final Prompt 时间编码之间的质量机制。它不规定每秒必须几拳、几脚，也不把动作拆成机械帧级清单；它检查的是：**一个 Active Exchange 时间窗里是否真正承载了一串前后因果连续的动作，而不是只有一个需要慢慢完成的宏事件。**
+
+### 44.1 时间窗服务 Phrase，而不是把 Phrase 摊薄
+
+Active Exchange 时间窗应优先组织为：
+
+```text
+当前动作产生后果
+→ 对手立即响应
+→ 响应改变 Position / Range / Axis / Contact
+→ 下一动作从这个后果直接启动
+→ 在同一连续窗口内形成局部 Payoff
+```
+
+例如“3 秒高速攻防”不能只写成“女方连续两次反制”；应明确为一段连续事件流，使前一个动作尚在产生后果时，下一个动作已经由该后果启动。
+
+Final Prompt 可继续使用 `0–3s / 3–6s` 等时间锚点，但时间锚点只负责控制阶段与关键事件顺序，不应暗示“每个时间块只有一个独立动作”。
+
+### 44.2 因果时间语言
+
+高密度连续攻防应优先使用能够表达衔接关系的时间语言，例如：
+
+- `同时 / 顺势 / 刚被偏开便 / 尚未站稳时 / 接触后立即 / 沿着前一动作的方向 / 在对手收势之前`；
+- 动作 B 应明确由动作 A 的 Contact、Reaction、失衡、换位、开放线路或 Range 变化触发；
+- 不鼓励大量“然后 / 随后 / 再做一个”式彼此独立的动作枚举。
+
+这些词不是固定模板，核心是让动作时间关系可见、可执行。
+
+### 44.3 Temporal Combat Stretch / Action Underpacking
+
+新增 Failure Signature：
+
+> **Temporal Combat Stretch / Action Underpacking**
+
+典型触发：
+
+- Prompt 标记“高速”，但 3–4 秒只承载一个主要动作事件；
+- 一个抓、推、转身、撞击分别被拉成长时间独立事件；
+- Action Phrase 逻辑上有多个步骤，但时间轴让每一步都拥有过长独立表演时间；
+- High Coverage 只表现为“角色一直在动”，而单位时间真正发生的有效攻防交换很低；
+- 模型频繁出现明显等待、停顿或动作完成后的缓冲，再进入下一动作。
+
+一旦触发，Final Preflight 不允许仅因为 Coverage 达标而通过；应重新压缩时间组织、增加 Phrase 内因果衔接，必要时拆成多个连续但不停止交战的短 Phrase。
+
+### 44.4 动态而非动作频率配额
+
+Temporal Action Packing 由 Choreography Profile、Action Exchange Rhythm、Exchange Depth、Kinetic Scope、Contact Modality、Camera Readability 与 Model Capability 动态决定。
+
+- 高手高速交换通常需要更高 Packing；
+- 重型硬派型可以动作频率低一些，但接触、失衡、恢复与下一次进入必须仍然形成有效连续动作链；
+- Grapple / Control 可以出现持续压力，但持续控制期间必须有杠杆、重心、支撑点或挣脱 / 再控制变化，而不是长时间静止抱住；
+- 模型 Temporal / Prompt Following 较弱时，优先减少单 Phrase 同时复杂度并增加清楚的短 Phrase 衔接，不直接把整场动作稀释。
+
+### 44.5 与 Preflight / Benchmark 的关系
+
+Final Preflight 增加 **Temporal Action Packing** 检查；Golden Combat Benchmark 增加 **Temporal Packing Realization** 观察项，用于比较计划的连续动作密度与成片实际交换频率之间的落差。
+
+原则：
+
+> **时间轴用于组织连续动作，不用于给每一个动作分配独立表演槽。**
+
+## 45. V2-39：Combat Action Interlock / Motion Handoff
+
+真实成片继续暴露出比“动作太稀”更进一步的失败：即使同一时间窗已经包含多个动作，模型仍可能把它们执行成彼此隔离的片段——完成一个动作、回到近似中性姿态、再重新起手做下一个动作。最终呈现为约 1–2 秒一个独立动作，缺乏真正连续搏斗的运动感。
+
+因此正式新增 **Combat Action Interlock / Motion Handoff / 战斗动作咬合与运动交接**。它把 Action Phrase 原有的“逻辑因果”提升为“运动状态继承”：**下一个动作应尽量从上一个动作正在形成的 Contact、Reaction、Momentum、Footwork、Body Axis、Range、Position 或 Environment State 中直接启动，而不是先归零再重新开始。**
+
+### 45.1 Motion Handoff
+
+连续动作至少应存在一种真实可见的状态继承，例如：
+
+- **Contact Handoff**：格挡、抓控、碰撞形成的接触继续成为下一动作的支点或线路；
+- **Momentum Handoff**：前冲、偏转、失衡、旋转或回收的动量被下一动作利用或反制；
+- **Footwork Handoff**：前一步形成的新角度、支撑脚或追击路线直接启动后续动作；
+- **Body Axis Handoff**：肩线、髋线、躯干旋转或重心偏移成为下一次进入 / 防守条件；
+- **Range / Position Handoff**：前一动作造成的距离与站位变化直接决定下一动作，而不是重新拉回默认距离；
+- **Reaction Handoff**：对手的防守、受击、失衡或恢复动作本身立即成为下一次 Counter / Re-counter 的窗口。
+
+不要求每一步同时满足所有 Handoff；要求的是**下一动作真实继承当前身体与空间状态**。
+
+### 45.2 限制不必要的 Neutral Reset
+
+High Coverage、高手连续攻防、追击 / 反追击等场景中，**Neutral Reset / 中性归位应是稀缺且有意图的节奏事件**，而不是默认动作间隔。
+
+允许的 Reset 示例：双方有意拉开、重新判断、剧情节奏需要短暂冷却、武器 / 空间条件发生真正重建。
+
+不允许的默认模式：
+
+```text
+攻击
+→ 完整收势
+→ 双方站稳
+→ 短暂停顿
+→ 重新起架
+→ 下一攻击
+```
+
+如果用户要求高速连续对决，这种模式反复出现即属于失败。
+
+### 45.3 Phrase-to-Phrase Motion Handoff
+
+Action Interlock 不只作用于 Phrase 内，也作用于 Phrase 之间。
+
+前一个 Phrase 的 Payoff 应优先成为下一 Phrase 的 Entry Condition，例如：
+
+```text
+Phrase A Payoff
+→ 对手被逼到桌角、右脚路线受限、身体轴线偏转
+→ 不 Reset
+→ Phrase B 直接利用该限制继续压入 / 反制
+```
+
+因此“多个 Phrase 无缝衔接”正式从抽象原则升级为可检查的 Motion Handoff 合同。
+
+### 45.4 Action Segmentation / Excessive Neutral Reset
+
+新增 Failure Signature：
+
+> **Action Segmentation / Excessive Neutral Reset**
+
+典型触发：
+
+- 每 1–2 秒完成一个独立动作后明显停顿或重新起手；
+- 格挡完成后先收手归位，再开始 Counter；
+- 位移完成后先站稳，再重新发起攻击，而不是在位移形成的新角度中连续进入；
+- Phrase 之间反复回到默认站位 / 默认 Range；
+- Contact、Momentum、Footwork、Axis、Range 等前一状态没有被后续动作继承；
+- Prompt 虽然写有多个动作，却主要依赖“然后 / 随后 / 再次”串联，缺乏同时、顺势、接触后直接转换等可见交接。
+
+Final Preflight 发现该模式时，应优先重写动作衔接与 Phrase-to-Phrase Handoff，而不是只继续增加动作数量。
+
+### 45.5 与 Temporal Packing / Kinetic Scope / State Engine 的关系
+
+```text
+Temporal Action Packing
+→ 同一时间窗里不能太稀
+
+Combat Action Interlock
+→ 动作之间不能彼此隔离
+
+Combat Kinetic Scope
+→ 身体与空间运动不能长期锁死
+
+State / Continuity Engine
+→ 所有继承后的 Position / Range / Advantage / Condition 必须正确
+```
+
+四者分别解决不同问题，不能互相替代。
+
+### 45.6 Preflight / Benchmark 增量
+
+Final Preflight 正式增加：
+
+```text
+Temporal Action Packing
++ Combat Action Interlock / Motion Handoff
++ Neutral Reset Discipline
+```
+
+Golden Combat Benchmark 增加：
+
+- **Temporal Packing Realization**；
+- **Action Interlock / Motion Continuity Realization**；
+- **Excessive Neutral Reset** Failure Contract。
+
+对于 High Coverage + Expert Exchange 场景，成片若持续出现“一招一停、归位再打”，即使动作数量、Coverage 与 Contact Solidity 表面达标，也不能判为通过。
+
+原则：
+
+> **连续打斗不是把动作排得更近，而是让后一个动作从前一个动作的身体与空间状态里长出来。**
+
+## 46. 实测反馈增量决策记录
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-38 | Temporal Action Packing | Active Exchange 时间窗必须承载连续因果动作流，禁止用长时间块只描述一个宏动作来假装高速；用 Temporal Combat Stretch / Action Underpacking 拦截动作被时间轴摊薄 |
+| V2-39 | Combat Action Interlock / Motion Handoff | 动作与 Phrase 必须优先继承 Contact / Reaction / Momentum / Footwork / Body Axis / Range / Position 等当前运动状态；High Coverage / Expert Exchange 中 Neutral Reset 应稀缺，用 Action Segmentation / Excessive Neutral Reset 拦截“一招一停、归位再打” |
+
+V2-38 / V2-39 确认后，下一步需要继续验证 **Final Prompt 的时间序列化方式本身是否会制造动作分段**：即高密度 Combat 是否仍应以多个彼此硬边界的时间块表达，还是改用“连续动作主链 + 少量软时间锚点”，让时间控制保留但不诱导模型把每个时间段当成独立动作场。
