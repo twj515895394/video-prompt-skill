@@ -40,6 +40,7 @@ Combat Choreography Intent
 → Combat Character Identity
 → Environment Action Affordance
 → Action Phrase Design
+→ Tactical Interaction
 → Signature Moment Planning
 → Battle Beat
 → V1 State / Continuity Validation
@@ -66,6 +67,7 @@ Combat Choreography Intent
 - Action Phrase 组织；
 - 节奏变化；
 - 环境动作机会；
+- Tactical Interaction；
 - Signature Moment；
 - 可读性与模型可执行性的动态平衡。
 
@@ -510,9 +512,91 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 - 后续更换 / 增补案例时不需要重写 Pattern 主体；
 - 可以追溯 Pattern 的案例依据，但不把证据层变成运行时依赖。
 
+## 22. V2-20：Tactical Interaction / 攻防博弈机制
+
+正式新增 **Tactical Interaction / 攻防博弈机制**，作为 Action Phrase 内部的可选战术因果层，用来表现高手之间“互相读取、诱导、预判和反制”，而不是单纯增加动作数量。
+
+它与 Exchange Depth 明确区分：
+
+- **Exchange Depth**：回答“一轮连续攻防有多深”；
+- **Tactical Interaction**：回答“为什么会自然进入下一层攻防”。
+
+例如同样是高 Exchange Depth：
+
+```text
+打 → 挡 → 打 → 闪 → 打 → 挡
+```
+
+可能只是高频动作交换；而 Tactical Interaction 更强调：
+
+```text
+试探
+→ 读取对方习惯
+→ 重复相似入口诱导预判
+→ 改变时机 / 角度
+→ 惩罚对方预期反应
+→ 对方识破后再反制
+```
+
+### 基础机制
+
+第一版只在 Playbook 中维护少量稳定的战术机制，不建设大型独立 Library，例如：
+
+- **Feint / 假动作**：制造错误判断后改变真实攻击线路；
+- **Probe & Read / 试探与读取**：通过小风险动作观察对手反应习惯；
+- **Bait / 诱导**：主动暴露或制造攻击窗口，引导对方进入预期路线；
+- **Anticipation / 预判**：根据已知节奏或动作习惯提前准备反制；
+- **Counter-to-Counter / 反制对反制**：A 已预期 B 的 Counter，并让 Continuation 专门攻击 B Counter 后的位置 / 状态；
+- **Pattern Break / 模式打破**：先建立重复节奏 / 习惯，再突然改变时机、方向或动作选择；
+- **Forced Response / 强迫反应**：通过空间、压力或动作威胁迫使对方做出某类可预测回应。
+
+这些机制不是固定招式模板，只描述战术因果关系。
+
+### 动态触发
+
+Tactical Interaction **不作为用户必须选择的参数，也不要求每个 Phrase 都启用**。是否使用及复杂度主要由以下因素动态判断：
+
+- Combat Character Identity 中的经验、冷静度、欺骗 / 读取倾向；
+- 双方能力是否接近；
+- Cinematic Choreography Profile；
+- Exchange Depth；
+- Action Exchange Rhythm；
+- 当前 Range / Advantage / Condition；
+- 当前 Phrase 的可用时长；
+- 视频模型可执行性与动作可读性。
+
+典型倾向：
+
+- **高手连续攻防型 + 高 Exchange Depth + 双方实力接近**：明显提高 Tactical Interaction 使用概率；
+- **写实战术型**：可以使用较短、直接的 Probe / Feint / Forced Response；
+- **重型硬派型 / 普通人互殴**：默认降低复杂战术博弈，不把所有角色都写成高度预判型高手。
+
+### 与 Action Phrase 的关系
+
+```text
+Character Identity
++ Choreography Profile
++ Exchange Rhythm / Depth
++ 当前战术状态
+        ↓
+判断是否需要 Tactical Interaction
+        ↓
+选择 0～少量战术机制
+        ↓
+融入 Action Phrase 的动作因果链
+        ↓
+由 V1 State / Continuity 验证动作与空间结果
+```
+
+原则：
+
+> **高手感不只来自动作快和动作多，还来自“下一步为什么发生”体现双方正在互相读取与欺骗。**
+
+Tactical Interaction 不能为了显得聪明而过度解释角色心理；最终 Prompt 仍应尽量通过可见动作、时机、线路和反应把博弈外显出来。
+
 ---
 
-## 22. V2 设计原则汇总
+## 23. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -525,18 +609,20 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 9. Active Combat Feedback 与 Downtime 必须区分；
 10. Ending 不应提前终止战斗；
 11. Exchange Depth 衡量因果深度，不衡量动作词数量；
-12. 环境先作为动作机会参与设计，再由 V1 继承状态；
-13. Choreography Profile 只维护少量稳定原型；
-14. 15 秒短动作片默认只有少量 Signature Moment；
-15. 经典影视参考用于抽象动作设计规律，不用于复制完整动作段落；
-16. Pattern 是知识主体，作品只作为来源案例；
-17. Pattern 保存抽象因果骨架，不保存可直接复刻的完整影视动作；
-18. Pattern Library 必须通过轻量索引按需加载；
-19. 正常生成加载设计知识，不加载影视调研证据层；
-20. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
-21. 最终 Prompt 应外显精彩动作，内部状态规范尽量压缩。
+12. Tactical Interaction 负责攻防为何进入下一层，不能与 Exchange Depth 混为一谈；
+13. 战术博弈按角色能力和场景动态触发，不要求每个 Phrase 都有；
+14. 环境先作为动作机会参与设计，再由 V1 继承状态；
+15. Choreography Profile 只维护少量稳定原型；
+16. 15 秒短动作片默认只有少量 Signature Moment；
+17. 经典影视参考用于抽象动作设计规律，不用于复制完整动作段落；
+18. Pattern 是知识主体，作品只作为来源案例；
+19. Pattern 保存抽象因果骨架，不保存可直接复刻的完整影视动作；
+20. Pattern Library 必须通过轻量索引按需加载；
+21. 正常生成加载设计知识，不加载影视调研证据层；
+22. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
+23. 最终 Prompt 应外显精彩动作与可见战术博弈，内部状态规范尽量压缩。
 
-## 23. 已确认决策记录
+## 24. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -559,21 +645,21 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 | V2-17 | Pattern 数据结构 | 抽象因果骨架 + 适用条件 + 可变化参数 + 案例证据，不存完整动作复刻 |
 | V2-18 | Pattern 加载架构 | 轻量 `index.md` → 按需加载 1–3 个 Pattern → source-cases 默认不加载 |
 | V2-19 | Pattern / Source Case 分层 | `patterns/` 存生产知识；`source-cases/` 存影视事实、核实来源和研究笔记；运行时默认只加载 Pattern |
+| V2-20 | Tactical Interaction | 假动作、试探、诱导、预判、Counter-to-Counter 等作为 Phrase 可选战术因果层；由角色能力、Profile、Rhythm、Exchange Depth 和当前状态动态触发，不做用户参数、暂不建大型独立 Library |
 
-## 24. 尚待继续 Grill Me 的设计树
+## 25. 尚待继续 Grill Me 的设计树
 
-1. 假动作、预判、诱导、Counter / Re-counter 是否形成独立动作编排规则；
-2. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-3. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-4. V1 “宁少而清晰”如何重述，避免动作预算通缩；
-5. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-6. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
-7. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
+1. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+2. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+3. V1 “宁少而清晰”如何重述，避免动作预算通缩；
+4. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+5. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
+6. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
 
-## 25. 当前阶段结论
+## 26. 当前阶段结论
 
 V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
 
-> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有电影动作编排感，并拥有真正值得记住的动作时刻，同时通过索引化知识结构控制运行时 Token 成本。**
+> **把战斗设计得持续、丰富、有角色差异、有环境逻辑、有战术博弈、有电影动作编排感，并拥有真正值得记住的动作时刻，同时通过索引化知识结构控制运行时 Token 成本。**
 
 本文件继续作为 V2 Grill Me 的单一设计记录。后续每确认一个关键决策，同步更新已确认决策与待讨论设计树，直到 V2 设计收口。
