@@ -685,9 +685,80 @@ Combat Character Identity 继续动态推导，不建设角色 / 职业画像库
 > **Combat Task 负责“怎么把这一场战斗导演出来”；Controls 提供跨任务工具；Libraries 提供专业知识。**  
 > **不要为了模块化而把同一个领域引擎切成两半。**
 
+## 36. V2-34：Task 内拆分 `core-playbook.md` 与 `choreography-playbook.md`
+
+正式确认在 `references/tasks/action-combat-video/` 内新增 **`choreography-playbook.md`**，让 V1 的状态 / 连续性骨架与 V2 的动作导演逻辑在文件职责上真正解耦，但仍属于同一个 Combat Task。
+
+推荐 Task 结构：
+
+```text
+references/tasks/action-combat-video/
+├─ index.md
+├─ core-playbook.md
+├─ choreography-playbook.md
+├─ modern-combat-playbook.md
+└─ cinematic-wuxia-playbook.md
+```
+
+### `core-playbook.md` 的职责
+
+`core-playbook.md` 回归 **Combat State / Continuity / Battle Runtime Skeleton**，主要保留和强化：
+
+- Combat Intent；
+- Combat Spatial Map；
+- Range / Advantage / Condition；
+- Turning Event；
+- Action–Reaction 的基础因果合同；
+- 1vN / Target Handoff；
+- Battle Beat 与 Beat State Contract；
+- Position / Environment / Weapon State 的状态继承；
+- Spatial / Physical / Continuity Validation；
+- Task 如何调用通用 Controls、专业 Libraries 与专项 Playbook 的总协调关系。
+
+`core-playbook.md` 不再承担 V2 的完整动作导演细节，也必须移除 V1 `1 个主攻防目标 + 2–4 个连续攻防交互节点 + 1 个结束状态` 的全局动作数量锚点。
+
+### `choreography-playbook.md` 的职责
+
+`choreography-playbook.md` 作为 **Combat Choreography Engine 的主运行 Playbook**，集中承载：
+
+- Cinematic Choreography Profile；
+- Active Combat Coverage 与四类时间预算；
+- Action Exchange Rhythm；
+- Action Phrase 与 Battle Beat 的动态关系；
+- Exchange Depth；
+- Combat Character Identity；
+- Tactical Interaction；
+- Environment Action Affordance；
+- Signature Moment；
+- Combat Contact Solidity；
+- Action Execution Budget + Action Sufficiency Check；
+- Camera Readability Budget；
+- Combat Audio Choreography；
+- Clarity Through Structure, Not Action Reduction；
+- State Machine Internalized, Choreography Externalized；
+- Shared Combat Planning Graph；
+- Model Combat Capability Contract 对执行复杂度的反馈方式；
+- 两阶段 Reference 按需加载与 Library Detail Slot 协调。
+
+### 专项 Playbook 的职责
+
+`modern-combat-playbook.md` 与 `cinematic-wuxia-playbook.md` 不复制 Core 或 Choreography 的通用机制，只负责把它们实例化为对应战斗形式的：
+
+- 动作语言；
+- 物理尺度；
+- 默认节奏与 Range 倾向；
+- Contact Modality 表现；
+- Fighting / Martial / Weapon Profile 使用方式；
+- Camera / Audio 的专项表达倾向。
+
+原则：
+
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、丰富、好看、有实感”；专项 Playbook 负责“这种战斗具体怎么表现”。**  
+> **拆文件是为了稳定职责边界，不是把同一个 Combat Task 拆成多个互相竞争的引擎。**
+
 ---
 
-## 36. V2 设计原则汇总
+## 37. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -711,10 +782,11 @@ Combat Character Identity 继续动态推导，不建设角色 / 职业画像库
 20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行；
 21. Model Combat Capability Contract 为动作 / 镜头 / 多人 / 接触复杂度预算提供模型侧输入；模型能力只能改变实现路径，不能擅自降低已确定的 Combat Intent / Coverage / 观看目标，并由 Golden Benchmark 持续校准；
 22. Quick 与 Interactive 共享同一 Combat Planning Graph、质量标准与验证链；Quick 完整规划但静默解决低风险决策，Interactive 只暴露高影响、低置信度的真实分叉；
-23. Combat Audio Choreography 作为轻量协同质量层参与 Phrase 节奏、Contact Solidity、身体 / 呼吸、武器材质、环境空间与 Signature Moment；Audio Accent Density 不等于 Action Density，声音强调必须有层级且不能替代动作设计。
-24. Combat Choreography Engine 归属于 `action-combat-video` Task；Task 负责领域导演流程，Controls 只提供跨任务通用能力，Libraries 只提供专业知识，不新增独立 Combat Choreography Control。
+23. Combat Audio Choreography 作为轻量协同质量层参与 Phrase 节奏、Contact Solidity、身体 / 呼吸、武器材质、环境空间与 Signature Moment；Audio Accent Density 不等于 Action Density，声音强调必须有层级且不能替代动作设计；
+24. Combat Choreography Engine 归属于 `action-combat-video` Task；Task 负责领域导演流程，Controls 只提供跨任务通用能力，Libraries 只提供专业知识，不新增独立 Combat Choreography Control；
+25. Task 内新增 `choreography-playbook.md`：`core-playbook.md` 回归 State / Continuity / Battle Runtime Skeleton，`choreography-playbook.md` 承载 V2 动作导演逻辑，Modern / Wuxia 只做专项实例化。
 
-## 37. 已确认决策记录
+## 38. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -751,16 +823,17 @@ Combat Character Identity 继续动态推导，不建设角色 / 职业画像库
 | V2-31 | Quick / Interactive 统一规划 | Quick 与 Interactive 共享同一 Combat Planning Graph、动作引擎、质量标准与验证链；Quick 完整规划并静默解决低风险决策，Interactive 只把高影响、低置信度分叉暴露给用户，模式不同不代表质量等级不同 |
 | V2-32 | Combat Audio Choreography | 在 V1 三线同步基础上增加轻量战斗声音编排；声音参与 Phrase 节奏、Contact 实感、身体 / 呼吸、武器材质、环境空间和 Signature Moment，强调密度不等于动作密度，不机械堆音效，也不替代动作本身 |
 | V2-33 | Combat Engine 实现归属 | Combat Choreography Engine 归属于 `action-combat-video` Task，不新增一级 Combat Choreography Control；Task 统筹领域导演流程，现有 Controls 继续提供跨任务通用能力，Libraries 只承载专业知识 |
+| V2-34 | Task 内 Playbook 拆分 | 新增 `choreography-playbook.md` 承载 V2 动作导演逻辑；`core-playbook.md` 回归 State / Continuity / Battle 骨架；Modern / Wuxia Playbook 只负责专项实例化 |
 
-## 38. 全局复盘后待继续 Grill Me 的设计树
+## 39. 全局复盘后待继续 Grill Me 的设计树
 
-1. **实现映射收口**：基于 V2-33 的职责边界，确认最终文件修改清单，尤其是哪些 V2 规则留在 `core-playbook.md`、哪些值得拆到新的 `choreography-playbook.md`，以及现有 Modern / Wuxia Playbook、Controls、Libraries、Diagnostics、Model Adapter、Prompt Assembly 分别需要哪些修改；
-2. 文件映射确认后结束 Grill Me，进入 V2 实现与回归。
+1. **实现映射总确认**：一次性确认 V2 对 Task Playbooks、Controls、Libraries、Diagnostics、Models、Prompt Assembly / 输出契约、Regression / Benchmark 的完整文件映射；不再逐文件追问；
+2. 总映射确认后结束 Grill Me，进入 V2 实现与回归。
 
-## 39. 当前阶段结论
+## 40. 当前阶段结论
 
-V2 的一级动作质量与运行架构问题已经基本收口：持续性、丰富度、角色差异、环境、战术博弈、接触实感、Signature Moment、Camera Readability、Audio Choreography、动作化 Final Prompt、真实成片 Benchmark、Combat Core / 专项边界、按需加载、模型能力接口以及 Quick / Interactive 统一规划均已有明确结论。
+V2 的一级动作质量、运行架构与 Task 内部职责边界已经收口：持续性、丰富度、角色差异、环境、战术博弈、接触实感、Signature Moment、Camera Readability、Audio Choreography、动作化 Final Prompt、真实成片 Benchmark、Combat Core / 专项边界、按需加载、模型能力接口、Quick / Interactive 统一规划，以及 Core / Choreography Playbook 文件拆分均已有明确结论。
 
-V2 的上位职责边界现已确认：Combat Choreography Engine 留在 `action-combat-video` Task 内部，不新增 Combat 专属一级 Control。下一步只剩 **最终文件映射收口**：决定 Task 内是否新增 `choreography-playbook.md`、现有专项 Playbook / Controls / Libraries / Diagnostics / Model Adapter / Prompt Assembly 各自需要修改什么，然后结束 Grill Me 进入实现。
+下一步只剩 **一次实现映射总确认**。确认后结束 Grill Me，不再继续追加细粒度设计问题，直接进入 V2 实现与回归。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
