@@ -297,6 +297,8 @@ Combat Intent
 + Cinematic Choreography Profile
 + Environment / Spatial Context
         ↓
+Environment Action Affordance
+        ↓
 Action Phrase Design
         ↓
 Battle Beat Design
@@ -630,7 +632,53 @@ Combat Intent / 用户观看目标
 → Action Phrase 动作编排
 ```
 
-## 17. V2 设计原则补充
+## 17. 已确认决策十四：Environment Action Affordance 环境动作机会
+
+确认新增 **Environment Action Affordance / 环境动作机会**。环境不再只作为动作发生后的状态修改器，而要在 Action Phrase 设计之前，动态推导“当前场景能为攻防提供什么动作机会”。
+
+核心流程：
+
+```text
+场景对象 / 空间结构 / 障碍关系
+→ Environment Action Affordance
+→ 结合 Combat Intent / Character Identity / Range / Advantage 过滤
+→ 选择真正有战术或视觉价值的环境动作机会
+→ Action Phrase 动作编排
+→ 更新 Position / Range / Advantage / Condition / Environment State
+```
+
+例如办公室场景中的桌子、椅子、玻璃隔断、狭窄通道等，不应只在碰撞发生后记录状态，而可以提前转化为：
+
+- 限制或改变攻击路线；
+- 限制退路、形成压迫边界；
+- 绕行、切角或迫使换位；
+- 作为短暂支撑点帮助恢复重心或改变身体方向；
+- 阻断步法、改变追击路线；
+- 制造 Range / Advantage 变化；
+- 为 Phrase Payoff 提供合理的环境落点。
+
+### 使用门槛
+
+环境动作机会不能为了“热闹”而机械使用。只有当它至少能够改变以下一项时，才值得进入 Action Phrase：
+
+- 攻击路线；
+- 移动路线；
+- Range；
+- Advantage；
+- 角色的战术选择；
+- Phrase Payoff。
+
+因此禁止把环境升级理解成“每隔几秒踢椅子、扔文件、砸显示器、撞玻璃”。环境利用仍必须服从动作因果、角色打法、场景真实性和模型可执行性。
+
+### 与 V1 环境状态的关系
+
+V2 不替代 V1 的 Environment State / Combat Spatial Map，而是把环境逻辑向前扩展一层：
+
+> **V2 Environment Action Affordance 负责“环境可以怎样参与动作设计”；V1 Environment State 负责“环境参与之后状态怎样正确继承”。**
+
+Environment Action Affordance 主要由当前场景动态推导，不要求为每一种具体道具建立固定模板。现有环境 Library 可以继续提供稳定的环境模式知识，但不能把场景对象机械映射为唯一动作。
+
+## 18. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -653,8 +701,9 @@ Combat Intent / 用户观看目标
 17. **Combat 中文术语统一使用“动作编排 / 动作导演”，不再用“编舞”作为主要中文翻译。**
 18. **Combat Character Identity 是动态推导结果，不是职业或角色类型画像库。**
 19. **Cinematic Choreography Profile 只沉淀少量稳定基础原型，禁止演化为无限扩张的风格百科。**
+20. **环境先作为动作机会参与设计，再由 V1 状态层验证和继承；环境利用必须改变战斗或 Phrase，而不是装饰性破坏。**
 
-## 18. 已确认决策记录
+## 19. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -671,22 +720,22 @@ Combat Intent / 用户观看目标
 | V2-11 | 中文术语 | 英文保留 Choreography；中文统一“动作编排 / 动作导演”，不再使用“编舞”作为主要翻译 |
 | V2-12 | Combat Character Identity 来源 | 不建角色 / 职业画像库；根据人物、环境、对手、Intent、状态和动作编排风格动态推导 |
 | V2-13 | Choreography Profile Library | 正式新增 `combat-choreography-profiles`；仅维护少量稳定基础原型，Playbook 动态选择 / 组合，不做无限风格百科 |
+| V2-14 | Environment Action Affordance | 环境从被动状态修改器升级为 Action Phrase 前的动态动作机会；只保留能实质改变战斗或 Phrase 的环境利用 |
 
-## 19. 尚待继续 Grill Me 的设计树
+## 20. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-2. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-3. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
-4. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-5. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-6. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-7. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-8. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-9. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+2. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
+3. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+4. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+5. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+6. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+7. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+8. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 20. 当前阶段结论
+## 21. 当前阶段结论
 
 V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、动作编排弱”倾向。
 
