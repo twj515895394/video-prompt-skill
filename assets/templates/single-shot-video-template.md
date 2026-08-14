@@ -2,9 +2,11 @@
 
 ## 适用范围
 
-用于单一主动作、单一情绪变化或单一镜头主任务的视频。
+用于单一主动作、单一情绪变化或单一主要观看任务的视频生成单元。
 
-单镜头不等于完全静止，也不等于必须使用一镜到底。核心是整段只有一个主要观看任务。
+**本模板中的 `single-shot-video` 表示单一视频生成单元 / 单一主要观看任务，不自动等于电影剪辑术语中的“一镜到底 / one-take”。**
+
+除非用户明确要求一镜到底、长镜头，或目标模型 / 输入形式确实要求严格连续摄影，否则一个 15 秒视频单元内部可以存在有目的的 Cut、Insert、Reaction、Impact Shot 和 Re-establish。
 
 ## 内部组装字段
 
@@ -13,7 +15,7 @@
 输入 / 参考职责：
 初始画面与主体状态：
 主体动作或表演顺序：
-镜头起点、运动和停止点：
+Camera Coverage / Shot 关系：
 环境、光影和材质变化：
 对白、声音和音乐：
 最终落点：
@@ -28,12 +30,12 @@
 快速模式默认将字段合并成一份可直接复制 Prompt：
 
 ```text
-生成一段 [时长] 的 [任务 / 风格] 视频。[输入参考及职责，如有]。镜头从 [景别、机位和初始构图] 开始，[主体] 处于 [初始状态]。[主体按自然顺序完成动作或表演]，同时镜头 [明确的相对运动、速度和停止点]。[头发、服装、道具和环境的响应]。[对白、环境音、拟音或音乐，如有]。光线保持 [来源、方向、阴影和色调]，最终 [动作、视线、重心、镜头和声音的落点]。全程保持 [身份、服装、场景、道具和运动方向] 连续，避免 [当前最危险的 3-6 项失败]。
+生成一段 [时长] 的 [任务 / 风格] 视频。[输入参考及职责，如有]。从 [景别、机位和初始构图] 建立 [主体 / 空间关系]，[主体按自然顺序完成动作或表演]。Camera 根据当前信息需要进行 [移动 / Cut / 景别变化 / 聚焦]，并在跨镜时保持动作方向、位置与状态连续。[头发、服装、道具和环境的响应]。[对白、环境音、拟音或音乐，如有]。光线保持 [来源、方向、阴影和色调]，最终 [动作、视线、重心、镜头和声音的落点]。全程保持 [身份、服装、场景、道具和运动方向] 连续，避免 [当前最危险的 3-6 项失败]。
 ```
 
 ## 时间轴使用条件
 
-普通单镜头任务满足以下任一条件时，可在 Prompt 内使用绝对时间：
+普通视频单元满足以下任一条件时，可在 Prompt 内使用绝对时间：
 
 - 时长较长且有三个以上清晰动作阶段；
 - 存在对白与动作同步；
@@ -82,20 +84,39 @@ Combat 默认继承 Task / Prompt Assembly 已确定的：
 只有以下情况可以在高密度 Combat 中恢复 Hard Time Blocks：
 
 - 用户明确要求逐秒动作；
-- 多镜头 Shot 边界；
+- 需要精确 Shot 边界；
 - 对白 / 音乐 / 外部事件精确同步；
 - Model Adapter 有真实 Benchmark 证据表明严格时间轴更稳定。
 
 即使恢复 Hard Time Blocks，块与块之间仍必须继承 Contact / Momentum / Footwork / Axis / Range / Position 等 Motion Handoff；**时间块边界不能成为 Neutral Reset。**
 
-> **Combat 专项时间序列化规则优先于通用单镜头模板默认时间轴规则。**
+> **Combat 专项时间序列化规则优先于通用模板默认时间轴规则。**
+
+### Action Combat Camera Override
+
+> **Action Continuity ≠ Shot Continuity。**
+
+Combat 的 Continuous Action Spine 只约束战斗动作与状态连续，不要求整个视频单元使用一条连续 Camera Path。
+
+如果用户没有明确要求一镜到底，Combat 可以根据动作信息动态使用：
+
+- Master / Relationship Shot；
+- Medium / Medium-wide；
+- Contact / Weapon / Footwork Close-up；
+- Insert；
+- Reaction / Impact Shot；
+- Re-establish。
+
+Cut 前后必须继承 Position / Direction / Contact / Momentum / Axis / Range；局部镜头之后如果空间关系可能丢失，应通过 Re-establish 恢复可读性。
+
+禁止把“动作可读”机械实现为全程中全景 / 中景 + 轻微 tracking，也禁止为了“电影感”固定加入若干特写配额。
 
 ## 图生视频补充
 
 图生视频应优先写“从当前画面接下来如何运动”：
 
 ```text
-基于参考图，从当前姿态自然开始。[主体动作]，[头发、服装、道具和背景响应]；镜头 [运动]，保持原图身份、构图逻辑、光源和风格，最终停在 [状态]。
+基于参考图，从当前姿态自然开始。[主体动作]，[头发、服装、道具和背景响应]；Camera [移动 / Cut / 聚焦]，保持原图身份、构图逻辑、光源和风格，最终停在 [状态]。
 ```
 
 避免长篇复述参考图已经清楚展示的静态细节。
@@ -120,17 +141,20 @@ Combat 默认继承 Task / Prompt Assembly 已确定的：
 
 对于 Action Combat，不把这条普通动作骨架机械重复到每一个 Phrase；应优先服从 Combat Task 的 Action Phrase、Motion Handoff、Kinetic Scope 和 Continuous Action Spine，使新的平衡 / 受力状态直接成为后续动作入口。
 
-主体动作强时通常降低无必要 Camera Complexity；**不等于让 Camera 静止**。如果人物发生明显 Position / Range / Axis / Route 变化，应继承 Combat Task 的 Camera Mobility 计划进行简单连续跟随。
+主体动作强时通常降低无必要 Camera Complexity；**不等于让 Camera 静止，也不等于禁止 Cut / Close-up / Insert。** 如果人物发生明显 Position / Range / Axis / Route 变化，单个 Shot 内应继承 Camera Mobility；整段 Coverage 则按动作信息动态选择景别与 Cut。
 
 ## 输出检查
 
 - 是否只有一个主观看任务；
 - 是否写清初始状态；
-- 主体运动和镜头运动是否分开；
-- 镜头是否有起点、路线和停止点；
+- 主体运动和 Camera 观察策略是否分开；
+- 单个 Shot 的镜头是否有起点、路线和停止点；
+- Cut 后动作方向 / Position / Contact / Momentum / Axis 是否连续；
 - 环境反馈是否有物理来源；
 - 最后一拍是否自然停住；
 - 是否删除了无关备选和自动补全说明；
 - 是否已经按 Generic、Seedance 或 LTX 正确转换；
 - 如果是高密度 Action Combat，是否没有被本模板重新切成多个无必要 Hard Time Blocks；
-- 如果 Combat Task 已提供 Continuous Action Spine / Camera Mobility，模板是否完整继承而没有覆盖。
+- 是否误把 `single-shot-video` 理解成 one-take；
+- 是否误把动作可读性实现成全程中全景 / 中景；
+- 如果 Combat Task 已提供 Continuous Action Spine / Camera Coverage，模板是否完整继承而没有覆盖。
