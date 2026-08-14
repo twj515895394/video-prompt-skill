@@ -1575,3 +1575,94 @@ Golden Combat Benchmark 增加 **Visible Advantage Dynamics Realization** 与 **
 | V2-42 | Visible Advantage Dynamics | Advantage 必须通过 Attack Initiative、Forced Defense、Range / Angle / Route / Position / Environment Control、Recovery Burden 等动作事实外显；Major Advantage Reversal 必须真实改变至少一类战斗控制权，并用 Invisible Advantage / Nominal Reversal 拦截“文字说逆转、动作压力没变化” |
 
 V2-42 确认后，下一项优先验证 **Initiative Handoff / 主动权交接**：避免 Visible Advantage 最后仍被实现成“轮流各出一招”，需要进一步明确主动权如何在 Counter / Re-counter / Forced Response 中被抢夺、维持和转移。
+
+## 53. V2-43：Initiative Handoff / 主动权交接
+
+Visible Advantage 进一步校准后，需要解决一个更细但直接影响连续打斗观感的问题：即使系统已经知道谁整体占优，Action Phrase 仍可能被执行成“甲完整打一段 → 停 → 乙完整打一段 → 停”的轮流表演。这样的成片表面上有 Counter / Re-counter，实际上没有真正发生主动权争夺。
+
+因此正式新增 **Initiative Handoff / 主动权交接**。它描述的是当前瞬间“谁正在迫使对方响应”，与持续一段时间的 `Advantage` 区分：
+
+```text
+Advantage
+→ 一段时间里谁更持续地控制局势、Range、Route、Pressure
+
+Initiative
+→ 当前这一瞬间谁在驱动动作因果、迫使对手做出响应
+```
+
+一个角色可以总体处于劣势，但短暂抢到 Initiative；也可以总体占优，却在某次 Counter 中瞬间失去主动权。
+
+### 53.1 主动权应在动作过程中被抢走
+
+高手连续攻防、Counter / Re-counter、Forced Response 场景中，Initiative Handoff 优先发生在动作尚未完全结束时，例如：
+
+- **Interception**：防守方在攻击线路尚未完成时截断、偏转或占住线路，使原进攻方被迫改动作；
+- **Forced Response**：原防守方通过 Contact / Threat / Position 变化迫使进攻方立刻转入防守或恢复；
+- **Line / Axis Control**：通过身体轴线、Threat Line、Weapon Line、角度或脚步抢先占据后续动作通道；
+- **Range Capture**：在对手进入或退出 Range 的过程中直接接管理想距离；
+- **Contact Handoff**：格挡 / 抓控 / 碰撞本身不结束，而直接转为下一次控制、反击或 Re-counter 的支点；
+- **Recovery Attack Window**：对手尚在失衡、收势、重新站位时，另一方直接接管主动权。
+
+核心不是动作速度，而是：**主动权转移发生在同一连续运动链里，而不是等前一个人的动作完整结束。**
+
+### 53.2 Initiative Handoff 与 Action Interlock
+
+`Combat Action Interlock / Motion Handoff` 回答“后一个动作是否继承前一个身体与空间状态”；`Initiative Handoff` 回答“在这条继承链里，谁正在迫使谁响应”。
+
+```text
+Motion Handoff
+→ 保证动作不断线
+
+Initiative Handoff
+→ 保证控制动作因果的人可以在链内动态切换
+```
+
+因此一次高质量 Counter 不只是“B 在 A 之后攻击”，而应体现：A 的攻击仍在形成 → B 截断 / 改变它 → A 被迫应对 → Initiative 已转到 B。
+
+### 53.3 Turn-taking Combat / Initiative Segmentation
+
+新增 Failure Signature：
+
+> **Turn-taking Combat / Initiative Segmentation / 轮流式战斗 / 主动权分段**
+
+典型触发：
+
+- 甲完整完成一组攻击，停下后才轮到乙攻击；
+- Counter 只表现为“对方打完以后我再打”，没有在对方动作过程中夺取 Initiative；
+- 双方拥有整齐、对称、互不打断的独立攻击回合；
+- Re-counter 实际上只是第二轮独立攻击，没有 Contact / Range / Axis / Recovery Window 的继承；
+- Final Prompt 频繁使用“男方完成攻击后，女方开始反击”这类轮次式序列；
+- 成片像动作排练轮番展示，而不是双方实时争夺主动权。
+
+Final Preflight 触发该模式时，应优先重写 Counter / Re-counter / Forced Response 的衔接，使 Initiative 在动作尚未完成时发生真实转移，而不是简单增加更多攻击回合。
+
+### 53.4 与 Visible Advantage / Intensity Curve 的关系
+
+- `Initiative` 是瞬时控制权；`Advantage` 是更持续的局势控制；
+- 连续获得 Initiative 往往会积累成 Visible Advantage，但不要求每次短暂 Initiative Handoff 都改变整体 Advantage；
+- 重要 Initiative Handoff 可以构成 Intensity Turning Point 或 Advantage Reversal 的微观机制；
+- Signature Moment 可以建立在一次非常清楚的 Initiative Theft / Initiative Recovery 上，但禁止机械化固定套路。
+
+### 53.5 Preflight / Benchmark 增量
+
+Final Preflight 增加：
+
+- 高手连续攻防中是否存在真正的 Initiative Handoff；
+- Counter / Re-counter 是否在对手动作过程中发生，而不是轮流回合；
+- Initiative 转移是否通过 Contact / Range / Axis / Position / Recovery Window 等可见动作成立；
+- 是否触发 Turn-taking Combat / Initiative Segmentation。
+
+Golden Combat Benchmark 增加 **Initiative Handoff Realization** 与 **Turn-taking Combat** Failure Contract。
+
+原则：
+
+> **高手交手不是轮流出招，而是在同一条连续动作链里不断抢走对方的行动权。**  
+> **Counter 的关键不是“我接下来攻击”，而是“你的攻击还没结束，我已经迫使你开始应对我”。**
+
+## 54. 实测反馈增量决策记录（五）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-43 | Initiative Handoff | Initiative 与 Advantage 分离；高手连续攻防中的主动权优先在动作尚未结束时通过 Interception、Forced Response、Line / Axis Control、Range Capture、Contact Handoff、Recovery Window 等方式转移；用 Turn-taking Combat / Initiative Segmentation 拦截“你打一段、我打一段”的轮流式战斗 |
+
+V2-43 确认后，下一项优先验证 **Initiative Handoff 是否必须受 Combat Character Identity 约束**：不同角色应以不同方式抢夺 / 维持主动权，避免所有高手都被写成同一种“格挡后反击 / 截断后抢攻”逻辑。
