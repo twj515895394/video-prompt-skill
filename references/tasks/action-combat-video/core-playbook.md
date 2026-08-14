@@ -1,42 +1,51 @@
 # Action Combat Core Playbook
 
-## 1. 核心目标
+## 1. 职责
 
-把战斗设计成可读、连续、可执行的状态变化，而不是招式名词堆叠。
+本文件是 `action-combat-video` Task 的 **Combat State / Continuity / Battle Runtime Skeleton**。
 
-内部主链：
+它负责：
+
+- 战斗目的与阶段关系；
+- 人物 / 环境 / 兵器的空间真源；
+- Range / Advantage / Condition；
+- Turning Event；
+- Action–Reaction 的基础因果合同；
+- 1vN / Target Handoff；
+- Battle Beat 与 Beat State Contract；
+- Position / Environment / Weapon State 的跨 Beat 继承；
+- Spatial / Physical / Continuity Validation；
+- Task 与 Choreography / 专项 Playbook / Controls / Libraries 的运行协调。
+
+它**不负责**完整动作导演策略。Coverage、Rhythm、Action Phrase、Exchange Depth、Combat Character Identity、Tactical Interaction、Signature Moment、Combat Contact Solidity、Action Execution Budget、Camera Readability Budget、Combat Audio Choreography 等由 `choreography-playbook.md` 负责。
+
+核心分工：
+
+> **Core 负责“打得对、接得上”。**  
+> **Choreography 负责“打得够、丰富、好看、有实感”。**
+
+最终 Prompt 不直接 Dump 内部状态表；状态通过可见动作、空间变化和因果结果体现。
+
+---
+
+## 2. 总运行链
 
 ```text
 Combat Intent
 → Combat Spatial Map
 → Beat Start State
-→ Action / Camera / Audio Choreography
-→ Turning / Handoff
+→ Choreography Planning / Action Phrase
+→ Action–Reaction / Contact / Transition
+→ Turning Event / Target Handoff（如有）
 → Beat End State
 → Beat State Contract
+→ Continuity Validation
 → Next Beat
 ```
 
-最终交付始终是视频模型可直接执行的自然语言 Prompt，不把内部状态表直接 Dump 给用户或模型。
+Core 不规定每个 Battle Beat 必须包含固定数量动作。
 
-## 2. Battle Beat
-
-Combat 的主要组织单位是 Battle Beat。Beat 数量不固定，根据总时长、人数、复杂度和叙事目标自动决定。
-
-一个 Beat 默认只承担一个主要攻防目标，并包含若干连续交互节点和一个清楚的结束状态。
-
-通用阶段可参考：
-
-```text
-观察 / 起势
-→ 接触 / 试探
-→ 攻防交换
-→ 转折 / 爆发
-→ 缠斗 / 脱离 / 重组
-→ 终结 / 制服 / 收势
-```
-
-这些是可选节奏，不是强制模板。
+---
 
 ## 3. Combat Intent
 
@@ -51,218 +60,454 @@ Combat 的主要组织单位是 Battle Beat。Beat 数量不固定，根据总�
 - 击败 / 终结；
 - 展示实力。
 
-Intent 影响动作选择、Beat 顺序、主导权、镜头重点和结尾落点。Quick Mode 未指定时从剧情自动推断。
+Intent 影响：
 
-## 4. Combat Spatial Map
+- Battle Beat 的战术目标；
+- 主导权变化；
+- Range 选择；
+- Target Handoff；
+- Condition 后果；
+- 最终战斗结果。
 
-战斗开始前内部建立轻量空间真源，只维护真正影响动作与镜头的变量：
+Quick Mode 未明确时从剧情和观看目标自动推断；Interactive Mode 只有在存在高影响分叉且无法可靠推断时才向用户暴露。
+
+---
+
+## 4. Battle Beat
+
+Battle Beat 是 Combat 的**战术 / 状态阶段单位**，不是固定动作数量容器。
+
+Beat 只有在以下内容实质变化时才应切换：
+
+- 战术目标；
+- 主要 Advantage；
+- 关键 Condition；
+- Primary Target；
+- 战斗阶段；
+- Turning Event 后形成新的状态关系。
+
+一个 Beat 可以包含一个或多个无缝连续 Action Phrase。Phrase 的数量与复杂度由 `choreography-playbook.md` 动态决定。
+
+Beat 之间不要求停战，也不要求重新起势。
+
+---
+
+## 5. Combat Spatial Map
+
+战斗开始前内部建立轻量空间真源，只维护真正影响动作、状态与镜头的变量：
 
 - 人物初始位置与朝向；
 - 主要环境锚点；
 - 障碍、出口、死角、高低差；
 - 可移动区域与通道；
+- 关键可交互边界；
 - 当前 Camera Axis；
-- 初始 Combat Range State。
+- 初始 Combat Range State；
+- 兵器 / 关键道具位置（如适用）。
 
-每个 Beat 只能增量更新：
+每次位置变化必须满足：
 
 > **Position State → Movement / Interaction → New Position State**
 
-禁止人物、道具、环境和镜头关系无因果漂移。
+禁止人物、兵器、道具、环境与镜头关系无因果漂移。
 
-## 5. Combat Range State
+Environment Action Affordance 由 Choreography 规划；一旦环境动作发生，其结果必须回写 Spatial / Environment State。
 
-内部可使用：远距离、长兵器距离、中距离、近距离、缠斗距离、脱离 / 重置距离。
+---
+
+## 6. Combat Range State
+
+内部可按场景使用：
+
+- 远距离；
+- 长兵器距离；
+- 中距离；
+- 近距离；
+- 缠斗 / 控制距离；
+- 脱离 / 重置距离。
 
 距离变化必须由动作产生：
 
 > **Current Range → Range Transition Action → New Range**
 
-例如逼近、格挡后压入、推开、侧移、脱离、兵器偏转后贴身等。
+例如：逼近、侧移、格挡后压入、推开、摔脱、追击、兵器偏转后贴身、撤步重建距离。
 
-不要为了状态标签而机械写标签；最终 Prompt 直接描述双方如何改变距离。
+Range 是状态真源，不是 Final Prompt 的标签模板。最终应直接描述人物如何改变距离。
 
-## 6. Combat Advantage State 与 Turning Event
+---
 
-内部维护均势 / 轻度占优 / 明显压制 / 脱离重置等主导关系，并记录优势来源：距离、速度、力量、技术、兵器长度、地形、人数、失衡、受伤或死角。
+## 7. Combat Advantage State 与 Turning Event
 
-明显主导权改变必须有 Turning Event：
+内部维护当前主导关系，例如：
+
+- 均势；
+- 轻度占优；
+- 明显压制；
+- 暂时失衡；
+- 脱离 / 重置。
+
+Advantage 必须记录来源，例如：
+
+- Range；
+- 速度；
+- 力量；
+- 技术；
+- 兵器长度 / 线路；
+- 地形；
+- 人数；
+- 失衡；
+- 受伤 / 功能受限；
+- 死角；
+- 环境位置。
+
+明显主导权变化必须有 Turning Event：
 
 > **旧优势 → 转折事件 → 优势来源变化 → 新优势**
 
-转折可以来自落空、成功格挡 / 拆招、失衡、换距、缴械、环境换位、受伤、第三人介入等。
+Turning Event 可来自：
 
-避免机械“你一下我一下”的轮流反转。
+- 落空；
+- 格挡 / 拆招；
+- Counter / Re-counter；
+- 失衡；
+- Range 改变；
+- 缴械；
+- 环境换位；
+- 受伤；
+- 新目标介入。
 
-## 7. Combat Condition State
+避免机械“你一下我一下”的无因果轮流反转。
 
-受伤、体力、呼吸和局部功能跨 Beat 累积，但不做 RPG 数值化。
+---
 
-只维护对后续动作真正有影响的状态，并让它改变：
+## 8. Combat Condition State
+
+Condition 只维护会真实影响后续动作的状态，不做 RPG 数值化。
+
+可包括：
+
+- 疲劳；
+- 呼吸压力；
+- 局部受伤 / 功能受限；
+- 握持 / 兵器状态；
+- 平衡受损；
+- 防守结构被破坏；
+- 暂时眩晕或恢复中的状态。
+
+Condition 必须改变后续至少一项：
 
 - 速度；
-- 连招长度；
+- 动作选择；
 - 站姿 / 重心；
 - 防守方式；
-- 动作选择；
-- Range 与 Advantage；
-- 表演与呼吸。
+- Range；
+- Advantage；
+- 兵器使用；
+- 表演 / 呼吸。
 
-状态不应无理由在下一 Beat 重置。
+状态不应在下一 Beat 无理由重置。
 
-## 8. Action–Reaction Pair
+---
 
-关键交互使用：
+## 9. Action–Reaction 基础因果合同
+
+Core 对所有重要战斗交互要求：
 
 > **Initiator Action → Defender Response → Contact / Outcome → State Change**
 
-动作链必须表现双方互相影响，而不是各自完成独立招式列表。
+双方必须互相影响，不能各自完成独立招式列表。
 
-关键命中或接触遵循：
+这是状态因果最低合同；Action Phrase 的完整连续编排由 `choreography-playbook.md` 负责。
 
-> **Preparation → Delivery → Contact → Reaction → Recovery → Continuation**
+重要接触至少要让 Core 能判断：
 
-不是每次轻触都要写满六段，但重要打击必须能看出发力、接触、受力和后续动作。
+- 是否真实发生 Contact；
+- Contact 后 Range / Advantage / Condition / Position / Weapon State 是否变化；
+- 下一动作是否从当前结果继续。
 
-## 9. 1vN 与 Target Handoff
+Combat Contact Solidity 的细化链由 Choreography 负责，但其结果必须回写 Core State。
 
-每个 Beat 只保留一个主交战关系；其他对手处于明确的次级状态，例如逼近、被阻挡、被击退、倒地恢复、等待切入或重新包抄。
+---
+
+## 10. 1vN 与 Target Handoff
+
+多人战中，每个当前战术窗口保留一个清楚的主交战关系；其他对手必须处于可解释的次级状态，例如：
+
+- 逼近；
+- 被阻挡；
+- 被击退；
+- 倒地恢复；
+- 等待切入；
+- 重新包抄；
+- 被环境隔开。
 
 主目标切换必须经过：
 
 > **Current Target → Target Handoff → Spatial Re-map → New Primary Target**
 
-Handoff 可以由新目标入画、旧目标被击退、转身、环境遮挡、新威胁介入、兵器轨迹或动作动线完成。
+Handoff 可以由：
 
-切换后重新建立人物朝向、Range、Camera Axis 和其他人的位置。
+- 新威胁入画；
+- 旧目标被击退；
+- 转身；
+- 环境遮挡；
+- 兵器轨迹；
+- 连续动作动线；
+- 新对手主动切入。
 
-## 10. Camera Choreography
+切换后重新确认：
 
-镜头按功能选择：
+- 人物朝向；
+- Range；
+- Camera Axis；
+- 其他角色位置 / 状态；
+- 当前 Advantage 来源。
 
-> **镜头目的 → 主体关系 → 机位 → 镜头路径 → 景别变化 → 停止点**
+多人战不允许多个角色在同一时间窗口内无主次地独立表演复杂动作。
 
-支持三种模式：
+---
 
-- Continuous / Long-take：连续性优先，动作复杂度更克制；
-- Hybrid：默认，连续运动为主，必要处功能性切镜；
-- Cut-driven：允许更高频切镜，但每次 Cut 都必须有动作 / 空间 /冲击理由。
+## 11. Weapon / Prop State
 
-Battle Beat 与 Shot 不强制 1:1。
+兵器与关键道具必须有连续状态：
 
-跨 Beat 优先继承屏幕方向、人物朝向、轴线、环境锚点、结束姿态和未完成运动。
+- 当前持有人；
+- 左 / 右手或双手关系（只有确实影响动作时维护）；
+- 是否完整；
+- 是否脱手；
+- 落点；
+- 是否被夺取；
+- 当前与人物 / 环境的位置关系。
 
-允许跨轴，但必须通过连续绕位、中性重建或动作驱动换位让观众看懂。
+状态变化必须由可见事件产生：
 
-## 11. Audio Choreography
+> **Weapon State → Contact / Disarm / Drop / Transfer → New Weapon State**
 
-Audio 与 Action / Camera 同一时间链设计。
+禁止兵器变形、消失、凭空换手或没有过渡地重置。
 
-按场景需要选择：
+具体兵器距离、线路与动作语言由 Weapon Profile / 专项 Playbook 决定。
 
-- 环境底噪；
-- 脚步 / 急停；
-- 呼吸；
-- 衣料 / 衣袂；
-- 破风；
-- 身体 / 环境碰撞；
-- 兵器挥动 / 接触 / 偏转；
-- BGM；
-- 静默或音乐让位。
+---
 
-声音服务动作可读性、重量、空间感和节奏，不给每个微动作机械配音效。
+## 12. Environment State
 
-## 12. 时间与速度
+环境不是动作清单，而是 Spatial State 的一部分。
 
-先拆 Beat，再分配 Soft Time Window。复杂 Beat 获得更多时间，简单 Beat 更短。
+当角色使用环境后，必须更新相关状态，例如：
 
-允许关键重击、极限闪避、兵器交错、腾跃转折短暂减速，但必须说明慢下来是为了看清什么，并尽快回到正常速度。
+- 某障碍被移动；
+- 某通路被打开 / 封住；
+- 某人被压到边界；
+- 桌椅位置变化；
+- 可用空间缩小；
+- 新高低差 / 支撑点产生；
+- 环境物损坏后不再保持原状态。
 
-不机械按固定秒数切动作。
+Environment Action 是否值得发生由 Choreography 负责；一旦发生，Core 负责继承结果。
+
+---
 
 ## 13. Beat State Contract
 
-每个 Beat 内部结束时至少继承：
+每个 Beat 结束时，内部至少继承当前相关的：
 
-- Actor：位置、朝向、姿态 / 重心、肢体、兵器、当前目标；
-- Combat：Range、Advantage、Condition、攻防趋势、未结束 momentum；
-- Camera：机位关系、Axis、屏幕运动方向、镜头运动趋势；
-- Environment：当前锚点、障碍关系、可用空间；
-- Continuity：Visual Handoff、Target Handoff、未结束动作趋势。
+### Actor
 
-下一 Beat 必须从这个状态继续，不重新解释一套初始状态。
+- 位置；
+- 朝向；
+- 姿态 / 重心；
+- 关键肢体状态；
+- 兵器 / 道具；
+- 当前目标。
 
-## 14. 环境互动
+### Combat
 
-环境是一级变量，但每个 Beat 只突出真正有价值的主要互动。
+- Range；
+- Advantage；
+- Condition；
+- 当前攻防趋势；
+- 未结束 momentum；
+- 重要 Contact Consequence。
 
-环境可以承担：移动、遮挡、借力、碰撞、改变站位、镜头接力。
+### Camera
 
-避免为“丰富”而让角色同时使用多个无关物体。
+- 机位关系；
+- Axis；
+- 屏幕运动方向；
+- 未完成镜头运动趋势。
 
-## 15. 动作复杂度预算
+### Environment
 
-默认参考：
+- 主要锚点；
+- 障碍 / 通路状态；
+- 可用空间；
+- 被移动 / 损坏的关键物体。
 
-> **1 个主攻防目标 + 2–4 个连续攻防交互节点 + 1 个结束状态**
+### Continuity
 
-这是可读性预算，不是硬性模板。用户动作设计本身清楚且模型可执行时，可以灵活增减。
+- Visual Handoff；
+- Target Handoff；
+- 未完成动作趋势；
+- Weapon / Prop State。
 
-当信息过载时，优先：拆 Beat、降低镜头复杂度、保留主动作和关键反馈。
+下一 Beat 必须从该状态继续，不重新解释一套初始状态。
 
-## 16. 最终 Prompt 组装
+---
 
-Combat 必须最终转译为可复制 Prompt，至少包含适用的信息块：
+## 14. Camera Continuity Contract
 
-- 场景与视觉锁定；
-- 战斗总体设定；
-- 动作 / 镜头 / 声音时间线；
-- 声音总体设计；
-- 连续性与物理约束；
-- 动态选择的高风险 Negative Constraints；
-- 画质与输出约束。
+具体 Camera Choreography 与 Readability Budget 由 `choreography-playbook.md` + `camera-direction` Control 负责。
 
-单镜头 / 长镜头挂接现有 single-shot 输出合同；多镜头动作戏挂接现有 multi-shot 输出合同。
+Core 只维护连续性最低合同：
 
-## 17. 推荐现有 Controls
+- 屏幕方向；
+- 人物朝向；
+- Camera Axis；
+- 关键环境锚点；
+- Shot 结束时人物 / 镜头运动趋势。
 
-按需选择，不全量加载：
+允许跨轴，但必须通过连续绕位、中性重建、动作驱动换位或其他可理解方式完成。
 
-- `timeline-rhythm`
-- `subject-motion`
-- `camera-direction`
-- `spatial-blocking`
-- `continuity-consistency`
-- `audio-visual-sync`
-- `prompt-assembly`
-- `realism-quality`
+Battle Beat 与 Shot 不强制 1:1。
 
-## 18. Libraries 选择
+---
 
-最多按当前缺口读取 0–2 份：
+## 15. Physical Continuity Validation
 
-- 现代格斗：`combat-fighting-profiles`
-- 武术 / 武侠：`combat-martial-profiles`
-- 兵器：`combat-weapon-profiles`
-- 强环境交互：`combat-environment-patterns`
+每个 Battle Beat / 重要 Action Phrase 结束后，检查：
 
-用户已经明确动作语言时不额外加载无关库。
+- 人物是否瞬移；
+- Range 是否无动作因果跳变；
+- Advantage 是否无 Turning Event 翻转；
+- Condition 是否无理由消失；
+- Weapon State 是否无过渡改变；
+- Environment State 是否重置；
+- Target 是否无 Handoff 瞬间切换；
+- Contact 结果是否在下一动作完全失效；
+- Camera Axis / 屏幕方向是否无解释翻转。
 
-## 19. 核心失败限制
+Core Validation 只负责识别状态 / 连续性错误，不通过删减大量有效攻防来“修复”复杂动作。
 
-按场景动态选择最危险项：
+如复杂度过载，交给 Choreography 的 Action Execution Budget / Camera Readability Budget 处理。
 
-- 禁止人物瞬移和无理由换位；
-- 禁止 Range 无动作因果跳变；
-- 禁止命中无受力反馈；
-- 禁止 Condition 无理由重置；
-- 禁止 Target 无 Handoff 瞬间切换；
-- 禁止 Camera Axis 无解释翻转；
-- 禁止动作 / 镜头 / 音效互相抢占导致不可读；
-- 兵器场景禁止兵器变形、消失、凭空换手。
+---
 
-## 20. 创作自由原则
+## 16. Controls 协调
+
+按当前任务缺口选择，禁止全量加载。常用：
+
+- `timeline-rhythm`：通用时间 / 节奏控制；
+- `subject-motion`：通用主体运动、重心与动作表达；
+- `camera-direction`：通用镜头语言；
+- `spatial-blocking`：通用空间调度；
+- `continuity-consistency`：通用连续性；
+- `audio-visual-sync`：通用音画同步；
+- `prompt-assembly`：Final Prompt 组装；
+- `realism-quality`：写实表现需要时使用。
+
+Combat 专属 Phrase、Exchange Depth、Contact Solidity、Signature Moment 等逻辑不能迁入这些全局 Controls。
+
+---
+
+## 17. Libraries 协调
+
+Core 不直接要求“每次必须读取哪些库”。
+
+Library 选择由 `choreography-playbook.md` 的 Two-stage On-demand Loading 根据 `Combat Planning Context` 决定。
+
+现有专业知识可能包括：
+
+- `combat-fighting-profiles`；
+- `combat-martial-profiles`；
+- `combat-weapon-profiles`；
+- `combat-environment-patterns`；
+- `combat-choreography-profiles`（V2）；
+- `signature-moment-patterns`（V2）。
+
+Core 只要求：Library 不能覆盖 State / Continuity 真源，也不能把职业画像当成状态或打法真源。
+
+---
+
+## 18. 专项 Playbook 协调
+
+在 Core + Choreography 之后只选择一个主专项分支：
+
+- Modern Combat；
+- Cinematic Wuxia；
+- 后续其他显著不同的 Combat Branch。
+
+专项 Playbook 可以覆盖：
+
+- 动作语言；
+- 物理尺度；
+- 默认 Range / Rhythm 倾向；
+- Contact Modality 表现；
+- Fighting / Martial / Weapon Profile 使用方式；
+- Camera / Audio 专项表达。
+
+专项 Playbook 不能：
+
+- 重定义 Range / Advantage / Condition 的状态连续性规则；
+- 引入固定 Battle Beat 动作数量；
+- 把职业直接映射固定打法；
+- 覆盖 Choreography 的 Coverage / Sufficiency / Contact Quality 合同。
+
+---
+
+## 19. Final Prompt 边界
+
+Core 只向 Final Prompt 提供**必要的连续性事实**，例如：
+
+- 谁位于哪里；
+- 如何换位；
+- Contact 后谁失衡 / 被迫后退 / 被控制；
+- 兵器如何转移；
+- 下一动作从哪个状态继续。
+
+不要把：
+
+- Range = Close；
+- Advantage = A；
+- Condition = B injured；
+- State Contract = ...
+
+等内部标签直接大量输出。
+
+最终动作化表达遵循 `choreography-playbook.md` 与 `prompt-assembly`。
+
+---
+
+## 20. 核心失败边界
+
+Core 优先防止：
+
+- 人物瞬移 / 无理由换位；
+- Range 无因果跳变；
+- Advantage 无 Turning Event 翻转；
+- Condition 无理由重置；
+- Target 无 Handoff 切换；
+- Weapon / Prop State 不连续；
+- Environment State 重置；
+- Camera Axis 无解释翻转；
+- 接触结果不被后续继承。
+
+动作不足、Choreography 平、Contact 实感差、Camera 抢动作等问题应由 V2 Choreography / Diagnostics 处理，不应全部归为状态连续性错误。
+
+---
+
+## 21. 创作自由原则
 
 > **约束错误，不约束创作。**
 
-以上状态、默认节奏、镜头模式、动作预算和案例都是生成工具，不是固定动作模板。不要为了“满足规则”把所有状态都显式写进最终 Prompt，也不要把同一套路复用于所有战斗。
+Core 固定的是因果、状态继承、空间与物理底线，不固定：
+
+- Battle Beat 数量；
+- Action Phrase 数量；
+- 攻防交换次数；
+- 固定招式；
+- 固定镜头；
+- 固定环境互动。
+
+尤其禁止重新引入“为了清晰默认写更少动作”的隐含策略。
+
+复杂战斗的清晰度应通过 Choreography 的结构化组织、Camera Readability 与模型执行预算获得，而不是通过动作通缩获得。
