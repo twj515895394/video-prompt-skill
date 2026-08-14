@@ -376,7 +376,7 @@ Signature Moment 不等于慢动作。
 - **Camera Readability Hint**：只描述需要看清什么，不固化镜头脚本；
 - **Adaptation Variables**：可以自由替换的环境、攻击方式、人物差异等；
 - **Do Not Copy**：明确禁止直接迁移具体影视招式顺序、逐镜头设计、台词、独特特技；
-- **Source Cases**：经过核实的影视案例 metadata。
+- **Source Case IDs**：指向独立 `source-cases/` 证据层的案例 ID；Pattern 文件只保留短引用，不内嵌完整案例资料。
 
 其中 **Action Causality Skeleton** 是核心知识，不保存影视片段的逐招还原。
 
@@ -463,9 +463,56 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 
 该设计遵守 V2 总体的按需加载原则，避免 Pattern 数量增长后造成 Token 膨胀。
 
+## 21. V2-19：`patterns/` 与 `source-cases/` 正式职责分离
+
+确认将 **运行时动作设计知识** 与 **影视案例研究证据** 正式拆成两个独立层，不把完整影视案例 metadata 和研究笔记塞入 Pattern 文件。
+
+职责明确如下：
+
+### `patterns/`
+
+用于 Agent 正常生成时按需加载，只保存可迁移的动作设计知识：
+
+- Pattern Intent；
+- Trigger Conditions；
+- Core Mechanism；
+- Action Causality Skeleton；
+- Environment Role；
+- Rhythm / Exchange Fit；
+- Camera Readability Hint；
+- Adaptation Variables；
+- Do Not Copy；
+- `source_case_ids` 与极短案例备注。
+
+### `source-cases/`
+
+作为研究 / 核实层，保存：
+
+- 作品与场景标识；
+- 角色 / 对战双方；
+- 名场面事实摘要；
+- 公开资料核实来源；
+- 案例为什么支持某个 Pattern 的分析笔记；
+- 事实可信度 / 待核实项；
+- 可关联的 Pattern IDs。
+
+运行时原则：
+
+> **Pattern 是生产知识；Source Case 是研究证据。**
+
+正常 Prompt 生成只通过 `index.md → patterns/<id>.md` 路由，不因为 Pattern 引用了 source_case_id 就自动加载案例文件。只有维护、核实、用户明确点名作品 / 名场面等情形才进入 `source-cases/`。
+
+这样可以同时保证：
+
+- Agent 运行上下文精简；
+- 影视事实和动作设计抽象可独立维护；
+- Pattern 不被某个具体作品的细节污染；
+- 后续更换 / 增补案例时不需要重写 Pattern 主体；
+- 可以追溯 Pattern 的案例依据，但不把证据层变成运行时依赖。
+
 ---
 
-## 21. V2 设计原则汇总
+## 22. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -486,9 +533,10 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 17. Pattern 保存抽象因果骨架，不保存可直接复刻的完整影视动作；
 18. Pattern Library 必须通过轻量索引按需加载；
 19. 正常生成加载设计知识，不加载影视调研证据层；
-20. 最终 Prompt 应外显精彩动作，内部状态规范尽量压缩。
+20. Pattern 与 Source Case 正式分层，生产知识与研究证据独立维护；
+21. 最终 Prompt 应外显精彩动作，内部状态规范尽量压缩。
 
-## 22. 已确认决策记录
+## 23. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -510,19 +558,19 @@ Agent 根据当前场景与索引选出少量候选后，只加载最相关的 *
 | V2-16 | 影视参考组织 | Pattern 为一级，影视作品是来源案例 |
 | V2-17 | Pattern 数据结构 | 抽象因果骨架 + 适用条件 + 可变化参数 + 案例证据，不存完整动作复刻 |
 | V2-18 | Pattern 加载架构 | 轻量 `index.md` → 按需加载 1–3 个 Pattern → source-cases 默认不加载 |
+| V2-19 | Pattern / Source Case 分层 | `patterns/` 存生产知识；`source-cases/` 存影视事实、核实来源和研究笔记；运行时默认只加载 Pattern |
 
-## 23. 尚待继续 Grill Me 的设计树
+## 24. 尚待继续 Grill Me 的设计树
 
-1. `source-cases/` 是否正式与 `patterns/` 分离为第三层，还是把少量案例 metadata 直接附在 Pattern 文件中；
-2. 假动作、预判、诱导、Counter / Re-counter 是否形成独立动作编排规则；
-3. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-4. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-5. V1 “宁可少而清晰”如何重述，避免动作预算通缩；
-6. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-7. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
-8. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
+1. 假动作、预判、诱导、Counter / Re-counter 是否形成独立动作编排规则；
+2. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+3. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+4. V1 “宁少而清晰”如何重述，避免动作预算通缩；
+5. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+6. Combat Quality Regression 如何从静态覆盖升级为真实生成质量评价；
+7. V2 最终修改哪些 Playbook / Library / Contract / Diagnostic，是否新增 Control。
 
-## 24. 当前阶段结论
+## 25. 当前阶段结论
 
 V1 已能够较好地“把战斗写对”；V2 的目标是在此基础上进一步做到：
 
