@@ -1372,3 +1372,122 @@ Golden Combat Benchmark 增加 **Continuous Action Spine Realization** 与 **Tim
 | V2-40 | Continuous Action Spine + Soft Time Anchors | 高密度 Combat 默认用一条连续 Active Exchange 主链 + 少量 Setup / Advantage Reversal / Signature Moment / Ending 软时间锚点；严格时间块仅在模型、同步、多镜头、用户明确要求等场景使用，并不得让块边界成为 Neutral Reset |
 
 V2-40 确认后，下一项优先验证 **Combat Intensity Curve / 节奏强度波形**：连续动作不能再被时间块切碎，但也不能因为追求“全程连续”而从头到尾保持同一速度、同一压力和同一视觉强度。
+
+## 49. V2-41：Combat Intensity Curve / 战斗强度波形
+
+真实成片校准进入下一层后，需要避免另一个极端：Combat 已经通过 Continuous Action Spine、Temporal Action Packing 与 Motion Handoff 实现“不断线”，但如果从首次接触到最终控制始终保持同一速度、同一交换密度、同一接触重量和同一空间压力，成片仍会显得机械、疲劳、没有电影动作戏的层次。
+
+因此正式新增 **Combat Intensity Curve / 战斗强度波形**。它不等于 Active Combat Coverage，也不等于 Action Exchange Rhythm：
+
+```text
+Coverage
+→ 有多少时间真正处于交战
+
+Rhythm
+→ 交战期间主要采用什么交换节奏 / 结构
+
+Intensity Curve
+→ 连续交战内部的压力、速度、重量、空间危险和表现强度如何动态起伏
+```
+
+### 49.1 强度不是“速度”单变量
+
+Combat Intensity 由多个可组合维度共同形成：
+
+- **Exchange Frequency**：单位时间有效攻防交换频率；
+- **Contact Weight / Pressure**：接触重量、持续压力与身体负荷；
+- **Advantage Pressure**：一方是否持续逼迫、封线、压缩空间或迫使对手被动应对；
+- **Kinetic Scope**：空间移动、Range / Axis / Level 变化规模；
+- **Exchange Depth / Tactical Complexity**：Counter / Re-counter 与战术博弈深度；
+- **Environment Stakes**：环境是否提高限制、危险或路线压力；
+- **Camera Proximity / Mobility Accent**：镜头是否在关键节点适度靠近、追随或重构观察关系；
+- **Audio Accent / Body State**：关键 Contact、呼吸、环境反馈是否形成强弱层次。
+
+因此“局部降速”不等于“强度下降”。例如重型压制、摔控僵持、刀尖威胁或狭窄空间封锁可以降低 Exchange Frequency，却同时显著提高 Contact Pressure / Advantage Pressure / Danger。
+
+### 49.2 连续 Combat 中允许波峰波谷，但不允许无价值停战
+
+Intensity Curve 的目标不是制造新的 Downtime，而是在 Active Combat 内部形成层次：
+
+```text
+连续快速交换
+→ 压力增加 / Range 被压缩
+→ 局部重型或高危险阶段
+→ 通过 Counter / Reversal 改变优势
+→ 再加速或扩大 Kinetic Scope
+→ Signature Moment / Major Payoff 达到主要峰值
+→ 短促 Ending Transition
+```
+
+以上只是结构示意，不是固定曲线模板。不同 Choreography Profile、Character Identity、Combat Branch、Duration 与结局可以采用不同波形；禁止把所有 15 秒战斗都套成相同“低→中→高”三段式。
+
+### 49.3 Intensity Turning Point
+
+约 15 秒电影化高手 1v1 默认应至少出现一个清楚的 **Intensity Turning Point**，它通常与以下事件之一发生耦合：
+
+- Major Advantage Reversal；
+- Contact Modality / Range 明显变化；
+- Environment 开始真正限制或打开路线；
+- Character Identity 的打法差异第一次产生明显后果；
+- Signature Moment 前的压力重组。
+
+Turning Point 不要求停顿；它应该主要通过动作压力、空间关系、Contact、节奏与 Camera / Audio Accent 的变化被观众感知。
+
+### 49.4 Flat Combat Intensity
+
+新增 Failure Signature：
+
+> **Flat Combat Intensity / 战斗强度扁平化**
+
+典型触发：
+
+- 全程以近似相同速度、动作长度与交换频率推进；
+- 所有 Contact 的感知重量几乎一样，没有轻重与压力层次；
+- Advantage 虽然在文字状态里变化，但成片压力关系看不出来；
+- Signature Moment 只是“又一个动作”，没有建立在前面强度变化之上；
+- Camera / Audio 从头到尾同一强调级别，没有真正的层级；
+- 为了保持 Continuous Action Spine，把所有局部压力变化错误压平成“全程高速”。
+
+Final Preflight 发现上述问题时，应优先调整 Phrase 之间的速度 / 压力 / Range / Contact / Advantage / Camera-Audio Accent 组合，而不是通过增加停顿解决。
+
+### 49.5 与 Continuous Action Spine / Coverage 的关系
+
+```text
+Continuous Action Spine
+→ 保证战斗不断线
+
+Temporal Action Packing
+→ 保证单位时间不被摊薄
+
+Action Interlock
+→ 保证动作真正咬合
+
+Combat Intensity Curve
+→ 保证连续战斗内部仍有层次和高潮
+```
+
+因此“有波谷”不代表必须离开 Active Combat；波谷可以是更沉、更危险、更受限、更近身的压力阶段。
+
+### 49.6 Preflight / Benchmark 增量
+
+Final Preflight 增加：
+
+- 是否存在可感知但不模板化的 Intensity Variation；
+- 主要 Advantage Reversal / Signature Moment 是否拥有相应强度变化；
+- 局部降速是否仍保持有效 Combat Pressure；
+- 是否触发 Flat Combat Intensity。
+
+Golden Combat Benchmark 增加 **Combat Intensity Curve Realization** 与 **Flat Combat Intensity** Failure Contract。
+
+原则：
+
+> **连续不等于匀速；高密度不等于全程同强度。**  
+> **好的动作高潮来自压力的组织，而不是只把动作越堆越快。**
+
+## 50. 实测反馈增量决策记录（三）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-41 | Combat Intensity Curve | 连续 Combat 内必须存在动态但非模板化的强度波形；强度由交换频率、Contact Weight、Advantage Pressure、Kinetic Scope、战术复杂度、环境、Camera / Audio 等共同形成；约 15 秒电影化高手战默认至少形成一次明确 Intensity Turning Point，并用 Flat Combat Intensity 拦截“全程同速、同密度、同压力” |
+
+V2-41 确认后，下一项优先验证 **Advantage 是否应成为 Intensity Curve 的主要驱动之一**：不能只在内部 State 标记“男方占优 / 女方翻转”，而应让优势变化通过谁在逼迫、谁被迫换位、谁控制 Range / Axis / Environment 等可见压力变化真实表现出来。
