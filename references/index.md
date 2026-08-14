@@ -18,25 +18,31 @@
 
 索引只负责导航，不复制叶子正文。
 
+---
+
 ## 2. 默认加载预算
 
 固定读取：
 
 - `1` 份 input Reference；
-- `1` 份 task Playbook；
+- `1` 份 task 主路线；
 - `1` 份模式输出合同；
 - `1` 份主交付模板。
 
 按需读取：
 
 - `0-3` 份 controls；
-- `0-2` 份 libraries；
+- `0-2` 份主要 libraries detail；
 - `0-1` 份 style；
 - `0-1` 份 model adapter；
 - `0-1` 份多模态参考模板；
 - 失败诊断时 `0-1` 份 diagnostic。
 
 分类索引只用于导航，不计入业务 Reference 数量。
+
+Action Combat 的 `router + core + choreography + 一个 specialist` 视为一条复合主 Task 路线，不与普通任务的“单文件 Playbook”机械比较文件数量。
+
+---
 
 ## 3. 信息优先级
 
@@ -53,7 +59,9 @@
 → 自动补全
 ```
 
-模型适配页可以限制表达方式和能力边界，但不能擅自改变用户剧情、人物关系和核心动作。
+模型适配页可以限制表达方式和执行路径，但不能擅自改变用户剧情、人物关系、Combat Intent、Coverage 和核心动作目标。
+
+---
 
 ## 4. 输入路由
 
@@ -70,11 +78,13 @@
 
 混合输入只读取 `mixed-multimodal-input.md`，不同时加载多份单模态输入页。
 
+---
+
 ## 5. 任务路由
 
 读取：`tasks/index.md`
 
-继续路由到唯一主任务 Playbook：
+继续路由到唯一主任务路线：
 
 - 文生视频：`tasks/text-to-video/playbook.md`；
 - 图生视频：`tasks/image-to-video/playbook.md`；
@@ -84,9 +94,24 @@
 - 视频向前 / 向后延长：`tasks/video-extension/playbook.md`；
 - 音频驱动与音乐卡点：`tasks/audio-driven-and-beat-sync/playbook.md`；
 - 故事板 / 多镜头 / 多片段到视频：`tasks/storyboard-and-multi-shot-video/playbook.md`；
-- 复杂动作格斗 / 电影武侠：`tasks/action-combat-video/index.md`，再读取 `core-playbook.md` + 一个专项分支。
+- 复杂动作格斗 / 电影武侠：`tasks/action-combat-video/index.md` + `core-playbook.md` + `choreography-playbook.md` + 一个专项分支。
 
-题材差异通常不新增任务 Playbook。Action Combat 只因存在明显独立执行流程（Battle Beat、Combat State、Target Handoff、兵器连续性和三线同步）而作为一级专项任务；简单动作仍留在原主任务 + `action-motion`。
+### Action Combat 职责
+
+```text
+Core
+→ State / Continuity / Battle Runtime Skeleton
+
+Choreography
+→ Coverage / Rhythm / Phrase / Identity / Contact / Signature / Execution Budget
+
+Modern / Wuxia specialist
+→ 具体动作语言、物理尺度、Range / Contact 表现
+```
+
+Action Combat 只因存在明显独立执行流程而作为一级专项任务；简单动作仍留在原主任务 + `action-motion`。
+
+---
 
 ## 6. 控制路由
 
@@ -105,13 +130,17 @@
 - `controls/prompt-assembly/control.md`；
 - `controls/realism-quality/control.md`。
 
-Combat 第一版不新增专属 Control，优先复用以上真源。任务 Playbook 已经能解决的问题，不重复读取控制页。
+Combat 不新增专属 `combat-choreography` Control。Task 已能解决的领域导演问题不迁入全局 Controls。
+
+---
 
 ## 7. 资料库路由
 
 读取：`libraries/index.md`
 
-按需加载 `0-2` 份：
+### 通用 Libraries
+
+按需：
 
 - `libraries/camera-shot/library.md`；
 - `libraries/action-motion/library.md`；
@@ -119,13 +148,32 @@ Combat 第一版不新增专属 Control，优先复用以上真源。任务 Play
 - `libraries/transition-effects/library.md`；
 - `libraries/lighting-color/library.md`；
 - `libraries/audio-sound/library.md`；
-- `libraries/genre-patterns/library.md`；
-- `libraries/combat-fighting-profiles/library.md`；
-- `libraries/combat-martial-profiles/library.md`；
-- `libraries/combat-weapon-profiles/library.md`；
-- `libraries/combat-environment-patterns/library.md`。
+- `libraries/genre-patterns/library.md`。
 
-Combat Libraries 只提供动作语言、兵器语言与环境模式，不定义 Combat 工作流。资料库回答“有哪些选择”，不代替控制规则。
+### Combat Libraries
+
+- `libraries/combat-choreography-profiles/library.md`：少量稳定电影动作编排 Profile；
+- `libraries/combat-fighting-profiles/library.md`：现代 Fighting Technique / Execution；
+- `libraries/combat-martial-profiles/library.md`：武术 / 武侠空手知识；
+- `libraries/combat-weapon-profiles/library.md`：Weapon Range / Contact / State；
+- `libraries/combat-environment-patterns/library.md`：Environment Affordance 专业知识；
+- `libraries/signature-moment-patterns/index.md`：轻量 Signature Pattern 路由，随后只加载命中的 `patterns/<id>.md`。
+
+Combat V2 使用 Two-stage On-demand Loading：
+
+```text
+Task Core / Choreography / specialist / lightweight indexes
+→ Combat Planning Context
+→ 默认约 2 个主要 Library Detail Slot
+```
+
+优先级：专业正确性 > Character Identity 差异化 > Signature / 创意增强。
+
+`signature-moment-patterns/source-cases/` 属于研究证据，不是默认运行时 Reference。
+
+不建设 Combat Character Identity / occupation portrait Library。
+
+---
 
 ## 8. 风格路由
 
@@ -141,9 +189,9 @@ Combat Libraries 只提供动作语言、兵器语言与环境模式，不定义
 - `styles/documentary-ugc/style.md`；
 - `styles/experimental-visual/style.md`。
 
-Combat 不新增一级 Style；现代动作片 / 武侠的“怎么打”由 Combat Playbook 和 Profile 决定，“画面长什么样”继续由现有 Style 决定。
+Combat 不新增一级 Style；“怎么打”由 Combat Choreography + specialist + Profile 决定，“画面长什么样”继续由现有 Style 决定。
 
-风格必须转成镜头、表演、光影、材质、节奏和声音，不用风格名替代执行内容。
+---
 
 ## 9. 模型适配路由
 
@@ -157,7 +205,22 @@ Combat 不新增一级 Style；现代动作片 / 武侠的“怎么打”由 Com
 
 不创建或加载其他模型适配页。
 
-模型页只转换通用导演方案，不重新设计任务内容。对于 Combat，Generic Professional Prompt 本身就是完整最终产品，模型 adapter 只做必要的轻量转换。
+### Combat Capability Contract
+
+模型页可向 Choreography 提供：
+
+- Motion Complexity Capacity；
+- Multi-character Stability；
+- Contact / Interaction Fidelity；
+- Spatial Continuity；
+- Camera Complexity Capacity；
+- Temporal / Prompt Following。
+
+没有可靠证据时标记 `Unverified`，禁止伪造等级。
+
+Model Adapter 只改变执行路径 / 表达，不偷改 Combat Intent / Coverage / 观看目标。
+
+---
 
 ## 10. 输出合同路由
 
@@ -176,59 +239,90 @@ Combat 不新增一级 Style；现代动作片 / 武侠的“怎么打”由 Com
 - 多模态职责：`../assets/templates/multimodal-reference-template.md`；
 - 模型转换：`../assets/templates/model-adapted-output-template.md`。
 
-Combat 不建立独立 single-shot / multi-shot 模板：内部 Combat Blueprint 先判断单 / 多镜头，再将动作、镜头、声音、连续性和专项 Negative Constraints 注入现有输出合同。
+Combat 不建立独立 single-shot / multi-shot 模板。
 
-默认输出规则：
+Quick / Interactive 共用同一 Combat Planning Graph 和质量标准：
 
-- 简单任务只输出一份可直接复制 Prompt；
-- Combat Quick / Interactive 最终都必须给详细、完整、专业、可直接复制 Prompt；
-- 多镜头输出必要的全局固定项和 Prompt Pack；
-- 多模态只保留执行必要的职责说明；
-- 不默认输出备选版本、自动补全项和方向摘要。
+- Quick = Full Planning + Silent Resolution；
+- Interactive = 同一 Planning Graph + Decision Exposure Policy。
+
+Final Combat Prompt 遵循：
+
+> **State Machine Internalized, Choreography Externalized.**
+
+动作语言、Contact / Reaction / Consequence 和空间变化占主体；状态术语和 Negative 只做必要支撑。
+
+---
 
 ## 11. 失败诊断
 
 读取：`diagnostics/index.md`
 
-只有以下情况进入：
+只有用户反馈失败、多个维度同时失效或难以定位根因时进入。
 
-- 用户反馈生成效果不好；
-- 多个维度同时失效；
-- 参考素材职责冲突；
-- Prompt 过载或要求互相矛盾；
-- 无法从单一任务页或控制页定位根因。
+### Combat 三类专项路由
 
-复杂战斗中，如果主问题是 Advantage / Condition / Target / Weapon / Beat State Contract 前后无法同时成立，可读取 `diagnostics/combat-state-continuity-failure/diagnostic.md`。
+- `diagnostics/combat-state-continuity-failure/diagnostic.md`：打得不对 / 状态链接不上；
+- `diagnostics/combat-choreography-underfill/diagnostic.md`：Coverage / Exchange 明显不足、打得太少；
+- `diagnostics/combat-contact-solidity-failure/diagnostic.md`：Contact 发生但受力 / 压力 / 兵器 / 材质后果不可信。
 
-正常生成不提前加载诊断层。
+人体穿模、普遍失重、Camera Chaos、音画错位等继续使用对应通用 Diagnostic。
+
+每次只选择一份主 Diagnostic，正常生成不提前加载诊断层。
+
+---
 
 ## 12. 运行规则
 
-- 同一轮只读取一份主 input 和一份主 task；
+- 同一轮只选择一份主 input 和一条主 task 路线；
 - 同一叶子文件被多个入口命中时只读取一次；
 - 主体运动、镜头运动、环境变化和声音事件分别判断；
-- Combat 内部 Action / Camera / Audio 同一 Beat 同步编排，但最终应融合为自然可执行时间线；
+- Combat 内部 Action / Camera / Audio 协同，但 Camera / Audio 不能替代 Choreography；
+- Combat 遵循 `Clarity Through Structure, Not Action Reduction`；
 - 多模态素材必须分配职责，禁止平均融合；
 - 一段视频必须有开始、推进和落点；
-- 全局固定项只写一次，时间轴只写变化；
-- 负向限制只针对当前最危险的失败模式；
+- 全局固定项只写一次，动态部分只写变化；
+- 负向限制只针对当前最危险失败模式；
 - 不一次性读取整个目录；
-- 不把研究区原始资料作为运行期 Reference。
+- 不把研究区 / source-cases 原始资料作为默认运行期 Reference。
+
+---
 
 ## 13. 创作自由与约束边界
 
 尤其在 Combat 中遵守：
 
-> **约束错误，不约束创作。**
+> **约束错误，不约束创作。**  
+> **Clarity Through Structure, Not Action Reduction.**
 
-固定的是因果、连续性、物理、状态继承和输出完整度；Battle Beat 数量、具体招式、镜头组合、环境利用、速度变化和回归样例都不是死模板。
+固定的是：
 
-用户已有明确创意时，优先保留用户设计，只修正不可执行、无因果、空间断裂、物理矛盾和 Prompt 过载部分。
+- 因果；
+- 连续性；
+- 状态继承；
+- Contact 质量合同；
+- Coverage / Sufficiency 兑现；
+- Output 完整度。
 
-## 14. 旧结构状态
+不固定：
 
-Phase 6 已将 `SKILL.md` 切换到 v2。旧模式、旧输入、旧任务、旧时间轴、旧连续性、旧附录和旧输出模板不再参与默认运行。
+- Battle Beat 数量；
+- Action Phrase 数量；
+- 具体招式；
+- Signature Moment 具体答案；
+- 镜头模板；
+- Golden Scenario 动作答案。
 
-这些文件在 Phase 7 测试和断链检查完成前暂时保留，只用于回滚和迁移核对。
+用户已有明确创意时，优先保留用户设计，只修正不可执行、无因果、空间断裂、物理矛盾、Choreography Underfill 与 Prompt 过载部分。
 
-迁移状态见：`../docs/migration-inventory.md`。
+---
+
+## 14. 回归与研究边界
+
+V2 静态与成片回归：`../docs/action-combat-video-v2-regression.md`。
+
+Golden Scenario 锁 Quality / Failure Contract，不锁固定动作答案。
+
+Model Combat Capability 长期由真实 Golden Benchmark 校准；没有实测时不得写成已验证能力。
+
+旧 V1 文档可作为历史基线保留，但现行运行期真源以 V2 Task / Controls / Libraries / Models / Diagnostics 为准。
