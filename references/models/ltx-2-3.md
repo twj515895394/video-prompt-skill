@@ -23,7 +23,46 @@
 
 ---
 
-## 3. 推荐输入结构
+## 3. Model Combat Capability Contract
+
+当前官方 Prompt Guide 能确认 LTX-2.3 的自然语言 Prompt 组织偏好，但**不能据此直接推导 Combat Motion / Contact / Multi-character 等专项稳定等级**。
+
+因此在 Golden Combat Benchmark 完成前：
+
+```text
+Motion Complexity Capacity: Unverified
+Multi-character Stability: Unverified
+Contact / Interaction Fidelity: Unverified
+Spatial Continuity: Unverified
+Camera Complexity Capacity: Unverified
+Temporal / Prompt Following: Unverified
+```
+
+### 当前 Known Risks / 表达风险
+
+本 Adapter 已明确的高风险写法包括：
+
+- Prompt 太短，无法支撑目标时长；
+- 多人物、多动作和复杂物理同时堆叠；
+- 图生视频重复静态画面但缺少运动；
+- 缺少结束状态；
+- 使用大量机械参数破坏自然动作描述。
+
+这些是 Prompt / 执行风险提示，不等于经过 Benchmark 验证的能力等级。
+
+### Combat 适配策略
+
+- 保留用户 Combat Intent / Coverage / 观看目标；
+- 把内部 Action Phrase 转成自然、连续、现在时的动作段落；
+- 用“紧接着、随即、在对方尚未恢复前、顺势”等语言保持 Counter / Re-counter 因果；
+- Contact 后直接写身体 / 兵器 / 空间 Consequence；
+- 高密度动作时减少不必要 Camera Complexity 和次要独立事件；
+- 需要降载时拆成连续 Phrase，而不是把高手对决压成少量孤立动作；
+- 后续由 Golden Benchmark 校准真实 Combat Capability。
+
+---
+
+## 4. 推荐输入结构
 
 在转换为 LTX Prompt 前，通用导演方案应包含：
 
@@ -39,9 +78,11 @@
 高风险限制
 ```
 
+Action Combat 还应在内部已经完成 Coverage、Rhythm、Action Phrase、Character Identity、Contact Solidity、Signature Moment 与 State / Continuity Validation。
+
 ---
 
-## 4. 最终 Prompt 组织
+## 5. 最终 Prompt 组织
 
 LTX-2.3 默认将结构化导演方案压缩成一个连贯自然段：
 
@@ -51,11 +92,36 @@ LTX-2.3 默认将结构化导演方案压缩成一个连贯自然段：
 
 内部可以使用时间轴推理，但最终 Prompt 不必机械保留表格和字段标题，除非用户明确要求结构化版本。
 
+### Action Combat
+
+Combat Final Prompt 遵循：
+
+> **State Machine Internalized, Choreography Externalized.**
+
+不要输出：
+
+```text
+Range = Close
+Advantage = A
+Solidity = Heavy
+Exchange Depth = High
+```
+
+而应直接写成可见动作：
+
+- 谁压近 / 后撤 / 换轴；
+- 对手如何防守和 Counter；
+- Contact 在哪里发生；
+- 受力 / 兵器偏转 / 重心怎样改变；
+- 下一动作怎样在未完全 reset 前继续。
+
+自然语言压缩不能删掉关键 Attack → Response → Contact → Consequence 因果。
+
 ---
 
-## 5. 任务转换规则
+## 6. 任务转换规则
 
-### 5.1 文生视频
+### 6.1 文生视频
 
 LTX 需要从零建立完整视觉起点。
 
@@ -72,7 +138,7 @@ LTX 需要从零建立完整视觉起点。
 
 不要用很短的 Prompt 支撑较长视频，也不要先堆大量风格词再补动作。
 
-### 5.2 图生视频
+### 6.2 图生视频
 
 参考图已经定义了静态视觉起点，最终 Prompt 应把重点放在“接下来发生什么”。
 
@@ -87,7 +153,7 @@ LTX 需要从零建立完整视觉起点。
 
 避免重新长篇描述图片中已经可见的外貌、场景和构图，除非某个细节必须作为连续性锚点。
 
-### 5.3 音频驱动
+### 6.3 音频驱动
 
 当音频提供时间结构时：
 
@@ -98,7 +164,7 @@ LTX 需要从零建立完整视觉起点。
 
 ---
 
-## 6. 表演与对白
+## 7. 表演与对白
 
 ### 抽象情绪改写
 
@@ -133,7 +199,7 @@ LTX 需要从零建立完整视觉起点。
 
 ---
 
-## 7. 镜头描述
+## 8. 镜头描述
 
 使用自然的电影语言，并说明镜头相对主体如何运动：
 
@@ -142,17 +208,15 @@ LTX 需要从零建立完整视觉起点。
 - `the camera pans right to reveal...`；
 - `the lens holds on his face for a beat`。
 
-镜头移动后，应描述主体在新构图中的状态，帮助运动完成：
+镜头移动后，应描述主体在新构图中的状态，帮助运动完成。
 
-```text
-镜头缓慢向她推进，直到背景柔化，她的眼睛和压住的嘴角占据画面中心。
-```
+Action Combat 中，高 Exchange Depth / 高 Coverage 时优先保持可读的稳定跟随；如果复杂 Camera 会与动作争夺执行预算，优先简化 Camera，而不是先删有效攻防。
 
 避免过度数值化的控制，例如精确角度、每秒移动距离或大量机械参数。官方指南更推荐自然语言描述。
 
 ---
 
-## 8. 音频描述
+## 9. 音频描述
 
 根据任务按需写：
 
@@ -162,11 +226,13 @@ LTX 需要从零建立完整视觉起点。
 - BGM 的进入、强弱和退出；
 - 声音与视觉事件的同步关系。
 
+Combat 中 Audio Accent Density 不等于 Action Density；重点 Contact / Phrase Payoff / Signature Moment 获得更明显声音组织，普通微动作保持基础声层即可。
+
 不要为画面中不存在来源的声音堆砌音效。
 
 ---
 
-## 9. 高风险写法
+## 10. 高风险写法
 
 - Prompt 太短，无法填满目标时长；
 - 只写抽象情绪，不写可观察表演；
@@ -176,13 +242,17 @@ LTX 需要从零建立完整视觉起点。
 - 光源和色彩逻辑互相冲突；
 - 使用大量精确数值约束自然表演和镜头；
 - 依赖可读文字、Logo 或复杂排版作为核心结果；
-- 缺少结束状态，导致视频在动作中途被截断。
+- 缺少结束状态，导致视频在动作中途被截断；
+- Combat 自然语言压缩后只剩少量动作，Coverage / Exchange Richness 未兑现；
+- Combat 用 Camera Shake / 大音效代替 Contact Solidity。
 
 ---
 
-## 10. 来源
+## 11. 来源
 
 - LTX 官方博客：`LTX-2.3 Prompt Guide: Tips For Prompting LTX-2.3`，2026-03-10。
 - 官方指南用于确认 Prompt 长度、自然语言组织、表演、对白、图生视频和音频描述原则。
+
+Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级。**
 
 资料复核日期：`2026-07-10`。
