@@ -1268,3 +1268,107 @@ Golden Combat Benchmark 增加：
 | V2-39 | Combat Action Interlock / Motion Handoff | 动作与 Phrase 必须优先继承 Contact / Reaction / Momentum / Footwork / Body Axis / Range / Position 等当前运动状态；High Coverage / Expert Exchange 中 Neutral Reset 应稀缺，用 Action Segmentation / Excessive Neutral Reset 拦截“一招一停、归位再打” |
 
 V2-38 / V2-39 确认后，下一步需要继续验证 **Final Prompt 的时间序列化方式本身是否会制造动作分段**：即高密度 Combat 是否仍应以多个彼此硬边界的时间块表达，还是改用“连续动作主链 + 少量软时间锚点”，让时间控制保留但不诱导模型把每个时间段当成独立动作场。
+
+## 47. V2-40：Continuous Action Spine + Soft Time Anchors / 连续动作主链 + 软时间锚点
+
+真实成片与 Prompt 序列化复盘进一步确认：高密度 Combat 即使已经满足 Temporal Action Packing 与 Motion Handoff，如果 Final Prompt 仍默认被切成多个 `0–1.5s / 1.5–4.5s / 4.5–7.5s ...` 的硬时间块，模型仍可能把每个块理解成独立动作单元，在时间边界处自动完成、停顿、归位，再进入下一组动作。
+
+因此正式增加 **Continuous Action Spine + Soft Time Anchors / 连续动作主链 + 软时间锚点**，作为高密度 Combat 的默认 Final Prompt 时间序列化策略。
+
+### 47.1 Continuous Action Spine
+
+大部分 Active Exchange 不再默认拆成多个互相独立的硬时间盒，而应优先序列化为一条连续动作主链：
+
+```text
+首次接触
+→ 连续 Counter / Re-counter
+→ Position / Range / Axis 不断变化
+→ Advantage Reversal
+→ 不 Reset 地继续下一组 Phrase
+→ Signature Moment / Major Payoff
+→ Ending Transition
+```
+
+Action Spine 内必须保持 V2-39 的 Motion Handoff；前一个 Phrase 的 Payoff 优先直接成为下一 Phrase 的 Entry Condition。
+
+### 47.2 Soft Time Anchors
+
+时间仍然保留，但主要用于锁定少量真正重要的阶段 / 事件：
+
+- Setup / First Contact；
+- Major Advantage Reversal；
+- Signature Moment / Major Payoff；
+- Ending / Final Control；
+- 用户明确要求的同步事件或模型必须严格遵守的关键时点。
+
+这些时间锚点是**软边界**：它们用于约束“大约什么时候发生什么”，不意味着锚点前的动作必须完整收势，也不意味着锚点后的动作需要重新起手。
+
+### 47.3 Hard Time Blocks 何时才值得使用
+
+严格时间块不是全面废除。以下情况可以继续使用：
+
+- 目标模型 / Model Adapter 明确证明严格时间轴执行更稳定；
+- 多镜头任务需要精确 Shot 边界；
+- 音乐 / 音频 / 对白 / 外部事件需要精确同步；
+- 用户明确要求逐秒动作时间表；
+- Benchmark 正在专门测试 Temporal Following。
+
+即使使用 Hard Time Blocks，也必须额外声明跨块 Motion Handoff，禁止块边界自动成为 Neutral Reset。
+
+### 47.4 Timeline-induced Action Segmentation
+
+新增序列化级 Failure Signature：
+
+> **Timeline-induced Action Segmentation / 时间轴诱导动作分段**
+
+典型触发：
+
+- 每个时间块内部有动作，但块与块之间明显归位 / 停顿；
+- Prompt 的时间标题比动作因果更强，导致模型逐段“完成任务”；
+- 同一 High Coverage Sequence 被切成多个独立小场景；
+- Action Spine、Camera Path、Momentum 在时间块边界处反复中断；
+- 删除硬时间标签后，动作连续性反而明显改善。
+
+Final Preflight 如果识别到高密度 Combat 被时间序列化格式本身切碎，应优先改为 Continuous Action Spine + Soft Time Anchors，而不是继续在每个硬时间块内部增加动作。
+
+### 47.5 与 Camera / Audio 的统一连续主链
+
+Continuous Action Spine 不只约束 Action。高密度 Combat 中应尽量让：
+
+```text
+Action Motion Handoff
++ Camera Mobility Path
++ Audio Rhythm / Contact Evidence
+```
+
+共享同一连续事件流。
+
+Camera 不应在每个软锚点自动停稳再重新启动；Audio 也不应把每个动作段机械做成独立“起—落”音效单元。只有真正的 Turning Event / Signature Moment / Ending 才值得获得更明显的节奏标点。
+
+### 47.6 Model Adapter 边界
+
+默认策略是 **连续性优先，时间精度次之**。但若目标模型已被 Golden Benchmark 证明更依赖明确时间戳，Model Adapter 可以选择更严格的时间表达；前提是不得因此重新引入 Action Segmentation / Excessive Neutral Reset。
+
+原则：
+
+> **时间码服从动作连续性，而不是动作服从时间码。**  
+> **高密度 Combat 默认是一条连续事件流，时间锚点只负责定位关键转折。**
+
+### 47.7 Preflight / Benchmark 增量
+
+Final Preflight 增加：
+
+- Continuous Action Spine 是否成立；
+- Soft Time Anchors 是否被错误实现成 Hard Reset；
+- Action / Camera / Audio 是否在时间边界保持连续；
+- 是否触发 Timeline-induced Action Segmentation。
+
+Golden Combat Benchmark 增加 **Continuous Action Spine Realization** 与 **Timeline-induced Segmentation** Failure Contract。
+
+## 48. 实测反馈增量决策记录（二）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-40 | Continuous Action Spine + Soft Time Anchors | 高密度 Combat 默认用一条连续 Active Exchange 主链 + 少量 Setup / Advantage Reversal / Signature Moment / Ending 软时间锚点；严格时间块仅在模型、同步、多镜头、用户明确要求等场景使用，并不得让块边界成为 Neutral Reset |
+
+V2-40 确认后，下一项优先验证 **Combat Intensity Curve / 节奏强度波形**：连续动作不能再被时间块切碎，但也不能因为追求“全程连续”而从头到尾保持同一速度、同一压力和同一视觉强度。
