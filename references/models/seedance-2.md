@@ -4,7 +4,7 @@
 
 当用户明确使用 Seedance 2.0、即梦 Seedance 2.0，或任务依赖其图片 / 视频 / 音频多模态参考能力时，读取本页。
 
-本页只处理 Seedance 特有能力和表达，不复制通用的时间轴、运镜、动作、表演和风格知识。
+本页只处理 Seedance 特有能力和表达，不复制通用时间轴、运镜、动作、表演和风格知识。
 
 ---
 
@@ -22,7 +22,46 @@
 
 ---
 
-## 3. 素材职责绑定
+## 3. Model Combat Capability Contract
+
+目前官方能力资料支持确认 Seedance 2.0 的多模态、时长和音视频联合生成能力，但**不足以直接给出 Combat 专项 Motion / Contact / Spatial 等 High / Medium / Low 稳定评级**。
+
+因此在 Golden Combat Benchmark 完成前：
+
+```text
+Motion Complexity Capacity: Unverified
+Multi-character Stability: Unverified
+Contact / Interaction Fidelity: Unverified
+Spatial Continuity: Unverified
+Camera Complexity Capacity: Unverified
+Temporal / Prompt Following: Unverified
+```
+
+### 当前 Known Risks / 实践约束
+
+基于本 Adapter 已整理的实践经验，高风险写法包括：
+
+- 单段塞入过多人物和连续复杂事件；
+- 主体运动和镜头运动同时持续满强度；
+- 对白、口型和动作缺乏时间关系；
+- 多素材在同一维度发生冲突。
+
+这些只能作为 Prompt 规划风险提示，**不能直接推导某一 Combat Capability 等级**。
+
+### Combat 适配策略
+
+在评级未验证前：
+
+- 保留用户 Combat Intent / Coverage / 观看目标；
+- 高密度 Combat 优先使用清楚的 Action Phrase 分段；
+- 同一时间窗口避免同时加入多个人物独立复杂动作 + 复杂 Camera + 多个环境事件；
+- 需要降载时先降低 Camera Complexity、拆 Phrase，再减少次要分支；
+- 不把 High Coverage 自动改成极少交换；
+- 后续由 Golden Benchmark 按模型版本持续校准本 Contract。
+
+---
+
+## 4. 素材职责绑定
 
 Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
@@ -47,7 +86,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
 ---
 
-## 4. 推荐 Prompt 结构
+## 5. 推荐 Prompt 结构
 
 ```text
 [时长、任务和整体目标]
@@ -56,12 +95,12 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 [分时段 / 分镜动作与运镜]
 [表演、对白和声音]
 [光影、风格和特效延续]
-[失败限制]
+[高风险限制]
 ```
 
 ### 时间轴
 
-10 秒以上、存在多步动作、对话、特效或多个镜头时，优先使用绝对时间：
+10 秒以上、存在多步动作、对话、特效或多个镜头时，可使用绝对时间帮助组织：
 
 ```text
 0–3 秒：
@@ -69,17 +108,44 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 7–10 秒：
 ```
 
+但 Action Combat 中，时间段应尽量与 Action Phrase / Battle Beat 的自然边界对齐，不因为机械秒点切断连续 Counter / Re-counter。
+
 简单单镜头可写成连续自然段，不必强行切碎。
 
 ---
 
-## 5. 任务转换规则
+## 6. Action Combat 转换规则
 
-### 5.1 文生视频
+进入本 Adapter 前，Combat Task 已经完成：
+
+- Combat Intent；
+- Coverage / Rhythm；
+- Action Phrase；
+- Character Identity；
+- Contact Solidity；
+- Environment / Signature Moment；
+- State / Continuity Validation。
+
+Seedance 输出时：
+
+- 把内部状态转译成可见动作，不输出状态表；
+- 用清楚分时段 / 分镜承载复杂 Phrase，但保持动作因果连续；
+- 多模态动作参考要明确只继承动作 / 节奏 / Camera 中指定维度；
+- Contact 后描述 Reaction / Position / Advantage 后果；
+- 高动作复杂度时优先 Camera Readability；
+- Negative 只保留当前明确高风险项。
+
+> **Model Adapter 只改变实现与表达，不改变 Combat Intent / Coverage。**
+
+---
+
+## 7. 任务转换规则
+
+### 7.1 文生视频
 
 建立完整初始画面，再写动作、运镜、声音和收尾。
 
-### 5.2 图生视频
+### 7.2 图生视频
 
 明确图片是首帧、尾帧、人物、场景还是其他参考。
 
@@ -91,7 +157,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 - 光影和场景如何延续；
 - 最终停在哪里。
 
-### 5.3 视频参考复刻
+### 7.3 视频参考复刻
 
 不要只写“完全参考 @视频1”。需要拆开说明复用维度：
 
@@ -105,7 +171,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
 只复用用户需要的维度，避免把原视频人物和场景一并错误继承。
 
-### 5.4 视频编辑
+### 7.4 视频编辑
 
 结构：
 
@@ -119,7 +185,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
 局部编辑时，原视频的镜头、时长、主体动作和背景不应被无关改写。
 
-### 5.5 视频延长
+### 7.5 视频延长
 
 明确：
 
@@ -130,7 +196,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
 不要让延长段从全新场景突然开始。
 
-### 5.6 音频驱动和音乐卡点
+### 7.6 音频驱动和音乐卡点
 
 将音频分为：
 
@@ -144,7 +210,7 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 
 ---
 
-## 6. 通用导演方案转换示例
+## 8. 通用导演方案转换示例
 
 通用素材职责：
 
@@ -163,7 +229,7 @@ Seedance 转换：
 
 ---
 
-## 7. 高风险写法
+## 9. 高风险写法
 
 - 只写多个 `@素材`，不说明用途；
 - 同一个维度同时绑定多个互相冲突的素材；
@@ -172,11 +238,13 @@ Seedance 转换：
 - 主体运动和镜头运动同时持续满强度；
 - 对白、口型和动作没有时间关系；
 - 延长视频时忽略原视频最后一帧的动作和镜头速度；
-- 视频编辑没有声明必须保留的内容。
+- 视频编辑没有声明必须保留的内容；
+- Combat 因为时间轴分段而让每段重新起势 / 摆 Pose；
+- Combat 用大量 Negative 代替实际 Action Phrase。
 
 ---
 
-## 8. 来源与可信度
+## 10. 来源与可信度
 
 ### 官方 / 一手来源
 
@@ -189,5 +257,7 @@ Seedance 转换：
   - 用于整理 `@图片 / @视频 / @音频` 的职责绑定写法、视频编辑、延长和卡点实践。
 - `YouMind-OpenLab/awesome-seedance-2-prompts`。
   - 只用于分析高质量案例结构，不将社区长 Prompt 原样复制为规则。
+
+Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级。**
 
 规格更新时间：`2026-07-10`。
