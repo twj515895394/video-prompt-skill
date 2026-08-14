@@ -1,6 +1,6 @@
 # Tasks Index
 
-任务层负责判断当前要完成什么，以及最终输出应采用什么执行流程。每次只读取一份主任务 Playbook。
+任务层负责判断当前要完成什么，以及最终输出应采用什么执行流程。每次只选择一份主任务路线。
 
 ## 文生视频
 
@@ -54,25 +54,80 @@
 
 适用：根据剧本、分镜、故事板或多个片段规划完整镜头顺序，并管理镜间承接与跨段一致性。
 
+---
+
 ## 动作格斗 / 电影武侠
 
 读取：`action-combat-video/index.md`
 
-适用：战斗视频的成败主要依赖攻防因果、距离变化、受力反馈、1vN 目标切换、兵器状态、战斗空间与动作 / 镜头 / 声音同步时。
+适用：战斗视频的成败主要依赖持续攻防、Action Phrase、距离变化、受力 / 接触实感、1vN 目标切换、兵器状态、战斗空间与 Action / Camera / Audio 协同时。
 
-先读取 `action-combat-video/core-playbook.md`，再只选择一个专项分支：
+Combat 是一条复合主 Task 路线：
+
+```text
+action-combat-video/index.md
++ action-combat-video/core-playbook.md
++ action-combat-video/choreography-playbook.md
++ 一个专项 Playbook
+```
+
+### Core
+
+`action-combat-video/core-playbook.md`
+
+负责：
+
+- Combat Intent；
+- Spatial Map；
+- Range / Advantage / Condition；
+- Turning Event；
+- Target Handoff；
+- Beat State Contract；
+- Position / Environment / Weapon State；
+- Spatial / Physical / Continuity Validation。
+
+### Choreography
+
+`action-combat-video/choreography-playbook.md`
+
+负责：
+
+- Active Combat Coverage；
+- Choreography Profile；
+- Rhythm；
+- Action Phrase / Exchange Depth；
+- Combat Character Identity；
+- Tactical Interaction；
+- Environment Affordance；
+- Combat Contact Solidity；
+- Signature Moment；
+- Action Execution / Sufficiency；
+- Camera Readability；
+- Combat Audio；
+- Final Prompt Action Externalization。
+
+### 专项分支
+
+只选一个：
 
 - 现代格斗：`action-combat-video/modern-combat-playbook.md`；
 - 电影武侠：`action-combat-video/cinematic-wuxia-playbook.md`。
 
+> **Core 负责打得对、接得上；Choreography 负责打得够、丰富、好看、有实感；专项 Playbook 负责这种战斗具体怎么表现。**
+
+Combat Quick 与 Interactive 共用同一 Planning Graph；模式区别是决策暴露程度，不是质量等级。
+
 这是一条因执行流程显著不同而存在的专项任务，不代表所有“动作题材”都进入本任务。简单挥拳、跑跳、体育动作继续使用原主任务 + `action-motion`。
+
+---
 
 ## 判断边界
 
 - 题材不同通常不等于任务不同。写实短剧、漫剧、广告、悬疑、纪录等优先进入同一任务，再加载不同 style 或 library。
-- Action Combat 是例外：只有当战斗需要独立的 Battle Beat、Range / Advantage / Condition、Target Handoff、兵器连续性或三线同步工作流时，才进入专项任务。
+- Action Combat 是例外：只有当战斗需要独立 Combat State + Choreography 工作流时，才进入专项任务。
 - 有图片和视频混合参考时，如果素材职责本身是主要难点，优先进入多模态参考任务；如果核心难点明确是复杂战斗编排，可由 Action Combat 作为主任务并继续使用对应输入 Reference。
 - 用户提供完整故事板并要求管理整部镜头链路时，优先使用故事板任务；单个或局部镜头中的复杂战斗可引用 Combat 专项规则。
 - 只替换视频中的一个元素且其余内容保持不变，属于视频局部编辑。
 - 以原视频的动态结构整体重生成，属于视频参考复刻 / 视频转视频。
 - 模型专属能力由 `references/models/` 决定，不在任务层写死平台语法。
+- Combat 不新增独立全局 Choreography Control；动作导演逻辑属于 `action-combat-video` Task。
