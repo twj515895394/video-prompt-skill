@@ -36,6 +36,7 @@ Combat Choreography Intent
 → Camera Readability Budget / Camera Coordination
 → Combat Audio Choreography / Audio Coordination
 → Final Prompt Action Externalization
+→ Combat Final Preflight Gate
 ```
 
 ---
@@ -756,9 +757,141 @@ references/tasks/action-combat-video/
 > **Core 负责“打得对、接得上”；Choreography 负责“打得够、丰富、好看、有实感”；专项 Playbook 负责“这种战斗具体怎么表现”。**  
 > **拆文件是为了稳定职责边界，不是把同一个 Combat Task 拆成多个互相竞争的引擎。**
 
----
+## 37. V2-35：Combat Planning / Final Preflight Gate
 
-## 37. V2 设计原则汇总
+真实交互测试暴露出：V2 的 Coverage、Character Identity、Tactical Interaction、Action Sufficiency、Prompt Assembly 等规则已经存在，但如果没有输出前的强制 Gate，Agent 仍可能在“规则被读取”后直接交付不合格 Prompt。
+
+因此正式增加 **Combat Planning / Final Preflight Gate**。它不是新的用户参数，也不新增一级 Control，而是 Combat Task 在规划与最终组装两个关键出口上的强制质量否决机制。
+
+### 37.1 Planning Preflight
+
+交互或 Quick 内部 Combat Planning 进入动作编排前，必须检查：
+
+- 是否按依赖关系先解决上游高影响决策，而不是过早锁定战斗结局；
+- 当前 Choreography Profile 候选是否真的覆盖该场景最相关方向，例如高手对决不能因为选项设计而漏掉“高手连续攻防型”；
+- Character Identity 是否来自人物设定、Combat Intent、双方关系、环境与 Profile 的动态推导，而不是仅凭职业、性别、年龄、外貌或体型直接映射打法；
+- Coverage / Rhythm / Character Identity / Environment / Camera 等是否存在真正需要暴露给用户的高影响分叉；
+- Camera、Contact Solidity、Action Sufficiency 等可高置信度自动推导的质量机制是否被错误浪费为固定问卷。
+
+Planning Preflight 不通过时，优先内部重排决策链；只有确实存在用户必须决定的高影响歧义时，才在 Interactive Mode 暴露当前唯一问题。
+
+### 37.2 Final Preflight
+
+Final Prompt 输出前必须至少检查：
+
+```text
+Action Sufficiency
++ Combat Character Identity Visibility
++ Tactical Interaction Externalization
++ Combat Contact Solidity
++ Combat Kinetic Scope
++ Camera Readability
++ Action Language Dominance
++ Negative Constraint Discipline
++ State / Continuity Validation
+```
+
+关键判定：
+
+- Medium / High Coverage 是否真正转成足够连续的有效 Action Phrase；
+- 高手 / 势均力敌场景是否存在与设定相符的 Counter / Re-counter / Tactical Interaction；
+- Character Identity 是否能从 Movement / Attack / Defense / Rhythm 看出来，而不是靠旁白解释；
+- `提前读到、判断、预判` 等内部战术概念是否已转成可见动作与时机；
+- Contact 是否有与模态匹配的 Commitment → Transfer / Pressure → Reaction → Consequence；
+- Final Prompt 是否由动作 / 反应 / 接触 / 位移语义主导；
+- Negative Constraints 是否只保留真实高风险，禁止自动追加“无武器”等用户未指定限制或长通用 Avoid 清单；
+- 内部 State / Meta 说明是否挤占有效动作语言。
+
+### 37.3 Gate Failure 行为
+
+Final Preflight 失败时：
+
+```text
+定位失败维度
+→ 优先重写当前 Action Phrase / Character Identity / Prompt Assembly
+→ 必要时重新分配 Action / Camera Execution Budget
+→ 再次执行 Preflight
+→ 通过后才允许交付
+```
+
+不得因为用户已经完成 Interactive 选择就跳过 Gate，也不得把 Gate 失败直接变成继续追问用户的理由。
+
+> **规则存在不等于规则生效；Preflight Gate 让已有质量规则真正拥有否决权。**
+
+## 38. V2-36：Combat Kinetic Scope / 战斗运动尺度
+
+真实成片进一步暴露出新的失败类型：即使 Coverage 较高、时间线上一直处于交战、甚至存在 Counter / Reversal，战斗仍可能主要锁在上半身与原地，表现为大量抬臂、格挡、抓腕、控制上臂等动作，而脚步、膝髋、躯干轴线、重心、Position、Range 与空间路线变化不足，最终观感仍然是“没真正打起来”。
+
+因此正式新增 **Combat Kinetic Scope / 战斗运动尺度**，作为区别于 Coverage 与 Exchange Depth 的第三个动作充分性维度：
+
+```text
+Coverage
+→ 这段时间有多少真正处于有效交战
+
+Exchange Depth
+→ 单次连续攻防的因果层有多深
+
+Kinetic Scope
+→ 身体和空间实际动了多大、多丰富
+```
+
+三者互不替代。
+
+### 38.1 核心观察维度
+
+Kinetic Scope 动态检查：
+
+- **Whole-body Engagement**：脚步、膝髋、躯干、上肢、重心是否按当前 Fighting / Martial / Weapon 语言协同；
+- **Spatial Mobility**：Position、Angle、Range、攻防线路是否产生有意义变化；
+- **Level / Axis Variation**：是否存在与当前战斗形式相符的高低位、身体轴线、方向关系变化；
+- **Contact-driven Displacement**：Contact 是否推动身体、重心、站位、距离或姿态变化，而不是只发生手臂碰撞；
+- **Environment Flow**：环境是在推动追击、绕位、逼压、脱离、重新切入，还是把双方永久锁死在一个点；
+- **Camera Mobility Coupling**：Camera 是否能跟随真实空间运动，而不是因为“稳定可读”退化成近似固定；Camera 的完整规则继续由后续 Camera 设计决定；
+- **Temporal Action Packing**：较长时间窗口是否包含足够连续因果动作，避免 3–4 秒只被一个宏事件慢慢占满。
+
+### 38.2 Upper-body Combat Lock / Kinetic Underfill
+
+新增正式 Failure Signature：
+
+> **Upper-body Combat Lock / Kinetic Underfill**
+
+典型表现：
+
+- 大量前臂、手腕、肩部交互，但脚步 / 膝髋 / 躯干参与弱；
+- 双方长时间停在原地或单一小区域；
+- Range、Angle、Position 长时间不变化；
+- 所谓环境利用只是把人按在桌边 / 墙边继续上半身对抗；
+- Camera 看似稳定，实质近似静止；
+- 时间轴标记“高速”，但一个 3–4 秒窗口只承载一个宏动作；
+- 成片虽然“每秒都有人动”，但没有持续的全身与空间动力学。
+
+一旦触发，Action Sufficiency 不能因 Coverage 已经达到目标而判 PASS；必须重新设计 Action Phrase，使动作在当前战斗形式允许的范围内增加全身协同、空间 / 角度 / 距离变化或身体轴线变化。
+
+### 38.3 动态而非配额
+
+Kinetic Scope 不建立固定动作配额：
+
+- 不要求每场必须踢腿、摔投、跑动、绕桌或改变高度；
+- Grapple 可以空间位移较小，但应有重心、支撑点、杠杆、高低位、身体轴线和 Position 的丰富变化；
+- Boxing / Striking 可以不频繁摔投，但应通过脚步、压进 / 撤出、侧切、Pivot、Slip、角度变化和 Contact 后位移体现全身参与；
+- Blade / Weapon Combat 重点可落在 Threat Line、Range、进退、角度、兵器线路与身体协调；
+- Wuxia 可采用更大身法 / 腾跃尺度，但仍必须服从当前专项物理合同。
+
+实际 Kinetic Scope 由 Choreography Profile、Character Identity、Fighting / Martial / Weapon Profile、Environment、Duration、Model Capability 与 Camera Readability 共同决定。
+
+> **运动尺度的目标不是“动作越大越好”，而是避免战斗长期退化成原地上半身互相操作。**
+
+### 38.4 与 Final Preflight / Benchmark 的关系
+
+Final Preflight 增加 Kinetic Scope 检查：
+
+- Coverage 达标但 Kinetic Scope 明显不足，仍判不通过；
+- Exchange Depth 不低但主要发生在手臂层级，仍可判 Kinetic Underfill；
+- 如果模型能力限制需要降低同时复杂度，优先拆 Phrase、降低 Camera Complexity 或减少次要分支，不默认把全身 / 空间运动全部压掉。
+
+Golden Combat Benchmark 增加 **Kinetic Scope Realization** 观察项，重点比较计划中的 Whole-body / Spatial / Range / Axis 变化是否在真实成片中兑现。
+
+## 39. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -784,9 +917,11 @@ references/tasks/action-combat-video/
 22. Quick 与 Interactive 共享同一 Combat Planning Graph、质量标准与验证链；Quick 完整规划但静默解决低风险决策，Interactive 只暴露高影响、低置信度的真实分叉；
 23. Combat Audio Choreography 作为轻量协同质量层参与 Phrase 节奏、Contact Solidity、身体 / 呼吸、武器材质、环境空间与 Signature Moment；Audio Accent Density 不等于 Action Density，声音强调必须有层级且不能替代动作设计；
 24. Combat Choreography Engine 归属于 `action-combat-video` Task；Task 负责领域导演流程，Controls 只提供跨任务通用能力，Libraries 只提供专业知识，不新增独立 Combat Choreography Control；
-25. Task 内新增 `choreography-playbook.md`：`core-playbook.md` 回归 State / Continuity / Battle Runtime Skeleton，`choreography-playbook.md` 承载 V2 动作导演逻辑，Modern / Wuxia 只做专项实例化。
+25. Task 内新增 `choreography-playbook.md`：`core-playbook.md` 回归 State / Continuity / Battle Runtime Skeleton，`choreography-playbook.md` 承载 V2 动作导演逻辑，Modern / Wuxia 只做专项实例化；
+26. Combat Planning / Final Preflight Gate 让已有质量规则拥有输出否决权；规划顺序、Action Sufficiency、Character Identity、Tactical Externalization、Contact、Kinetic Scope、Action Language 与 Negative Discipline 不通过时必须内部重写；
+27. Combat Kinetic Scope 与 Coverage / Exchange Depth 并列检查动作充分性；高 Coverage 不能掩盖 Upper-body Combat Lock，运动尺度强调全身协同、空间 / Range / Axis 变化和 Contact-driven Displacement，而不是固定动作配额。
 
-## 38. 已确认决策记录
+## 40. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -824,16 +959,21 @@ references/tasks/action-combat-video/
 | V2-32 | Combat Audio Choreography | 在 V1 三线同步基础上增加轻量战斗声音编排；声音参与 Phrase 节奏、Contact 实感、身体 / 呼吸、武器材质、环境空间和 Signature Moment，强调密度不等于动作密度，不机械堆音效，也不替代动作本身 |
 | V2-33 | Combat Engine 实现归属 | Combat Choreography Engine 归属于 `action-combat-video` Task，不新增一级 Combat Choreography Control；Task 统筹领域导演流程，现有 Controls 继续提供跨任务通用能力，Libraries 只承载专业知识 |
 | V2-34 | Task 内 Playbook 拆分 | 新增 `choreography-playbook.md` 承载 V2 动作导演逻辑；`core-playbook.md` 回归 State / Continuity / Battle 骨架；Modern / Wuxia Playbook 只负责专项实例化 |
+| V2-35 | Combat Planning / Final Preflight Gate | 规划阶段与最终输出阶段增加强制 Gate；已有质量机制不通过时内部重排 / 重写，不允许直接交付，也不默认把失败转成用户追问 |
+| V2-36 | Combat Kinetic Scope | 新增战斗运动尺度；与 Coverage / Exchange Depth 并列检查 Whole-body Engagement、Spatial Mobility、Level / Axis、Contact-driven Displacement、Environment Flow、Camera Mobility Coupling 与 Temporal Action Packing；识别 Upper-body Combat Lock / Kinetic Underfill |
 
-## 39. 全局复盘后待继续 Grill Me 的设计树
+## 41. 实测反馈后的待继续 Grill Me 设计树
 
-1. **实现映射总确认**：一次性确认 V2 对 Task Playbooks、Controls、Libraries、Diagnostics、Models、Prompt Assembly / 输出契约、Regression / Benchmark 的完整文件映射；不再逐文件追问；
-2. 总映射确认后结束 Grill Me，进入 V2 实现与回归。
+1. **Camera Mobility Coupling**：明确 `Camera Complexity` 与 `Camera Mobility` 的区别，解决“为了稳定可读把稳定镜头误实现成近似固定镜头”的问题；
+2. 上述问题确认后，再把 V2-35 / V2-36 映射进 Choreography Playbook、Prompt Assembly、Interactive Contract、Diagnostics 与 Regression / Golden Benchmark，并重新执行静态 Gate 与真实成片测试。
 
-## 40. 当前阶段结论
+## 42. 当前阶段结论
 
-V2 的一级动作质量、运行架构与 Task 内部职责边界已经收口：持续性、丰富度、角色差异、环境、战术博弈、接触实感、Signature Moment、Camera Readability、Audio Choreography、动作化 Final Prompt、真实成片 Benchmark、Combat Core / 专项边界、按需加载、模型能力接口、Quick / Interactive 统一规划，以及 Core / Choreography Playbook 文件拆分均已有明确结论。
+V2 在第一次真实交互与成片测试后进入“基于成片反馈继续校准”的阶段。现有 Coverage / Exchange Depth / Contact / Camera Readability 等机制仍然成立，但新增两条重要结论：
 
-下一步只剩 **一次实现映射总确认**。确认后结束 Grill Me，不再继续追加细粒度设计问题，直接进入 V2 实现与回归。
+- **质量规则必须有 Preflight 否决权，不能只存在于 Reference 中；**
+- **战斗是否真正“打起来”不能只看时间占比和攻防层数，还必须看全身与空间运动尺度。**
+
+当前最需要继续确认的是 Camera Mobility Coupling：如何保持复杂动作的可读性，同时让镜头真正跟随人物的空间战斗，而不是退化成静态观察。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
