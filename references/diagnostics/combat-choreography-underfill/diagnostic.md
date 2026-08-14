@@ -2,207 +2,192 @@
 
 ## 1. 何时使用
 
-当 Combat Prompt / 成片**状态和连续性大体成立，但真正有效交战明显不足**时使用本页。
+当 Combat Prompt / 成片的状态与连续性大体成立，但观看结果仍然表现为“没真正打起来”“一招一停”“原地上半身互打”“镜头不跟”“文字说高速但实际很慢”时使用本页。
 
-典型现象：
+本页把这类问题统一归入 **Combat Under-realization / 战斗兑现不足**，不为每一种现象建立独立大型 Diagnostic。
 
-- 15 秒动作视频只有约 2–3 秒真正交战；
-- High / Medium Active Combat Coverage 在计划或成片中没有兑现；
-- 高手 / Mixed / 高速交换型设定，实际只有两三次孤立攻防；
-- 大量时间被站立观察、重新起势、走位等待、抓腕僵持或 Ending Pose 占用；
-- Battle Beat 写满，但 Active Exchange Budget 大量空置；
-- 有很多动作词，却缺少 Defense → Counter → Re-counter → Continuation 的有效因果；
-- Camera / 氛围 / 状态说明很丰富，但真正 Action Phrase 太少。
-
-如果主问题是人物瞬移、Advantage / Condition / Target 状态矛盾，优先 `combat-state-continuity-failure`。如果动作数量够但接触发软，优先 `combat-contact-solidity-failure`。
+如果主问题是人物瞬移、Advantage / Condition / Weapon / Target State 矛盾，优先 `combat-state-continuity-failure`；如果动作数量足够但接触发软，优先 `combat-contact-solidity-failure`。
 
 ---
 
 ## 2. 核心判断
 
-Underfill 不是“动作词数量少”，而是：
+不要只检查“Prompt 有没有写动作”。同时检查：
 
-> **Coverage、Rhythm、Exchange Depth、Active Exchange Budget 与用户观看目标没有被实际兑现。**
+```text
+Coverage
++ Exchange Depth
++ Kinetic Scope
++ Temporal Packing
++ Motion Handoff
++ Camera Mobility
++ Visible Advantage / Initiative
++ Intensity Variation
+```
+
+这些是观察维度，不要求逐项输出给用户。
+
+---
+
+## 3. 高频 Failure Signatures
+
+### A. Combat Coverage Underfill
+
+典型：15 秒只打 2–3 秒；大量对视、重新起势、静态控制、提前 Ending。
+
+修复：减少无价值 Downtime，增加真正连续 Action Phrase。
+
+### B. Upper-body Combat Lock / Kinetic Underfill
+
+典型：大量前臂、抓腕、肩部控制；脚步、膝髋、躯干、重心、Position / Range / Axis 长时间不变；环境把双方锁在一个点。
+
+修复：根据当前 Fighting / Martial / Weapon 语言增加全身协同、换角、Range / Position / Axis 变化和 Contact-driven Displacement；不使用固定动作配额。
+
+### C. Temporal Combat Stretch / Action Underpacking
+
+典型：Prompt 写“高速”，但 3–4 秒只描述一个抓、推、转身或撞击；模型慢慢演完一个宏事件。
+
+修复：把 Active Exchange 写成连续因果动作流，让前一动作的后果立即启动下一动作。
+
+### D. Action Segmentation / Excessive Neutral Reset
+
+典型：每 1–2 秒一个独立动作；挡完收手、站稳、重新起架，再做下一招。
+
+修复：强化 Contact / Reaction / Momentum / Footwork / Body Axis / Range / Position 的 Motion Handoff；High Coverage 高手战中 Neutral Reset 应稀缺。
+
+### E. Timeline-induced Action Segmentation
+
+典型：`0–1.5 / 1.5–4.5 / 4.5–7.5...` 每个时间盒内部有动作，但块与块之间自动 Reset。
+
+修复：优先改为 Continuous Action Spine + Soft Time Anchors；严格时间块仅在模型 / 同步 / 多镜头确有需要时使用，并明确跨块 Handoff。
+
+### F. Camera Mobility Underfill
+
+典型：人物明明换位、压进、侧切、改变 Range，Camera 却长期近似 fixed；“稳定”被误实现成“不动”。
+
+修复：降低无必要 Camera Complexity，但保留与 Kinetic Scope 匹配的简单连续 tracking / dolly / small arc / reframe。
+
+> **Stable ≠ Static。**
+
+### G. Turn-taking Combat / Initiative Segmentation
+
+典型：A 连续打一段 → B 连续打一段；看似双方都有动作，实质仍在轮流表演。
+
+修复：让 Initiative 在 Counter / Re-counter 执行过程中通过 Interception、Forced Response、Line / Range / Axis Control、Contact Handoff 等发生转移。
+
+### H. Invisible Advantage / Nominal Reversal
+
+典型：文字写“男方占优 / 女方逆转”，但谁在逼迫、谁被迫防守、谁控制 Range / Route / Position 并没有改变。
+
+修复：把 Advantage 转成可见控制关系，并让 Reversal 后的 Phrase 继承新状态。
+
+### I. Homogeneous Initiative Style
+
+典型：双方 Character Identity 虽然描述不同，但抢主动权都只靠同一种“格挡后反击”。
+
+修复：让 Initiative Acquisition / Retention 服从 Character Identity，例如侧切截断、封线压迫、距离控制、接触控制、节奏破坏等按当前角色动态选择。
+
+### J. Flat Combat Intensity
+
+典型：全程同速、同密度、同重量、同压力；Signature Moment 只是“又一个动作”。
+
+修复：在 Continuous Spine 内组织 Exchange Frequency、Contact Weight、Advantage Pressure、Kinetic Scope、Environment、Camera / Audio Accent 的动态变化；局部降速不等于停止战斗。
+
+---
+
+## 4. 检查顺序
+
+### Step 1｜先看 Coverage
+
+确认 Active Exchange 是否占据目标主体时间；纯站立、无进展控制、重复观察、提前 Ending 不算。
+
+### Step 2｜再看 Kinetic Scope
+
+即使每秒都有人动，也要检查是否只是手臂层级运动。观察脚步、重心、身体轴线、Position / Range / Route 是否真正变化。
+
+### Step 3｜再看 Temporal Continuity
 
 检查：
 
-```text
-用户 Combat Intent / 观看目标
-→ 目标 Coverage
-→ Active Exchange Budget
-→ 实际 Action Phrase 数量与持续时间
-→ 每个 Phrase 的有效 Exchange Depth
-→ Downtime 是否有价值
-→ Ending 是否过早停止战斗
-```
+- 较长窗口是否只承载一个宏动作；
+- 动作之间是否频繁 Reset；
+- 时间标签是否把连续 Combat 切成独立事件块。
+
+### Step 4｜再看 Advantage / Initiative / Character
+
+检查双方是否只是轮流出招；优势是否真正可见；角色差异是否进入“如何抢主动权”。
+
+### Step 5｜最后看 Camera / Intensity / Contact
+
+Camera 是否跟随 fight-space；强度是否有层次；Contact 是否有可信 Transfer / Reaction / Consequence。
 
 ---
 
-## 3. 常见根因
+## 5. 统一修复顺序
 
-### 3.1 把 Timeline Coverage 当 Combat Coverage
+1. 删除 / 压缩无价值 Downtime 与提前 Ending；
+2. 恢复 Whole-body / Spatial / Range / Axis 运动；
+3. 把孤立动作改成连续因果 Phrase；
+4. 建立 Motion Handoff，减少 Neutral Reset；
+5. 高密度 Combat 改用 Continuous Action Spine + Soft Time Anchors；
+6. 让 Advantage / Initiative 通过可见动作控制关系表现；
+7. 让 Camera Mobility 跟随 Kinetic Scope，而不是增加无意义切镜；
+8. 组织 Intensity Variation；
+9. 删除 Final Prompt 中 Meta / 重复 Negative，把语义预算还给动作；
+10. 如果仍过载，再降低单 Phrase 同时复杂度，而不是把整场动作通缩。
 
-每个时间段都有文字，但内容是对峙、表情、镜头、走位、控制或收势，真正攻防只占很少。
-
-### 3.2 旧式动作预算通缩
-
-把“清晰”理解成一个 Beat 只能发生很少交互，或隐含采用“宁少而清晰”。
-
-### 3.3 Battle Beat 被误当成单个小动作
-
-每个 Beat 都重新观察 / 起势 / 接触，导致连续战斗被频繁 reset。
-
-### 3.4 Tactical Close Combat / Grapple 过度占时
-
-快速抓控本来只应服务某个战术目的，却变成长时间静态抓腕 / 抱持。
-
-### 3.5 Camera 抢占动作预算
-
-为了复杂运镜而主动把主体动作削减到很少。
-
-### 3.6 Final Prompt Meta 语言过多
-
-状态、连续性、物理、禁止项、风格描述占据大部分语义，Action Phrase 被压缩。
-
-### 3.7 Ending 过早
-
-最后数秒已经进入摆 Pose / 对视 / 定格，却仍被算作“动作段”。
+> **修复 Underfill 的目标是让战斗真正连续发生，不是增加动作名词数量。**
 
 ---
 
-## 4. 检查步骤
-
-### Step 1｜确认 Coverage 目标
-
-根据用户要求和 Choreography Profile 判断 Low / Medium / High。
-
-不要因为模型未知就自动选择更低 Coverage。
-
-### Step 2｜标记真正 Active Combat
-
-只有直接推动下一次攻防的内容算 Active Combat，例如：
-
-- Attack / Defense / Counter；
-- 失衡后立即恢复并继续；
-- 躲闪后形成新线路；
-- 有主动争夺的 Grapple / Control；
-- 换距后立即进入新攻击窗口；
-- Environment Action 直接改变下一次攻防。
-
-纯站立、无进展控制、重复观察、装饰性镜头和提前 Ending 不算。
-
-### Step 3｜检查 Phrase
-
-确认是否存在多个真实 Action Phrase，且前一个动作制造下一个动作机会。
-
-不要只数动词。
-
-### Step 4｜检查 Exchange Depth
-
-高手 / 高速 / Mixed 场景若大多数 Phrase 都只停在：
-
-```text
-Attack → Block
-```
-
-则仍然可能 Underfill。
-
-### Step 5｜找无价值 Downtime
-
-定位：
-
-- reset pose；
-- 无战术价值的绕场；
-- 重复对视；
-- 长时间静态抓控；
-- 过早收尾；
-- 镜头独立表演。
-
----
-
-## 5. 修复顺序
-
-> **修复 Underfill 的目标是增加有效攻防，不是堆动作动词。**
-
-优先：
-
-1. 删除 / 压缩无价值 Downtime；
-2. 把孤立 Attack–Block 扩展成有因果的 Counter / Re-counter / Continuation；
-3. 在同一 Battle Beat 内增加无缝 Action Phrase；
-4. 让 Contact / 失衡 / Environment Result 直接制造下一次攻击窗口；
-5. 把长静态 Control 改成压力变化、挣脱尝试、位置争夺或快速过渡；
-6. 降低无必要 Camera Complexity，释放动作可读性 / 执行预算；
-7. Final Prompt 删除 Meta / 重复 Negative，把语义预算还给动作；
-8. 缩短过早 Ending Pose。
-
-禁止优先通过“加入更多独立招式名”修复。
-
----
-
-## 6. 与 Action Execution Budget 的关系
-
-Underfill 修复不能造成同一短窗口过载。
-
-双向约束：
-
-```text
-Action Sufficiency Check
-↔ Action Execution Budget
-↔ Clarity Through Structure
-```
-
-动作不足时优先增加**更多连续 Phrase**；单个 Phrase 过载时拆开，但 Phrase 之间不需要停战。
-
-> **高信息密度，但低混乱度。**
-
----
-
-## 7. 重写方向示例
+## 6. 重写示意
 
 ### 失败结构
 
 ```text
-0–3s 对视争执
-3–5s A 出拳，B 挡住
-5–8s 双方抓住手腕僵持
-8–10s B 推开 A
-10–15s 两人对峙并摆出戒备姿态
+男方出拳
+→ 女方格挡
+→ 双方重新站稳
+→ 女方反击
+→ 男方抓腕
+→ 两人停在桌边控制
+→ 女方转身反制
 ```
 
-问题不是“时间轴没写满”，而是 Active Combat 严重不足。
-
-### 修复结构
+### 更合理的连续结构
 
 ```text
-短促冲突直接进入第一条 Action Phrase：A 压近攻击，B 偏转并立即 Counter，A 在 B 反击尚未回收前改角度截击；接触让 B 的重心被迫侧移，B 借桌边稳住并从侧面重新切入。第二条 Phrase 紧接着由 B 主动压迫，A 用短防守化解后进入身体控制，B 不停顿地转髋破开控制，两人围绕桌角换位，A 的追击线路被桌边限制，B 借这个窗口完成一次环境辅助反击。最后一条 Phrase 在优势尚未完全确定时继续高速 Counter / Re-counter，并在最后约一秒收束为互相控制的僵持结局。
+男方压入首击；女方偏开线路的同时已向外侧切步，男方沿她的新路线立刻封入；她不重新站稳，借新角度短击迫使他收肘，他顺着接触用身体压力继续压进；她后脚刚落地便沿桌角侧切，他追着转身封线，转身造成的肩线偏移又成为她下一次进入窗口。双方始终在交换主动权，Position / Range / Axis 与 Camera Path 同步变化，中段出现一次明显压力翻转，最后才短促收束。
 ```
 
-这里增加的是连续因果，而不是机械招式数量。
+重点不是固定招式，而是连续状态继承。
 
 ---
 
-## 8. 与其他 Diagnostics 的边界
+## 7. 与其他 Diagnostics 的边界
 
-- Advantage / Condition / Target / Weapon / Beat State 矛盾：`combat-state-continuity-failure`；
-- 接触点 / 肢体结构穿模：`anatomy-contact-failure`；
-- 动作有数量但整体漂浮无重量：`physics-and-weightlessness`；
-- Contact 缺乏模态正确的 Transfer / Reaction / Consequence：`combat-contact-solidity-failure`；
-- Camera 本身失控：`camera-chaos`；
-- Prompt 多维要求互相矛盾：`prompt-overload-and-conflict`。
+- State / Target / Weapon / Position 真源矛盾：`combat-state-continuity-failure`；
+- 肢体接触穿模：`anatomy-contact-failure`；
+- 漂浮 / 无重量：`physics-and-weightlessness`；
+- Contact 缺乏正确受力链：`combat-contact-solidity-failure`；
+- Camera 自身混乱：`camera-chaos`；
+- 多维要求互相矛盾：`prompt-overload-and-conflict`。
 
-本页只处理：**战斗设计在有效交战时间和因果交换丰富度上明显不足。**
+本页负责：**战斗时间、身体 / 空间运动、动作连续性、主动关系和镜头跟随等综合兑现不足。**
 
 ---
 
-## 9. 完成标准
+## 8. 完成标准
 
-修订后应满足：
+修订后应看到：
 
-- Coverage 与用户观看目标大体一致；
-- Active Exchange 占据应有主体时间；
-- Action Phrase 之间可以无缝衔接；
-- Rhythm / Exchange Depth 与高手 / 重击 / Mixed 等目标匹配；
-- Downtime 有明确价值，不再大量空耗；
-- Ending 不过早停止战斗；
-- Final Prompt 的动作语言明显多于 Meta 状态说明；
-- 没有为了增加动作而破坏 State / Continuity / Camera Readability。
+- Coverage 与观看目标一致；
+- Whole-body / Spatial / Range / Axis 运动符合当前战斗形式；
+- 动作与 Phrase 通过 Motion Handoff 连续衔接；
+- 高密度 Combat 不再被硬时间块切碎；
+- Advantage / Initiative 能从动作看出来；
+- Character Identity 不只是标签；
+- Camera 跟随 fight-space 但不过度炫技；
+- Intensity 有层次；
+- Final Prompt 明显由具体动作语言主导；
+- 没有为了修复 Underfill 反而制造 State / Contact / Camera Chaos。
