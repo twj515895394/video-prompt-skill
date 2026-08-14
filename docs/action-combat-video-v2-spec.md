@@ -6,7 +6,7 @@
 >
 > V1 状态：已完成设计、实现与静态回归
 >
-> V2 定位：在保留 V1 Combat State / Continuity Engine 的基础上，新增并强化 **Combat Choreography Engine（动作导演 / 武术指导层）**，重点解决实测中“有效交战时间不足、动作交换过少、角色打法同质、动作缺乏电影编排感”等问题。
+> V2 定位：在保留 V1 Combat State / Continuity Engine 的基础上，新增并强化 **Combat Choreography Engine（动作编排引擎 / 动作导演层）**，重点解决实测中“有效交战时间不足、动作交换过少、角色打法同质、动作缺乏电影动作编排感”等问题。
 
 ## 1. 背景与问题来源
 
@@ -39,7 +39,7 @@ V1 已经较完整地解决了复杂打斗 Prompt 中的状态与连续性问题
 - 环境虽然参与状态变化，但没有充分转化为动作编排素材；
 - V1 强调“宁少而清晰”，在短时长动作片中可能被过度执行，形成动作预算通缩。
 
-因此 V2 不推翻 V1，而是补足 V1 当前较弱的“动作导演 / 武术指导”能力。
+因此 V2 不推翻 V1，而是补足 V1 当前较弱的“动作导演 / 动作编排”能力。
 
 ## 2. V1 与 V2 的关系
 
@@ -80,18 +80,18 @@ V2 必须继续遵守 V1 的上位原则：
 
 > **约束错误，不约束创作。**
 
-新增的 Coverage、Rhythm、Identity、Profile、Action Phrase 均属于创作与编排工具，不应被实现为所有场景固定套用的动作模板。
+新增的 Coverage、Rhythm、Identity、Profile、Action Phrase 均属于创作与动作编排工具，不应被实现为所有场景固定套用的动作模板。
 
 ## 3. 已确认决策一：新增 Combat Choreography Engine
 
-确认 V2 的核心不是继续堆叠更多状态连续性规则，而是在 V1 上新增一层正式的 **Combat Choreography Engine**。
+确认 V2 的核心不是继续堆叠更多状态连续性规则，而是在 V1 上新增一层正式的 **Combat Choreography Engine（动作编排引擎 / 动作导演层）**。
 
 该层主要负责：
 
 - 控制整段视频真正处于交战状态的时间比例；
 - 控制单位时间内攻防交换的节奏和丰富度；
 - 为主要战斗角色建立差异化打法；
-- 决定整场动作戏的电影编排观感；
+- 决定整场动作戏的电影动作编排观感；
 - 将原子级 Action–Reaction Pair 组织成连续 Action Phrase；
 - 生成具有视觉记忆点、节奏变化和环境利用的动作设计；
 - 在保证可读性的前提下避免“动作过少”。
@@ -167,7 +167,7 @@ Interactive Mode 下不使用第二套抽象 Low / Medium / High，而使用用�
 
 ## 6. 已确认决策四：Action Phrase
 
-正式新增 **Action Phrase / 动作句**，作为 Combat Choreography Engine 的核心编舞单位。
+正式新增 **Action Phrase / 动作句 / 连续攻防段**，作为 Combat Choreography Engine 的核心动作编排单位。
 
 V1 当前主要粒度为：
 
@@ -188,7 +188,7 @@ Action–Reaction Pair
 职责分层：
 
 - **Action–Reaction Pair**：原子级攻防交互单位；
-- **Action Phrase**：多个连续攻防交互组成的一段完整动作句；
+- **Action Phrase**：多个连续攻防交互组成的一段完整动作句 / 连续攻防段；
 - **Battle Beat**：承担一个战术 / 剧情攻防目标；
 - **Combat Sequence**：整场动作戏。
 
@@ -229,14 +229,14 @@ V1 Fighting Profile 主要回答 Boxing、Muay Thai、Sanda、MMA、Tactical Clo
 ```text
 Combat Character Identity
 → 选择适合该角色的 Fighting / Martial Profile
-→ Action Phrase 编排
+→ Action Phrase 动作编排
 ```
 
 这用于避免“职业杀手 = Tactical Close Combat = 双方抓腕控制”的同质化结果。
 
 ## 8. 已确认决策六：Cinematic Choreography Profile
 
-新增 **Cinematic Choreography Profile / 电影动作编排观感**。
+新增 **Cinematic Choreography Profile / 电影动作编排风格**。
 
 该概念与 Combat Character Identity 明确拆开：
 
@@ -247,11 +247,11 @@ Combat Character Identity
 
 - 写实战术型；
 - 凌厉电影动作型；
-- 高手连续编舞型；
+- 高手连续编排型；
 - 重型硬派型；
 - 环境技巧型。
 
-允许在需要时采用“主编排观感 + 辅助倾向”，但不得堆叠互斥风格。
+允许在需要时采用“主动作编排风格 + 辅助倾向”，但不得堆叠互斥风格。
 
 ### 架构落位确认
 
@@ -277,7 +277,7 @@ Combat Sequence
       └─ Action–Reaction Pair
 ```
 
-生成前的上游编排变量：
+生成前的上游动作编排变量：
 
 ```text
 Combat Intent
@@ -315,9 +315,9 @@ Combat Interactive Mode 不再直接套用通用文生视频的“核心观看�
 → 战斗结果 / 收尾
 ```
 
-其中 **Cinematic Choreography Profile 位于 Coverage / Rhythm 之前**，因为整场编舞观感应先决定后续推荐倾向。例如：
+其中 **Cinematic Choreography Profile 位于 Coverage / Rhythm 之前**，因为整场动作编排风格应先决定后续推荐倾向。例如：
 
-- “高手连续编舞型”通常更适合推荐 High Coverage + 混合型 / 高速交换 Rhythm；
+- “高手连续编排型”通常更适合推荐 High Coverage + 混合型 / 高速交换 Rhythm；
 - “重型硬派型”可能更适合 Medium / High Coverage + 重击型或混合型 Rhythm；
 - “写实战术型”可以保持较低动作数量，但仍需根据用户的观看目标判断是否需要较高 Active Combat Coverage。
 
@@ -330,10 +330,10 @@ Interactive Mode 不要求机械地把链路中每一项都问一遍。
 - 上游选择应主动缩小下游候选范围；
 - 每个下游问题都应给出基于已确认上游条件的推荐；
 - 如果某项可以高置信度从已确认信息推断，且不会明显改变成片，则允许自动补全而不追问；
-- 只有会实质改变编舞、持续交战、角色打法、环境利用、Camera Mode 或最终落点的变量才继续询问；
+- 只有会实质改变动作编排、持续交战、角色打法、环境利用、Camera Mode 或最终落点的变量才继续询问；
 - 始终遵守“一次只问一个最关键问题”。
 
-例如用户确认“高手连续编舞型 + High Coverage + 混合型 Rhythm”后，后续 Combat Character Identity 的推荐应主动服务于角色打法差异，而不是重新从全部 Fighting Profile 无差别询问。
+例如用户确认“高手连续编排型 + High Coverage + 混合型 Rhythm”后，后续 Combat Character Identity 的推荐应主动服务于角色打法差异，而不是重新从全部 Fighting Profile 无差别询问。
 
 该决策链仍服从全局 Interactive Contract：
 
@@ -432,7 +432,7 @@ Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Actio
 
 ### 软预算原则
 
-以上“1–2 / 2–3 / 3–5 轮”只作为内部编舞倾向，不得变成固定模板或硬计数器。
+以上“1–2 / 2–3 / 3–5 轮”只作为内部动作编排倾向，不得变成固定模板或硬计数器。
 
 实际 Exchange Depth 必须受以下变量共同影响：
 
@@ -447,7 +447,78 @@ Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Actio
 
 当动作过载时，优先降低单个 Phrase 的 Exchange Depth、缩短支线动作或拆分 Phrase，而不是退回“所有战斗统一 2–4 个动作节点”的全局保守上限。
 
-## 13. V2 设计原则补充
+## 13. 已确认决策十：Battle Beat 与 Action Phrase 动态一对多
+
+确认 **Battle Beat : Action Phrase 采用动态一对多关系**，不默认 `1 Beat = 1 Phrase`，也不规定一个 Beat 必须包含固定数量的 Phrase。
+
+职责边界：
+
+> **Battle Beat 负责一个战术 / 剧情攻防阶段。**
+>
+> **Action Phrase 负责该阶段内部的一段局部连续攻防。**
+
+只要战术目标和主要攻防关系没有发生实质变化，同一个 Battle Beat 内可以连续存在多个 Action Phrase。
+
+例如：
+
+```text
+Battle Beat A：第一次争夺，男方轻度占优
+├─ Phrase A1：第一次高速接触
+├─ Phrase A2：连续追击与换位
+└─ Phrase A3：环境压迫 → Turning Event
+
+Battle Beat B：女方夺回主动
+├─ Phrase B1：反制后连续攻防
+└─ Phrase B2：扩大空间优势
+```
+
+### Action Phrase 的结束条件
+
+一个 Phrase 可以在以下情况形成局部结束：
+
+- 当前连续攻防形成一个局部 Payoff；
+- 双方在极短时间内重新建立新的攻击窗口；
+- 动作路线、Range 或环境利用方式明显改变；
+- 需要从高速交换切换到重型爆点，或反向切换；
+- 当前 Phrase 继续增加动作会导致可读性或模型执行风险明显下降。
+
+Phrase 结束不代表战斗暂停，也不代表必须产生 Downtime；下一个 Phrase 可以无缝继续。
+
+### Battle Beat 的结束条件
+
+Battle Beat 只在更高层状态发生实质变化时切换，例如：
+
+- 战术目标改变；
+- Advantage 发生主要反转；
+- 关键 Condition 改变后续打法；
+- 主交战对象切换；
+- 战斗阶段从争夺转为追击、脱身、终结等；
+- 明确 Turning Event 改变双方关系。
+
+因此：
+
+> **Phrase 切分服务局部动作组织；Beat 切分服务战术状态变化。**
+
+Phrase 数量由 Beat 可用时长、Active Combat Coverage、Exchange Rhythm、Exchange Depth、Turning Event、环境变化、Camera Complexity 和模型执行性共同动态决定。
+
+## 14. 已确认决策十一：Combat 中文术语统一
+
+英文专业术语继续保留 `Choreography`，因为 `Fight Choreography / Action Choreography` 在电影动作设计语境中表示打斗动作的设计、串联、节奏、空间和镜头协同。
+
+但中文正文不再使用容易产生舞蹈语义的“编舞”作为 Combat 的主要翻译，统一采用：
+
+- **Combat Choreography Engine** → **动作编排引擎 / 动作导演层**；
+- **Cinematic Choreography Profile** → **电影动作编排风格**；
+- **Action Choreography** → **动作编排**；
+- **Action Phrase** → **动作句 / 连续攻防段**。
+
+原则：
+
+> **英文保留行业语义，中文优先表达“动作设计与连续攻防编排”，避免让文档读起来像舞蹈设计。**
+
+后续新增 V2 文档内容统一遵守这一中文术语规则。
+
+## 15. V2 设计原则补充
 
 在 V1 原则基础上增加：
 
@@ -456,7 +527,7 @@ Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Actio
 3. **动作合理不代表动作好看。** Choreography Engine 必须负责视觉节奏与动作设计。
 4. **高手身份应通过打法表现，而不是只靠人物设定文字。**
 5. **不同角色应允许有不同 Combat Character Identity。**
-6. **Action Phrase 负责连续编舞，State Contract 负责连续性，两者不能互相替代。**
+6. **Action Phrase 负责连续动作编排，State Contract 负责连续性，两者不能互相替代。**
 7. **High Coverage 不等于全程同速高速动作。** 必须允许节奏反差。
 8. **V2 不通过增加大量 Negative Constraints 解决动作不足问题。** 优先增强正向动作编排。
 9. **最终 Prompt 应外显精彩动作，内部状态检查应尽量压缩。**
@@ -466,8 +537,10 @@ Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Actio
 13. **收尾预算服务最后一拍，不应提前终止战斗。**
 14. **Exchange Depth 衡量攻防因果深度，不衡量动作词数量。**
 15. **不同 Rhythm 应动态改变 Phrase 内部交换深度，而不是统一套一个动作数量上限。**
+16. **Phrase 与 Beat 不绑定 1:1。** Phrase 负责局部连续攻防，Beat 负责更高层战术阶段。
+17. **Combat 中文术语统一使用“动作编排 / 动作导演”，不再用“编舞”作为主要中文翻译。**
 
-## 14. 已确认决策记录
+## 16. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -480,27 +553,28 @@ Exchange Depth 不独立作为用户必须选择的参数，而主要由 **Actio
 | V2-07 | Interactive Mode | 建立 Combat 专属决策链；Choreography Profile 位于 Coverage / Rhythm 之前；上游选择驱动下游推荐 |
 | V2-08 | Coverage 时间预算 | 新增 Setup / Active Exchange / Combat Downtime / Ending 四类预算；High Coverage 限制非交战时间 |
 | V2-09 | Action Phrase 复杂度 | 新增 Exchange Depth；由 Rhythm、Phrase 时长等动态决定，不采用固定招式数 |
+| V2-10 | Beat / Phrase 关系 | 动态一对多；Phrase 按局部攻防组织，Beat 只在战术状态实质变化时切换 |
+| V2-11 | 中文术语 | 英文保留 Choreography；中文统一“动作编排 / 动作导演”，不再使用“编舞”作为主要翻译 |
 
-## 15. 尚待继续 Grill Me 的设计树
+## 17. 尚待继续 Grill Me 的设计树
 
 以下内容尚未确认，必须继续按“一次一个问题”的方式推进：
 
-1. Action Phrase 与 Battle Beat 的数量关系如何控制，避免再次形成新死模板；
-2. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
-3. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
-4. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
-5. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
-6. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立编舞规则；
-7. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
-8. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
-9. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
-10. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
-11. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
-12. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
+1. Combat Character Identity 是否需要预设画像库，以及画像库应包含哪些维度；
+2. Cinematic Choreography Profile 是否正式新增 `combat-choreography-profiles` Library；
+3. Environment Interaction 如何升级为 Environment Choreography，而不是仅作为状态修改器；
+4. 视觉记忆点 / Signature Moment 是否作为 Choreography Engine 的显式设计目标；
+5. 假动作、预判、诱导、Counter / Re-counter 是否需要形成独立动作编排规则；
+6. Combat Density / Coverage / Rhythm 与 Camera Complexity 如何联动；
+7. V1 “动作复杂度预算”如何调整，避免 `2–4` 交互节点被过度保守执行；
+8. V1 “宁可少而清晰”原则如何重新表述，避免动作预算通缩；
+9. Final Prompt 如何减少状态规范语言、提高正向动作编排权重；
+10. Combat Quality Regression 如何从静态规则覆盖升级为实际生成质量评价；
+11. V2 最终需要修改哪些 Playbook / Library / Contract / Diagnostic，以及是否需要新增 Control。
 
-## 16. 当前阶段结论
+## 18. 当前阶段结论
 
-V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、编舞弱”倾向。
+V1 的核心问题不是状态连续性设计错误，而是系统在真实生成中表现出明显的“防错强、动作编排弱”倾向。
 
 V2 当前目标可以概括为：
 
