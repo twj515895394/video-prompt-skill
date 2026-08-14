@@ -314,27 +314,81 @@ Signature Moment 必须由前后 Phrase 因果“挣来”，不是随机炫技�
 
 ---
 
-## 13. Camera Readability + Mobility Coupling
+## 13. Combat Camera：Readability + Mobility + Coverage
 
-必须区分：
+必须区分三个问题：
 
 ```text
-Camera Complexity ≠ Camera Mobility
-```
+Camera Complexity
+→ 单个 Shot / 整段方案的镜头语言有多复杂
 
-高动作 / 空间复杂度时可以降低不必要 Camera Complexity，但**不等于降低 Camera Mobility**。
+Camera Mobility
+→ 单个 Shot 内摄影机是否跟随真实 Position / Range / Axis / Route 变化
+
+Shot Scale / Editorial Coverage
+→ 整段 Combat 用哪些观察距离与 Cut 去强调动作信息
+```
 
 正式原则：
 
-> **Stable Camera ≠ Static Camera.**
+> **Stable Camera ≠ Static Camera.**  
+> **Action Continuity ≠ Shot Continuity.**
 
-当 Kinetic Scope 出现明显 Position / Range / Axis / Route 变化时，Camera 应使用简单、连续、可预测的 tracking / dolly / small arc / reframe 跟随；高密度动作常用目标是：
+高动作 / 空间复杂度时可以降低无必要 Camera Complexity，但不能把它错误执行成：
 
-> **Low Camera Complexity + Medium / High Camera Mobility。**
+- Camera 长时间不动；
+- 全程中全景 / 中景；
+- 只能使用 tracking / dolly；
+- 禁止 Close-up / Insert / Reaction / Impact Shot；
+- Continuous Action Spine = 必须 one-take。
 
-不要为了“保持构图”反向把人物锁在画面中央小区域。
+### 13.1 Camera Mobility
 
-Camera 具体语言继续由通用 `camera-direction` Control 提供。
+当 Kinetic Scope 出现明显 Position / Range / Axis / Route 变化时，单个 Shot 可使用简单、连续、可预测的 tracking / dolly / small arc / reframe 跟随。
+
+目标是：动作复杂时减少无意义镜头炫技，但保留跟随真实 fight-space 所需的 Mobility。
+
+### 13.2 Cinematic Combat Coverage
+
+电影化 Combat 可以动态使用：
+
+- Master / Establishing Shot：建立双方位置、Range 与空间；
+- Medium / Medium-wide Relationship Shot：看主要攻防与身体关系；
+- Close-up / Extreme Close-up：Contact、拳脚、武器、眼神、受击 / 反应；
+- Insert：脚步、支撑脚、手部、握持、Weapon Line、环境触发物；
+- Reaction Shot：威胁、Contact、Advantage Reversal 后的即时反应；
+- Impact Shot：关键 Contact / Payoff / Signature Moment；
+- Re-establish：局部 Coverage 后重新确认 Position / Range / Axis。
+
+不设置“必须几个特写 / 几个全景”的配额。
+
+### 13.3 Cut 可以存在，Action State 不能 Reset
+
+跨镜 Cut 必须尽量继承：
+
+```text
+Position / Left-Right
++ Action Direction
++ Contact
++ Momentum
++ Body / Weapon Axis
++ Range
++ Initiative / Advantage Consequence
+```
+
+例如：
+
+```text
+中全景：A 侧切，B 封线
+→ CUT：前臂 Contact 特写
+→ CUT：低机位脚步 Insert，B 前脚封住出口
+→ CUT：中近景，A 肩轴被迫转开
+→ CUT：双人中景，A 顺转轴 Counter
+```
+
+摄影发生 Cut，但 Action Spine 连续；禁止 Cut 后双方回到默认距离、默认站位或重新起架。
+
+Camera 具体镜头语言继续由通用 `camera-direction` Control 提供。
 
 ---
 
@@ -361,8 +415,9 @@ Audio 不能替动作表演。
 1. 删除重复 / 装饰性 / 无状态价值动作；
 2. 降低单 Phrase 次要 Tactical 分支；
 3. 降低无必要 Camera Complexity；
-4. 拆成多个无缝连续 Phrase；
-5. 最后才缩减次要有效攻防。
+4. 保留有信息价值的 Camera Coverage，不用一条保守中景替代全部镜头；
+5. 拆成多个无缝连续 Phrase；
+6. 最后才缩减次要有效攻防。
 
 模型能力只能改变实现路径，不能偷偷把“高手持续对决”改成“两三次简单交换”。
 
@@ -474,12 +529,16 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 触发失败：**Contact Solidity Failure**、**Flat Combat Intensity**。
 
-### F. Camera
+### F. Camera Coverage
 
-- Kinetic Scope 明显变化时 Camera 是否跟随；
-- `stable / readable` 是否被错误写成长期近似 fixed framing。
+- Kinetic Scope 明显变化时，Camera 是否有足够 Mobility / Reframe；
+- `stable / readable` 是否被错误写成长期近似 fixed framing；
+- 是否把 Continuous Action Spine 误解为 one-take / 不能 Cut；
+- 是否全程几乎只有中全景 / 中景，系统性排斥 Contact / Weapon / Footwork / Reaction 特写；
+- Cut 后 Position / Direction / Contact / Momentum / Axis / Range 是否连续；
+- 局部 Shot 后是否在需要时 Re-establish 空间关系。
 
-触发失败：**Camera Mobility Underfill**。
+触发失败：**Camera Mobility Underfill**、**Combat Camera Coverage Lock / Medium-wide Overconstraint**、**Cut-induced Action Reset**。
 
 ### G. Prompt Externalization
 
@@ -491,7 +550,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 ```text
 定位失败维度
-→ 优先重写 Action Phrase / Action Spine / Camera Path / Prompt Assembly
+→ 优先重写 Action Phrase / Action Spine / Camera Coverage / Prompt Assembly
 → 必要时重新分配执行预算
 → 再次 Preflight
 → 通过后才交付
@@ -514,6 +573,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 > **动作要足够多，但不是独立动词堆叠。**  
 > **连续打斗不是动作排得更近，而是后一个动作从前一个动作的身体与空间状态里长出来。**  
-> **镜头要稳定可读，但 Stable ≠ Static。**  
+> **镜头可以稳定，也可以切；Action Continuity ≠ Shot Continuity。**  
+> **可读性来自空间锚点与剪辑连续性，不来自全程中全景。**  
 > **连续不等于匀速；高密度不等于同强度。**  
 > **状态机留在内部，最终 Prompt 交付一条真正连续、可见、可执行的动作主链。**
