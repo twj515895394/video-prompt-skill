@@ -13,6 +13,8 @@
 
 用户没有明确表达上述意图时，不自动进入交互模式。
 
+---
+
 ## 核心规则
 
 - 每次只问一个最影响结果的问题；
@@ -23,6 +25,37 @@
 - 能从请求、上下文和素材推断的内容不追问；
 - 只追问会实质改变视频目标、动作、镜头、节拍、连续性或模型能力的变量；
 - 用户要求收口，或剩余问题只影响轻微细节时，立即停止提问并完成交付。
+
+### Combat Interactive Mode
+
+Action Combat 与 Quick Mode **共用同一 Combat Planning Graph、Choreography Engine、State / Continuity Engine 和最终质量标准**。
+
+Interactive 只增加 **Decision Exposure Policy / 决策暴露策略**：
+
+```text
+用户已经明确
+→ 直接继承
+
+高置信度 + 低风险
+→ 自动补全
+
+存在多个明显不同方向
++ 会显著改变成片
++ 当前置信度不足
+→ 暴露当前一个最关键分叉
+```
+
+不把以下基础质量机制变成固定问卷：
+
+- Contact Solidity；
+- Action Sufficiency Check；
+- State / Continuity Validation；
+- Camera Readability Budget；
+- Combat Audio Choreography。
+
+> **模式不同只代表控制权不同，不代表成片质量等级不同。**
+
+---
 
 ## 追问优先级
 
@@ -67,6 +100,25 @@
 → 每镜动作与镜头
 ```
 
+### Action Combat
+
+优先依赖顺序：
+
+```text
+核心 Combat Intent / 观看目标
+→ Combat Branch（例如 Modern / Wuxia）
+→ Cinematic Choreography Profile
+→ Active Combat Coverage
+→ Action Exchange Rhythm
+→ Character Identity 的关键差异
+→ 环境参与 / Camera Intent（只有显著影响成片时）
+→ 战斗结果 / 收尾
+```
+
+只在当前节点真的存在高影响分叉时提问。
+
+例如用户已经明确“15 秒高手办公室近身连续对决、稳定中景跟拍”，则不再逐项询问 Coverage、Contact Solidity、Camera Readability 等已经可以高置信度推导的内容。
+
 ### 视频编辑 / 延长
 
 ```text
@@ -75,6 +127,8 @@
 → 允许变化范围
 → 新落点
 ```
+
+---
 
 ## 单轮问题格式
 
@@ -88,6 +142,8 @@
 
 必要时可给 2-3 个方向差异，但必须明确推荐其中一个，不把设计责任全部交还用户。
 
+---
+
 ## 交互阶段允许输出
 
 - 当前唯一问题；
@@ -100,7 +156,10 @@
 - 未完成决策的完整 Prompt；
 - 同时展开多个问题；
 - 大量不影响主方向的细节选项；
+- Combat 内部 State Table / Planning Context；
 - 内部 Reference、目录或加载逻辑。
+
+---
 
 ## 收口条件
 
@@ -108,8 +167,11 @@
 
 - 用户说“直接出结果”“够了”“按推荐做”；
 - 核心观看目标、动作、镜头、节拍和收尾已经可执行；
+- Combat 的剩余节点都可高置信度自动补全；
 - 再问只会改变轻微风格或装饰细节；
 - 用户明确不希望继续深挖。
+
+---
 
 ## 最终交付
 
@@ -118,15 +180,20 @@
 - 一份最终可复制 Prompt；
 - 多镜头 Prompt Pack；
 - 必要的素材职责和固定项；
-- 简短方向决策摘要；
+- 简短方向决策摘要（只有确有价值时）；
 - 只有确有价值时才提供备选版本。
 
+Action Combat 收口后，内部继续完整执行未显式讨论的 Choreography / State / Contact / Camera / Audio 质量机制，再把状态机转译成具体可见动作。
+
 交互模式最终结果仍必须可直接使用，不能只停留在讨论结论。
+
+---
 
 ## 与快速模式的边界
 
 - 快速模式解决“直接给我可用结果”；
 - 交互模式解决“和我一起锁定重大方向”；
-- 两种模式共用相同输入、任务、控制、资料和模型适配；
+- 两种模式共用相同输入、任务、控制、资料、Combat Planning Graph 和模型适配；
 - 差异只在是否需要用户参与重大决策，以及最终是否需要附带方向摘要；
-- 用户在交互过程中要求直接生成时，立即转入最终交付，不继续追问。
+- 用户在交互过程中要求直接生成时，立即转入最终交付，不继续追问；
+- Interactive 不能因为讨论更久而获得一套 Quick 没有的“高级动作引擎”。
