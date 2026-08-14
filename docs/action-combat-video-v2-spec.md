@@ -317,38 +317,84 @@ Combat Core
 └─ Weapon Profiles / Weapon-specific execution
 ```
 
-Core 规定的是 **机制与质量合同**，例如：
+Core 规定的是 **机制与质量合同**，例如：接触必须有 Commitment → Contact → Transfer → Reaction → Consequence；Phrase 必须有因果连续性；Coverage / Rhythm / Exchange Depth 必须兑现；环境利用必须改变战术或空间关系；Signature Moment 必须由前后动作因果支撑；Camera 必须服务动作可读性。
 
-- 接触必须有 Commitment → Contact → Transfer → Reaction → Consequence；
-- Phrase 必须有因果连续性；
-- Coverage / Rhythm / Exchange Depth 必须兑现；
-- 环境利用必须改变战术或空间关系；
-- Signature Moment 必须由前后动作因果支撑；
-- Camera 必须服务动作可读性。
-
-专项层规定的是 **这种战斗形式如何表现上述机制**：
-
-- Modern Combat：更强调重心、身体发力、直接压迫、真实失衡、短距离 Contact；
-- Cinematic Wuxia：可采用借力、身法、兵器轨迹、电影化腾跃、节奏留白等不同物理尺度，但仍必须保持动作因果与状态继承；
-- Grapple / Takedown：以杠杆、压迫、夺重心、控制与挣脱代价体现 Contact Solidity；
-- Blade / Weapon：以危险线路、距离约束、格挡偏转、兵器震荡、主动权与 Weapon State 变化体现 Contact Solidity；
-- 其他 Fighting / Martial / Weapon Profile 继续作为专业动作语言来源，而不是改写 Core 规则。
-
-禁止以下反向污染：
-
-- 把现代拳脚的“拳拳到肉”表现模板强制套到刀剑 / 武侠 / 摔控；
-- 把某一职业 / 流派直接映射为唯一 Character Identity；
-- 因某专项默认节奏修改 Core 的 Coverage / Phrase / State Contract 基本定义；
-- 为适配某一种动作形式在 Core 中塞入大量专项招式或影视表现细节。
-
-原则：
+专项层规定的是 **这种战斗形式如何表现上述机制**。Modern Combat 更强调重心、身体发力、直接压迫、真实失衡与短距离 Contact；Cinematic Wuxia 可采用借力、身法、兵器轨迹、电影化腾跃、节奏留白等不同物理尺度；Grapple / Takedown 用杠杆、压迫、夺重心与挣脱代价体现 Solidity；Blade / Weapon 用危险线路、距离约束、格挡偏转、兵器震荡、主动权与 Weapon State 变化体现 Solidity。
 
 > **Core 规定“必须成立什么”；专项层规定“在这种战斗里它具体长什么样”。**  
 > **专项可以覆盖默认表现，但不能反向重定义 Combat Core。**
 
+## 31. V2-29：Two-stage On-demand Loading / 两阶段按需加载
+
+Combat V2 正式采用 **Plan First, Load Detail Second / 先规划、再加载详情** 的运行时 Reference 策略，避免随着能力和 Library 扩展而全量加载上下文。
+
+### Stage 1：Planning / 路由阶段
+
+先加载轻量、稳定的运行骨架：
+
+```text
+action-combat-video/index
++ Combat Core
++ 当前专项 Playbook（Modern / Wuxia 等）
++ 必要 Library 轻量 index
++ 可选 Model Adapter 索引 / 能力摘要
+        ↓
+形成 Combat Planning Context
+```
+
+`Combat Planning Context` 只记录当前任务真正需要的规划变量，例如：Combat Branch、Coverage、Rhythm、Character Identity 倾向、主要 Contact Modality、环境参与程度、是否需要 Signature Moment、是否存在武器 / 多人 / 特殊 Camera 风险等。
+
+Planning 阶段**不展开大量叶子知识正文**。Coverage、Rhythm、Exchange Depth、Tactical Interaction、Combat Contact Solidity、Action Execution Budget、Camera Readability Budget 等属于 Core / Playbook 的判断机制，不因为存在这些能力就分别占用 Library Detail Slot。
+
+### Stage 2：Execution Knowledge / 叶子知识阶段
+
+根据 `Combat Planning Context` 再按需展开少量真正需要的专业叶子知识。正常运行原则上只允许约 **2 个主要 Library Detail Slot**：
+
+```text
+Slot A：Technique / Execution Knowledge
+→ 最相关的 Fighting / Martial / Weapon Profile
+
+Slot B：Choreography Enhancement Knowledge
+→ 最相关的 Signature Moment Pattern 或其他确有必要的增强知识
+```
+
+`2 个 Slot` 是默认 Reference 预算，不是不可突破的硬限制；只有当用户明确要求、任务确实存在多个不可合并的专业知识依赖，且额外加载能显著提升正确性时，才允许有理由地增加。
+
+### Slot 竞争优先级
+
+当叶子知识竞争有限预算时，优先级为：
+
+```text
+用户明确指定的专业动作 / 武器知识
+        ↓
+保证动作正确执行所必需的专业知识
+        ↓
+Character Identity 差异化所需知识
+        ↓
+Signature Moment / 创意增强知识
+```
+
+因此刀战、长兵器、特殊摔控等任务中，Weapon / Fighting / Martial Profile 优先于 Signature Moment Pattern。上下文预算紧张时，可以暂不加载创意增强 Pattern，但不能为了保留创意素材而牺牲动作专业性和基本执行正确性。
+
+### Index 与叶子文件职责
+
+> **Indexes are cheap routing knowledge; leaf files are expensive execution knowledge.**  
+> **索引用于选择，正文用于执行。**
+
+所有可扩展 Library 都应尽量采用轻量 index → 少量候选 → 只加载命中叶子的方式。`source-cases/`、研究档案、未命中 Profile、未命中 Pattern 默认不进入正常生成上下文。
+
+Environment Action Affordance 默认由当前场景动态推导，不建设“桌子动作库 / 椅子动作库”并默认加载；只有特殊环境确实需要独立专业知识时才占用叶子知识预算。
+
+### 与 Reference Architecture 的关系
+
+V2-29 服从全局 Reference Architecture 的 `1 task + 少量 controls + 少量 libraries + 可选 model adapter` 原则。Combat V2 能力数量可以持续增长，但**单次生成的实际 Reference 读取量应保持小而有针对性**。
+
+> **能力很多，不等于每次加载很多。**  
+> **先用索引和 Core 做判断，再为当前动作计划购买少量高价值知识上下文。**
+
 ---
 
-## 31. V2 设计原则汇总
+## 32. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -368,9 +414,10 @@ Core 规定的是 **机制与质量合同**，例如：
 16. State Machine Internalized, Choreography Externalized；Final Prompt 由正向动作语言主导；
 17. Combat 回归同时包含静态结构与真实成片质量回归，并评价 Prompt Intent → Generated Result Gap；
 18. Golden Scenario 采用 Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor，锁质量不锁创意；
-19. Combat Core 只定义跨战斗形式稳定成立的机制 / 质量合同；Modern / Wuxia / Weapon 等专项层负责具体表现，不允许专项反向污染 Core。
+19. Combat Core 只定义跨战斗形式稳定成立的机制 / 质量合同；Modern / Wuxia / Weapon 等专项层负责具体表现，不允许专项反向污染 Core；
+20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行。
 
-## 32. 已确认决策记录
+## 33. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -402,19 +449,19 @@ Core 规定的是 **机制与质量合同**，例如：
 | V2-26 | Combat Quality Benchmark | 静态结构回归 + 真实成片质量回归；评价 Prompt→成片执行差距 |
 | V2-27 | Golden Scenario Contract | Fixed Input + Quality Contract + Failure Contract + Optional Test Anchor；锁质量不锁创意 |
 | V2-28 | Core / 专项边界 | Combat Core 定义通用机制与质量合同；Modern / Wuxia / Weapon 等专项层实例化动作语言、物理尺度、节奏和 Contact 表现，禁止专项反向污染 Core |
+| V2-29 | Runtime Reference Loading | 两阶段按需加载：Core / 专项 Playbook / 轻量索引先形成 Combat Planning Context，再按默认约 2 个主要 Library Detail Slot 展开最需要的叶子知识；专业执行知识优先于创意增强知识 |
 
-## 33. 全局复盘后待继续 Grill Me 的设计树
+## 34. 全局复盘后待继续 Grill Me 的设计树
 
-1. **运行时编排与 Reference 加载预算**：V2 新增 Choreography Profile、Signature Moment Pattern、Environment Affordance、Fighting / Martial / Weapon Profile 等知识，需要确认实际按需路由链，避免运行时全量加载；
-2. **模型能力如何正式进入动作预算**：是否形成轻量 Model Capability Contract，为 Exchange Depth、Action Execution Budget、Camera Complexity 等提供能力输入；
-3. **Quick / Interactive 的运行闭环**：Interactive 已有决策链，Quick Mode 的自动推导顺序仍需确认；
-4. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
-5. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
+1. **模型能力如何正式进入动作预算**：是否形成轻量 Model Capability Contract，为 Exchange Depth、Action Execution Budget、Camera Complexity、多人 / 接触复杂度等提供能力输入；
+2. **Quick / Interactive 的运行闭环**：Interactive 已有决策链，Quick Mode 的自动推导顺序仍需确认；
+3. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
+4. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
 
-## 34. 当前阶段结论
+## 35. 当前阶段结论
 
-V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并正式建立 Combat Core 与专项实现层的边界。
+V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界与两阶段按需加载策略。
 
-下一步应优先解决 **运行时按需加载与 Reference 预算**，再进入模型能力输入、Quick / Interactive 闭环、Audio 协同和最终实现归属。
+下一步应确认 **模型能力如何以轻量、稳定的方式进入 Choreography Engine 的复杂度预算**，再进入 Quick / Interactive 闭环、Audio 协同和最终实现归属。
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
