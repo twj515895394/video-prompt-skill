@@ -34,7 +34,7 @@ Combat Choreography Intent
 → Battle Beat
 → V1 State / Continuity Validation
 → Camera Readability Budget / Camera Coordination
-→ Audio Coordination
+→ Combat Audio Choreography / Audio Coordination
 → Final Prompt Action Externalization
 ```
 
@@ -533,9 +533,84 @@ Interactive Mode 不建立另一套更复杂的动作生成逻辑，而是在同
 
 这也意味着 V2 的 Static Regression、Golden Combat Benchmark 与 Failure Contract 默认评价同一套核心动作规划能力；若需比较两种模式，测试重点是决策暴露与用户控制行为，不是两套动作引擎的质量差异。
 
+## 34. V2-32：Combat Audio Choreography / 战斗声音编排
+
+在继承 V1 `Action Choreography + Camera Choreography + Audio Choreography` 三线同步原则的基础上，V2 正式增加轻量 **Combat Audio Choreography / 战斗声音编排**，补齐 Action 与 Camera 已增强、Audio 相对滞后的问题。
+
+Combat Audio Choreography 不是新的庞大独立系统，也不是“给每个动作加一个音效”。它的职责是：**让声音成为动作因果、接触实感、节奏、身体状态和空间变化的可听证据，并把有限的强调预算集中在真正重要的节点上。**
+
+### 核心参与维度
+
+Combat Audio 至少参与以下动作质量：
+
+- **Action Phrase Rhythm**：通过脚步、衣料、呼吸、连续接触、停顿与再切入帮助观众感知 Phrase 节奏；
+- **Combat Contact Solidity**：为拳脚、摔控、钝器、刀剑 / 兵器交击、环境撞击等提供与 Contact Modality 匹配的声音证据；
+- **Body State / Breath**：呼吸、短促吐气、受压、恢复等声音反映身体状态变化，但不机械给每个动作配喘息；
+- **Weapon / Material Feedback**：根据兵器与材质关系体现切线、碰撞、偏转、摩擦、震动或落点，而不是统一使用夸张金属声；
+- **Environment / Spatial Feedback**：脚步、地面、桌椅、墙体、狭窄空间或空旷空间的反馈帮助建立空间真实性；
+- **Phrase Payoff / Signature Moment**：重要 Payoff 与 Signature Moment 可以获得更强的声音组织与落点，但声音不能代替动作本身的设计质量。
+
+### Audio Accent Density ≠ Action Density
+
+正式增加：
+
+> **Audio Accent Density ≠ Action Density.**  
+> **动作密集，不代表每一个微动作都需要独立强化音效。**
+
+高密度战斗中应建立声音层级：
+
+```text
+基础动作 / 环境声音
+→ 维持连续空间与身体存在感
+
+关键 Contact Accent
+→ 强化真正改变状态或节奏的接触
+
+Phrase Payoff Accent
+→ 标记局部动作句落点
+
+Signature Moment Accent
+→ 获得整段最高优先级的声音关注之一
+```
+
+必要时可以通过短暂声音收缩、呼吸突出、环境底噪下降或瞬时留白制造对比，使下一次关键 Contact 更有冲击；但不把“静音后重击”做成固定套路。
+
+### 不同 Contact Modality 的声音证据不同
+
+Audio 继续服从 V2-23 的 Contact Modality：
+
+- Strike：脚下发力、衣料、呼气、身体接触、失衡脚步等共同形成实感；
+- Grapple / Takedown：身体摩擦、鞋底抓地、压迫呼吸、落地 / 环境反馈更重要；
+- Blade / Edge / Thrust：空气切线、兵器路线、材质接触、偏转与距离危险感优先，不用“重拳式”闷响；
+- Weapon Clash / Parry：接触点、材质、偏转 / 摩擦、握持与脚步调整共同体现线路变化；
+- Environment Impact：身体 / 武器与具体材质的碰撞、反弹与空间共振应与画面一致。
+
+因此 Audio 与 Combat Contact Solidity 共用同一原则：**不同战斗形式共享因果要求，但不共享同一种表现模板。**
+
+### 与 Action / Camera 的关系
+
+```text
+Action Phrase / Contact / Movement
+        ↓
+Combat Audio Choreography
+        ↓
+Rhythm + Solidity + Spatial Readability + Signature Moment
+```
+
+Camera 与 Audio 都是动作质量的放大器和可读性工具，不能替代 Choreography 本身。禁止用大音效、持续轰鸣、统一低频冲击或过度声音设计掩盖动作接触不成立的问题。
+
+### 模型适配边界
+
+Combat Audio Choreography 是 Combat Core 的协同质量规则；目标模型是否支持原生音频、音效 / 对白 / BGM 的控制能力，以及具体应如何表达，由 Model Adapter 处理。模型不支持音频时，不应让 Audio 规则反向挤占核心动作 Prompt，也不因此降低 Action Choreography 质量。
+
+原则：
+
+> **声音要证明动作、组织节奏、强化关键节点，而不是替动作表演。**  
+> **高动作密度需要声音层级，不需要音效堆砌。**
+
 ---
 
-## 34. V2 设计原则汇总
+## 35. V2 设计原则汇总
 
 1. 时间轴写满不代表动作写满，必须检查 Coverage；
 2. 持续交战不代表动作丰富，必须检查 Rhythm / Phrase / Exchange Depth；
@@ -558,9 +633,10 @@ Interactive Mode 不建立另一套更复杂的动作生成逻辑，而是在同
 19. Combat Core 只定义跨战斗形式稳定成立的机制 / 质量合同；Modern / Wuxia / Weapon 等专项层负责具体表现，不允许专项反向污染 Core；
 20. Combat Reference 采用两阶段按需加载：先形成 Planning Context，再只展开少量高价值叶子知识；索引用于选择，正文用于执行；
 21. Model Combat Capability Contract 为动作 / 镜头 / 多人 / 接触复杂度预算提供模型侧输入；模型能力只能改变实现路径，不能擅自降低已确定的 Combat Intent / Coverage / 观看目标，并由 Golden Benchmark 持续校准；
-22. Quick 与 Interactive 共享同一 Combat Planning Graph、质量标准与验证链；Quick 完整规划但静默解决低风险决策，Interactive 只暴露高影响、低置信度的真实分叉。
+22. Quick 与 Interactive 共享同一 Combat Planning Graph、质量标准与验证链；Quick 完整规划但静默解决低风险决策，Interactive 只暴露高影响、低置信度的真实分叉；
+23. Combat Audio Choreography 作为轻量协同质量层参与 Phrase 节奏、Contact Solidity、身体 / 呼吸、武器材质、环境空间与 Signature Moment；Audio Accent Density 不等于 Action Density，声音强调必须有层级且不能替代动作设计。
 
-## 35. 已确认决策记录
+## 36. 已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -595,16 +671,17 @@ Interactive Mode 不建立另一套更复杂的动作生成逻辑，而是在同
 | V2-29 | Runtime Reference Loading | 两阶段按需加载：Core / 专项 Playbook / 轻量索引先形成 Combat Planning Context，再按默认约 2 个主要 Library Detail Slot 展开最需要的叶子知识；专业执行知识优先于创意增强知识 |
 | V2-30 | Model Combat Capability Contract | Model Adapter 用统一轻量能力合同向 Choreography Engine 提供 Motion / Multi-character / Contact / Spatial / Camera / Temporal 能力与 Known Risks；用于调整执行复杂度而不偷改用户导演意图，并由 Golden Benchmark 实测持续校准 |
 | V2-31 | Quick / Interactive 统一规划 | Quick 与 Interactive 共享同一 Combat Planning Graph、动作引擎、质量标准与验证链；Quick 完整规划并静默解决低风险决策，Interactive 只把高影响、低置信度分叉暴露给用户，模式不同不代表质量等级不同 |
+| V2-32 | Combat Audio Choreography | 在 V1 三线同步基础上增加轻量战斗声音编排；声音参与 Phrase 节奏、Contact 实感、身体 / 呼吸、武器材质、环境空间和 Signature Moment，强调密度不等于动作密度，不机械堆音效，也不替代动作本身 |
 
-## 36. 全局复盘后待继续 Grill Me 的设计树
+## 37. 全局复盘后待继续 Grill Me 的设计树
 
-1. **Action / Camera / Audio 三线职责平衡**：确认 V2 Audio 是继承 V1 即可，还是需要动作节奏 / Contact / Signature Moment 的专项增强；
-2. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control。
+1. **实现层归属**：最终确认哪些内容属于 Task Playbook、Control、Library、Diagnostic、Output Contract、Model Adapter，以及是否新增独立 Control；
+2. **实现映射收口**：在职责归属确认后，形成最终文件修改清单与 V2 实施边界，然后结束 Grill Me 进入实现。
 
-## 37. 当前阶段结论
+## 38. 当前阶段结论
 
-V2 已基本补齐“持续性、丰富度、角色差异、环境设计、博弈、接触实感、记忆点、镜头可读性、动作化 Prompt、成片验证”等核心质量层，并建立 Combat Core / 专项实现边界、两阶段按需加载策略、模型战斗能力接口，以及 Quick / Interactive 共享规划图的统一运行闭环。
+V2 的一级动作质量与运行架构问题已经基本收口：持续性、丰富度、角色差异、环境、战术博弈、接触实感、Signature Moment、Camera Readability、Audio Choreography、动作化 Final Prompt、真实成片 Benchmark、Combat Core / 专项边界、按需加载、模型能力接口以及 Quick / Interactive 统一规划均已有明确结论。
 
-下一步应确认 **Action / Camera / Audio 三线在 V2 中是否已经平衡，Audio 是否需要独立的 Combat 专项增强**，随后再进入最终实现层归属与 V2 设计收口。
+下一步不再继续下钻单个动作字段，而应进入最后一个一级架构分支：**把已经确认的能力落到 Task Playbook / Control / Library / Diagnostic / Output Contract / Model Adapter 的正确职责层，形成最终实现映射并收口 V2 设计。**
 
 本文件继续作为 V2 Grill Me 的单一设计记录。
