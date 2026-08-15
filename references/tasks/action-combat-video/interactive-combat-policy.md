@@ -8,6 +8,7 @@
 - System Refinement / Hybrid Refinement；
 - Character Combat Expression；
 - optional Per-Character Cinematic Combat Archetype；
+- optional Combat Rhythm / Macro Tempo Strategy；
 - Derived Choreography Direction 输入。
 
 它只负责 Interactive 决策暴露与推荐策略，不替代 `core-playbook.md`、`choreography-playbook.md`、Stage-2 Pattern Selection、Camera 或 Final Preflight。
@@ -454,6 +455,151 @@ B + 双方统一甄子丹型
 
 ---
 
+## 4A. Combat Rhythm / Tempo Gate（conditional）
+
+Combat Rhythm 回答的是：
+
+> **正在交战的过程中，速度与压力如何组织、何时自然升降。**
+
+它与以下概念正交：
+
+```text
+Active Combat Coverage = 有多少时间真的在交战
+Combat Rhythm / Tempo = 交战过程中速度怎样变化
+Camera Editing Pace = 镜头切换有多快
+```
+
+因此：
+
+- High Coverage 不等于全程高速；
+- 高速 Combat 不等于高频快切；
+- 慢速 Clinch / Grappling 可以保持很高 Pressure / Intensity。
+
+### 4A.1 Conditional Exposure
+
+本 Gate 不固定增加一轮问题。只有当多个合理节奏方向会明显改变成片，或用户明确关心“快 / 慢 / 节奏变化 / 爆发 / 喘息 / 疼痛恢复”时才暴露。
+
+如果不暴露：
+
+```text
+Macro Rhythm Strategy = Dynamic Wave
+Tempo Adaptation = Adaptive by Combat State
+```
+
+作为默认值静默进入 Runtime。
+
+如果暴露，候选使用以下**语义曲线**，不是硬时间表：
+
+A. **推荐：动态波浪型 / Dynamic Wave**
+- 中速进入 → 高速第一次交锋 → 短暂降速但保持战斗压力 → 再次高速爆发 → 收束；
+- 适合大多数电影化高手对决。
+
+B. **持续高压型 / Sustained High Pressure**
+- 开打后大部分时间维持高速连续攻防；
+- 仍允许极短的受击恢复、失衡补步、抱控转换与呼吸窗口。
+
+C. **渐进升级型 / Escalation**
+- 前段克制 / 中速 → 中段加速 → 后段最高密度爆发；
+- 适合双方逐渐确认对手实力、越打越认真。
+
+D. **爆发—压迫—再爆发 / Burst → Pressure → Burst**
+- 高速碰撞 → 较慢但沉重的贴身控制 / Clinch / Grappling 压力 → 脱控后再次高速爆发；
+- 特别适合 Striker vs Grappler、轻灵 vs 重型等速度差异明显的组合。
+
+E. **重击跌落—恢复再起 / Impact Drop → Recovery → Rebuild**
+- 高速交换 → 重击 / 踢飞 / 摔倒 / 撞墙 → 局部明显降速 → 撑地 / 调整呼吸 / 恢复支撑 → 再次加速进入；
+- 强调“受击有恢复成本”，避免角色像不会疼。
+
+F. **消耗衰减型 / Attrition / Fatigue Curve**
+- 前段速度较高，随后因体能、伤势和呼吸负担逐渐下降；
+- 后段以短促爆发替代持续高速，更适合写实、重型或较长战斗。
+
+G. **战术脉冲型 / Tactical Pulse**
+- 高速 Exchange → 很短的判断 / 绕位 / 呼吸 / 重建威胁 → 再高速进入；
+- Micro-recovery 仍处于战术威胁中，不是双方停战休息。
+
+H. **控制权交替型 / Asymmetric Tempo**
+- Local Tempo 跟随 Initiative / Advantage / Range 改变；
+- 例如女方抢主动时 High，男方抱控时 Slow-but-heavy，女方脱控后 High，男方受重击后 Low Recovery，再重新压入。
+
+I. **自定义**
+- 用户可以直接描述阶段顺序；
+- 也可以提供 High / Medium / Low 百分比，但百分比只作为软分布偏好，不自动映射成固定秒数或固定时间段。
+
+### 4A.2 Adaptive by Combat State（默认开启）
+
+无论用户选择哪一种 Macro Rhythm，默认都允许 Runtime 根据真实 Combat State 动态改变局部速度：
+
+```text
+Macro Rhythm Strategy
++ Current Range / Contact
++ Initiative / Advantage
++ Heavy Impact / Pain Reaction
++ Knockdown / Throw / Wall Impact
++ Clinch / Grappling Compression
++ Loss of Balance / Recovery Burden
++ Breath / Fatigue Accumulation
++ Separation / Reassessment
+→ Local Tempo
+```
+
+常见合法变化：
+
+```text
+高速 Striking
+→ 进入 Clinch / Grappling
+→ Tempo ↓，Pressure 可以保持 HIGH
+
+重击 / 踢飞 / 撞墙
+→ 疼痛、呼吸被打断、撑地或重新找支撑
+→ Tempo 明显下降
+→ 恢复威胁与支撑后再逐步带回速度
+```
+
+`Recovery Burden` 不是 Neutral Reset。受创后的短暂恢复应继续保留：
+
+- 疼痛反应；
+- 呼吸变化；
+- 视线重新锁定；
+- 撑地 / 扶墙 / 补步 / 调整支撑；
+- 对手仍然逼近、观察或控制空间。
+
+禁止写成：
+
+```text
+双方停下来休息
+→ 完全恢复默认姿态
+→ 再重新开打
+```
+
+除非剧情明确要求真正停战。
+
+### 4A.3 Macro Strategy 不是硬曲线
+
+用户选择 Macro Rhythm 只决定导演层节奏倾向，不锁死局部执行：
+
+```text
+Macro Strategy = directing intent
+Combat State = local tempo authority
+```
+
+只有用户明确要求“严格按指定节奏 / 时间比例执行”时，才提高固定曲线约束；正常情况下不得为了遵守曲线而无视受击、抱控、失衡、疼痛、喘息或疲劳。
+
+### 4A.4 Aftermath / Destruction 非阻塞提示
+
+当 Interactive 暴露 Physical Presentation / Aftermath 相关决策，或正在提出最后一个高价值 Combat 问题时，可以附带一条**非阻塞提示**：
+
+> 默认使用轻到中度电影化写实受创反馈；如果希望明显血腥、严重开放性伤口、大面积破衣、玻璃大规模碎裂或墙体 / 家具显著破坏，请主动说明。
+
+该提示：
+
+- 不新增一个必答问题；
+- 不产生新的 Pending User Decision；
+- 用户不回复时继续使用轻到中度写实默认；
+- 用户主动提出更高 Damage / Destruction Scale 时，再把它作为 Physical Presentation / Aftermath 的显式约束交给 Runtime。
+
+---
+
 ## 5. Combat System 与 Cinematic Archetype 必须分层
 
 ```text
@@ -489,6 +635,8 @@ System Refinement / Hybrid Refinement（if explicit）
 Per-Character Combat Expression
 Per-Character Cinematic Combat Archetype（optional）
 Physical Presentation Domain
+Combat Rhythm / Macro Tempo Strategy（if exposed; otherwise Dynamic Wave）
+Tempo Adaptation = Adaptive by Combat State（default）
 Scene / Range / Environment / Intent
 Duration / Coverage Context
 ```
@@ -539,15 +687,21 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 6. **Character-level Archetype**
    - 双方是否可以不同，也允许共享。
 
-7. **Post-Planning Handoff Boundary**
+7. **Combat Rhythm Gate**
+   - Rhythm 只有在高价值时才暴露，不固定增加 Round；
+   - 默认是否为 `Dynamic Wave + Adaptive by Combat State`；
+   - 用户选择 Macro Strategy 后，受击、疼痛、抱控、摔倒、喘息、疲劳是否仍能合法改变 Local Tempo；
+   - 是否没有把 Combat Tempo 与 Camera Cut Frequency / Active Coverage 混为一谈。
+
+8. **Post-Planning Handoff Boundary**
    - 本 Policy 完成 Interactive 角色级决策后是否没有直接进入 Stage-2 / Final Assembly；
    - 是否交回 `SKILL.md` 主路由，由 RF-22 负责真实 Direct READ / Read Evidence Gate。
 
-8. **Archetype Consumption / Realization**
+9. **Archetype Consumption / Realization**
    - 选中 Archetype 后必须在 Post-Planning Runtime 中进入对应 Runtime Bias；
    - 不能只在 Prompt 写明星名字。
 
-9. **No Static Standing Shortcut**
+10. **No Static Standing Shortcut**
    - 选择 Hybrid 或任何 Archetype 不等于自动 PASS；
    - Final Preflight 仍必须检查 Static Standing Combat / Upper-body Technique Dominance / Movement Causality。
 
@@ -559,6 +713,9 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 
 - Round 3；
 - generic `电影动作表达参考` 独立问卷；
+- 固定 Rhythm 百分比问卷；
+- 把 Macro Rhythm 曲线写成逐秒硬时间表；
+- 把 Combat Tempo 自动绑定 Camera 快切频率；
 - 明星独立 Combat Engine；
 - 每明星固定 Combo；
 - Hybrid 门派强制问卷；
@@ -570,6 +727,8 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 核心原则：
 
 > **用户决定高价值动作方向；Runtime 负责把专业动作知识补完整。**
+
+> **Macro Rhythm defines intent; Combat State controls local tempo.**
 
 > **Dynamic recommendation breadth, not a fixed questionnaire.**
 
