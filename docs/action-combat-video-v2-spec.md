@@ -1872,3 +1872,97 @@ Prompt-level Regression 增加：
 | # | 决策 | 当前结论 |
 |---|---|---|
 | V2-46 | Action Continuity ≠ Shot Continuity | Continuous Action Spine 只约束战斗动作 / 状态 / 因果不断线，不要求摄影机物理路径或单镜头连续；Combat 可动态使用 Master / Medium / Close-up / Extreme Close-up / Insert / Reaction / Impact / Re-establish 与 Cut，跨镜必须继承 Position / Direction / Contact / Momentum / Axis / Range；取消高密度 Combat 默认“中全景连续跟拍”为唯一安全解法 |
+
+## 60. V2-47：Interactive High-value Question Budget / 高价值问题预算
+
+最新 Interactive 回归确认：**问答轮数本身不是质量问题。** 对复杂动作视频，4 轮、5 轮、6 轮甚至更多都可以是合理的，只要每一轮都在减少真正会改变成片的高影响不确定性。反过来，如果为了“效率”机械追求最少问题，也可能让系统静默猜掉用户真正关心的导演分叉。
+
+因此正式确认：
+
+> **High-value Questions, Not Minimum Questions.**  
+> **追求高价值问题覆盖，不追求最少问题。**
+
+### 60.1 动态轮数，不设固定完成轮数
+
+Interactive 不设置“必须问 4 轮 / 6 轮”等固定完成模板。
+
+每次准备继续追问前，当前候选问题必须同时满足：
+
+```text
+用户尚未明确
++ 系统无法高置信度代替用户决定
++ 不同答案会显著改变最终视频
++ 该问题优先级高于剩余未确认项
+```
+
+只有同时满足，才值得继续问。
+
+因此：
+
+- 可能 2–3 轮已经足够；
+- 4–6 轮在复杂动作 / 叙事任务中完全合理；
+- 必要时可以继续到更深轮次；
+- 只要当前需求已经形成完整可执行导演方案，就应立即收口；
+- 不得为了走完整个 Planning Graph 或“显得专业”而继续机械追问。
+
+### 60.2 10 轮 Safety Cap
+
+Interactive 默认设置 **最多 10 轮追问** 作为上限保护。
+
+这不是目标轮数，也不是必须问满：
+
+- 前 4–6 轮甚至更少已经足够时，立即提前收口；
+- 到达第 10 轮后，不再新增用户问题；
+- 剩余低风险 / 次要不确定项按当前上下文与系统推荐静默补全；
+- 如果仍有会导致方案无法执行的核心冲突，原则上应在更早的高价值问题中暴露，而不是拖到第 10 轮之后。
+
+### 60.3 收口由需求完整度驱动
+
+Interactive 的真正完成条件是：
+
+> **当前已确认信息是否足以形成完整、可执行、符合用户意图的导演方案。**
+
+不是：
+
+- 问到了某个固定轮数；
+- Planning Graph 每个节点都问过；
+- Camera / Contact / Kinetic / Preflight 等内部质量机制都让用户回答过。
+
+如果剩余节点可以高置信度静默补全，或者继续追问只影响轻微细节，应立即收口并进入完整内部 Planning / Prompt Assembly / Final Preflight。
+
+### 60.4 与 Quick / Interactive 的关系
+
+Quick 与 Interactive 继续共享同一 Planning Graph 与质量上限：
+
+```text
+Quick
+→ Full Planning + Silent Resolution
+
+Interactive
+→ Full Planning + Selective High-value Decision Exposure
+```
+
+Interactive 的价值是让用户参与真正重要的创作分叉，不是通过更多问题提高质量等级，也不是通过更少问题提高效率指标。
+
+### 60.5 Regression 观察
+
+Interactive Regression 不以“问题轮数多少”直接判 PASS / FAIL，而观察：
+
+- 每一轮是否对应真实高影响分叉；
+- 是否存在重复询问；
+- 是否把基础质量机制误做成用户问卷；
+- 需求已经完整后是否仍继续追问；
+- 是否为了减少问题而跳过用户必须决定的重要分叉；
+- 是否在 10 轮 Safety Cap 内自然收口。
+
+原则：
+
+> **问题可以多，但不能低价值。**  
+> **需求一旦完整，就停止追问。**  
+> **10 轮是防止无限追问的护栏，不是交互目标。**
+
+## 61. 实测反馈增量决策记录（八）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-47 | Interactive High-value Question Budget | Interactive 不追求最少问题、不设固定完成轮数；每轮必须是真正高影响、当前低置信度的用户决策；默认最多 10 轮作为 Safety Cap，若前 4–6 轮或更少已形成完整可执行需求则立即收口，达到上限后剩余低风险项静默补全 |
