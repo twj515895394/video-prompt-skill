@@ -39,6 +39,7 @@ Confirmed Per-Character Planning Context
 → Action–Camera Handoff（沿用现有 Runtime，不修改）
 → Prompt Assembly
 → Serialization Deduplication
+→ Adapter-output Concrete Technique Final Scan
 → Final Preflight
 ```
 
@@ -480,6 +481,64 @@ Stage-2 的 Pattern / Technique 名称是**动作生成知识**，不是可直�
 
 必须回到当前 System + State + Range + Pattern Detail，选定一个具体动作，不得靠增加更多形容词修复。
 
+#### Category-disguised Action / Mechanic Ambiguity Scan
+
+只检查**真正承担 Active Combat 因果的动作句**，不误伤角色风格摘要。例如人物总述里写“偏好低线腿法 / 贴身控制”可以合法存在；但一旦进入具体 Exchange，就不能再把这种类别词当成已经发生的动作。
+
+下列表达即使已经带有目标或结果，仍然属于未完成 Technique Resolution：
+
+```text
+低线干扰他的承重小腿
+用腿部绊阻破坏她的支撑
+用身体压迫改变他的朝向
+近身控制他的上身
+用下肢破坏平衡
+以全身力量截入他的路线
+```
+
+原因是它们只给出了：
+
+```text
+身体区域 / 高层类别
++ 意图 / 结果
+```
+
+但没有收敛为一个可唯一执行的 Contact Mechanic。
+
+执行 **Mechanic Ambiguity Test**：
+
+> 如果同一句文字仍可以在不改变其表面语义的前提下，被实现成两个或更多明显不同的动作机制（例如踢、扫、勾、踩、外绊、内绊等），则该 Technique 仍未 resolved。
+
+对主动改变对手支撑 / 路线 / 身体关系的 Contact Action，至少应能读出当前必要组合：
+
+```text
+具体接触部位 / 接触面
++ 一个明确动作动词 / 接触机制
++ 明确目标部位或身体关系
++ 可见即时结果
+```
+
+注意：
+
+- `腿部`、`身体`、`低线` 是区域 / 类别，不等于具体接触面；
+- `干扰`、`控制`、`破坏支撑`、`改变朝向` 是意图 / 结果，不足以单独作为动作 Head；
+- `绊阻` 如果仍未说明是哪个接触部位以什么方向建立阻挡 / 勾带关系，也可能继续过于宽泛。
+
+示例：
+
+```text
+FAIL：女方低线干扰男方的承重小腿，迫使他换支撑。
+PASS：女方用前脚内侧横扫男方承重小腿外侧，迫使他跨步换支撑。
+
+FAIL：男方用腿部绊阻破坏女方支撑，使她短暂失衡。
+PASS：男方用外侧脚勾住女方承重脚踝向内带，迫使她单脚补步稳住身体。
+
+FAIL：男方用身体压迫改变女方朝向。
+PASS：男方肩胸贴住女方上臂与肩侧向前斜推，迫使她肩线转向玻璃隔断。
+```
+
+这里的 PASS 只是“具体程度”示例，不建立固定 Combo 或动作字典；Runtime 仍必须根据已确认 Combat System、Current State、Range、Contact 与 Pattern Detail 选择当前真正合理的动作。
+
 #### 最小可执行语义
 
 普通 Active Technique 至少应形成：
@@ -711,6 +770,8 @@ Failure 可判：
 持续换位
 全身连动短击
 短促身体控制
+低线干扰
+腿部绊阻
 ```
 
 如果删除抽象形容词后仍不知道人物具体做了什么，Phrase 不可执行。
@@ -760,12 +821,15 @@ Medium / Low Phrase 可以更短，但不能重新模糊。
 某种低线动作……
 ```
 
-也禁止把已经收敛的 Technique 再压回动作类别：
+也禁止把已经收敛的 Technique 再压回动作类别或“类别 + 结果”伪具体表达：
 
 ```text
 全身连动短击……
 短促身体控制……
 低线腿法扰乱……
+低线干扰承重小腿……
+腿部绊阻破坏支撑……
+身体压迫改变朝向……
 破平衡反制……
 用身体改变朝向……
 ```
@@ -873,6 +937,67 @@ Failure：
 
 > **Unrequested Content-category Negative Injection**
 
+### 12.2 Adapter-output Concrete Technique Final Scan
+
+`Concrete Technique Resolution PASS` 不能只看 Stage-2 / Choreography 中间态。Prompt Assembly、压缩或 Model Adapter 可能把已经具体的动作重新泛化，所以在**实际要交付给用户的 Final Prompt**上必须再执行一次 Active Technique Scan。
+
+扫描范围：
+
+- 只扫描真正承担攻击、防守、抱控、摔控、支撑破坏、路线改变、主动权转移的 Action Clause；
+- 不把人物总述里的“偏好低线腿法 / 擅长贴身控制 / 强调全身连动”等风格摘要误判为失败；
+- 不要求 Camera / Audio / Aftermath 描述通过 Technique Head Test。
+
+对每个 Active Technique Clause 依次问：
+
+```text
+1. 是否有明确动作 Head？
+2. 是否有实际接触面 / 身体关系，而不只是“腿部 / 身体 / 低线 / 近身”？
+3. 是否有明确目标 / 接触对象？
+4. 是否有即时可见响应 / 状态后果？
+5. 该句是否仍需要视频模型自己在多个不同 Mechanic 中任选一个，才能知道角色到底怎么做？
+```
+
+第 5 项只要为 `YES`，即使前四项出现了一部分信息，也不得 PASS。
+
+重点拦截：
+
+```text
+低线干扰 + 目标
+腿部绊阻 + 结果
+身体压迫 + 方向变化
+近身控制 + 身体部位
+全身连动 + 反制结果
+```
+
+如果这些句子仍没有具体 Contact Mechanic，判：
+
+> **Concrete Technique Serialization Leakage**
+
+修复路径必须是**局部替换，而不是扩动作量**：
+
+```text
+定位当前漏网 Action Clause
+→ 回看已确认 Combat System / Current State / Stage-2 Pattern Detail
+→ 选择一个已经合法的具体 Contact Mechanic
+→ 只重写当前句的动作 Head / 接触关系
+→ 保留原有 Result / Continuation / Camera Handoff
+→ 不新增 Exchange
+→ 不改变 Advantage / Ending
+→ 不机械增加生物力学细节
+```
+
+例如：
+
+```text
+“低线干扰他的承重小腿，迫使他换支撑”
+→ 只把“低线干扰”解析成一个具体动作，不改后面的换支撑结果与 Action Spine。
+
+“用腿部绊阻破坏她的支撑，形成摔控威胁”
+→ 只把“腿部绊阻”解析成当前 Grappling State 下的具体脚 / 小腿接触关系，不新增第二个摔法。
+```
+
+Final Scan 的目标是**防止具体动作在序列化最后一公里重新变抽象**，不是扩大 Prompt。
+
 ---
 
 ## 13. Camera Runtime Freeze
@@ -909,7 +1034,7 @@ Failure：
 6. **Stage-2 Traceability**：Regression / Debug 是否存在 Gap → Slot → Pattern → Phrase 证据？
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
-9. **Concrete Technique Resolution**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作，是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法` 等 Abstract Action Head？
+9. **Concrete Technique Resolution + Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后实际 Final Prompt 是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法 / 低线干扰承重小腿 / 腿部绊阻破坏支撑 / 身体压迫改变朝向` 等 Abstract / Category-disguised Action Head？是否仍要求模型在多个不同 Mechanic 中自行任选？
 10. **Impact Aftermath Lifetime / Continuity**：明显有效的受击、抓扯、摔撞或环境碰撞是否产生了与部位、力度、材质和 Physical Presentation 相匹配的合理后果；是否正确区分 Transient / Persistent / Progressive；持久后果是否无因 Reset；瞬态振动 / 回响 / 痛缩是否又无理由持续到很后面？
 11. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
 12. **Exchange Density**：是否因过度展开只剩少量大动作？
@@ -930,6 +1055,7 @@ Failure：
 - Body Method Engine；
 - 明星独立 Combat Engine；
 - 固定 Combo Library；
+- 固定 Technique 动词白名单 / 固定招式字典；
 - 固定动作数 / Exchange 数；
 - 固定腿法 / 换位次数；
 - 固定受伤数量 / 固定流血次数 / 每击必留伤；
@@ -937,4 +1063,4 @@ Failure：
 - 第二套 Camera Runtime；
 - 固定 Skeleton 模板。
 
-本轮目标是修复消费顺序、选择权重、动作密度、Aftermath 生命周期、Final Negative 边界与序列化，不是增加系统层数。
+本轮目标是修复消费顺序、选择权重、动作密度、Concrete Technique 最终序列化、Aftermath 生命周期、Final Negative 边界与序列化，不是增加系统层数。
