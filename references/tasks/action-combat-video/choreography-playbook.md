@@ -25,14 +25,18 @@
 
 ## 2. Combat Planning Graph + Planning Gate
 
-Quick 与 Interactive 共用同一规划图：
+Quick 与 Interactive 共用同一个下游 Choreography Engine；本 MVP 只改 Interactive 上游决策来源。
+
+### Interactive MVP Planning Graph
 
 ```text
 Combat Intent / 观看目标
-→ Combat Branch
-→ Fighting Direction / 怎么打（用户明确、交互确认或静默推导）
+→ Per-Character Combat System / System Refinement
+→ Per-Character Combat Expression
+→ Physical Presentation Domain（必要时条件暴露）
+→ Derived Choreography Direction（Runtime 自动派生）
+→ legacy Fighting Direction execution slot（兼容下游，不再询问用户）
 → Active Combat Coverage
-→ Combat Character Identity
 → Contact Modality / Environment Affordance
 → Camera Intent
 → Model Combat Capability Input（如有）
@@ -45,40 +49,55 @@ Combat Intent / 观看目标
 → Final Prompt Externalization
 ```
 
+Quick Mode 暂保留 legacy Planning，等待本轮 Interactive 回归通过后再迁移。
+
 ### Planning Gate
 
 进入具体 Phrase 设计前必须检查：
 
-- Fighting Direction 是否已经明确；Interactive 中若用户未明确且存在多个会显著改变动作内容的方向，应优先直接询问“怎么打”；
-- 原“核心动作风格 / Cinematic Choreography Profile”不得再作为另一轮高度重复交互；其 Rhythm / Realism / Impact / Physical Scale 等价值并入 Fighting Direction 的执行属性；
-- Coverage / Character Identity 等上游高影响决策是否已经足够执行；
-- Character Identity 是否动态推导，而不是按职业、性别、年龄、体型直接套模板；
+- Interactive Round 1 是否完成关键 Combatant 的 Combat System Selection 或 System Refinement；
+- Interactive Round 2 是否完成关键 Combatant 的 Combat Expression Selection 或 Refinement；
+- Character / Narrative Identity 是否被职业、性别、年龄、体型、外貌错误映射成 Combat System；
+- Physical Presentation Domain 是否存在真正必须询问的高价值歧义；
+- Derived Choreography Direction 是否从角色级 System / Refinement / Expression 与场景状态派生，而不是重新覆盖用户确认；
+- Coverage 等上游高影响决策是否已经足够执行；
 - Interactive 是否把真正改变成片的分叉暴露给用户，而不是浪费问题在可自动推导的 Contact / Sufficiency / Camera 基础质量上；
 - 目标战斗结果是否没有过早锁死整个编排路径；
 - Stage-2 是否按当前 Planning / Phrase Gap 读取真正需要的 Movement / Technique / Transition Knowledge，而不是只形成高层风格标签。
 
-Planning Gate 失败时先内部重排规划，不默认继续追问用户。
+Planning Gate 失败时先内部重排规划，不默认继续追问用户。用户明确要求“先实现 / 先测试 / 停止细化”时，不继续扩低价值流派细节。
 
 ---
 
-## 3. Fighting Direction / Choreography Execution Direction
+## 3. Derived Choreography Direction / Choreography Execution Direction
 
-Fighting Direction 回答的是：**这场战斗整体“怎么打”**。
+Interactive 中旧 `Fighting Direction / 怎么打` 不再作为独立用户决策节点。
 
-它是上游创作方向，不是固定门派树，也不是把具体动作链交给用户设计。Interactive 中只在用户未明确、且不同打法会显著改变 Movement / Technique / Range / Physical Scale 时条件暴露；Quick 中静默推导基线。
+Runtime 自动综合：
 
-Fighting Direction 应至少影响以下内部执行属性：
+```text
+Per-Character Combat System
++ System Refinement
++ Per-Character Combat Expression
++ Physical Presentation Domain
++ Scene / Range / Environment / Intent
+→ Derived Choreography Direction
+```
+
+MVP 阶段把 `Derived Choreography Direction` 临时写入 legacy `Fighting Direction` execution slot，以继续使用现有 Stage-2 / Prompt Assembly / Camera 等下游规则。
+
+Derived Choreography Direction 应至少影响：
 
 - Movement 倾向：正面对线 / 侧切 / 绕位 / Level Change / Ground↔Air 等；
 - Technique 倾向：Strike / Kick / Grapple / Throw / Weapon 等；
 - Range / Level 倾向；
-- Physical Scale：realistic / martial-grounded / wuxia cinematic；
+- Physical Scale：由独立 Physical Presentation Domain 约束；
 - Rhythm / Realism / Impact / Contact 气质；
 - Environment / Signature Moment 的合理方向。
 
-可使用的方向包括现代职业杀手近身、MMA、硬派短打、身法角度争夺、摔控反摔、腿法全身攻防、中国武术电影化近身、武侠轻功兵器等；这些是候选空间，不是固定分类表。
+例如“灵活身法与角度争夺”“拳摔压迫”“后发反制型连续换轴”可以成为派生执行方向，但不能重新包装成用户问卷。
 
-原先的“写实战术型 / 凌厉电影动作型 / 高手连续攻防型 / 重型硬派型 / 环境技巧型 / 武侠流动拆招型”等内容保留为**执行属性 / Profile evidence**，不再与 Fighting Direction 形成两套独立用户决策节点。
+职业身份不能直接生成“现代职业杀手短打”并覆盖真实 Combat System；太极、MMA、咏春、八极等 System 也不能自动决定 Modern / Wuxia Physical Domain。
 
 具体稳定来源知识仍可由 `combat-choreography-profiles`、Fighting / Martial / Weapon Library 提供，但最终必须落实到动作构造，而不是只写标签。
 
@@ -184,7 +203,7 @@ Movement 不能退化为“给上肢动作补一句脚步”；如果它真正�
 
 ### 5.3 抽象动作词只能做摘要，不能替代关键动作
 
-以下表达可以用于 Fighting Direction / Rhythm 摘要、次要过渡或局部压缩，但不能单独承担关键 Active Exchange：
+以下表达可以用于 Derived Choreography Direction / Rhythm 摘要、次要过渡或局部压缩，但不能单独承担关键 Active Exchange：
 
 - 连续攻击；
 - 连续格挡；
@@ -278,26 +297,31 @@ Phrase-to-Phrase 同样优先使用前一 Payoff 直接启动下一 Phrase。
 
 ---
 
-## 7. Combat Character Identity
+## 7. Combat Character Identity / System / Expression
 
-Character Identity 回答“当前这个角色怎么打”，动态来源：
+Interactive MVP 中角色层至少区分：
 
 ```text
-人物明确设定
-+ 能力 / 经验 / 体型（如已知）
-+ 性格 / 行为倾向（如已知）
-+ Combat Intent
-+ 对手与环境
-+ Fighting Direction
-+ 当前 State
-→ Character Identity
+Character / Narrative Identity
++ Combat System / Technique Backbone
++ System Refinement
++ Combat Expression
++ Current State
+→ 可见角色打法
 ```
 
-至少让角色在 Movement / Attack / Defense-Counter / Rhythm 中存在可见差异，再按需选择 Fighting / Martial / Weapon Profile。
+- Character / Narrative Identity 回答“这个人是谁”；
+- Combat System 回答“主要会什么体系”；
+- System Refinement 回答“这套体系主要怎么用”；
+- Combat Expression 回答“这个人以什么气质和战斗决策倾向使用它”。
 
-> **职业 ≠ Character Identity ≠ Fighting Profile。**
+Combat Expression 可以影响主动压迫、诱导、后发反制、风险偏好、抢主动与再进入倾向，但不能直接定义固定 Combo。
 
-角色差异不应只写成“女方快、男方重”这类形容词，而应进入具体动作选择与主动权获取方式。
+> **职业 ≠ Combat System ≠ Combat Expression ≠ Fighting Profile。**
+
+角色差异不应只写成“女方快、男方重”这类形容词，而应进入具体动作选择、状态改变与主动权获取方式。
+
+每个关键角色允许 `1 Primary System + 0~1 Secondary System`。像 MMA 这种完整混合体系可作为 Primary；体系内部拳摔 / Wrestling / 站立偏向属于 Refinement，真正跨体系才进入 Secondary。
 
 ---
 
@@ -446,7 +470,9 @@ action-combat-video/index
 → Combat Planning Context
 ```
 
-Planning Context 至少保留当前需要的 Fighting Direction 及其执行属性。不要在正常运行加载维护文档、研究档案或未命中的叶子知识。
+Interactive Planning Context 至少保留：角色级 Combat System / Refinement / Expression、Physical Presentation Domain 与 Derived Choreography Direction。legacy Fighting Direction 只作为兼容执行槽。
+
+不要在正常运行加载维护文档、研究档案或未命中的叶子知识。
 
 ### Stage 2：Execution Knowledge — Gap-driven
 
@@ -496,7 +522,7 @@ Relevant Pattern Detail
 → Prompt Assembly
 ```
 
-如果 Routing 正确、Pattern 实际读取、Fighting Direction 已兑现、Granularity 正确、Assembly 保真、Preflight 有效，但相同 Golden Scenario 仍持续动作贫乏 / 上肢主导，才进入更大的 Concrete Choreography Knowledge Coverage Audit。
+如果 Routing 正确、Pattern 实际读取、Derived Choreography Direction 已兑现、Granularity 正确、Assembly 保真、Preflight 有效，但相同 Golden Scenario 仍持续动作贫乏 / 上肢主导，才进入更大的 Concrete Choreography Knowledge Coverage Audit。
 
 > **Indexes are routing knowledge; leaf files are execution knowledge.**  
 > **按缺口补知识，而不是按目录读知识。**
@@ -548,7 +574,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 ### B. Executable Action Granularity
 
 - 关键数秒是否主要由抽象动作词承担；
-- Character Identity 是否只有打法标签，没有具体动作证据；
+- 角色 System / Refinement / Expression 是否只有标签，没有具体动作 / Initiative 证据；
 - Action Phrase 是否能看出具体动作入口、即时响应、Footwork / Axis / Range / Position 后果和下一动作入口；
 - Camera / Audio 是否比身体动作本身写得更具体。
 
@@ -563,8 +589,6 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 即使 Prompt 出现“转髋 / 脚步 / 降低重心”等词，如果这些只服务上肢控制、没有改变战斗空间或下一动作入口，也不能判通过。
 
-触发失败：**Upper-body Combat Lock / Kinetic Underfill**、**Static Standing Combat / Upper-body Technique Dominance**。
-
 ### D. Temporal Continuity + Choreography Richness Preservation
 
 - 长时间窗是否只有一个宏动作；
@@ -576,16 +600,18 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 失败时优先重新分配 High / Medium / Low 信息深度和拆分连续 Phrase，不使用固定动作数量配额。
 
-触发失败：**Temporal Combat Stretch / Action Underpacking**、**Action Segmentation / Excessive Neutral Reset**、**Timeline-induced Action Segmentation**、**Choreography Richness Underfill**。
+### E. Character Decision Realization / Derived Direction
 
-### E. Fighting Direction Realization
+检查：
 
-如果 Fighting Direction 已由用户明确或 Interactive 确认：
+- 用户确认的 Primary / Secondary Combat System 是否真实可见；
+- System Refinement 是否真实改变 Technique / Entry / Range / State-change 逻辑；
+- Combat Expression 是否影响主动 / 反制、节奏和再进入方式，但没有取代 Technique；
+- Character / Narrative Identity 是否没有偷偷重写 Combat System；
+- Derived Choreography Direction 是否真实体现角色级输入，而不是只写顶部标签；
+- legacy Fighting Direction execution slot 是否只承担兼容执行，没有重新成为用户创作真源。
 
-- Final Action Language 是否真实体现它在 Movement / Technique / Range / Level / Physical Scale 上的差异；
-- 是否只在 Prompt 顶部写了一个风格标签，实际动作骨架仍与其他方向基本相同。
-
-未兑现时 FAIL，并回到 Pattern Selection / Concrete Phrase 重写；不重新向用户询问同一决策。
+未兑现时 FAIL，并回到角色上下文合成 / Pattern Selection / Concrete Phrase 重写；不重新向用户询问已经确认的同一决策。
 
 ### F. Character / Tactical / Advantage / Initiative
 
@@ -621,7 +647,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 ```text
 定位失败维度
-→ 优先重写 Pattern Selection / Concrete Action Phrase / Action Spine / Camera Coverage / Prompt Assembly
+→ 优先重写角色上下文合成 / Pattern Selection / Concrete Action Phrase / Action Spine / Camera Coverage / Prompt Assembly
 → 必要时重新分配执行预算
 → 再次 Preflight
 → 通过后才交付
@@ -634,8 +660,10 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 ## 20. 边界与最终原则
 
 - Core 是 State / Continuity 真源；
-- Choreography 不复制专项动作知识；
-- Modern / Wuxia 负责具体表现与物理尺度；
+- Character / Narrative Identity、Combat System / Refinement、Combat Expression 必须分层；
+- Derived Choreography Direction 是 Runtime 派生结果，不是 Interactive 独立用户问题；
+- legacy Fighting Direction 只作为 MVP 兼容执行槽；
+- Modern / Wuxia 当前继续提供具体表现与物理尺度知识，但不得由单一 Combat System 或职业身份自动决定；
 - Fighting / Martial / Weapon Libraries 与 Pattern Set 提供专业可组合执行知识；
 - Controls 提供通用 Camera / Motion / Spatial / Audio / Prompt Assembly；
 - Model Adapter 只改变执行路径与序列化，不改导演意图。
