@@ -64,7 +64,7 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 ```text
 当前问题的 Primary Planning Node 是什么？
 → 推荐是否真正只在解决这个节点？
-→ 是否提前锁死尚未确认的 Character Identity / Camera / Ending / Result？
+→ 是否提前锁死尚未确认的 Combat System / Combat Expression / Camera / Ending / Result？
 ```
 
 允许：
@@ -75,12 +75,12 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 不允许：
 
-- 问 Fighting Direction，却同时替用户决定双方具体 Character Identity、最终谁占优和 Camera Coverage；
-- 问 Character Identity，却顺手把 Ending 或 Camera 定死；
-- 问 Camera Base Viewing Priority，却偷偷改变用户已经确认的 Fighting Direction / Technique Identity / 战斗结果；
+- 问 Combat System，却同时替用户决定 Combat Expression、最终谁占优和 Camera Coverage；
+- 问 Combat Expression，却顺手把已经确认的 Combat System 改成另一套体系；
+- 问 Camera Base Viewing Priority，却偷偷改变用户已经确认的 Combat System / Combat Expression / Technique Identity / 战斗结果；
 - 问 Camera Hard Constraint，却顺手替用户决定 Base Viewing Priority。
 
-如果 downstream 节点已经由用户输入高置信度明确，则直接继承；如果仍有多个高价值方向，应留到后续按 High-value Question Budget 判断是否单独暴露。
+如果 downstream 节点已经由用户输入高置信度明确，则直接继承或进入该节点的 Refinement；如果仍有多个高价值方向，应留到后续按 High-value Question Budget 判断是否单独暴露。
 
 ---
 
@@ -88,33 +88,36 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 Action Combat 与 Quick Mode 共用同一 Combat Planning Graph、Choreography Engine、State / Continuity Engine、Final Preflight Gate 和质量上限。
 
-Interactive 只负责 **Decision Exposure Policy / 决策暴露策略**：
+Interactive 负责 **Decision Exposure Policy / 决策暴露策略**。本 MVP 对角色打斗设计采用两个固定核心 Planning Node：
 
 ```text
-用户已明确
-→ 直接继承
-
-高置信度 + 低风险
-→ 静默补全
-
-多个方向都合理
-+ 会显著改变成片
-+ 当前置信度不足
-→ 暴露当前唯一最关键分叉
+Round 1：Combat System / Technique Backbone
+Round 2：Combat Expression / Performance Identity
 ```
+
+“固定”指两个决策节点必须被处理，不代表重复询问已经明确的事实：
+
+```text
+Unknown → Select
+Known → Refine
+```
+
+其他节点仍遵循高价值条件暴露原则。
 
 ### Combat Planning Gate
 
 Combat 追问前先内部检查：
 
 - 当前真正的上游高影响分叉是什么；
-- **用户是否已经明确“怎么打 / Fighting Direction”；若未明确且不同打法会显著改变动作内容，应优先考虑直接询问，而不是复杂自动猜测；**
-- Character Identity 是否需要用户参与决定，还是可以动态推导；
-- 当前问题是否比尚未解决的 Character Identity / Camera / Ending 更重要；
+- 每个关键 Combatant 的 Combat System 是否已经明确；如果明确，Round 1 应转入 System Refinement，而不是重复确认；
+- 每个关键 Combatant 的 Combat Expression 是否已经明确；如果明确，Round 2 应转入 Expression Refinement；
+- Character / Narrative Identity 是否被错误映射成固定 Combat System；
+- Physical Presentation Domain 是否存在真正高价值歧义；
+- 当前问题是否比尚未解决的 Camera / Ending 更重要；
 - 是否把 Contact Solidity、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制误做成问卷；
 - 当前推荐是否把职业、性别、年龄、外貌或体型直接转换成固定打法；
 - 当前推荐是否夹带未确认的 downstream 决策；
-- **如果当前信息已经足以完整规划 Combat Sequence，是否应立即收口而不是继续沿 Planning Graph 逐节点发问。**
+- **如果用户明确要求停止深挖、先实现 / 先测试 / 直接生成，应立即收口当前设计，不继续追问低价值细节。**
 
 如果当前问题只是系统应该自己做好的质量机制，不问用户。
 
@@ -124,61 +127,237 @@ Combat 追问前先内部检查：
 
 ```text
 核心 Combat Intent / 观看目标
-→ Combat Branch（Modern / Wuxia 等）
-→ Fighting Direction / 怎么打（条件暴露）
+→ Round 1：Per-Character Combat System / System Refinement
+→ Round 2：Per-Character Combat Expression / Expression Refinement
+→ Physical Presentation Domain（只有存在真实高价值歧义时条件暴露）
+→ Derived Choreography Direction（Runtime 自动推导，不询问）
 → Active Combat Coverage（只有存在真实方向分叉时）
-→ Combat Character Identity 的关键差异
 → Environment / Camera Base Viewing Priority（只有会明显改变成片时）
 → Camera Hard Constraint（只在用户明确提出或它本身成为高价值分叉时）
 → 战斗结果 / 收尾
 ```
 
-这是**依赖顺序，不是固定问卷顺序**。任一节点如果已经由用户明确、可高置信度自动补全，或不会显著改变成片，应直接跳过。
+这是**依赖顺序，不是所有节点都必须逐轮询问的固定问卷**。Combat System 与 Combat Expression 是本 MVP 的两个核心角色打斗节点；Physical Presentation Domain、Camera、Ending 等仍按价值条件暴露。
 
 `Camera Hard Constraint` 不因为出现在依赖图中就自动增加一轮问题。绝大多数任务默认没有特殊 Hard Constraint；只有用户明确说“一镜到底 / 固定机位 / 不要切镜”等，或不同 Constraint 会根本改变摄影实现时，才进入该节点。
 
-### Fighting Direction / “怎么打”的条件暴露
+### Round 1：Combat System / Technique Backbone
 
-`Fighting Direction` 取代原本独立询问的“核心动作风格 / Choreography Profile”。节奏、写实度、重量感、电影化程度等仍可作为执行属性，但不再额外占一轮高度重复的问题。
+`Combat System` 回答的是：
 
-满足以下逻辑时，Fighting Direction 可以成为当前唯一问题：
+> **每个关键角色主要使用什么格斗 / 武术体系解决战斗。**
+
+它属于角色级属性，不属于整场统一标签。
+
+允许：
 
 ```text
-用户尚未明确 Fighting Direction
-+ 当前 Combat Branch / 场景 / 人物关系已基本可判断
-+ 存在至少两个明显不同、都合理的打法方向
-+ 不同选择会显著改变 Movement / Technique / Range / Physical Scale / 成片动作内容
-→ 直接询问“你希望这场战斗具体怎么打？”
+太极 vs 太极
+太极 vs MMA
+咏春 vs 八极
+拳击 vs 泰拳
 ```
 
-如果用户已经明确“咏春”“MMA”“现代职业杀手近身格斗”“轻功剑战”等，直接继承，不重复询问。
+禁止把以下 Character / Narrative Identity 当成 Combat System：
 
-#### 候选答案规则
+```text
+职业杀手
+特工
+警察
+黑帮打手
+武术宗师
+年轻女性
+年长男性
+```
 
-候选方向必须足够覆盖真实打法空间，不能只有 2–3 个粗糙选项，也不能为了凑数输出一堆同义项。
+因此候选池应优先出现真正的 Technique Backbone，例如：
 
-- **至少 5 个有实质差异的候选方向；**
-- 正常推荐 **6–8 个**，复杂场景可到 **10 个**；
-- 始终允许“自定义 / 直接描述打法”；
-- 每个选项必须在动作层面有真实差异，例如 Range、Movement、Technique、Physical Scale、摔控比例、腿法比例、高低位 / 路线变化或环境使用方式；
-- 推荐项基于场景、任务和用户输入，不按性别、年龄、体型、职业做刻板映射。
-
-可动态使用的方向示例包括：
-
-- 现代职业杀手近身格斗：短打、截击、低线攻击、摔控、快速换位；
-- 中国武术电影化近身格斗：身法、步法、腿法、高低位、转身绕位更丰富；
-- 综合格斗 / MMA：拳肘膝腿 + 抱摔 / 反摔，站立与低位转换；
-- 硬派实战短打：动作短、重、直接，强调打断、失衡与碰撞；
-- 灵活身法 / 角度争夺：切线、绕侧、换轴、Level Change、Route Change；
-- 摔控 / 反摔：进入、破平衡、摔投、失败反摔、再进入；
-- 腿法 / 全身攻防：低线腿法、踢蹬扫与步法、上肢动作串联；
-- 电影化混合动作：更强 Movement、环境借力与 Signature Moment，但仍受当前 Physical Scale 约束；
-- 明确武术 / 格斗体系：如咏春、八极、泰拳、拳击、柔术等；
+- MMA；
+- 太极；
+- 咏春；
+- 八极；
+- 泰拳；
+- 拳击；
+- 散打；
+- 摔跤 / Wrestling；
+- 柔术 / BJJ；
+- 其他当前场景真正合理的体系；
 - 自定义。
 
-这些是候选池，不是固定十选一模板。实际询问应按当前场景筛选 5–10 个互有明显差异的方向。
+这些是动态候选池，不是固定十选一模板。可以按场景筛选，但**不得把“现代职业杀手短打”与 MMA / 太极并列为同级 Combat System**。
 
-用户只需要决定**打法方向**，不需要设计具体动作链；后续 Runtime 负责把方向展开成 Movement + Technique + Transition，并保证连续性、颗粒度与可执行性。
+#### Selection-or-Refinement
+
+如果用户没有明确体系：
+
+```text
+→ Selection
+→ 一轮内定义所有关键 Combatant 的 Combat System
+```
+
+如果用户已经明确体系：
+
+```text
+→ Refinement
+→ 不重复确认体系名称
+→ 询问当前体系在这个角色上的具体技术实现方向
+```
+
+例如：
+
+```text
+用户已给：女方太极，男方 MMA
+
+Round 1 可精炼：
+女方太极偏听劲 / 借力 / 粘随 / 实战发劲中的哪种方向？
+男方 MMA 偏拳腿 / 拳摔 / Clinch / Counter 中的哪种方向？
+```
+
+一轮仍然只解决 `Combat System / System Refinement` 这个 Primary Node。
+
+#### 1v1 / 多人战轮次规则
+
+1v1：
+
+- 同一轮同时定义双方 System / Refinement；
+- 不机械拆成“女方一轮 + 男方一轮”。
+
+1vN / 多人战：
+
+- 主角独立；
+- 关键对手独立；
+- 次要敌人允许按战斗功能分组共享；
+- 禁止角色数量直接等于交互轮数。
+
+#### Primary + Secondary
+
+每个关键角色允许：
+
+```text
+Primary Combat System：1 个
+Secondary Combat System：0~1 个
+```
+
+Primary 决定主要动作语言；Secondary 只在合适 Range / Contact / Tactical State 下介入，不得随机高频换体系。
+
+像 MMA 这种完整混合体系本身可以作为 Primary。MMA 内部的拳摔、站立、Wrestling 倾向优先作为 System Refinement；只有真正跨体系增加另一套技术语言时，才使用 Secondary System。
+
+### Round 2：Combat Expression / Performance Identity
+
+`Combat Expression` 回答的是：
+
+> **这个角色以什么人物气质和战斗决策倾向使用已经确认的技法体系。**
+
+它属于角色级属性，可以影响：
+
+- 冷静 / 凶狠 / 克制 / 从容；
+- 主动压迫 / 后发反制 / 诱导 / 节奏破坏；
+- 风险偏好；
+- 杀意 / 留手 / 竞技感；
+- 抢到主动后的延续方式；
+- 丢掉主动后的再进入倾向。
+
+它**不能直接定义具体招式**，例如：
+
+- 低扫后接直拳；
+- 肘击后抱摔；
+- 固定 Combo；
+- 具体 Technique Pattern。
+
+这些属于 System Refinement / Stage-2 / Choreography Runtime。
+
+如果用户已经明确 Expression，Round 2 继续精炼其节奏、主动 / 反制倾向、杀意、克制程度等，而不是再问一次“是否确认”。
+
+职业 / 身份可以影响本轮推荐，但只能影响 Expression，不能反向改掉 Round 1 的 Combat System。
+
+例如两个人都是职业杀手，也完全可以：
+
+```text
+A：太极 + 冷静诱导 / 后发反制
+B：MMA + 主动压迫 / 持续抢先手
+```
+
+也可以：
+
+```text
+A：太极 + 冷静诱导
+B：太极 + 凶狠主动
+```
+
+### Physical Presentation Domain / Combat World
+
+`Combat System` 与 `Physical Presentation Domain` 正交。
+
+```text
+Combat System
+→ 会什么 / 用什么技法体系
+
+Physical Presentation Domain
+→ 当前世界允许什么物理尺度、动作以什么电影表现尺度呈现
+```
+
+合法组合包括：
+
+```text
+太极 + Modern Grounded
+太极 + Cinematic Wuxia
+MMA + Modern Grounded
+MMA + Cinematic Wuxia
+```
+
+禁止：
+
+```text
+太极 → 自动 Wuxia
+MMA → 自动 Modern
+职业杀手 → 自动 Modern Tactical
+武术宗师 → 自动 Wuxia
+```
+
+#### 条件暴露
+
+Physical Presentation Domain **不是固定第三轮**。
+
+```text
+用户描述足够明确
+→ 静默推导
+
+存在两个以上合理尺度
++ 会显著改变动作实现
++ 无法高置信度替用户决定
+→ 单独暴露当前这一问
+```
+
+例如“现代办公室、写实职业杀手”通常静默推导 Modern Cinematic Grounded；“两个太极高手，很电影化”如果现代动作片尺度与武侠尺度都合理，则值得询问。
+
+### Derived Choreography Direction
+
+旧的 `Fighting Direction / 怎么打` **不再作为独立用户决策节点**。
+
+Runtime 自动综合：
+
+```text
+Per-Character Combat System
++ System Refinement
++ Per-Character Combat Expression
++ Physical Presentation Domain
++ Scene / Range / Environment / Intent
+→ Derived Choreography Direction
+```
+
+例如“灵活身法与角度争夺”“拳摔压迫”“后发反制型连续换轴”可以成为派生结果，但不再额外拿出来让用户重复选择。
+
+#### MVP Legacy Compatibility Adapter
+
+本阶段为了先验证交互方向，不立即重构整个下游 Choreography Runtime：
+
+```text
+Derived Choreography Direction
+→ 临时写入 legacy Fighting Direction execution slot
+→ 继续现有 Stage-2 / Persistent Combat Signature / Subject Motion / Action–Camera 执行链
+```
+
+这里的 legacy `Fighting Direction` 只是内部兼容执行槽，**不得重新暴露为用户问卷，也不得覆盖已确认 Combat System / Expression。**
 
 ### Camera Intent = Base Viewing Priority + Camera Hard Constraint
 
@@ -353,22 +532,24 @@ One-take / Fixed / No-cut 等不同选择会根本改变可执行摄影方案
 > 动态 Camera Accent
 ```
 
-但 Hard Constraint 只限制摄影实现，不允许反向改写已经确认的 Fighting Direction、Technique Identity、动作因果或 Combat Coverage 目标。Runtime 应在约束内寻找最接近 Base Viewing Priority 的实现。
+但 Hard Constraint 只限制摄影实现，不允许反向改写已经确认的 Combat System、System Refinement、Combat Expression、动作因果或 Combat Coverage 目标。Runtime 应在约束内寻找最接近 Base Viewing Priority 的实现。
 
 ### 重要约束
 
 - **不要过早先问“谁赢”**，除非胜负本身就是用户的核心观看目标或会彻底改变前面所有设计；
-- Fighting Direction 已经明确时，不再重新问“核心动作风格”；
-- Camera Base Viewing Priority 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Fighting Direction / Character Identity；
+- 不再独立询问 legacy Fighting Direction；它只保留为 Derived Choreography Direction 的兼容执行槽；
+- Combat System / System Refinement 与 Combat Expression 必须分层，不允许职业身份直接替代 System；
+- Camera Base Viewing Priority 通常在角色打斗节点后判断是否值得条件暴露；
 - Camera Hard Constraint 默认静默为空，不因为系统拆成两个概念就机械增加一轮问题；
 - 用户已经明确 One-take / Fixed Camera / No Cut 等 Hard Constraint 时直接继承，不再重复询问；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件；
+- 用户明确“先实现 / 先测试 / 不要继续细化”时立即停止继续 Grill 低价值分支；
 - **不以固定 4 轮、6 轮、10 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行，或后续问题已不再值得问。**
 
 ### Character Identity Recommendation Guard
 
-Character Identity 必须动态推导。推荐答案中不得出现以下快捷逻辑：
+Character / Narrative Identity 与 Combat System 必须分离。推荐答案中不得出现以下快捷逻辑：
 
 ```text
 职业 → 固定流派 / 固定打法
@@ -378,23 +559,31 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 外貌 → 固定动作风格
 ```
 
-这些信息可以影响运动能力、Reach、惯性、支撑、恢复速度或视觉对比，但**不能单独决定打法**。
+这些信息可以影响运动能力、Reach、惯性、支撑、恢复速度或视觉对比，也可以影响 Combat Expression 的推荐，但**不能单独决定 Combat System**。
 
-例如用户给出“22 岁女性 + 55 岁矮胖男性 + 两人都是职业杀手”，推荐不能自动写成：
+例如用户给出“22 岁女性 + 55 岁矮胖男性 + 两人都是职业杀手”，Round 1 推荐不能自动写成：
 
-- 女方 = 速度、角度、闪避；
-- 男方 = 体重、力量、抓控。
+- 女方 = 速度型短打；
+- 男方 = 力量抱控；
+- 双方 = Tactical Close Combat。
 
-除非用户已经明确这些打法，否则应先由 Combat Intent、Fighting Direction、经验、对手关系、空间、Range 与当前 State 推导；若多个角色差异方向仍都合理且会显著改变成片，才把“双方如何在同一 Fighting Direction 中形成差异”作为当前一个交互问题。
+应先为双方选择 / 精炼真正的 Combat System。Round 2 再讨论双方如何以不同气质、主动权策略和决策方式使用这些技术。
 
-推荐答案应描述**动作逻辑**而不是人口属性刻板映射，例如：
+例如：
 
-- 一方偏主动侧切、抢角度、连续截断；
-- 另一方偏路线封锁、短距离打断、节奏破坏；
+```text
+女方：MMA / 拳腿倾向
+男方：MMA / 拳肘 + 抱摔倾向
+```
 
-但这些也只是当前场景的可选设计，不是某类人的固定模板。
+这是 Technique Backbone / Refinement；之后才可以进一步形成：
 
-例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Fighting Direction、双方打法差异，或在动作方案明确后的 Base Viewing Priority，而不是让用户回答十几个内部参数。
+```text
+女方：冷静诱导、反制后突然提速
+男方：主动压迫、失去控制后立即再进入
+```
+
+这是 Combat Expression。
 
 ---
 
@@ -444,7 +633,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 原因：...
 ```
 
-Fighting Direction 属于例外的“多候选单问题”：仍然只问一个问题，但为保证覆盖可以展示 5–10 个互有实质差异的候选方向，并明确推荐一个。
+Combat System 属于允许“多候选单问题”的 Primary Node：仍然只问一个问题，但 1v1 可以在同一轮给双方分别提供候选 / 推荐；多人战按关键角色或功能组组织，不按角色数量机械拆轮。
 
 ---
 
@@ -460,16 +649,16 @@ Fighting Direction 属于例外的“多候选单问题”：仍然只问一个�
 
 满足任一条件即结束追问：
 
-- 用户说“直接出结果 / 按推荐做 / 够了”；
-- 核心观看目标、Fighting Direction / 动作方向、镜头原则、节拍和收尾已可执行；
+- 用户说“直接出结果 / 按推荐做 / 够了 / 先实现 / 先测试”；
+- Combat System / Refinement、Combat Expression、必要的 Physical Presentation Domain、镜头原则、节拍和收尾已可执行；
 - 剩余节点可高置信度自动补全；
 - 再问只会影响轻微细节；
 - 用户明确不希望继续深挖；
 - 当前经过 Quality Review 后，后续问题的边际价值已经很低。
 
-**达到 10 轮本身不是收口条件。** 用户明确质量优先时，只要仍存在真实高价值分叉，可以继续超过 10 轮。
+**达到 10 轮本身不是收口条件。** 用户明确质量优先时，只要仍存在真实高价值分叉，可以继续超过 10 轮；但用户明确要先实现测试时，不得以“还没走完设计树”为由继续追问。
 
-> **收口由“需求是否足够完整 + 后续问题是否仍有高价值”驱动，不由轮数驱动。**
+> **收口由“需求是否足够完整 + 后续问题是否仍有高价值 + 用户是否要求先进入验证”共同驱动。**
 
 ---
 
@@ -479,6 +668,9 @@ Fighting Direction 属于例外的“多候选单问题”：仍然只问一个�
 
 Action Combat 收口后，系统内部继续执行：
 
+- 角色级 Combat System / Refinement / Combat Expression 合并；
+- Derived Choreography Direction 推导；
+- MVP 阶段把 Derived Choreography Direction 映射进 legacy Fighting Direction execution slot；
 - Choreography Planning；
 - State / Continuity；
 - Contact / Kinetic / Temporal Continuity；
@@ -522,7 +714,21 @@ Final Draft
 - Ending 是否自然且没有提前吞掉主要内容；
 - Model Adapter 是否只改变实现方式，没有偷改目标。
 
-Action Combat 还必须叠加：Stage-2 Evidence、Subject Motion、Persistent Combat Signature、Upper-body Semantic Dominance、Motion / Energy Carry-over、Action–Camera / Perceptual Impact、Camera Hard Constraint、Instruction Saturation 与 Combat Final Preflight。
+Action Combat 还必须叠加：
+
+- Combat System / System Refinement 是否在 Final Prompt 中真实可辨；
+- Combat Expression 是否影响决策与节奏但没有替代具体 Technique；
+- Character Identity 是否错误吞并 Combat System；
+- Derived Choreography Direction 是否保持两个角色的差异；
+- Stage-2 Evidence；
+- Subject Motion；
+- Persistent Combat Signature；
+- Upper-body Semantic Dominance；
+- Motion / Energy Carry-over；
+- Action–Camera / Perceptual Impact；
+- Camera Hard Constraint；
+- Instruction Saturation；
+- Combat Final Preflight。
 
 ### Silent Self-Repair 权限边界
 
@@ -530,13 +736,18 @@ Action Combat 还必须叠加：Stage-2 Evidence、Subject Motion、Persistent C
 
 - Phrase / 语序 / 信息层级；
 - 已确认内容在最终 Prompt 中的遗漏或弱化；
+- Derived Choreography Direction 的局部实现，只要不改变已确认角色级决策；
 - 动作、Camera、Continuity、Ending 的实现质量；
 - Instruction Saturation、重复描述、低价值 Camera / Audio / Negative；
 - 不改变高层决策的局部动作 / 镜头组织。
 
 不能静默改：
 
-- 用户已确认的 Fighting Direction / Persistent Combat Signature / Technique Identity；
+- 用户已确认的 Primary / Secondary Combat System；
+- System Refinement；
+- Combat Expression；
+- 用户已确认的 Physical Presentation Domain；
+- Persistent Combat Signature / Technique Identity；
 - Base Viewing Priority / Camera Hard Constraint；
 - 人物身份、剧情关系、胜负 / Ending 意图；
 - 素材主真源和明确绑定；
@@ -565,9 +776,9 @@ Action Combat 还必须叠加：Stage-2 Evidence、Subject Motion、Persistent C
 > **Quick = Full Planning + Silent Resolution。**
 
 - Quick 直接完成所有低风险决策；
-- Interactive 只把真正高影响、低置信度分叉交给用户；
+- Interactive 在本 MVP 中显式处理 Combat System 与 Combat Expression 两个角色打斗节点，其余仍按高价值分叉暴露；
 - 两者共用同一动作引擎和质量标准；
 - Interactive 不能因为问得更多就获得更高质量上限；
 - Interactive 的价值是让用户控制关键创作分叉，而不是最小化问答次数；
 - 用户明确质量优先时，允许为了高价值决策继续深入，而不是被固定轮数截断；
-- 用户在交互中要求直接生成时，立即收口，不继续追问。
+- 用户在交互中要求直接生成、先实现或先测试时，立即收口，不继续追问。
