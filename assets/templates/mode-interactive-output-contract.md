@@ -72,9 +72,9 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 不允许：
 
-- 问 Choreography Profile，却同时替用户决定双方具体打法、最终谁占优和 Camera Coverage；
+- 问 Fighting Direction，却同时替用户决定双方具体 Character Identity、最终谁占优和 Camera Coverage；
 - 问 Character Identity，却顺手把 Ending 或 Camera 定死；
-- 问 Camera Intent，却偷偷改变用户已经确认的动作风格或战斗结果。
+- 问 Camera Intent，却偷偷改变用户已经确认的 Fighting Direction 或战斗结果。
 
 如果 downstream 节点已经由用户输入高置信度明确，则直接继承；如果仍有多个高价值方向，应留到后续按 High-value Question Budget 判断是否单独暴露。
 
@@ -104,9 +104,9 @@ Interactive 只负责 **Decision Exposure Policy / 决策暴露策略**：
 Combat 追问前先内部检查：
 
 - 当前真正的上游高影响分叉是什么；
-- 是否遗漏与场景明显相关的 Choreography Profile；
+- **用户是否已经明确“怎么打 / Fighting Direction”；若未明确且不同打法会显著改变动作内容，应优先考虑直接询问，而不是复杂自动猜测；**
 - Character Identity 是否需要用户参与决定，还是可以动态推导；
-- 当前问题是否比尚未解决的 Character Identity / Rhythm / Profile 更重要；
+- 当前问题是否比尚未解决的 Character Identity / Camera / Ending 更重要；
 - 是否把 Contact Solidity、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制误做成问卷；
 - 当前推荐是否把职业、性别、年龄、外貌或体型直接转换成固定打法；
 - 当前推荐是否夹带未确认的 downstream 决策；
@@ -121,15 +121,57 @@ Combat 追问前先内部检查：
 ```text
 核心 Combat Intent / 观看目标
 → Combat Branch（Modern / Wuxia 等）
-→ Cinematic Choreography Profile
+→ Fighting Direction / 怎么打（条件暴露）
 → Active Combat Coverage（只有存在真实方向分叉时）
-→ Action Exchange Rhythm
 → Combat Character Identity 的关键差异
 → Environment / Camera Intent（只有会明显改变成片时）
 → 战斗结果 / 收尾
 ```
 
 这是**依赖顺序，不是固定问卷顺序**。任一节点如果已经由用户明确、可高置信度自动补全，或不会显著改变成片，应直接跳过。
+
+### Fighting Direction / “怎么打”的条件暴露
+
+`Fighting Direction` 取代原本独立询问的“核心动作风格 / Choreography Profile”。节奏、写实度、重量感、电影化程度等仍可作为执行属性，但不再额外占一轮高度重复的问题。
+
+满足以下逻辑时，Fighting Direction 可以成为当前唯一问题：
+
+```text
+用户尚未明确 Fighting Direction
++ 当前 Combat Branch / 场景 / 人物关系已基本可判断
++ 存在至少两个明显不同、都合理的打法方向
++ 不同选择会显著改变 Movement / Technique / Range / Physical Scale / 成片动作内容
+→ 直接询问“你希望这场战斗具体怎么打？”
+```
+
+如果用户已经明确“咏春”“MMA”“现代职业杀手近身格斗”“轻功剑战”等，直接继承，不重复询问。
+
+#### 候选答案规则
+
+候选方向必须足够覆盖真实打法空间，不能只有 2–3 个粗糙选项，也不能为了凑数输出一堆同义项。
+
+- **至少 5 个有实质差异的候选方向；**
+- 正常推荐 **6–8 个**，复杂场景可到 **10 个**；
+- 始终允许“自定义 / 直接描述打法”；
+- 每个选项必须在动作层面有真实差异，例如 Range、Movement、Technique、Physical Scale、摔控比例、腿法比例、高低位 / 路线变化或环境使用方式；
+- 推荐项基于场景、任务和用户输入，不按性别、年龄、体型、职业做刻板映射。
+
+可动态使用的方向示例包括：
+
+- 现代职业杀手近身格斗：短打、截击、低线攻击、摔控、快速换位；
+- 中国武术电影化近身格斗：身法、步法、腿法、高低位、转身绕位更丰富；
+- 综合格斗 / MMA：拳肘膝腿 + 抱摔 / 反摔，站立与低位转换；
+- 硬派实战短打：动作短、重、直接，强调打断、失衡与碰撞；
+- 灵活身法 / 角度争夺：切线、绕侧、换轴、Level Change、Route Change；
+- 摔控 / 反摔：进入、破平衡、摔投、失败反摔、再进入；
+- 腿法 / 全身攻防：低线腿法、踢蹬扫与步法、上肢动作串联；
+- 电影化混合动作：更强 Movement、环境借力与 Signature Moment，但仍受当前 Physical Scale 约束；
+- 明确武术 / 格斗体系：如咏春、八极、泰拳、拳击、柔术等；
+- 自定义。
+
+这些是候选池，不是固定十选一模板。实际询问应按当前场景筛选 5–10 个互有明显差异的方向。
+
+用户只需要决定**打法方向**，不需要设计具体动作链；后续 Runtime 负责把方向展开成 Movement + Technique + Transition，并保证连续性、颗粒度与可执行性。
 
 ### Camera Intent / 镜头意图的条件暴露
 
@@ -175,8 +217,8 @@ Camera 问题必须使用用户能理解的**导演观看策略**，而不是内
 ### 重要约束
 
 - **不要过早先问“谁赢”**，除非胜负本身就是用户的核心观看目标或会彻底改变前面所有设计；
-- 高手对决若“高手连续攻防型”明显相关，不能因为选项设计漏掉它；
-- Camera 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Character Identity；
+- Fighting Direction 已经明确时，不再重新问“核心动作风格”；
+- Camera 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Fighting Direction / Character Identity；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件；
 - **不以固定 4 轮、6 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行。**
@@ -200,7 +242,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 - 女方 = 速度、角度、闪避；
 - 男方 = 体重、力量、抓控。
 
-除非用户已经明确这些打法，否则应先由 Combat Intent、Choreography Profile、经验、对手关系、空间、Range 与当前 State 推导；若多个打法方向都合理且差异会显著改变成片，才把“双方打法差异”作为当前一个交互问题。
+除非用户已经明确这些打法，否则应先由 Combat Intent、Fighting Direction、经验、对手关系、空间、Range 与当前 State 推导；若多个角色差异方向仍都合理且会显著改变成片，才把“双方如何在同一 Fighting Direction 中形成差异”作为当前一个交互问题。
 
 推荐答案应描述**动作逻辑**而不是人口属性刻板映射，例如：
 
@@ -209,7 +251,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 
 但这些也只是当前场景的可选设计，不是某类人的固定模板。
 
-例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Choreography Profile、双方打法差异，或在动作方案明确后的 Camera Intent，而不是让用户回答十几个内部参数。
+例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Fighting Direction、双方打法差异，或在动作方案明确后的 Camera Intent，而不是让用户回答十几个内部参数。
 
 ---
 
@@ -259,7 +301,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 原因：...
 ```
 
-必要时可给 2–3 个明显方向，但必须明确推荐一个。
+Fighting Direction 属于例外的“多候选单问题”：仍然只问一个问题，但为保证覆盖可以展示 5–10 个互有实质差异的候选方向，并明确推荐一个。
 
 ---
 
@@ -276,7 +318,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 满足任一条件即结束追问：
 
 - 用户说“直接出结果 / 按推荐做 / 够了”；
-- 核心观看目标、动作方向、镜头原则、节拍和收尾已可执行；
+- 核心观看目标、Fighting Direction / 动作方向、镜头原则、节拍和收尾已可执行；
 - 剩余节点可高置信度自动补全；
 - 再问只会影响轻微细节；
 - 用户明确不希望继续深挖；
@@ -296,6 +338,7 @@ Action Combat 收口后，系统内部继续执行：
 - Choreography Planning；
 - State / Continuity；
 - Contact / Kinetic / Temporal Continuity；
+- Stage-2 Gap-driven Pattern Selection；
 - Camera Readability / Mobility / Coverage；
 - **Combat-aware Prompt Assembly；**
 - **Final Preflight Gate；**
