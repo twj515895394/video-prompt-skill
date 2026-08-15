@@ -33,6 +33,7 @@ Confirmed Per-Character Planning Context
 → Pass 2: Selective Concrete Expansion
 → Movement Causality Check
 → Concrete Technique Resolution Gate
+→ Impact Aftermath / Damage Continuity Gate
 → Granularity / Exchange Density Check
 → Concrete Compression
 → Action–Camera Handoff（沿用现有 Runtime，不修改）
@@ -518,6 +519,145 @@ Concrete 不等于把每个动作都写成生物力学说明书：
 
 > **先把“做什么”说具体，再按 Granularity 决定“解释多少”。**
 
+### 9.2 Impact Aftermath / Damage Continuity Gate
+
+当 Concrete Action 中已经发生**有效打击、抓扯、摔撞、压迫、拖拽或环境碰撞**时，Runtime 不能只描述即时运动反应，还必须判断该接触是否会留下后续镜头可见的 **Aftermath State**。
+
+本 Gate 覆盖三类可见对象：
+
+```text
+Human / Body
++ Clothing / Wearables
++ Environment / Objects / Materials
+```
+
+核心链路：
+
+```text
+Effective Contact / Force Event
+→ Immediate Physical Response
+→ plausible Visible State / Appearance Change
+→ Persistent Continuity in later shots
+→ optional escalation only if later force justifies it
+```
+
+#### A. Human / Body Aftermath
+
+当明确受击部位、力度与写实尺度足以产生可见痕迹时，应选择**一个与当前 Physical Presentation Domain 相匹配的最小合理后果**，例如：
+
+- 嘴角 / 唇部受到有效拳掌擦击 → 发红、轻微破皮或少量血迹；
+- 额头 / 眉骨 / 脸颊受到明确撞击 → 局部泛红、擦伤或逐渐显现的轻度紫红淤痕；
+- 前臂 / 手背 / 膝部与墙面、地面发生明显摩擦或撞击 → 局部红印、擦痕或轻微磨伤。
+
+不是每次触碰都必须留下伤痕。轻微封挡、擦碰、无明显承伤的 Contact 可以只有运动 / 受力反馈；**只有动作本身已经被描述为有效命中、重撞或持续压迫时，才检查持久可见后果。**
+
+#### B. Clothing / Wearable Aftermath
+
+抓袖、扯领、抱控、拖拽、墙压或摔撞如果明显作用到服装 / 穿戴物，后果应服从力度与材质：
+
+```text
+轻度
+→ 褶皱 / 拉紧 / 歪斜 / 衣摆移位 / 领带松动
+
+中度持续或强力抓扯
+→ 明显拉伸 / 局部开线 / 小裂口 / 纽扣松脱或崩开（上下文合理时）
+```
+
+禁止：
+
+```text
+一次普通抓袖
+→ 衣服立刻大面积撕烂
+```
+
+也禁止：
+
+```text
+衣袖已经被强力扯裂
+→ 下一镜头自动恢复完整
+```
+
+#### C. Environment / Object / Material Aftermath
+
+人物撞击、推压、甩碰环境物体时，必须按对象真实材质决定反馈，而不是统一“破坏”：
+
+- 玻璃隔断：可先出现振动、轻响、手印 / 擦痕或轻微形变感；只有足够强且剧情 / Physical Scale 允许时才升级到裂纹 / 破裂；
+- 墙面 / 门框：可出现擦痕、轻微掉灰、局部撞痕；普通人体撞击不自动形成夸张大坑；
+- 办公椅 / 小型家具：可滑移、偏转、翻倒并保持新位置；不应无重量飞出；
+- 文件 / 纸张 / 小物：可散落、掉地、位置改变，并在后续镜头保留；
+- 衣物、玻璃、墙面、家具等的反馈必须符合当前材质和受力方向。
+
+#### Default Aftermath Intensity
+
+用户没有另外指定时，默认：
+
+> **轻到中度电影化写实后果。**
+
+目标是让观众看见“这场战斗留下了代价”，但不自动升级为：
+
+- 大量喷血；
+- 严重开放性伤口；
+- 夸张面部变形；
+- 大面积破衣；
+- 玻璃 / 墙体 / 家具无理由大规模毁坏。
+
+如果用户明确要求更轻、更重、更血腥或更破坏性的风格，再按用户目标调整；不得由 Runtime 自行升级。
+
+#### Persistence / Accumulation Contract
+
+一旦某个可见 Aftermath 已经进入画面，它必须成为后续 Continuity State：
+
+```text
+嘴角已有少量血迹
+→ 后续仍保持，除非画面内明确擦除 / 清理
+
+额角已出现红肿 / 淤痕
+→ 后续保持，并可随时间 / 再次受击合理加深
+
+领带已松、衣袖已裂
+→ 后续继续保持松动 / 裂口
+
+椅子已被撞开、纸张已散落
+→ 后续保持新的环境状态
+```
+
+禁止：
+
+> **Damage / Material / Environment Reset**
+
+即：没有画面内原因，伤痕、衣物破损、物体位移或环境损伤在下一镜头自动消失 / 恢复初始状态。
+
+后果只能：
+
+```text
+保持
+→ 被后续动作合理加重
+→ 或被明确的画面内行为改变
+```
+
+不能无因重置。
+
+#### Aftermath Information Budget
+
+本 Gate 不要求每个 Exchange 都追加一串伤痕说明。只把**当前已经具有可见持续价值**的后果写入最接近的 Action Phrase 或必要 Continuity 描述：
+
+- 对当前镜头只是瞬时、低价值且后续不可见的轻微反馈，可以不展开；
+- 对后续画面会持续出现、能强化真实感或影响表演 / 环境状态的后果，应简洁保留；
+- 同一伤痕 / 破损 / 环境变化后续只需保持，不在每个段落重新解释来源；
+- 不为了“更真实”给每次击打机械添加一种新伤痕。
+
+本 Gate 与 `Granularity Over-expansion` / `Serialization Deduplication` 同时生效：
+
+> **后果要真实存在，但描述只写到足以让模型保持它。**
+
+Failure 可判：
+
+- `Impact Aftermath Missing`：明显有效受创 / 抓扯 / 撞击却完全没有合理可见反馈；
+- `Damage Continuity Reset`：已出现的伤痕 / 衣物损伤在后续无因消失；
+- `Environment State Reset`：已移动 / 受损物体无因恢复；
+- `Material Response Mismatch`：反馈与材质 / 力度明显不符；
+- `Aftermath Overstatement`：轻度接触被自动升级成重伤 / 大破坏。
+
 ---
 
 ## 10. Exchange Density / Granularity Distribution Gate
@@ -620,6 +760,7 @@ Prompt Assembly 后执行一次语义去重。
 - Motion Handoff；
 - Position / Axis 变化；
 - 接触受力；
+- 已形成的 Injury / Clothing / Environment Aftermath；
 
 不要在后面的 Continuity / Style / Avoid 段再重复解释同一件事。
 
@@ -679,10 +820,11 @@ Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给�
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
 9. **Concrete Technique Resolution**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作，是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法` 等 Abstract Action Head？
-10. **Exchange Density**：是否因过度展开只剩少量大动作？
-11. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
-12. **Serialization Deduplication**：同一控制语义是否被多段重复？
-13. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
+10. **Impact Aftermath / Damage Continuity**：明显有效的受击、抓扯、摔撞或环境碰撞是否产生了与部位、力度、材质和 Physical Presentation 相匹配的最小合理可见后果；已出现的人体伤痕、衣物状态、环境位移 / 损伤是否在后续保持，是否存在无因 Reset 或过度升级？
+11. **Exchange Density**：是否因过度展开只剩少量大动作？
+12. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
+13. **Serialization Deduplication**：同一控制语义是否被多段重复？
+14. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
 如果任何关键 Gate 失败，优先回到对应 Failure Layer 修复；不要第一反应扩知识库。
 
@@ -699,7 +841,9 @@ Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给�
 - 固定 Combo Library；
 - 固定动作数 / Exchange 数；
 - 固定腿法 / 换位次数；
+- 固定受伤数量 / 固定流血次数 / 每击必留伤；
+- 固定衣物破损或环境破坏配额；
 - 第二套 Camera Runtime；
 - 固定 Skeleton 模板。
 
-本轮目标是修复消费顺序、选择权重、动作密度与序列化，不是增加系统层数。
+本轮目标是修复消费顺序、选择权重、动作密度、可见后果连续性与序列化，不是增加系统层数。
