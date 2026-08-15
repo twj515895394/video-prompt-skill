@@ -177,6 +177,27 @@
 - `camera-direction/control.md`
 - `spatial-blocking/control.md`
 
+### 短时高强度 Action Combat
+
+当任务是约 10–20 秒、以持续近身攻防 / 高 Kinetic Scope / 1v1 或 1vN 为主体，且当前最大风险是动作不连续、上肢锁死、脚步 / 支撑 / Range / Position 不充分、Camera 跟不上 Fight-space 时，`0-3 Controls` 默认优先级为：
+
+1. `subject-motion/control.md`
+2. `camera-direction/control.md`
+3. `spatial-blocking/control.md`
+
+这不是所有 Combat 的固定三件套，而是**缺口相同条件下的优先级**。如果当前三个缺口并不同时存在，仍按实际 Gap 选择。
+
+`continuity-consistency/control.md` 不作为纯文字、单段、短时高强度 Combat 的默认第三项。只有出现以下一类或多类明显风险时，它才提高优先级并可替换上述某个 Control：
+
+- 多参考素材需要锁定人物 / 服装 / 场景主真源；
+- 多镜头 / 多片段需要跨 Shot / Segment 维持身份、道具或场景状态；
+- 已知模型 / 既有测试存在明显变脸、服装跳变、场景结构漂移；
+- 当前任务的主要失败已经是 Identity / Prop / Scene Continuity，而不是 Motion / Camera / Blocking。
+
+对于单段纯文字高强度 Combat，如果 `continuity-consistency` 只是重复“人物、服装、场景保持一致”并带来大量 Negative，而同时 `subject-motion` 未读取，应优先让出 Control 配额给 `subject-motion`。
+
+该优先级只影响 Control Loading，不替代 Combat Task 内部的 State / Continuity Engine；人物、位置、Range、Contact、Momentum 与 Action State 的连续性仍由 Action Combat Core / Choreography / Action–Camera Runtime 必须保证。
+
 ### 多模态与音频
 
 - `reference-binding/control.md`
