@@ -68,8 +68,19 @@ Combat 是一条复合主 Task 路线：
 action-combat-video/index.md
 + action-combat-video/core-playbook.md
 + action-combat-video/choreography-playbook.md
++ action-combat-video/advantage-structure-contract.md
 + 一个专项 Playbook
 ```
+
+其中 `advantage-structure-contract.md` 是 **Advantage / Counterplay / Ending 的运行期正文真源**，负责把：
+
+```text
+Outcome
++ Counterplay Shape
++ Advantage Trajectory
+```
+
+映射到现有 Core Advantage / Turning Event、Choreography Initiative 与 Final Prompt。它属于主 Task 固定 Reference，不占 Controls / Libraries 预算。
 
 ### Core
 
@@ -106,6 +117,20 @@ action-combat-video/index.md
 - Combat Audio；
 - Final Prompt Action Externalization。
 
+### Advantage Structure
+
+`action-combat-video/advantage-structure-contract.md`
+
+负责：
+
+- `Advantage ≠ Attack Share`；
+- `Outcome ≠ Advantage Trajectory`；
+- 持续压制 / 高频还手但被化解 / 拉锯后占优；
+- Advantage Structure 条件暴露；
+- High Counterplay 的真实动作兑现；
+- Ending 条件暴露；
+- Counterplay Starvation / Deferred Counterplay Collapse 检查。
+
 ### 专项分支
 
 只选一个：
@@ -113,7 +138,7 @@ action-combat-video/index.md
 - 现代格斗：`action-combat-video/modern-combat-playbook.md`；
 - 电影武侠：`action-combat-video/cinematic-wuxia-playbook.md`。
 
-> **Core 负责打得对、接得上；Choreography 负责打得够、丰富、好看、有实感；专项 Playbook 负责这种战斗具体怎么表现。**
+> **Core 负责打得对、接得上；Choreography 负责打得够、丰富、好看、有实感；Advantage Structure 负责谁占优不等于谁独占攻击权，以及主动权怎样流动；专项 Playbook 负责这种战斗具体怎么表现。**
 
 Combat Quick 与 Interactive 共用同一 Planning Graph；模式区别是决策暴露程度，不是质量等级。
 
