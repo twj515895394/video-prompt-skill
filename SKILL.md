@@ -59,7 +59,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 复杂战斗同时遵循 **Clarity Through Structure, Not Action Reduction**：高信息密度允许存在，但必须用 Action Phrase、状态连续性、镜头可读性和执行预算组织清楚。
 - Combat Final Prompt 遵循 **State Machine Internalized, Choreography Externalized**：状态机制在内部运行，最终由可见动作、接触、受力和空间变化主导。
 - **Action Combat Interactive 的角色打斗决策必须把 Character / Narrative Identity、Combat System / Technique Backbone、System Refinement、Combat Expression 分开；职业 / 性别 / 年龄 / 外貌 / 体型不能直接替代 Combat System。**
-- **Interactive 不再把 legacy `Fighting Direction` 作为独立用户问卷；它由角色级 System / Refinement / Expression 与 Physical Presentation Domain 自动合成为 `Derived Choreography Direction`，MVP 阶段仅映射进旧 execution slot 兼容下游。**
+- **Action Combat Interactive 还必须执行 `references/tasks/action-combat-video/interactive-combat-policy.md`：中国功夫电影观感不得机械默认 MMA；Round 1 可使用 `Chinese Cinematic Kung-fu Hybrid`；Round 2 在同一 Primary Node 下分别处理 Character Combat Expression 与 optional Cinematic Combat Archetype；Hybrid 默认静默展开，不固定追问门派混合。**
+- **Interactive 不再把 legacy `Fighting Direction` 作为独立用户问卷；它由角色级 System / Refinement / Expression / optional Archetype 与 Physical Presentation Domain 自动合成为 `Derived Choreography Direction`，MVP 阶段仅映射进旧 execution slot 兼容下游。**
 - Action Combat 的 `Stage-2 Pattern Hit Evidence + action-camera-handoff-playbook.md + Camera Handoff Realization Gate + prompt-assembly/control.md + Model Adapter + Camera Handoff Preservation Gate + Combat Final Preflight` 是最终交付必经路径；其中真正命中条件的 leaf execution knowledge 不能被“按需”预算跳过。
 - Action Combat 的 Camera Gate 是语义合同，不是固定字段 / 固定镜头数量；普通连接动作不因为 Gate 存在而强制增加 Camera Accent。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
@@ -148,6 +149,12 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `references/tasks/action-combat-video/core-playbook.md`
 - `references/tasks/action-combat-video/choreography-playbook.md`
 
+如果当前是 **Interactive Action Combat**，额外固定读取：
+
+- `references/tasks/action-combat-video/interactive-combat-policy.md`
+
+它负责 Round 1/2 的角色级交互语义、Chinese Cinematic Kung-fu Intent 推荐排序、`Chinese Cinematic Kung-fu Hybrid`、Hybrid Refinement 边界与 optional Cinematic Combat Archetype；不占普通 Controls / Libraries 预算。
+
 然后只选择一个专项分支：
 
 - 现代格斗：`references/tasks/action-combat-video/modern-combat-playbook.md`
@@ -157,7 +164,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 ### Action Combat Post-Planning Mandatory Path
 
-Interactive 中每个关键角色的 Combat System / System Refinement、Combat Expression，以及必要的 Physical Presentation Domain 一旦确认或精炼完成，先自动形成 `Derived Choreography Direction`；MVP 阶段再把该结果映射到 legacy `Fighting Direction` execution slot。之后**不得直接跳到 Controls / Template / Final Prompt**，必须重新进入执行阶段：
+Interactive 中每个关键角色的 Combat System / System Refinement、Character Combat Expression / optional Cinematic Combat Archetype，以及必要的 Physical Presentation Domain 一旦确认或精炼完成，先自动形成 `Derived Choreography Direction`；MVP 阶段再把该结果映射到 legacy `Fighting Direction` execution slot。之后**不得直接跳到 Controls / Template / Final Prompt**，必须重新进入执行阶段：
 
 ```text
 Confirmed Per-Character Combat Context
@@ -204,7 +211,7 @@ Realization / Preservation 都是语义 Gate：不要求固定字段、固定句
 
 - `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
 
-该条件必读属于 Combat Stage-2 Execution Knowledge，**不占普通 `0-2 libraries detail` 可选预算**。必须能内部回答：`Gap → Slot → 实际 leaf Read → Pattern / Detail → Concrete Action`；没有真实 Read Evidence 不能假定 Stage-2 已完成。
+该条件必读属于 Combat Stage-2 Execution Knowledge，**不占普通 `0-2 libraries detail` 可选预算**。必须能内部回答：`Gap → Slot → 实际 leaf Read → Pattern/Detail → Concrete Action`；没有真实 Read Evidence 不能假定 Stage-2 已完成。
 
 真正的 Combat Final Preflight 在 Model Adapter + Preservation Gate 之后执行。`prompt-assembly/control.md` 在 Action Combat 中属于必经 Final Assembly，不占普通 `0-3` Controls 的可选预算。
 
@@ -214,6 +221,7 @@ Combat 内部职责：
 
 - `core-playbook.md`：State / Continuity / Battle Runtime Skeleton；
 - `choreography-playbook.md`：Coverage / Rhythm / Action Phrase / Character Identity / Tactical Interaction / Contact Solidity / Signature Moment / Execution Budget / Kinetic / Temporal / Camera Mobility / Final Preflight Criteria；
+- `interactive-combat-policy.md`：Interactive Round 1/2 的 Combat System / Hybrid / Character Combat Expression / Cinematic Combat Archetype / Recommendation Ordering；
 - 专项 Playbook：Modern / Wuxia 的具体动作语言与物理尺度；
 - `action-camera-handoff-playbook.md`：Stage-2 Evidence / Model Execution Realizability / Motion-Energy Carry-over / Base Viewing Priority / Camera Hard Constraint / Action-triggered Camera Handoff / Perceptual Impact / Camera Handoff Realization Gate；
 - `prompt-assembly/control.md`：把内部动作设计转成连续、Action-first、可执行的 Prompt，并维护 Common Camera Handoff Preservation Contract；
@@ -259,6 +267,12 @@ Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Co
 
 读取：`assets/templates/mode-interactive-output-contract.md`
 
+如果当前任务是 Action Combat，同时读取：
+
+- `references/tasks/action-combat-video/interactive-combat-policy.md`
+
+其中 **Action Combat 的 Round 1/2 角色打斗语义以 `interactive-combat-policy.md` 为专项真源**；通用单轮提问、高价值问题预算、Decision Purity、Camera / Ending 条件暴露继续遵守 `mode-interactive-output-contract.md`。
+
 规则：
 
 - 每次只问一个问题；
@@ -269,14 +283,16 @@ Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Co
 - 能从输入和上下文推断的内容不重复确认；角色打斗两个核心节点采用 `Unknown → Select / Known → Refine`；
 - 用户要求收口、先实现或先测试，或剩余问题只影响轻微细节时立即停止继续 Grill。
 
-Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准。本 MVP 的角色打斗交互语义以 `assets/templates/mode-interactive-output-contract.md` 为真源。
+Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准。
 
 #### Combat Interactive Decision Purity 强制检查
 
 每轮候选项必须只回答当前 Primary Planning Node。特别是：
 
-- **Round 1 = Per-Character Combat System / System Refinement**：候选必须是真正的格斗 / 武术体系或已确认体系内部的技术偏向；不得把“职业杀手 / 特工 / 警察 / 年轻女性 / 年长男性”等身份作为 Combat System；
-- **Round 2 = Per-Character Combat Expression**：候选只决定人物气质 + 战斗决策倾向，不得偷换 Combat System，也不得直接塞固定 Combo / 具体 Technique Pattern；
+- **Round 1 = Per-Character Combat System / System Refinement / explicit Hybrid Refinement**：候选必须是真正的格斗 / 武术体系、`Chinese Cinematic Kung-fu Hybrid`，或已确认体系内部的技术偏向；不得把“职业杀手 / 特工 / 警察 / 年轻女性 / 年长男性”等身份作为 Combat System；当用户明确追求中国功夫电影 / 不站桩 / 明星型华语武打观感时，优先 whole-body-capable Chinese systems / Hybrid，MMA 保留但不机械首位；
+- **Round 2 = Per-Character Combat Expression / Performance Identity**：同一轮分开处理 `Character Combat Expression` 与 `optional Cinematic Combat Archetype`；不得预绑定“气质 + 明星型”套餐，不得偷换 Combat System，也不得直接塞固定 Combo / 具体 Technique Pattern；
+- 用户选择 `Chinese Cinematic Kung-fu Hybrid` 后默认静默展开，不固定追加“具体混哪些门派”问卷；只有用户主动指定主 / 辅倾向时才记录为 Hybrid Refinement；
+- Cinematic Combat Archetype 当前可按需使用李连杰型、吴京型、甄子丹型、成龙型、李小龙型；执行语义读取 `references/libraries/combat-cinematic-archetypes/library.md`，Final Prompt 优先使用中性动作语义而不是只写明星姓名；
 - 1v1 同一轮同时处理双方，不机械拆成四轮；1vN 只对主角 / 关键对手独立，次要敌人允许分组；
 - Physical Presentation Domain 与 Combat System 正交，只在真正存在高价值物理 / 电影尺度歧义时条件暴露；
 - legacy `Fighting Direction` 不再对用户询问，只由前述角色级决策自动形成 `Derived Choreography Direction` 后写入兼容执行槽；
@@ -324,6 +340,7 @@ Combat Choreography Engine 属于 Task；通用 Controls 继续只提供跨任�
 ### Combat Libraries
 
 - `combat-choreography-profiles/library.md`：少量稳定 Cinematic Choreography Profile；
+- `combat-cinematic-archetypes/library.md`：李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙型电影武打表达语义；只在 Interactive 选中 / 明确相关 Archetype 或确有功夫电影表达缺口时读取；
 - `combat-fighting-profiles/library.md`：现代格斗 Technique / Execution Knowledge；
 - `combat-martial-profiles/library.md`：武术 / 武侠空手知识；
 - `combat-weapon-profiles/library.md`：刀 / 剑 / 枪 / 棍 Range、Contact、Weapon State；
@@ -447,11 +464,12 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 
 Action Combat 额外固定读取：
 
+- Interactive Action Combat 时的 `interactive-combat-policy.md`，负责角色级交互与推荐策略；
 - `action-camera-handoff-playbook.md`，作为 Stage-2 Evidence / Realizability / Action–Camera Bridge / Realization Gate；
 - `prompt-assembly/control.md`，作为 Final Assembly / Common Preservation Contract 必经 Reference；
 - 条件命中的 Stage-2 leaf execution knowledge（当前最小验证阶段通常为 `minimum-validation-set.md`）。
 
-前两项不占 `0-3 controls` 配额；真正由 Stage-2 Gate 命中的 leaf execution knowledge 不占普通 `0-2 libraries detail` 可选预算。
+这些 Action Combat Mandatory References 不占普通 `0-3 controls` / `0-2 libraries detail` 可选预算；真正由 Stage-2 Gate 命中的 leaf execution knowledge也不占普通可选预算。
 
 Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Task 路线，不同时加载现代与武侠两个分支。
 
@@ -470,7 +488,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 ```text
 用户当前明确要求
 → 必须保留 / 必须修改 / 必须禁止
-→ 当前任务 Playbook
+→ 当前任务 Playbook / Action Combat Interactive Policy
 → 当前输入 Reference 和素材职责
 → Combat Stage-2 Evidence / Realizability / Action–Camera / Realization / Final Assembly / Preservation（当前为 Combat 时）
 → 已加载 controls
@@ -492,7 +510,8 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 用户选择“完整动作可读优先”时，默认优先 Whole-body / Footwork / Spatial Relationship 可读，但**不得序列化成全程固定中大全景**；在 Camera Hard Constraint 允许范围内，仍应随 Route / Level / Support / Initiative / Fight-space 与高价值 Perceptual Impact 做有动机的跟随、降位、Reframe、POV / Close-up 或必要 Cut；
 - 用户明确 One-take / No Cut / Fixed Camera 时视为 Camera Hard Constraint；Hard Constraint 优先于 Base Viewing Priority 与 Camera Accent，但只限制摄影实现，不反向削减 Combat Coverage / Derived Choreography Direction；
 - 互斥风格只保留最符合核心观看目标的一种；
-- Combat Interactive 缺少体系时必须由 Round 1 选择 / 精炼，不按职业强行套 Profile；Quick 暂按 legacy 静默规划，后续再迁移；
+- Combat Interactive 缺少体系时必须由 Round 1 选择 / 精炼；当用户明确中国功夫电影 / 不站桩 / 明星型华语武打观感时，使用 `interactive-combat-policy.md` 调整推荐排序，不按现代身份强推 MMA；Quick 暂按 legacy 静默规划，后续再迁移；
+- 用户选择 `Chinese Cinematic Kung-fu Hybrid` 后默认由 Runtime 静默选择合理 Movement / Technique / Transition Knowledge；除非用户主动指定，否则不追加“混哪些门派”问卷；
 - Combat Character Identity 不根据性别、年龄、外貌、体型直接套打法；这些只能作为能力 / 物理约束输入之一；
 - Combat 缺少音乐时按场景决定弱 BGM、无 BGM 或节奏音乐，不为了“完整”机械加音乐；
 - 不擅自增加新角色、新剧情线、大世界观或强情绪反转。
@@ -510,7 +529,8 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 图生视频减少静态画面复述，重点写从当前状态如何运动；
 - Combat 先由 Core 保证 Action–Reaction、Range / Advantage / Condition / Target / Weapon / Environment 状态连续，再由 Choreography 保证 Coverage、Action Phrase、角色打法、Contact Solidity、Kinetic Scope、Temporal / Motion Continuity 与 Camera Mobility；
 - Combat Stage-2 Gate 命中的 Movement / Technique / Transition Detail 必须真正进入 Concrete Action Phrase；没有 leaf Read Evidence 时不得在 Prompt Assembly 阶段用语言润色伪装 Pattern Realization；
-- 用户明确确认的 Combat System / System Refinement / Technique Identity 必须通过**改变动作状态的可见行为**兑现；Combat Expression 应影响节奏、主动权与决策倾向，但不能代替 Technique；
+- 用户明确确认的 Combat System / System Refinement / Hybrid Refinement / Technique Identity 必须通过**改变动作状态的可见行为**兑现；Character Combat Expression 应影响节奏、主动权与决策倾向；Cinematic Combat Archetype 应影响 Movement / Rhythm / Range / Environment / Transition 权重，但不能替代 Technique；
+- 被选中的 Cinematic Combat Archetype 在 Final Prompt 中优先转换为 `combat-cinematic-archetypes/library.md` 的中性动作语义，不只写明星姓名；
 - 高密度 Combat 默认使用 `Continuous Action Spine + Soft Time Anchors`，不把 Active Exchange 机械拆成每 1–3 秒一个独立动作盒；
 - Combat Final Prompt 由正向动作语言主导，状态术语尽量转译为可见动作、受力和空间后果；
 - Combat 的具体化必须通过 Model Execution Realizability：优先 `Whole-body Motor Driver → 关键 Technique → Opponent Response → Balance / Position Consequence → Continuation`，压描述复杂度而不是压动作连续性；
@@ -541,11 +561,11 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 如果当前是 Action Combat，**Model Adapter 完成后、最终交付前**必须对实际 Final Prompt 完成一个合并 Gate，而不是只确认文件“读过”：
 
-1. **角色决策是否分层**：Character / Narrative Identity 是否没有吞并 Combat System；Interactive 的 System / Refinement / Expression 是否真实保留；Derived Choreography Direction 是否由这些信息派生而非重新覆盖用户决策；
+1. **角色决策是否分层**：Character / Narrative Identity 是否没有吞并 Combat System；Interactive 的 System / Refinement / optional Hybrid Refinement / Character Combat Expression / optional Cinematic Combat Archetype 是否真实保留；Derived Choreography Direction 是否由这些信息派生而非重新覆盖用户决策；
 2. **Stage-2 是否真的命中**：当前 Derived Choreography Direction / Technique Identity / Movement Gap 是否需要 leaf execution knowledge；若需要，是否有真实 `Gap → Slot → leaf Read → Pattern/Detail → Concrete Action` Evidence；
 3. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标相符，是否仍有长对峙、上半身锁死、动作被时间摊薄；
 4. **动作是否连续**：Action Phrase 是否通过 Contact / Momentum / Footwork / Axis / Range / Position 等继承，是否仍是一招一停、轮流出招；
-5. **角色是否合理且真实区分**：Combat System / Refinement / Expression 是否能从改变状态的 Movement / Technique / Initiative 看出差异；用户已确认的技术差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
+5. **角色是否合理且真实区分**：Combat System / Refinement / Expression / Archetype 是否能从改变状态的 Movement / Technique / Initiative / Rhythm / Environment Use 看出差异；用户已确认的技术差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
 6. **Model Execution Realizability 是否通过**：是否出现 Effective High Granularity Everywhere、Instruction Saturation、Upper-body Semantic Dominance；Feet-fixed Test 是否失败；
 7. **接触与状态是否成立**：Contact 是否有 Commitment、受力 / 压力、Reaction 与 Persistent Consequence；Range / Position / Advantage / Environment 是否影响下一拍；
 8. **Camera Realization 是否成立**：被选中的高价值 Camera Moment 是否有具体 Action Anchor、匹配的 Camera Response / Viewer Task、Live Motion / State Continuation，并服从 Camera Hard Constraint；是否仍只是“第一次接触 / 关键时刻切近”；
@@ -554,7 +574,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 11. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；Global Camera Baseline 是否短，关键 Camera Accent 是否锚在具体 Action Moment；
 12. **Prompt 是否 Action-first**：是否由可见动作主导，Negative 是否少而有依据。
 
-任一关键项 FAIL：内部回到 Stage-2 Read / Pattern Selection / Action Phrase / Character System / Expression / Action–Camera Handoff / Prompt Assembly / 当前 Model Adapter 的对应层重写，重新执行 Gate，通过后才允许交付。
+任一关键项 FAIL：内部回到 Stage-2 Read / Pattern Selection / Action Phrase / Character System / Expression / Archetype Realization / Action–Camera Handoff / Prompt Assembly / 当前 Model Adapter 的对应层重写，重新执行 Gate，通过后才允许交付。
 
 其中：
 
@@ -615,7 +635,11 @@ Combat 主诊断：
 - Combat 不使用固定 `2-4` / `2–4` 交互节点作为 Battle Beat 全局动作数量上限；
 - Combat 不为了“清晰”默认减少有效攻防；
 - Combat 不把职业、性别、年龄、外貌或体型直接映射固定 Combat System / 固定打法；
+- Combat Interactive 不因“现代 / 杀手 / 警匪 / 办公室”机械默认 MMA；
 - Combat Interactive 不再暴露 legacy Fighting Direction 候选；
+- Combat Round 2 不把 Character Combat Expression 与 Cinematic Combat Archetype 预绑定成套餐；
+- Combat 选择 `Chinese Cinematic Kung-fu Hybrid` 后不固定追问混哪些门派；
+- Combat 不把李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙型当成 Combat System；
 - Combat System / Combat Expression 候选不混入 Camera Base Viewing Priority 或 Camera Hard Constraint；
 - Combat 不把 Base Viewing Priority 写成固定 Shot Template；
 - Combat 不把 One-take / No Cut / Fixed Camera 当成“完整动作可读 / 电影冲击”等观看优先级；
