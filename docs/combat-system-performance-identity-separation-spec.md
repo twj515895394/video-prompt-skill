@@ -146,13 +146,64 @@ Character / Narrative Identity
 
 三者互相影响最终 Choreography，但禁止任何一层直接吞并或替代另一层。
 
-## 7. 待确认设计分支
+## 7. 已确认：固定轮次采用 Selection-or-Refinement
+
+用户明确选择：**C — 对应层已明确时不重复确认，但仍保留该轮，将问题升级为精炼。**
+
+因此“两轮交互”描述的是两个固定高价值 Planning Node，而不是固定重复询问相同事实。
+
+### Round 1：Combat System
+
+```text
+用户未明确 Combat System
+→ Selection：选择每个角色的格斗 / 武术体系
+
+用户已明确 Combat System
+→ Refinement：精炼该体系在当前角色上的具体实现方向
+```
+
+例如用户已经指定：
+
+```text
+女方：太极
+男方：MMA
+```
+
+Round 1 不再问“是否确认太极 / MMA”，而可以精炼为：
+
+```text
+女方太极：偏推手听劲 / 借力化打 / 实战发劲 / 电影化粘随……
+男方 MMA：偏拳腿 / 拳摔 / Clinch 摔控 / Counter 型……
+```
+
+精炼结果仍然属于已确认 Combat System 的子方向，不允许偷偷把太极改成咏春、把 MMA 改成泰拳。
+
+### Round 2：Combat Expression
+
+同样采用：
+
+```text
+用户未明确 Combat Expression
+→ Selection：选择每个角色的战斗气质 / 意图 / 主动权策略
+
+用户已明确 Combat Expression
+→ Refinement：精炼其节奏、杀意、克制程度、主动 / 反制倾向等具体表现
+```
+
+因此最终规则是：
+
+> **固定的是两个决策节点，不是固定重复同一句问题。**
+>
+> **Known → Refine；Unknown → Select。**
+
+这样既保留用户希望的两轮精确交互，又不会浪费已经明确的信息。
+
+## 8. 待确认设计分支
 
 当前仍需继续 Grill-Me：
 
-1. 用户输入已经明确其中某一层时，固定两轮是否仍重复确认，还是把该轮改成确认 / 精炼；
-2. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
-3. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
-4. G01 回归基线如何迁移到新两轴 / 角色级三元组结构。
+1. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
+2. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
+3. G01 回归基线如何迁移到新两轴 / 角色级三元组结构。
 
 在上述依赖分支达成共识后，再统一修改 Runtime / Interactive Contract / Choreography / Router，避免边讨论边产生半完成语义。
