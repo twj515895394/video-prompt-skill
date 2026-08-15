@@ -441,7 +441,67 @@ Transition Extension
 
 ---
 
-## 14. 当前已确认决策记录
+## 14. Stage-2 Routing：Planning Gap → Pattern Slot
+
+确认：Stage-2 不固定每次把 Movement / Technique / Transition 三类知识全部读取，也不按 Library 名机械加载。
+
+运行时先从 Planning Context / 当前 Action Phrase 判断真正的 **Knowledge Gap**，再选择需要补充的 Pattern Slot：
+
+```text
+Planning / Phrase Gap
+├─ 缺路线、身法、高低位、重心、轴线、空间变化
+│  → Movement Slot
+├─ 缺具体攻击、防守、腿法、摔控、兵器动作
+│  → Technique Slot
+└─ 缺前后动作如何从当前 Contact / Range / Axis / Momentum 连续接上
+   → Transition Slot
+```
+
+每个被命中的 Slot 默认只选择：
+
+```text
+1 个主 Pattern
++ 必要时 1 个辅助 Pattern
+```
+
+不把“1 主 + 1 辅”理解成必须填满的数量配额；如果一个主 Pattern 已足够，就不额外加载。
+
+例如当前 G01 暴露：
+
+```text
+站立上肢控制过多
++ 缺空间 / 高低位变化
++ Counter-to-Counter 需要连续
+```
+
+Stage-2 应优先把它理解成多个可验证缺口，例如：
+
+```text
+Movement Gap
+→ 外侧切入 / Level Change / Route Change 等相关 Pattern
+
+Technique Gap
+→ 与当前 Range / Identity / Physical Scale 匹配的低线攻击、腿法、摔控或其他 Technique
+
+Transition Gap
+→ Contact / Axis / Range 状态如何进入下一次 Movement / Technique
+```
+
+但具体加载哪些 Slot 仍由当前 Gap 决定，不要求三槽全开。
+
+### 14.1 Movement 缺席风险
+
+对于 High Coverage / Expert Combat，如果连续多个关键 Phrase 都只命中 Upper-body Technique，而 Movement 长期只作为附属脚步说明，应把它视为 **Movement Knowledge Gap / Static Standing Combat Risk**，提高 Movement Slot 的路由优先级。
+
+这不是固定“每段必须有 Movement Pattern”的配额，而是针对当前已观察到的长期退化做 Routing 校正。
+
+原则：
+
+> **Stage-2 按缺口补知识，而不是按目录读知识；知识读取越少越好，但必须补到真正影响成片的那个缺口。**
+
+---
+
+## 15. 当前已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -456,10 +516,11 @@ Transition Extension
 | CK-09 | Ground↔Air | Wuxia 需要显式 Ground → Air → Ground Transition，避免漂浮、静止空中打斗和落地 Reset |
 | CK-10 | Pattern Schema 方向 | Movement / Technique / Transition 职责分离，但共享统一基础 Schema 并允许互相引用，不建立万能大 Pattern |
 | CK-11 | Schema 组织方式 | 共享小核心 Schema + Movement / Technique / Transition 专项扩展字段；统一索引与路由语言，不建设巨型全字段 Schema |
+| CK-12 | Stage-2 Gap-driven Routing | `Planning Gap → Pattern Slot → 1 主 + 可选 1 辅`；不固定三类全读；High / Expert Combat 长期缺 Movement 时提高 Movement Slot 优先级 |
 
 ---
 
-## 15. Anti-overdesign 边界
+## 16. Anti-overdesign 边界
 
 当前明确禁止：
 
@@ -470,7 +531,8 @@ Transition Extension
 - 把 Wuxia 另做一套平行 Combat Engine；
 - 在 Stage-2 Routing 尚未验证前扩建大规模 Fighting Library；
 - 通过固定“每段必须几次踢腿 / 几次换位 / 几次腾空”配额保证丰富度；
-- 为了统一 Schema 把所有专项字段都塞进 Shared Core。
+- 为了统一 Schema 把所有专项字段都塞进 Shared Core；
+- 固定每次 Stage-2 必须加载 Movement / Technique / Transition 三槽或必须填满辅助 Pattern。
 
 原则：
 
@@ -478,15 +540,14 @@ Transition Extension
 
 ---
 
-## 16. 当前未决设计树
+## 17. 当前未决设计树
 
 下一步仍需 Grill Me 的关键问题包括：
 
-1. Stage-2 Routing 如何从 Planning Context 选择 Movement / Technique / Transition Detail，而不一次加载过多知识；
-2. 一个 Action Phrase 默认应组合多少类知识，如何与 Action Execution Budget 协调；
-3. Pattern 的适用条件 / 禁用条件 / Range / Level / Contact / Environment / Physical Scale 如何表达；
-4. 传统武术来源知识如何研究、归纳和去门派模板化；
-5. Wuxia 的电影化物理尺度如何由 Specialist 约束，避免仙侠化或无重力漂浮；
-6. Regression 如何单独识别 Upper-body Technique Dominance、Static Standing Combat 与 Knowledge Diversity 是否真正改善。
+1. 一个 Action Phrase 默认应组合多少类知识，如何与 Action Execution Budget 协调；
+2. Pattern 的适用条件 / 禁用条件 / Range / Level / Contact / Environment / Physical Scale 如何表达；
+3. 传统武术来源知识如何研究、归纳和去门派模板化；
+4. Wuxia 的电影化物理尺度如何由 Specialist 约束，避免仙侠化或无重力漂浮；
+5. Regression 如何单独识别 Upper-body Technique Dominance、Static Standing Combat 与 Knowledge Diversity 是否真正改善。
 
 本文在上述设计完成后，再进入 Implementation Plan；在此之前不直接扩建 Runtime Library。
