@@ -32,6 +32,7 @@ Confirmed Per-Character Planning Context
 → Stage-2 Pattern Trace
 → Pass 2: Selective Concrete Expansion
 → Movement Causality Check
+→ Concrete Technique Resolution Gate
 → Granularity / Exchange Density Check
 → Concrete Compression
 → Action–Camera Handoff（沿用现有 Runtime，不修改）
@@ -440,6 +441,83 @@ FAIL：
 
 必须重写因果链，而不是增加 Movement 关键词。
 
+### 9.1 Concrete Technique Resolution Gate
+
+Stage-2 的 Pattern / Technique 名称是**动作生成知识**，不是可直接交给视频模型的最终招式。Pattern 命中后，承担 Active Combat 的 Technique 必须继续实例化成一个当前 Exchange 中真实发生的具体身体动作。
+
+特别禁止把下列类别词直接当作动作 Head：
+
+```text
+全身连动短击
+全身连动反击
+短促身体控制
+低线腿法 / 低线动作
+破平衡动作
+近身反制
+用身体改变朝向
+用全身力量截入
+```
+
+这些词可以作为内部 intent / mechanic / modifier，但不能替代“人物到底做了什么”。
+
+#### Head-action Test
+
+对每个承担关键攻防的 Phrase，临时删除以下类型的修饰 / 结果词：
+
+```text
+快速 / 短促 / 连续 / 全身连动 / 低线 / 强力
+反制 / 控制 / 破平衡 / 改变路线 / 改变朝向 / 借动量
+```
+
+然后问：
+
+> **剩下的文字能否回答：哪个身体部位 / 接触面，对哪个可见目标或身体关系，执行了什么具体动作？**
+
+如果不能，判：
+
+> **Technique Category Leakage / Abstract Action Head**
+
+必须回到当前 System + State + Range + Pattern Detail，选定一个具体动作，不得靠增加更多形容词修复。
+
+#### 最小可执行语义
+
+普通 Active Technique 至少应形成：
+
+```text
+一个具体动作
++ 一个明确接触面 / 身体关系（上下文已极清楚时可自然省略）
++ 一个明确目标 / 接触对象
++ 一个立即可见的对手响应或状态后果
+```
+
+例如：
+
+```text
+FAIL：女方用低线腿法扰乱男方支撑脚。
+PASS：女方用前脚内侧勾扫男方承重脚外侧，迫使他跨步补位。
+
+FAIL：女方以短促的全身连动截入改变他的路线。
+PASS：女方斜切半步后用掌根推击男方上胸，男方肩线被推偏并跨步转向。
+
+FAIL：女方用短促身体控制改变男方朝向。
+PASS：女方以前臂横架男方胸口，外侧跨步带转，使他的肩线转向门框。
+```
+
+这里不要求使用专业招式名。**清楚的普通身体语言优先于含糊的武术术语。**
+
+#### 防止反向过度展开
+
+Concrete 不等于把每个动作都写成生物力学说明书：
+
+- High Granularity 关键反转可以补必要 Footwork / Axis / Support / Force Chain；
+- Medium 只需一个具体 Technique + 对手响应 / 状态后果；
+- Low Connector 可以只保留明确动作与 Continuation Entry；
+- 不为了通过本 Gate，把每个普通 Exchange 都补齐脚、髋、肩、受力、恢复全过程。
+
+因此本 Gate 与 `Granularity Over-expansion` 同时生效：
+
+> **先把“做什么”说具体，再按 Granularity 决定“解释多少”。**
+
 ---
 
 ## 10. Exchange Density / Granularity Distribution Gate
@@ -453,6 +531,8 @@ FAIL：
 连续攻击
 低线动作
 持续换位
+全身连动短击
+短促身体控制
 ```
 
 如果删除抽象形容词后仍不知道人物具体做了什么，Phrase 不可执行。
@@ -502,7 +582,17 @@ Medium / Low Phrase 可以更短，但不能重新模糊。
 某种低线动作……
 ```
 
-应由 Runtime 先决策成一个明确可执行动作。
+也禁止把已经收敛的 Technique 再压回动作类别：
+
+```text
+全身连动短击……
+短促身体控制……
+低线腿法扰乱……
+破平衡反制……
+用身体改变朝向……
+```
+
+应由 Runtime 先决策成一个明确可执行动作；压缩时可以删掉次要 Mechanics，但不能删掉动作 Head、目标和关键状态后果。
 
 原则：
 
@@ -588,10 +678,11 @@ Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给�
 6. **Stage-2 Traceability**：Regression / Debug 是否存在 Gap → Slot → Pattern → Phrase 证据？
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
-9. **Exchange Density**：是否因过度展开只剩少量大动作？
-10. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
-11. **Serialization Deduplication**：同一控制语义是否被多段重复？
-12. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
+9. **Concrete Technique Resolution**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作，是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法` 等 Abstract Action Head？
+10. **Exchange Density**：是否因过度展开只剩少量大动作？
+11. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
+12. **Serialization Deduplication**：同一控制语义是否被多段重复？
+13. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
 如果任何关键 Gate 失败，优先回到对应 Failure Layer 修复；不要第一反应扩知识库。
 
