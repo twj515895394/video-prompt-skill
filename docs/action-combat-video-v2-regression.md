@@ -1,12 +1,14 @@
 # Action Combat Video V2 Regression & Quality Benchmark
 
-> 状态：**Phase 11 Mandatory-path Rewire 已完成；V2-46～V2-49 Runtime 已实施；Concrete Choreography Knowledge（CK-13～CK-19）进入实现前 Regression Gate 定义。真实成片必须重新生成，不得沿用旧 PASS。**
+> 状态：**Phase 11 Mandatory-path Rewire 已完成；V2-46～V2-49 Runtime 已实施；Concrete Choreography Knowledge CK-1 Runtime 已完成并通过 Static Read，下一步进入固定 G01 Prompt Regression。真实成片必须重新生成，不得沿用旧 PASS。**
 >
 > 设计依据：`docs/action-combat-video-v2-spec.md`
 >
 > Concrete Choreography Knowledge Spec：`docs/action-combat-video-concrete-choreography-knowledge-spec.md`
 >
-> 实施计划：`docs/action-combat-video-v2-implementation-plan.md`
+> Concrete Choreography Implementation Plan：`docs/action-combat-video-concrete-choreography-implementation-plan.md`
+>
+> 上游历史实施计划：`docs/action-combat-video-v2-implementation-plan.md`
 >
 > Traceability Audit：`docs/action-combat-video-v2-traceability-audit.md`
 
@@ -139,19 +141,31 @@ Stage-2 Pattern Non-realization
 - [x] 不设置镜头数量 / 特写数量配额；
 - [x] Negative Constraints 少而有针对性。
 
-### 3.6 Concrete Choreography Knowledge — CK-13～CK-19（待实施验证）
+### 3.6 Concrete Choreography Knowledge — CK-13～CK-19（CK-1 Static PASS）
 
-- [ ] Fighting Direction / “怎么打”进入 Conditional High-value Question Pool；
-- [ ] 若用户已明确拳种 / 格斗体系 / 打法，不重复询问；
-- [ ] Fighting Direction 与旧“核心动作风格 / Choreography Profile”合并，不连续问两个同义问题；
-- [ ] Fighting Direction 候选至少 5 个，正常 6–8 个，复杂场景最多 10 个，并支持自定义；
-- [ ] 候选之间必须在 Movement / Technique / Range / Physical Scale / 节奏等维度存在实质差异；
-- [ ] Stage-2 使用 `Planning Gap → Pattern Slot → 1 主 + 可选 1 辅`，不固定三槽全读；
-- [ ] 最小 Pattern 验证集先于完整 Knowledge Expansion；
-- [ ] Lightweight Action Phrase Budget 接入：关键转折 High、普通 Exchange Medium、连接 Low；
-- [ ] 连续两个 High Granularity 后，普通 Exchange 应优先压缩，不继续堆第三个同等长度大段；
-- [ ] Final Preflight 能识别 `Static Standing Combat / Upper-body Technique Dominance`；
-- [ ] Phase 1 未通过三个核心 Gate 时，禁止进入大规模 Knowledge Expansion。
+- [x] Fighting Direction / “怎么打”进入 Conditional High-value Question Pool；
+- [x] 若用户已明确拳种 / 格斗体系 / 打法，不重复询问；
+- [x] Fighting Direction 与旧“核心动作风格 / Choreography Profile”合并，不连续问两个同义问题；
+- [x] Fighting Direction 候选至少 5 个，正常 6–8 个，复杂场景最多 10 个，并支持自定义；
+- [x] 候选之间必须在 Movement / Technique / Range / Physical Scale / 节奏等维度存在实质差异；
+- [x] Stage-2 使用 `Planning Gap → Pattern Slot → 1 主 + 可选 1 辅`，不固定三槽全读；
+- [x] 最小 Pattern 验证集先于完整 Knowledge Expansion；
+- [x] Lightweight Action Phrase Budget 接入：关键转折 High、普通 Exchange Medium、连接 Low；
+- [x] 连续两个 High Granularity 后，普通 Exchange 应优先压缩，不继续堆第三个同等长度大段；
+- [x] Final Preflight 能识别 `Static Standing Combat / Upper-body Technique Dominance`；
+- [x] CK-2 未通过三个核心 Gate 时，禁止进入大规模 Knowledge Expansion。
+
+Static Read 已确认运行闭环：
+
+```text
+Fighting Direction
+→ Stage-2 Gap Detection
+→ Minimum Pattern Hit
+→ Concrete Action Phrase
+→ High / Medium / Low Granularity
+→ Prompt Assembly Preservation
+→ Static Standing / Upper-body Dominance / Richness Preflight
+```
 
 ---
 
@@ -412,9 +426,9 @@ Next Adjustment:
 
 ## 10. Concrete Choreography Knowledge Two-Stage Gate
 
-### Phase CK-1｜Runtime + Minimum Pattern Validation
+### Phase CK-1｜Runtime + Minimum Pattern Validation — ✅ Static PASS
 
-先实施：
+已实施：
 
 ```text
 Fighting Direction Interactive
@@ -422,18 +436,20 @@ Fighting Direction Interactive
 + Minimum Movement / Technique / Transition Pattern Set
 + Lightweight Action Phrase Budget
 + Static Standing Combat / Upper-body Dominance Preflight
++ Prompt Assembly Granularity / Fighting Direction Preservation
 ```
 
-必须验证：
+Static Read 已确认：
 
-- Fighting Direction 被正确询问 / 继承；
-- 候选答案数量与质量合格；
-- Stage-2 真正命中最小 Pattern，而不是仅“读过索引”；
-- Pattern 能进入 Concrete Action Phrase；
-- Movement 能主动改变空间 / 高低位 / 轴线 / 重心；
-- Granularity 没有再次挤压 Exchange 数量。
+- Fighting Direction 可被正确询问 / 继承；
+- 候选答案数量与质量规则已接入；
+- Stage-2 可命中最小 Pattern；
+- Pattern 之后强制进入 Concrete Action Phrase；
+- Movement 缺席会触发 `Static Standing Combat Risk`；
+- High / Medium / Low Granularity 已贯穿 Choreography → Assembly；
+- Knowledge Expansion 仍被 Gate 锁定。
 
-### Phase CK-2｜固定 G01 Prompt Regression
+### Phase CK-2｜固定 G01 Prompt Regression — ⏳ 下一步
 
 使用同一 G01 输入重新跑 Interactive → Final Prompt，三个核心 Gate 必须同时通过：
 
@@ -501,11 +517,11 @@ Prompt-level Gate PASS 后才重新生成 G01。
 - V2-48 Decision Purity + Conditional Camera Intent：✅ Runtime 已实施；
 - V2-49 Executable Action Granularity：✅ Runtime 已实施；
 - Concrete Choreography Knowledge Spec CK-01～CK-19：✅ 已记录；
-- Fighting Direction Interactive：⏳ 待实施；
-- Stage-2 Gap-driven Pattern Routing：⏳ 待实施 / 验证；
-- Minimum Pattern Validation Set：⏳ 待实施；
-- Lightweight Action Phrase Budget：⏳ 待实施；
-- Static Standing Combat / Upper-body Dominance Gate：⏳ 待实施；
-- CK-1 Runtime / Minimum Pattern Validation：⏳ 未执行；
-- CK-2 Fixed G01 Prompt Regression：⏳ 未执行；
+- Fighting Direction Interactive：✅ 已实施并回读；
+- Stage-2 Gap-driven Pattern Routing：✅ 已实施并回读；
+- Minimum Pattern Validation Set：✅ 已建立；
+- Lightweight Action Phrase Budget：✅ 已贯穿 Choreography / Router / Assembly；
+- Static Standing Combat / Upper-body Dominance Gate：✅ 已实施；
+- CK-1 Runtime / Minimum Pattern Validation：✅ **Static PASS**；
+- CK-2 Fixed G01 Prompt Regression：⏳ **下一步**；
 - G01 Actual Generated Video：⏳ 未执行，不得宣称质量 PASS。
