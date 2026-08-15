@@ -475,18 +475,69 @@ Camera Editing Pace = 镜头切换有多快
 - 高速 Combat 不等于高频快切；
 - 慢速 Clinch / Grappling 可以保持很高 Pressure / Intensity。
 
-### 4A.1 Conditional Exposure
+### 4A.1 Conditional Exposure / High-value Trigger
 
-本 Gate 不固定增加一轮问题。只有当多个合理节奏方向会明显改变成片，或用户明确关心“快 / 慢 / 节奏变化 / 爆发 / 喘息 / 疼痛恢复”时才暴露。
+本 Gate 不固定增加一轮问题，但 **Round 2 完成、双方 Combat System / Expression 已知后，必须执行一次 Rhythm Exposure Check**。只有检查结果为低决策价值时，才允许静默使用默认值。
 
-如果不暴露：
+#### MUST expose
+
+以下任一情况成立，且用户尚未明确指定 Macro Rhythm 时，`Combat Rhythm / Macro Tempo Strategy` 必须暴露给用户，不能直接静默默认：
+
+1. **用户显式关心节奏**：提到快 / 慢 / 快慢变化 / 爆发 / 缠斗降速 / 喘息 / 疼痛恢复 / 疲劳 / 越打越快 / 越打越慢 / 节奏反差等；
+2. **双方体系天然形成不同 Tempo Regime**：例如 Striking / 高机动体系 vs Wrestling / Grappling / Clinch-heavy Control，或一个角色依赖高速切入退出、另一个依赖慢速高压贴身控制；
+3. **当前设计很可能出现明显 Combat State Transition**：例如 Striking → Clinch / Grappling、重击 / 踢飞 / 摔倒 / 撞墙 → Recovery → Re-entry、持续伤势 / 体能消耗 → Fatigue、Separation / Tactical Reassessment → 再爆发；
+4. **至少两种 Macro Strategy 会明显改变 Action Spine**：例如 `Dynamic Wave`、`Burst → Pressure → Burst`、`Impact Drop → Recovery → Rebuild`、`Asymmetric Tempo` 中至少两种都合理，而且会改变阶段顺序、主动权交换或 Recovery Window 的位置；
+5. **用户追求明显电影化高手对决，而当前角色 Expression / Archetype 本身存在节奏对比空间**：例如轻灵流畅 / 截击型角色面对硬朗爆发 / 持续压迫型角色。
+
+特别地，以下组合属于高价值典型，不得因为“15 秒很短”而自动跳过 Rhythm：
+
+```text
+Chinese Cinematic Kung-fu Hybrid / Striker
+vs
+Wrestling / Grappling / Clinch-heavy Control
+```
+
+因为它至少天然存在：
+
+```text
+Dynamic Wave
+vs
+Burst → Pressure → Burst
+vs
+Asymmetric Tempo
+```
+
+这些选择会明显改变成片，不属于可无损自动推导的小参数。
+
+当 MUST expose 命中时：
+
+```text
+Macro Rhythm Strategy = unresolved
+→ 向用户暴露 Rhythm Gate
+→ 等待用户选择 / 自定义 / 授权自动决定
+→ resolved 后才能继续后续高价值 Planning
+```
+
+不得在已经识别到高价值 Rhythm 分叉后，又用 `Dynamic Wave` 把该字段静默标记 resolved。
+
+#### MAY default silently
+
+只有同时满足以下条件时，才允许：
 
 ```text
 Macro Rhythm Strategy = Dynamic Wave
 Tempo Adaptation = Adaptive by Combat State
 ```
 
-作为默认值静默进入 Runtime。
+静默进入 Runtime：
+
+- 用户没有任何节奏意图；
+- 当前 Combat System / Expression 不产生明显不同的速度制度；
+- 没有预期的 Clinch / Knockdown / Heavy-impact Recovery / Fatigue 等阶段性 Tempo Transition；
+- 合理候选之间只会造成轻微表现差异，不会改变 Action Spine；
+- 额外询问只是在让用户选择可被 Runtime 高置信度自动完成的低价值细节。
+
+> **Conditional 不等于“默认不问”。Conditional 的意思是：先判断是否存在真实节奏分叉；存在就问，不存在才默认。**
 
 如果暴露，候选使用以下**语义曲线**，不是硬时间表：
 
@@ -688,8 +739,9 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
    - 双方是否可以不同，也允许共享。
 
 7. **Combat Rhythm Gate**
-   - Rhythm 只有在高价值时才暴露，不固定增加 Round；
-   - 默认是否为 `Dynamic Wave + Adaptive by Combat State`；
+   - Round 2 后是否真实执行 Rhythm Exposure Check；
+   - 命中 Striker / High-mobility vs Grappler / Clinch-heavy、明显 State Transition 或多种 Macro Strategy 都合理时，是否实际暴露，而不是静默默认；
+   - 只有低决策价值时才允许默认 `Dynamic Wave + Adaptive by Combat State`；
    - 用户选择 Macro Strategy 后，受击、疼痛、抱控、摔倒、喘息、疲劳是否仍能合法改变 Local Tempo；
    - 是否没有把 Combat Tempo 与 Camera Cut Frequency / Active Coverage 混为一谈。
 
