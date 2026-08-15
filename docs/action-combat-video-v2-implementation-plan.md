@@ -1,6 +1,6 @@
 # Action Combat Video V2 Implementation Plan
 
-> 状态：**V2-01～34 初版实施已完成；V2-35～45 已完成 Traceability Re-baseline；Phase 11 Mandatory-path Rewire 已完成；V2-46 / V2-47 已实施；当前进入 V2-48 / V2-49 的 Phase 12 Prompt-quality Calibration 实施。**
+> 状态：**V2-01～34 初版实施已完成；V2-35～45 已完成 Traceability Re-baseline；Phase 11 Mandatory-path Rewire 已完成；V2-46 / V2-47 已实施；V2-48 / V2-49 Runtime 已实施并完成静态回读，当前等待 Phase 12E 同输入 G01 Prompt 回归。**
 >
 > 当前设计真源：`docs/action-combat-video-v2-spec.md`
 >
@@ -45,9 +45,9 @@ Phase 0–9  V2-01～34 初版设计 / 实现 / 静态回归
 → Phase 11 Runtime Mandatory-path Rewire
 → Phase 12A V2-46 Camera Coverage Correction            ✅ 已实施
 → Phase 12B V2-47 Interactive Question Budget           ✅ 已实施
-→ Phase 12C V2-48 Interactive Purity + Camera Exposure   🚧 本轮实施
-→ Phase 12D V2-49 Executable Action Granularity          🚧 本轮实施
-→ Phase 12E Same-input G01 Prompt Regression              ⏸ 实施后测试
+→ Phase 12C V2-48 Interactive Purity + Camera Exposure   ✅ 已实施
+→ Phase 12D V2-49 Executable Action Granularity          ✅ 已实施
+→ Phase 12E Same-input G01 Prompt Regression              ⏳ 当前下一步
 → Phase 13 Generated Video Re-run + Model Calibration     ⏸ Prompt PASS 后
 ```
 
@@ -135,107 +135,47 @@ Current Body / Range State
 
 ## 5. Runtime File Mapping
 
-### 5.1 `assets/templates/mode-interactive-output-contract.md` — Modify
+### 5.1 `assets/templates/mode-interactive-output-contract.md` — ✅ 已实施
 
 对应：V2-48。
 
-实施内容：
+已实现：
 
-1. 在 V2-47 High-value Question Filter 基础上增加 **Decision Purity Check**：
-
-```text
-当前问题的 Primary Planning Node 是什么？
-→ 推荐答案是否只解决该节点？
-→ 是否提前锁死尚未确认的 Character Identity / Camera / Ending / Result？
-```
-
-2. 明确推荐答案允许：
-   - 解释 downstream 影响；
-   - 给出系统推荐；
-   - 说明为什么该选择重要。
-
-   但不允许把 downstream 选择直接写成既定事实。
-
-3. 将 Camera Intent 正式加入 **Conditional High-value Node Pool**：
-   - 用户已明确 → 继承；
-   - 单一明显合理方向 → 静默推导；
-   - 多个明显不同、都会显著改变成片的导演观看策略 → 暴露 Camera Intent 一问。
-
-4. Camera 问题使用观看策略语言，例如：
-   - 电影冲击型 Coverage；
-   - 完整动作可读型；
-   - 贴身沉浸型；
-   - 固定 / 克制机位型；
-   - 一镜到底型。
-
-   这些仅为候选表达，不写成固定五选一模板。
-
+1. 在 V2-47 High-value Question Filter 基础上增加 **Decision Purity Check**；
+2. 推荐答案允许解释 downstream 影响，但不允许把 downstream 选择直接写成既定事实；
+3. Camera Intent 正式加入 **Conditional High-value Node Pool**；
+4. Camera 问题使用导演观看策略语言，不使用内部参数；
 5. 不新增固定 Camera 询问轮次，不改变 10-round Safety Cap。
 
-### 5.2 `references/tasks/action-combat-video/choreography-playbook.md` — Modify
+### 5.2 `references/tasks/action-combat-video/choreography-playbook.md` — ✅ 已实施
 
 对应：V2-49；同时强化已有 V2-43 / V2-08。
 
-实施内容：
+已实现：
 
-1. 在 Action Phrase 构造阶段加入 **Executable Granularity Contract**。
+1. Action Phrase 构造阶段加入 **Executable Granularity Contract**；
+2. 关键 Phrase 必须把主要因果外显为具体身体 / 武器动作事实；
+3. Initiative Handoff 强化为动作尚未结束时的 Contact / Footwork / Axis / Range / Recovery Window 交接；
+4. Action Execution Budget 明确“细化关键因果动作，压缩次要过渡”；
+5. Ending Coverage Protection 已接入；
+6. `Abstract Action Block` 已进入 Preflight。
 
-2. 关键 Phrase 不允许只停留在战术概括；必须把关键因果外显为身体 / 武器动作事实。
-
-3. 强化 Initiative Handoff 的实际构造：
-   - Counter / Re-counter 优先发生在对方动作尚未完全结束时；
-   - 使用 Contact / Footwork / Axis / Range / Recovery Window 作为下一动作入口；
-   - 避免 `A 完成 → B 开始` 的回合式语义。
-
-4. 强化 Action Execution Budget 的理解：
-   - 细化关键因果动作；
-   - 压缩次要过渡；
-   - 不把颗粒度提升实现成动作数量无限增长。
-
-5. Ending Coverage Protection：
-   - Ending 必须继承最后一次 Contact / Position / Momentum / Advantage；
-   - High Coverage 短 Combat 中，长时间 Pose / 对视不能自动占用最后数秒；
-   - 用户明确要求长悬停 / 情绪 Ending 时才允许扩大 Ending Budget。
-
-6. Planning / Preflight 增加 `Abstract Action Block` 检查入口。
-
-### 5.3 `references/controls/prompt-assembly/control.md` — Modify
+### 5.3 `references/controls/prompt-assembly/control.md` — ✅ 已实施
 
 对应：V2-49 的最终外显；同时保持 V2-46。
 
-实施内容：
+已实现：
 
-1. Combat Final Assembly 不得把已经具体的 Choreography Plan 压缩回泛化动作摘要。
+1. **Concrete Choreography In → Concrete Choreography Out**；
+2. 关键 Active Exchange 保留具体动作、Contact / Evasion / Interception、即时响应、Footwork / Axis / Range / Position 后果和下一动作入口；
+3. 抽象词只能承担摘要 / 次要过渡；
+4. Initiative Handoff 序列化保留动作重叠 / 状态继承；
+5. Ending 描述与 Ending Budget 对齐，过长时优先内部压缩；
+6. 保持 V2-46 Camera Coverage，不让动作细化导致镜头回退。
 
-2. 对承担主要 Active Exchange 的文本，优先保留：
-   - 具体动作部位 / 武器线路；
-   - Contact / Evasion / Interception；
-   - 对手即时响应；
-   - Footwork / Axis / Range / Position 后果；
-   - 下一动作入口。
+### 5.4 `references/tasks/action-combat-video/index.md` — ✅ Review 后最小强化
 
-3. 抽象词可以承担：
-   - 风格摘要；
-   - 次要过渡；
-   - 全局节奏说明。
-
-   但不能替代关键动作链。
-
-4. Initiative Handoff 序列化优先使用动作重叠 / 状态继承语言，例如语义上体现：
-   - 尚未收势；
-   - 接触后立即；
-   - 脚步尚未落稳；
-   - 顺前一偏转 / 抓控 / 轴线变化直接进入。
-
-   不要求固定关键词。
-
-5. Ending 描述必须与 Ending Budget 匹配；若 Ending 文本明显比有效交战更长、更细，应内部压缩。
-
-6. 保持 V2-46：颗粒度提升不能导致 Camera 再退化成全程中景，也不能因为 Close-up / Cut 把动作重新分段。
-
-### 5.4 `references/tasks/action-combat-video/index.md` — Review-first，必要时轻量 Modify
-
-目的：确认 Mandatory Path 已明确包含：
+已确认原 Mandatory Path 主体正确，但 Stage-2 后仍写成泛化 `Action Phrase`，因此按 Plan 做最小强化：
 
 ```text
 Planning
@@ -245,46 +185,27 @@ Planning
 → Final Preflight
 ```
 
-只有当前 index 对 Stage-2 → Concrete Phrase 的职责表达仍不够强时，才做最小文字强化。
+未新增新 Runtime 节点。
 
-不新增新 Runtime 节点。
+### 5.5 `references/libraries/combat-fighting-profiles/library.md` — 本轮未改
 
-### 5.5 `references/libraries/combat-fighting-profiles/library.md` — 本轮默认不改
+保持冻结。
 
-本轮先不扩 Library。
+只有相同 G01 在本轮 Runtime 正确执行后仍持续输出泛化动作，才进入 **Concrete Choreography Knowledge Audit**。
 
-只有实施 V2-49 后，相同 G01 仍持续出现：
+### 5.6 `references/controls/camera-direction/control.md` — 本轮未改
 
-- 连续格挡；
-- 快速反制；
-- 不断换位；
-- 抽象打法标签；
+V2-46 已经实现 Camera Coverage。本轮只增加 Camera Intent 的交互暴露策略，没有新增 Camera 能力。
 
-而 Choreography / Assembly 已正确要求具体动作时，才进入 **Concrete Choreography Knowledge Audit**。
+### 5.7 `assets/templates/single-shot-video-template.md` — 本轮未改
 
-届时再判断现有 Fighting / Martial / Weapon 知识是否缺乏可组合动作链，而不是现在预先扩库。
-
-### 5.6 `references/controls/camera-direction/control.md` — 本轮不主动改
-
-V2-46 已经实现 Camera Coverage。
-
-本轮 Camera 变化主要是 **Interactive 是否把 Camera Intent 暴露给用户**，不是 Camera Control 再增加新能力。
-
-只有回归证明 Camera Intent 选择无法被当前 Control 实现时才继续修改。
-
-### 5.7 `assets/templates/single-shot-video-template.md` — 本轮不主动改
-
-V2-46 已解决 `single-shot-video ≠ one-take`。
-
-本轮仅回归确认该规则没有被 V2-49 的动作细化破坏。
+V2-46 已解决 `single-shot-video ≠ one-take`。本轮回归只确认该规则没有被 V2-49 破坏。
 
 ---
 
-## 6. Final Preflight 增量
+## 6. Final Preflight 增量 — ✅ 已实施
 
-本轮不新建新的 Gate 系统，只扩展现有 Combat Final Preflight。
-
-新增 / 强化检查：
+本轮没有新建 Gate 系统，只扩展现有 Combat Final Preflight。
 
 ### A. Executable Action Granularity
 
@@ -311,8 +232,6 @@ FAIL 条件：
 
 > `Turn-taking Combat / Initiative Segmentation`
 
-不新建新 Failure。
-
 ### C. Ending Coverage Protection
 
 FAIL 条件：
@@ -321,13 +240,7 @@ FAIL 条件：
 - Ending 的文字与事件预算明显吞掉 Active Exchange；
 - Ending 未继承最后一次战斗状态，而是重新摆姿势。
 
-继续归入：
-
-- Action Sufficiency；
-- Coverage Budget；
-- Motion Handoff / Neutral Reset；
-
-不新建 Ending Engine。
+继续归入 Action Sufficiency / Coverage Budget / Motion Handoff，不新建 Ending Engine。
 
 ### D. Interactive Decision Purity
 
@@ -347,12 +260,7 @@ Interactive Regression FAIL 条件：
 
 > 使用交互模式，帮我做一段一个女生和男生在办公室打架的15秒电影片段，实际两个人穿着正常的职场服装但其实是2个杀手组织的职业杀手。中国男女，女的22岁长发高马尾漂亮身材完美，男性是一个秃顶又矮又胖的55岁领导，贴身搏斗，不要隔着什么办公桌。
 
-保持：
-
-- Interactive；
-- 15s；
-- Generic 模型；
-- 同一人物与场景输入。
+保持 Interactive、15s、Generic 模型、同一人物与场景输入。
 
 ### 7.2 Interactive Gate
 
@@ -390,10 +298,8 @@ Interactive Regression FAIL 条件：
 
 ### 7.4 Abstract Action Block 专项检查
 
-对 Final Prompt 中每个承担主要有效交战的段落做快速判断：
-
 ```text
-删掉“连续 / 快速 / 专业 / 高密度 / 反制 / 缠斗”等形容或概括词后，
+删掉“连续 / 快速 / 专业 / 高密度 / 反制 / 缠斗”等概括词后，
 是否仍然能看清人物具体在做什么、对方怎么立即响应、双方位置 / 轴线 / 距离如何变化？
 ```
 
@@ -403,87 +309,48 @@ Interactive Regression FAIL 条件：
 
 只有 Prompt-level Gate 通过，才进入 Phase 13。
 
-真实视频继续观察：
-
-- Active Combat Coverage Realization；
-- 动作是否仍被模型合并 / 丢失；
-- Action Granularity → Generated Motion 的兑现度；
-- Turn-taking 是否消失；
-- Ending 是否吞时；
-- Camera Impact / Readability 平衡；
-- Contact / Kinetic / Spatial Continuity。
-
 ---
 
-## 8. 开发执行顺序
+## 8. 开发执行顺序 — ✅ Step 1～6 已完成
 
-为降低变量数量，按以下顺序开发：
-
-### Step 1｜Interactive Contract
-
-修改：
+### Step 1｜Interactive Contract — ✅
 
 `assets/templates/mode-interactive-output-contract.md`
-
-只实现 V2-48：
 
 - Decision Purity；
 - Conditional Camera Intent Exposure。
 
-完成后静态检查，不立即重新测试 G01。
-
-### Step 2｜Choreography Playbook
-
-修改：
+### Step 2｜Choreography Playbook — ✅
 
 `references/tasks/action-combat-video/choreography-playbook.md`
-
-实现：
 
 - Executable Granularity Contract；
 - Initiative Handoff 具体化；
 - Ending Coverage Protection；
 - Abstract Action Block Preflight。
 
-### Step 3｜Prompt Assembly
-
-修改：
+### Step 3｜Prompt Assembly — ✅
 
 `references/controls/prompt-assembly/control.md`
 
-实现：
-
-- 不把 Concrete Phrase 重新压缩成概括；
-- 动作因果细节保留策略；
+- Concrete Phrase 保真；
+- 动作因果细节保留；
 - Initiative Handoff 序列化；
 - Ending 文本 / Budget 控制。
 
-### Step 4｜Combat Router / Index Review
-
-检查：
+### Step 4｜Combat Router / Index Review — ✅
 
 `references/tasks/action-combat-video/index.md`
 
-仅在需要时做轻量强化，保证：
+已做必要的轻量强化，明确 `Stage-2 Knowledge → Concrete Action Phrase → Assembly → Preflight`。
 
-`Stage-2 Knowledge → Concrete Action Phrase → Assembly → Preflight` 真正明确。
-
-### Step 5｜Regression Contract
-
-修改：
+### Step 5｜Regression Contract — ✅
 
 `docs/action-combat-video-v2-regression.md`
 
-新增：
+已加入：Interactive Decision Purity、Conditional Camera Intent Exposure、Executable Action Granularity、Abstract Action Block、Ending Coverage Protection、Initiative Handoff Action-language realization。
 
-- Interactive Decision Purity；
-- Conditional Camera Intent Exposure；
-- Executable Action Granularity；
-- Abstract Action Block；
-- Ending Coverage Protection；
-- Initiative Handoff Action-language realization。
-
-### Step 6｜Static Review
+### Step 6｜Static Review — ✅
 
 确认没有：
 
@@ -494,7 +361,7 @@ Interactive Regression FAIL 条件：
 - Fighting Library 无证据扩建；
 - Generic Model Adapter 变化。
 
-### Step 7｜Same-input G01 Regression
+### Step 7｜Same-input G01 Regression — ⏳ 当前下一步
 
 用户本地运行同一办公室 G01。
 
@@ -508,7 +375,7 @@ Interactive Regression FAIL 条件：
 
 ---
 
-## 9. 本轮明确不改
+## 9. 本轮明确未改
 
 本轮冻结：
 
@@ -517,7 +384,7 @@ Interactive Regression FAIL 条件：
 - `references/tasks/action-combat-video/cinematic-wuxia-playbook.md`；
 - `references/libraries/combat-fighting-profiles/library.md`；
 - Fighting / Martial / Weapon 大规模 Library；
-- `references/controls/camera-direction/control.md`，除非实施中发现 V2-48 无法被当前能力承载；
+- `references/controls/camera-direction/control.md`；
 - `assets/templates/single-shot-video-template.md`；
 - Model Adapters；
 - 新 Combat State Machine；
@@ -537,12 +404,7 @@ Interactive Regression FAIL 条件：
 5. Final Preflight 已能拦 Abstract Action Block；
 6. 相同 G01 Final Prompt 仍持续缺乏具体动作构造。
 
-满足后才审计：
-
-- Fighting Profile 是否只有风格标签，缺少可组合 Action Chain；
-- 是否缺少 Strike / Grapple / Weapon 的具体 Transition；
-- 是否缺少 Whole-body / Range / Axis / Footwork 组合知识；
-- 是否需要新增少量高价值 Technique Pattern，而不是扩建大全式动作库。
+满足后才审计 Fighting / Martial / Weapon 是否缺少可组合 Action Chain / Transition / Whole-body / Range / Axis / Footwork 知识。
 
 ---
 
@@ -576,7 +438,7 @@ Camera Contract
 + Editorial Coverage
 ```
 
-V2-48 / V2-49 在 Spec 中可以独立追踪，但 Runtime 不分别建设新 Engine。
+V2-48 / V2-49 在 Spec 中独立追踪，但 Runtime 不分别建设新 Engine。
 
 ---
 
@@ -589,20 +451,20 @@ V2-48 / V2-49 在 Spec 中可以独立追踪，但 Runtime 不分别建设新 En
 | 11 | ✅ Static PASS | Mandatory Assembly / Preflight |
 | 12A | ✅ 已实施 | V2-46 Camera Coverage |
 | 12B | ✅ 已实施 | V2-47 Interactive Question Budget |
-| 12C | 🚧 待开发 | V2-48 Decision Purity + Conditional Camera Intent |
-| 12D | 🚧 待开发 | V2-49 Executable Action Granularity |
-| 12E | ⏸ 待 12C/12D | Same-input G01 Prompt Regression |
+| 12C | ✅ 已实施 | V2-48 Decision Purity + Conditional Camera Intent |
+| 12D | ✅ 已实施 | V2-49 Executable Action Granularity |
+| 12E | ⏳ 当前下一步 | Same-input G01 Prompt Regression |
 | 13 | ⏸ 待 Prompt PASS | Generated Video Re-run / Model Calibration |
 
 当前准确状态：
 
-> **Spec V2-48 / V2-49 Confirmed；Implementation Plan Ready；Runtime Development Pending。**
+> **Spec / Plan / Runtime / Regression 已对齐；V2-48 / V2-49 Runtime Static Review PASS；Same-input G01 Prompt Re-test Pending。**
 
 ---
 
-## 13. 开发完成后的下一步
+## 13. 当前下一步
 
-完成 Step 1～6 后，不直接扩 Library，也不换测试场景。
+不扩 Library，也不换测试场景。
 
 继续使用同一办公室 G01 输入，检查：
 
