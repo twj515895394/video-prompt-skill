@@ -1,9 +1,9 @@
 # Action Combat Regression Fix Spec
 
-> 状态：**RF-01～RF-21 Initial Runtime Implemented + RF-22 Confirmed / 实施中，待 G01 Regression**  
+> 状态：**RF-01～RF-22 Runtime Implemented / 待同一 G01 ×2 Regression 验证**  
 > 日期：2026-08-15  
 > 来源：G01 办公室职业杀手 15 秒近身格斗真实 Interactive Regression、第二轮真实测试及后续 Grill Me 决策  
-> 作用：定义本轮 Action Combat 回归修复的设计真源与验收口径。RF-01～RF-21 首批 Runtime 已落库；第二轮真实 Regression 又暴露 Post-Planning Runtime 的一级接线可靠性问题，新增 RF-22。本轮只实施 RF-22，不扩其他设计。
+> 作用：定义本轮 Action Combat 回归修复的设计真源与验收口径。RF-01～RF-21 首批 Runtime 已落库；第二轮真实 Regression 又暴露 Post-Planning Runtime 的一级接线可靠性问题，新增 RF-22。RF-22 已按确认设计完成 Runtime 实施；下一步只跑同一 G01 双次 Regression，不扩其他设计。
 
 Runtime 实施入口：
 
@@ -878,6 +878,11 @@ RF-22 = OPEN
 - 只声明完成 Interactive Planning 后必须移交 Post-Planning Mandatory Path；
 - RF-22 实施后不再把自身作为 `regression-fix-runtime-policy.md` 的真正 Loader。
 
+当前实现 commits：
+
+- `9bf31595e0fb53bce4b0b19374729ca176c9d705` — 移除 transitive Loader 职责，改为上游边界；
+- `03158470401906bae2201ce25827337845daae10` — 恢复原有 Anti-overdesign 原则，保持最小改动。
+
 ### Regression Runtime Policy
 
 `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
@@ -887,6 +892,8 @@ RF-22 = OPEN
 - RF-08～RF-20 的运行顺序、消费门禁和 Final Preflight additions；
 - RF-21 Camera Freeze 的 Runtime 边界；
 - 不承担 RF-22 Loader Reliability。
+
+本轮未修改该文件正文。
 
 ### Stage-2 Minimum Validation Set
 
@@ -899,9 +906,11 @@ RF-22 = OPEN
 - Movement Causality；
 - G01 新验收。
 
+本轮未修改该文件。
+
 ### Main Wiring / RF-22
 
-`SKILL.md` 将作为一级 Routing Truth：
+`SKILL.md` 现在是一级 Routing Truth：
 
 ```text
 Interactive Planning Complete
@@ -911,9 +920,13 @@ Interactive Planning Complete
 → Post-Planning Runtime
 ```
 
+实现 Commit：
+
+`b06f57061394f59b36ffdae49b1e94c448db2bac`
+
 RF-22 当前状态：
 
-> **Confirmed / Implementing**
+> **Implemented / Pending same-G01 ×2 Regression**
 
 ---
 
@@ -1011,4 +1024,4 @@ RF-22 关闭
 
 下一步固定为：
 
-> **实施 RF-22 → 静态回读 → 完全相同 G01 × 2 → 先看 Routing，再看 RF-14～RF-20。**
+> **完全相同 G01 × 2 → 先看 RF-22 Routing，再看 RF-14～RF-20。**
