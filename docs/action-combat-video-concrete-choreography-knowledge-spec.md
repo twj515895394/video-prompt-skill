@@ -499,7 +499,65 @@ Regression 关注结果：
 
 ---
 
-## 12. 当前已确认决策
+## 12. Minimum Pattern Validation Set / 最小 Pattern 验证集
+
+确认：实施前只建立一个**很小的验证集**，目的不是建设完整武术知识库，而是证明 Stage-2 + Pattern 结构是否真的能改变 G01 的动作分布。
+
+### 12.1 验证集职责
+
+最小验证集只回答三个问题：
+
+1. Stage-2 是否真的能读取并使用 Pattern；
+2. Fighting Direction 选定后，Runtime 是否能把它展开成不同的 Movement / Technique / Transition 组合；
+3. 在不扩大完整 Library 的情况下，G01 是否已经明显减少 `前臂 / 肩线 / 抓腕` 主导和 Static Standing Combat。
+
+### 12.2 规模原则
+
+不预先做大型武术知识工程。每一类只准备**少量、互有明显差异、足以覆盖当前 G01 验证目标**的样例。
+
+示意：
+
+```text
+Movement Samples
+→ 外侧切入 / 绕侧换位
+→ Level Change / 沉身进入
+→ 轴线旋转 / 转身换侧
+→ 支撑与重心改变
+
+Technique Samples
+→ 上肢短打
+→ 低线腿法 / 踢蹬扫
+→ 摔控 / 破平衡入口
+→ 全身连接式攻击
+
+Transition Samples
+→ Contact → Movement Re-entry
+→ High → Low → High
+→ Strike → Control / Takedown
+→ Failed Control → Angle Exit → Re-entry
+```
+
+这些只是验证类型，不是最终固定 Pattern 名单。
+
+### 12.3 通过条件
+
+在相同 G01、相同 High / Expert Combat 前提下，至少应观察到：
+
+- Movement 不再只是“补一句脚步”，而会主动改变 Level / Route / Axis / Range / Position；
+- Lower-body / Balance / Takedown 等身体手段至少能在合适 Fighting Direction 下真实进入动作链；
+- Concrete Action 不再反复依赖 `前臂偏转 → 肩线封堵 → 抓腕 / 顶肩` 作为主要交换骨架；
+- Action Phrase 仍保持 V2-49 的可执行因果，而不是为了多样化退化成“各种腿法 / 身法连续变化”；
+- CK-17 的轻量颗粒度预算仍能给多个 Exchange 留空间。
+
+如果最小集已经能显著改善，则证明架构方向有效，再按实际失败扩 Knowledge；如果最小集正确加载后仍失败，再进入 Knowledge Coverage Audit。
+
+原则：
+
+> **先用最小知识证明结构能工作，再决定知识库要扩多大。**
+
+---
+
+## 13. 当前已确认决策
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -520,10 +578,11 @@ Regression 关注结果：
 | CK-15 | Static Standing Combat Gate | High / Expert Combat 连续关键 Phrase 上肢主导且 Movement 未创造有效状态 / 空间变化时判定失败 |
 | CK-16 | Fighting Direction 合并旧风格问法 | 原“核心动作风格 / Choreography Profile”不再作为独立 Interactive 问题；与“怎么打”合并为一个上游 Fighting Direction 节点，节奏 / 写实度 / 重量感等作为执行属性 |
 | CK-17 | Lightweight Action Phrase Budget | 只定义何时详细、何时压缩；连续高颗粒度后普通 Exchange 主动降为中 / 低颗粒度；不使用固定动作数、字数、秒数或占比配额 |
+| CK-18 | Minimum Pattern Validation Set | 实施前只准备少量 Movement / Technique / Transition 样例验证 Stage-2 是否真正打破 Upper-body Dominance；验证有效后才按失败扩 Knowledge |
 
 ---
 
-## 13. Anti-overdesign 边界
+## 14. Anti-overdesign 边界
 
 当前明确禁止：
 
@@ -537,19 +596,20 @@ Regression 关注结果：
 - 在 Interactive 已经可以直接获得高价值 Fighting Direction 时，用复杂自动推断替代一句清晰用户问题；
 - 把“候选答案 5–10 个”误解成固定凑数，产生同义选项；
 - 将“核心动作风格”和“Fighting Direction”拆成两轮高度重复交互；
-- 用固定动作数、字数、秒数或 Granularity 占比实现所谓“动作丰富度”。
+- 用固定动作数、字数、秒数或 Granularity 占比实现所谓“动作丰富度”；
+- 在最小 Pattern 验证集尚未证明架构有效前，直接建设大型完整武术知识库。
 
 原则：
 
-> **能用一次高价值交互解决创作方向，就不要为同一件事堆自动推断；Runtime 复杂度应该用于把用户选择真正执行好。**
+> **能用一次高价值交互解决创作方向，就不要为同一件事堆自动推断；Runtime 复杂度应该用于把用户选择真正执行好。先用最小知识验证结构，再扩知识覆盖。**
 
 ---
 
-## 14. 当前未决设计树
+## 15. 当前未决设计树
 
-当前分支已经接近收口。剩余需要 Grill Me 的关键问题主要是：
+当前知识与交互设计分支已经基本收口。剩余需要 Grill Me 的关键问题主要是：
 
-1. 是否需要在实施前补充最小 Pattern 样例集，用来验证 Stage-2 能真正打破 Upper-body Dominance；
-2. Implementation Plan 与 Regression 如何落地 CK-13～CK-17。
+1. Implementation Plan 如何分阶段落地 CK-13～CK-18；
+2. Regression 如何把 Fighting Direction、Granularity、Stage-2 Pattern 命中与 Static Standing Combat Gate 串成一条可执行验收链。
 
-不再继续横向扩展新的武术知识分类，优先完成上述依赖后进入实施。
+不再继续横向扩展新的武术知识分类，下一步优先进入实施与验收设计。
