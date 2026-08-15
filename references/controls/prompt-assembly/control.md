@@ -11,13 +11,16 @@
 > **State Machine Internalized, Choreography Externalized.**  
 > **状态机内化，动作编排外显。**
 
-并追加两条强制原则：
+并追加三条强制原则：
 
 > **Concrete Choreography In, Concrete Choreography Out.**  
 > **前面已经设计具体的动作，组装阶段不能重新压缩成抽象战斗摘要。**
 
 > **Action Drives Camera; Camera Preserves Live Motion.**  
 > **关键镜头变化必须由正在发生的动作信息触发，跨镜不能只保位置而丢掉仍在发生的运动。**
+
+> **Selective Camera Accent, Not Camera-per-Action.**  
+> **普通连接动作继承当前 Shot；只有高价值动作信息或观看体验变化才把 Camera Accent 嵌入对应 Action Phrase。**
 
 ---
 
@@ -38,7 +41,7 @@
 1. 正向可见 Action Flow / Reaction / Contact / Consequence
 2. Position / Range / Environment 的可见变化
 3. Fighting Direction / Character Identity / Rhythm / Intensity / Signature 的可见表现
-4. Action-triggered Camera Handoff / Camera / Audio 支持
+4. Action-triggered Camera Handoff / Perceptual Impact / Camera / Audio 支持
 5. 少量真正必要的 Continuity / Negative Constraints
 ```
 
@@ -200,9 +203,10 @@ Combat Final Prompt 可以动态使用：
 - Contact / Weapon / Footwork Close-up；
 - Extreme Close-up / Insert；
 - Reaction / Impact Shot；
+- POV / Near-subjective / Near-lens；
 - Re-establish。
 
-关键不是 Cut 数量，而是 Cut 的信息价值和动作继承。
+关键不是 Cut 数量，而是 Cut 的信息价值、观看体验价值和动作继承。
 
 跨镜必须尽量继承：
 
@@ -218,7 +222,7 @@ Position / Left-Right
 
 局部特写之后，如果观众可能丢失双方位置 / Range，应安排 Re-establish；禁止 Cut 后人物回到默认站位、默认距离或重新起架。
 
-不要把“动作可读”组装成全程中全景 / 中景 + 轻微 tracking，也不要反向规定固定数量的特写。
+不要把“动作可读”组装成全程中全景 / 中景 + 轻微 tracking，也不要反向规定固定数量的特写 / POV / Insert。
 
 ### 3.7 Temporal Packing + Motion Handoff
 
@@ -304,7 +308,7 @@ Continuous 不等于全程同速。
 
 ### 3.12 Camera Mobility + Editorial Coverage
 
-> **Stable ≠ Static；Mobile ≠ One-take。**
+> **Stable ≠ Static；Mobile ≠ One-take；Camera Coupling ≠ Camera-per-Action。**
 
 Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Route；Shot Scale / Editorial Coverage 描述整段 Combat 如何选择观察距离和 Cut。
 
@@ -313,22 +317,38 @@ Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Rout
 - 全程一个机位；
 - 全程中全景；
 - 只允许 tracking / dolly；
-- 禁止 Close-up / Insert / Impact / Reaction。
+- 禁止 Close-up / Insert / Impact / Reaction / POV。
+
+默认序列化逻辑：
+
+```text
+普通连接动作
+→ 继承当前 Shot / Camera Path
+
+动作信息或观看体验出现高价值变化
+→ 才考虑 Reframe / Cut / Camera Accent
+```
 
 根据当前动作信息动态组织：
 
 ```text
 空间关系清楚时用 Master / Relationship
+→ Route / Level / Support 变化时做有动机的跟随 / 降位 / Reframe
 → 关键 Contact / Weapon / Footwork 用局部 Shot 强化
-→ Advantage / Reaction 需要时短促靠近
+→ Threat Approach 可短暂 POV / Near-lens
+→ Impact Consequence 可使用受击侧 Close-up / Reaction
+→ Range Compression 可靠近或改变关系角度
+→ Advantage / Initiative Reversal 可改变 Relationship Angle / Distance
 → 空间关系可能丢失时 Re-establish
 ```
 
-不设置 Shot 数量或景别配额。
+不设置 Shot、Close-up、POV、Insert 数量或景别配额。
 
-### 3.13 Action–Camera Handoff Preservation
+如果当前 Shot 已经能同时清楚表达动作和足够冲击，不为了“更灵活”强制改变镜头。
 
-如果上游已经设计 Action–Camera Handoff，Assembly 必须保留“为什么此时 Camera Change”与“下一镜继续什么 Motion State”，不能压缩成泛化 Camera 摘要。
+### 3.13 Action–Camera Handoff + Perceptual Impact Preservation
+
+如果上游已经设计 Action–Camera Handoff / Perceptual Impact Trigger，Assembly 必须保留“为什么此时 Camera Change”“观众此刻需要体验什么”与“下一镜继续什么 Motion State”，不能压缩成泛化 Camera 摘要。
 
 优先保留的 Trigger 包括：
 
@@ -338,9 +358,25 @@ Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Rout
 - Initiative Reversal；
 - Range / Level / Support Change；
 - Occlusion / Match Motion；
-- Environment Boundary。
+- Environment Boundary；
+- Perceptual Impact：Threat POV / Near-lens、Impact Consequence、Near-miss / Whip-by、Body-mechanics Detail、Range Compression、Initiative / Reaction Experience。
 
 不要求把 Trigger 名写给用户，而要锚定到具体 Action Moment。
+
+#### Global Camera Baseline 要短
+
+Combat Final Prompt 可以保留一个简短 Camera 总体基线，用于说明：
+
+- 动作可读；
+- 空间关系清楚；
+- Camera 随真实 Route / Range / Level / Fight-space 变化；
+- 不无意义碎切。
+
+但不能再把完整摄影设计集中成一个独立大段，然后让动作正文完全没有关键 Camera Moment。
+
+#### Key Camera Accent Inline
+
+只有真正高价值的 Camera Handoff / Perceptual Accent 才直接嵌入对应 Action Phrase；普通动作不需要附镜头说明。
 
 避免：
 
@@ -350,9 +386,19 @@ Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Rout
 
 > 她开始沉身从高线下穿时，镜头随身体短暂降低；脚步跨过对方支撑线、迫使他重新踩稳的一瞬切到低位近景，下一镜继续同一失衡反应，并从新的斜侧关系接住她的再进入。
 
+Threat 体验可写成：
+
+> 男方突然压近挥拳，拳锋快速逼近她的视线，镜头短暂贴近她的主观观看位置；她在拳头几乎占满画面前侧头闪开，镜头顺着拳势从她肩侧切出，继续同一记挥空动作。
+
+Impact 体验可写成：
+
+> 她趁他回收不及一拳击中侧脸，接触瞬间切到受击侧近景，看到他的头部和肩轴被冲击带偏；下一镜不重演出拳，而是直接从这股偏转继续她的外侧切入。
+
 跨镜不仅保留 Position / Direction，还要尽量保留一类 Active Motion：Momentum、Contact、Pressure、Rotation、Support Transfer、Forced Step 或 Recovery。
 
 如果 Cut 总发生在动作完整结束、双方站稳之后，判 `Dead-motion Cut / Post-action Cut`；如果 Camera 只在动作段后作为独立说明出现，判 `Action–Camera Decoupling`。
+
+如果几乎每一个动作后都附 Camera 指令，判 `Camera Accent Overmapping / Perceptual Accent Overuse`。
 
 不要机械生成 `Medium → Close → Medium → Close`。Re-establish 只在局部镜头后 Position / Range / Axis / Fight-space 可能丢失时使用。
 
@@ -395,7 +441,8 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 3. 装饰性形容词；
 4. 重复 Negative；
 5. 不改变战斗关系的次要动作；
-6. Ending 中不必要的静态描述。
+6. 低价值 Camera Accent；
+7. Ending 中不必要的静态描述。
 
 最后才缩减有效攻防。
 
@@ -409,7 +456,7 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - Major Reversal / Signature 前后的因果；
 - Fighting Direction 在 Movement / Technique / Range / Physical Scale 上的真实差异；
 - High / Medium / Low Granularity 的信息层级差异；
-- Action-triggered Camera Handoff；
+- 高价值 Action-triggered Camera Handoff / Perceptual Impact；
 - 跨 Shot 的 Action Direction / Contact / Momentum / Active Motion 继承；
 - Ending 的真实收束状态。
 
@@ -458,8 +505,10 @@ Prompt Assembly 交付前至少检查：
 - Ending 是否过早进入静止 Pose / 对视并吞掉 Active Exchange；
 - Camera 是否 Stable 但不是 Static；
 - 是否把 Continuous Action Spine 错写成 one-take / 单一 Camera Path；
-- 是否长期只有中全景 / 中景，缺少有信息价值的 Shot Scale Variation；
-- **关键 Cut / Reframe 是否由具体 Action State Change 触发，而不是泛化“关键接触切近”；**
+- 是否长期只有中全景 / 中景，缺少有信息价值或体验价值的 Shot Scale Variation；
+- **关键 Cut / Reframe 是否由具体 Action State Change / Viewer Experience Opportunity 触发，而不是泛化“关键接触切近”；**
+- **存在明显 Threat / Impact / Near-miss / Support / Range Compression / Initiative Moment 时，是否全部被保守 Coverage 吞掉；**
+- **是否反过来给几乎每个动作都附 Camera Accent / POV / Close-up；**
 - **Cut 是否至少在关键位置保留 Active Motion / Contact / Pressure / Recovery，而不是动作死掉后再切；**
 - **是否机械形成 `Medium → Close → Medium → Close`，而没有信息变化动机；**
 - Cut 后 Position / Direction / Contact / Momentum / Axis / Range 是否连续；
@@ -475,6 +524,10 @@ Prompt Assembly 交付前至少检查：
 
 触发 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss / Coverage Patterning` 时，优先重写 Action Trigger、Inherited Motion State 与 Camera Handoff；不要通过增加更多 Shot / 特写 / Camera 术语修复。
 
+触发 `Perceptual Impact Underuse` 时，从已有动作中寻找真正的 Threat / Impact / Support / Range / Initiative 高价值节点，再决定观察方式；不是机械追加特写。
+
+触发 `Camera Accent Overmapping / Perceptual Accent Overuse` 时，删除低价值 Camera 指令，让普通连接动作重新继承当前 Shot。
+
 不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage / 压缩结构，再交付。
 
 ---
@@ -485,13 +538,13 @@ Prompt Assembly 交付前至少检查：
 视频目标：
 参考与稳定锚点：
 场景 / 人物初始关系：
-连续且具体的动作主链（Combat 时为主体）：
+连续且具体的动作主链（Combat 时为主体；关键 Camera Accent 直接嵌入对应 Action Phrase）：
 关键软时间锚点 / Turning Point：
-Action-triggered Camera Handoff / Camera Coverage / Audio：
+简短 Global Camera Baseline / 其他 Camera Coverage / Audio：
 必要连续性与高风险限制：
 ```
 
-Combat 不要求机械拆成每 1–2 秒一个独立小段，也不要求整段摄影一镜到底。
+Combat 不要求机械拆成每 1–2 秒一个独立小段，也不要求整段摄影一镜到底；也不要求每个动作都有对应镜头指令。
 
 ---
 
@@ -528,17 +581,19 @@ Model Adapter 入口：
 - 高 Exchange Depth + 高 Camera Complexity 超出模型承载；
 - “稳定镜头”被误实现为“静态镜头”；
 - “动作连续”被误实现为“不能 Cut”；
+- “Action–Camera Coupling”被误实现为“每个动作必须配一个镜头”；
 - 高密度 Combat 被锁成全程中全景 / 中景；
 - 用户要求连续高手战，但时间结构是多个独立动作槽；
 - Choreography 已经具体，但 Assembly 为了缩短 Prompt 又退回抽象动作块；
 - Choreography 已分配 Granularity，但 Assembly 又把所有 Phrase 展开成同等体量；
 - Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异；
-- Action–Camera Handoff 已规划，但 Assembly 又压回“关键接触切近 / 随后回中景”；
+- Action–Camera Handoff / Perceptual Impact 已规划，但 Assembly 又压回“关键接触切近 / 随后回中景”；
+- Camera Accent / POV / Close-up 过密，反而挤压动作执行；
 - Cut 只保持 Position，却丢失上一 Shot 仍然存在的 Motion / Pressure / Recovery。
 
-Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果，也不得把关键 Action–Camera Handoff 改成动作完成后的随机 Coverage。
+Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果，也不得把关键 Action–Camera Handoff / Perceptual Impact 改成动作完成后的随机 Coverage。
 
-模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 降低无必要 Camera Complexity → 保留高价值 Action-triggered Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
+模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 删除低价值 Camera Accent → 降低无必要 Camera Complexity → 保留少数高价值 Action-triggered / Perceptual Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
 
 ---
 
