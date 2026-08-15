@@ -23,11 +23,11 @@ Combat System / Technique Backbone
 
 Combat Expression / Performance Identity
 → 角色以什么气质、决策方式和电影动作表达去使用该体系
-   ├─ 人物气质 / 决策倾向
+   ├─ 子维度 A：Character Combat Expression
    │  ├─ 冷静 / 凶狠 / 克制 / 从容
    │  ├─ 主动压迫 / 后发反制 / 诱导 / 节奏破坏
    │  └─ 风险偏好 / 杀意 / 留手 / 再进入倾向
-   └─ Cinematic Combat Archetype（可选）
+   └─ 子维度 B：Cinematic Combat Archetype（可选）
       ├─ 李连杰型
       ├─ 吴京型
       ├─ 甄子丹型
@@ -41,7 +41,7 @@ Combat Expression / Performance Identity
 
 ---
 
-## 3. Interactive 决策：不新增固定 Round 3
+## 3. Interactive 决策：Round 2 同轮双子维度，不新增 Round 3
 
 Action Combat Interactive 继续保持两个核心角色打斗节点：
 
@@ -50,30 +50,40 @@ Round 1：Combat System / System Refinement
 Round 2：Combat Expression / Performance Identity
 ```
 
+Round 2 内部采用两个**分别选择、分别表达、同轮完成**的子维度：
+
+```text
+子维度 A：人物战斗表达
+→ 冷静 / 凶狠 / 克制 / 主动压迫 / 后发反制 / 节奏破坏 ...
+
+子维度 B：电影武打参考（optional）
+→ 李连杰型 / 吴京型 / 甄子丹型 / 成龙型 / 李小龙型 / 不指定 / 自定义
+```
+
 已确认：
 
 - Cinematic Combat Archetype 挂在 **Round 2** 内；
 - 不新增固定 `Round 3：明星武打风格`；
-- Round 2 可以同时解决：
-  - 人物气质 / 决策倾向；
-  - 可选 Cinematic Combat Archetype；
-- 用户不需要明星参考时，Archetype 可以为空；
+- **两个子维度分开展示，不提前组合成套餐候选**；
+- 用户可以选择任意人物战斗表达，再独立选择任意 Archetype；
+- 系统不得把 `冷静后发 + 李连杰型`、`凶狠压迫 + 吴京型` 等预绑定成唯一组合；
+- 用户不需要明星参考时，Archetype 可以为空 / 不指定；
 - 用户已经明确“李连杰式 / 吴京式 / 甄子丹式 / 成龙式 / 李小龙式”时，Round 2 直接继承，不重复确认；
 - 用户只说“想要中国功夫电影那种打法”且不同 Archetype 会显著改变成片时，Round 2 可以把五种 Archetype 作为导演参考候选；
-- 仍然遵守 `One Question, One Primary Decision Node`，因为它们都属于 `Combat Expression / Performance Identity`。
+- 仍然遵守 `One Question, One Primary Decision Node`，因为两个子维度都属于 `Combat Expression / Performance Identity`。
 
 示例：
 
 ```text
-女方：
-Combat System = 太极
-Combat Expression = 冷静诱导 / 后发反制
-Cinematic Archetype = 李连杰型
+Round 2｜Combat Expression / Performance Identity
 
-男方：
-Combat System = 八极
-Combat Expression = 凶狠主动 / 持续压迫
-Cinematic Archetype = 吴京型
+人物战斗表达：
+女方 = 冷静诱导 / 后发反制
+男方 = 凶狠主动 / 持续压迫
+
+电影武打参考（可选）：
+女方 = 李连杰型
+男方 = 吴京型
 ```
 
 这仍然只占 Round 1 + Round 2 两个核心节点。
@@ -145,7 +155,7 @@ Runtime 使用：
 ```text
 Per-Character Combat System
 + System Refinement
-+ Combat Expression
++ Character Combat Expression
 + Cinematic Combat Archetype（optional）
 + Physical Presentation Domain
 + Scene / Range / Environment / Intent
@@ -178,6 +188,7 @@ Stage-2 Gap Detection
 - 不把电影作品逐片做招式库；
 - 不因为存在明星 Archetype 就跳过 Combat System；
 - 不把五种 Archetype 固定展示给所有 Combat 用户；
+- 不把人物战斗表达和明星 Archetype 预组合成套餐；
 - 不无限收录“知名动作演员”，只有动作语言足够独立、稳定、可执行且能显著改变生成结果时才扩展。
 
 ---
@@ -200,6 +211,10 @@ Cinematic Combat Archetype 正式挂在 **Round 2 `Combat Expression / Performan
 
 Round 2 可以同时决定人物气质 / 决策倾向与可选 Archetype；这仍属于同一个 Primary Planning Node，不违反 `One Question, One Primary Decision Node`。
 
+### CA-05
+
+Round 2 采用**同轮双子维度分别选择**：`Character Combat Expression` 与 `Cinematic Combat Archetype` 分开展示、分开选择；不得预先组合成“气质 + 明星型”的绑定套餐。
+
 ---
 
 ## 9. 下一实施点
@@ -208,8 +223,18 @@ Round 2 可以同时决定人物气质 / 决策倾向与可选 Archetype；这�
 
 ```text
 Combat Expression / Performance Identity
-= Character combat temperament / decision tendency
-+ optional Cinematic Combat Archetype
+├─ Character Combat Expression
+└─ optional Cinematic Combat Archetype
+```
+
+交互展示要求：
+
+```text
+同一 Round 2
+→ 先列人物战斗表达候选
+→ 再列电影武打参考候选（optional）
+→ 用户一次回答两个子维度
+→ 不因此产生 Round 3
 ```
 
 并保证：
@@ -217,4 +242,5 @@ Combat Expression / Performance Identity
 - 用户不需要明星参考时不会多问；
 - 用户已明确 Archetype 时直接继承；
 - 中国功夫电影参考存在真实分叉时，可以在 Round 2 展示五种参考型；
+- 两个子维度独立，不做组合套餐；
 - 不新增独立 Archetype 问卷轮次。
