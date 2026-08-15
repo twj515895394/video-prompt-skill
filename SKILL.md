@@ -60,7 +60,8 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - Combat Final Prompt 遵循 **State Machine Internalized, Choreography Externalized**：状态机制在内部运行，最终由可见动作、接触、受力和空间变化主导。
 - **Action Combat Interactive 的角色打斗决策必须把 Character / Narrative Identity、Combat System / Technique Backbone、System Refinement、Combat Expression 分开；职业 / 性别 / 年龄 / 外貌 / 体型不能直接替代 Combat System。**
 - **Interactive 不再把 legacy `Fighting Direction` 作为独立用户问卷；它由角色级 System / Refinement / Expression 与 Physical Presentation Domain 自动合成为 `Derived Choreography Direction`，MVP 阶段仅映射进旧 execution slot 兼容下游。**
-- Action Combat 的 `Stage-2 Pattern Hit Evidence + action-camera-handoff-playbook.md + prompt-assembly/control.md + Combat Final Preflight` 是最终交付必经路径；其中真正命中条件的 leaf execution knowledge 不能被“按需”预算跳过。
+- Action Combat 的 `Stage-2 Pattern Hit Evidence + action-camera-handoff-playbook.md + Camera Handoff Realization Gate + prompt-assembly/control.md + Model Adapter + Camera Handoff Preservation Gate + Combat Final Preflight` 是最终交付必经路径；其中真正命中条件的 leaf execution knowledge 不能被“按需”预算跳过。
+- Action Combat 的 Camera Gate 是语义合同，不是固定字段 / 固定镜头数量；普通连接动作不因为 Gate 存在而强制增加 Camera Accent。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
 
 ## 第一步：判断输入
@@ -170,10 +171,13 @@ Confirmed Per-Character Combat Context
 → Model Execution Realizability
 → Motion / Energy Carry-over
 → action-camera-handoff-playbook.md
+→ Camera Handoff Realization Gate
 → Camera / Spatial Coordination
 → prompt-assembly/control.md
-→ Combat Final Preflight
-→ Delivery
+→ 当前 Model Adapter
+→ Camera Handoff Preservation Gate
+→ Combat Final Preflight（检查 Adapter 后实际 Final Prompt）
+→ Output Template / Delivery
 ```
 
 固定读取：
@@ -181,7 +185,9 @@ Confirmed Per-Character Combat Context
 - `references/tasks/action-combat-video/action-camera-handoff-playbook.md`
 - `references/controls/prompt-assembly/control.md`
 
-其中 `action-camera-handoff-playbook.md` 负责 Stage-2 Evidence、Model Execution Realizability、Motion / Energy Carry-over、Base Viewing Priority / Hard Constraint 协调与 Action ↔ Camera Handoff；`prompt-assembly/control.md` 负责最终保真序列化。两者都不占普通 `0-3` Controls 配额。
+其中 `action-camera-handoff-playbook.md` 负责 Stage-2 Evidence、Model Execution Realizability、Motion / Energy Carry-over、Base Viewing Priority / Hard Constraint 协调、Action ↔ Camera Handoff 与 Realization Gate；`prompt-assembly/control.md` 负责最终保真序列化与 Common Camera Handoff Preservation Contract。两者都不占普通 `0-3` Controls 配额。
+
+Realization / Preservation 都是语义 Gate：不要求固定字段、固定句式、固定 Camera Accent 数量。只有上游真正选中的高价值 Camera Moment 才要求 Realize / Preserve，普通连接动作继续当前 Shot。
 
 #### Stage-2 leaf knowledge 条件必读
 
@@ -200,7 +206,7 @@ Confirmed Per-Character Combat Context
 
 该条件必读属于 Combat Stage-2 Execution Knowledge，**不占普通 `0-2 libraries detail` 可选预算**。必须能内部回答：`Gap → Slot → 实际 leaf Read → Pattern / Detail → Concrete Action`；没有真实 Read Evidence 不能假定 Stage-2 已完成。
 
-再执行 Combat Final Preflight。`prompt-assembly/control.md` 在 Action Combat 中属于必经 Final Assembly，不占普通 `0-3` Controls 的可选预算。
+真正的 Combat Final Preflight 在 Model Adapter + Preservation Gate 之后执行。`prompt-assembly/control.md` 在 Action Combat 中属于必经 Final Assembly，不占普通 `0-3` Controls 的可选预算。
 
 简单挥拳、跑跳、追逐、体育动作不进入 Combat 专项，继续使用原主任务 + `action-motion`。
 
@@ -209,8 +215,9 @@ Combat 内部职责：
 - `core-playbook.md`：State / Continuity / Battle Runtime Skeleton；
 - `choreography-playbook.md`：Coverage / Rhythm / Action Phrase / Character Identity / Tactical Interaction / Contact Solidity / Signature Moment / Execution Budget / Kinetic / Temporal / Camera Mobility / Final Preflight Criteria；
 - 专项 Playbook：Modern / Wuxia 的具体动作语言与物理尺度；
-- `action-camera-handoff-playbook.md`：Stage-2 Evidence / Model Execution Realizability / Motion-Energy Carry-over / Base Viewing Priority / Camera Hard Constraint / Action-triggered Camera Handoff / Perceptual Impact；
-- `prompt-assembly/control.md`：把内部动作设计转成最终连续、Action-first、可执行的 Prompt，并执行 Negative / Temporal / Kinetic / Camera Handoff 外显检查。
+- `action-camera-handoff-playbook.md`：Stage-2 Evidence / Model Execution Realizability / Motion-Energy Carry-over / Base Viewing Priority / Camera Hard Constraint / Action-triggered Camera Handoff / Perceptual Impact / Camera Handoff Realization Gate；
+- `prompt-assembly/control.md`：把内部动作设计转成连续、Action-first、可执行的 Prompt，并维护 Common Camera Handoff Preservation Contract；
+- `references/models/*.md`：只负责 Adapter-specific Expression，不重新决定上游高价值 Camera Moment 是否值得存在。
 
 Combat 不新增独立 `combat-choreography` 全局 Control。
 
@@ -236,7 +243,7 @@ Combat Quick Mode 必须执行 **Full Planning + Silent Resolution**：内部仍
 
 > MVP 范围：本轮优先验证 Interactive。Quick 的 legacy `Fighting Direction` 规划结构暂不全量迁移，避免一次引入过多变量。
 
-Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准；也不得跳过 Stage-2 Evidence / Action–Camera Handoff / Combat Final Assembly / Final Preflight。
+Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准；也不得跳过 Stage-2 Evidence / Action–Camera Realization / Combat Final Assembly / Model Adapter / Preservation Gate / Final Preflight。
 
 只有以下情况可以在快速模式中提出一个必要问题：
 
@@ -375,7 +382,7 @@ Combat 不新增一级 Style；“角色具体会什么”由 Combat System / sp
 
 默认把结构化导演方案转换为具体、流动、现在时的自然语言段落。
 
-### Combat Capability Contract
+### Combat Capability + Camera Preservation Contract
 
 Combat Model Adapter 可提供：
 
@@ -388,7 +395,13 @@ Combat Model Adapter 可提供：
 
 没有可靠资料 / Benchmark 时标记 `Unverified`，不得伪造 High / Medium / Low。
 
-Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / 观看目标。模型若需要降载，优先降低 Camera Complexity / 单窗口并行复杂度，不默认降低 Camera Mobility、Kinetic Scope 或把连续战斗稀释成少量动作。
+`Unverified` 只表示未知上限，不代表模型做不到，也不得作为自动删除 / 泛化高价值 Action–Camera Handoff 的理由。
+
+Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / 观看目标。模型若有 Verified Limitation 或真实 Generated-video Regression Evidence 需要降载，使用 Intent-preserving Degradation：优先降低 Camera 实现复杂度 / 单窗口并行复杂度，同时保留高价值 Handoff 的 Action Anchor、Viewer Intent 与 live-motion continuation。
+
+每个 Action Combat Model Adapter 都必须继承 `prompt-assembly/control.md` 的 Common Camera Handoff Preservation Contract。Adapter 可以自由改写表达，但不得造成 `Camera Handoff Serialization Loss`。
+
+Model Adapter 完成后，必须对**实际 Final Prompt**执行 Preservation Gate，再进入真正 Combat Final Preflight。
 
 ## 第八步：选择输出模板
 
@@ -410,9 +423,9 @@ Model Capability 只改变实现路径，不偷改 Combat Intent / Coverage / �
 
 按需读取：`assets/templates/model-adapted-output-template.md`
 
-Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / 多镜头，再执行 Combat-aware Prompt Assembly + Final Preflight，**通过后**才把动作、镜头、声音、连续性和少量高风险约束注入现有模板。
+Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / 多镜头，再执行 Combat-aware Prompt Assembly → Model Adapter → Camera Handoff Preservation Gate → Combat Final Preflight，**通过后**才把最终动作、镜头、声音、连续性和少量高风险约束注入现有模板 / Delivery。
 
-输出模板只负责承载，不得覆盖 Combat Task 已确定的时间序列化和动作连续性规则。高密度 Combat 默认 `Continuous Action Spine + Soft Time Anchors`；通用模板不能仅因为“15 秒 / 3+ 阶段”自动改回 Hard Timeline。
+输出模板只负责承载，不得覆盖 Combat Task 已确定的时间序列化、动作连续性和已经 Preserve 的 Key Camera Handoff。高密度 Combat 默认 `Continuous Action Spine + Soft Time Anchors`；通用模板不能仅因为“15 秒 / 3+ 阶段”自动改回 Hard Timeline。
 
 ## Reference 加载预算
 
@@ -434,8 +447,8 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 
 Action Combat 额外固定读取：
 
-- `action-camera-handoff-playbook.md`，作为 Stage-2 Evidence / Realizability / Action–Camera Bridge；
-- `prompt-assembly/control.md`，作为 Final Assembly / Preflight 必经 Reference；
+- `action-camera-handoff-playbook.md`，作为 Stage-2 Evidence / Realizability / Action–Camera Bridge / Realization Gate；
+- `prompt-assembly/control.md`，作为 Final Assembly / Common Preservation Contract 必经 Reference；
 - 条件命中的 Stage-2 leaf execution knowledge（当前最小验证阶段通常为 `minimum-validation-set.md`）。
 
 前两项不占 `0-3 controls` 配额；真正由 Stage-2 Gate 命中的 leaf execution knowledge 不占普通 `0-2 libraries detail` 可选预算。
@@ -459,14 +472,14 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 → 必须保留 / 必须修改 / 必须禁止
 → 当前任务 Playbook
 → 当前输入 Reference 和素材职责
-→ Combat Stage-2 Evidence / Realizability / Action–Camera / Final Assembly（当前为 Combat 时）
+→ Combat Stage-2 Evidence / Realizability / Action–Camera / Realization / Final Assembly / Preservation（当前为 Combat 时）
 → 已加载 controls
 → 已加载 libraries 与 style
 → model adapter 的能力边界和表达方式
 → 自动补全
 ```
 
-模型适配可以限制能力和改变表达方式，但不能擅自改变用户的剧情目标、人物关系、Combat Intent、Coverage 和核心动作。
+模型适配可以限制能力和改变表达方式，但不能擅自改变用户的剧情目标、人物关系、Combat Intent、Coverage、核心动作或已经成立的高价值 Action–Camera Intent。
 
 ## 自动补全与冲突裁决
 
@@ -475,7 +488,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 缺少收尾时，为动作、视线、重心、镜头和声音补自然落点；
 - 缺少声音时，只补有明确画面来源的环境音或拟音；
 - 多素材冲突时，为每个关键维度选择唯一主真源；
-- 主体动作强时通常降低无必要 Camera Complexity；**Action Combat 不因此自动降低 Camera Mobility**；
+- 主体动作强时通常降低无必要 Camera Complexity；**Action Combat 不因此自动降低 Camera Mobility，也不因 `Unverified` 主动删掉高价值 Camera Moment**；
 - 用户选择“完整动作可读优先”时，默认优先 Whole-body / Footwork / Spatial Relationship 可读，但**不得序列化成全程固定中大全景**；在 Camera Hard Constraint 允许范围内，仍应随 Route / Level / Support / Initiative / Fight-space 与高价值 Perceptual Impact 做有动机的跟随、降位、Reframe、POV / Close-up 或必要 Cut；
 - 用户明确 One-take / No Cut / Fixed Camera 时视为 Camera Hard Constraint；Hard Constraint 优先于 Base Viewing Priority 与 Camera Accent，但只限制摄影实现，不反向削减 Combat Coverage / Derived Choreography Direction；
 - 互斥风格只保留最符合核心观看目标的一种；
@@ -502,6 +515,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - Combat Final Prompt 由正向动作语言主导，状态术语尽量转译为可见动作、受力和空间后果；
 - Combat 的具体化必须通过 Model Execution Realizability：优先 `Whole-body Motor Driver → 关键 Technique → Opponent Response → Balance / Position Consequence → Continuation`，压描述复杂度而不是压动作连续性；
 - Combat Camera 序列化必须区分 `Base Viewing Priority` 与 `Camera Hard Constraint`：全局 Camera Baseline 只保留简短观看基线和真正硬约束，高价值 Action-triggered / Perceptual Camera Accent 直接锚在对应 Action Phrase；普通连接动作继续当前 Shot，不逐动作配镜头；
+- 被选中的高价值 Camera Moment 在 Action–Camera Runtime 必须通过 Realization Gate；Assembly / Adapter 可以自由改写语言，但必须 Semantic Preservation，不得把具体 Handoff 压成“关键接触时切近”等泛化 Camera 摘要；
 - Combat Audio 与 Action / Camera 同一连续事件流设计，但 Audio Accent Density 不等于 Action Density；
 - Negative 只针对当前最危险失败模式，不默认追加通用禁止清单，也不添加用户未要求的剧情限制；
 - 最后一拍必须可自然停住。
@@ -525,20 +539,33 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 ### Combat 专项
 
-如果当前是 Action Combat，最终交付前必须完成一个**合并 Gate**，而不是只确认文件“读过”：
+如果当前是 Action Combat，**Model Adapter 完成后、最终交付前**必须对实际 Final Prompt 完成一个合并 Gate，而不是只确认文件“读过”：
 
 1. **角色决策是否分层**：Character / Narrative Identity 是否没有吞并 Combat System；Interactive 的 System / Refinement / Expression 是否真实保留；Derived Choreography Direction 是否由这些信息派生而非重新覆盖用户决策；
 2. **Stage-2 是否真的命中**：当前 Derived Choreography Direction / Technique Identity / Movement Gap 是否需要 leaf execution knowledge；若需要，是否有真实 `Gap → Slot → leaf Read → Pattern/Detail → Concrete Action` Evidence；
 3. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标相符，是否仍有长对峙、上半身锁死、动作被时间摊薄；
 4. **动作是否连续**：Action Phrase 是否通过 Contact / Momentum / Footwork / Axis / Range / Position 等继承，是否仍是一招一停、轮流出招；
-5. **角色是否合理且真实区分**：Combat System / Refinement / Expression 是否能从改变状态的 Movement / Technique / Initiative 看出差异；用户已确认的“拳腿 / 拳肘抱摔”等差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
+5. **角色是否合理且真实区分**：Combat System / Refinement / Expression 是否能从改变状态的 Movement / Technique / Initiative 看出差异；用户已确认的技术差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
 6. **Model Execution Realizability 是否通过**：是否出现 Effective High Granularity Everywhere、Instruction Saturation、Upper-body Semantic Dominance；Feet-fixed Test 是否失败；
 7. **接触与状态是否成立**：Contact 是否有 Commitment、受力 / 压力、Reaction 与 Persistent Consequence；Range / Position / Advantage / Environment 是否影响下一拍；
-8. **镜头是否跟得上且尊重 Camera 决策层级**：Base Viewing Priority 是否仍允许高价值 Route / Level / Support / Initiative / Perceptual Accent；关键 Cut / Reframe 是否继承 Active Motion；用户明确 One-take / No Cut / Fixed Camera 时是否存在 `Camera Hard Constraint Violation`；
-9. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；Action–Camera Handoff 是否没有被压成泛化 Camera 段；Camera Baseline 是否短、关键 Camera Accent 是否锚在具体 Action Moment；
-10. **Prompt 是否 Action-first**：是否由可见动作主导，Negative 是否少而有依据。
+8. **Camera Realization 是否成立**：被选中的高价值 Camera Moment 是否有具体 Action Anchor、匹配的 Camera Response / Viewer Task、Live Motion / State Continuation，并服从 Camera Hard Constraint；是否仍只是“第一次接触 / 关键时刻切近”；
+9. **Camera Preservation 是否成立**：Assembly / Model Adapter 后，关键 Handoff 是否仍保留 Action Anchor、Action↔Camera 因果、主要 Viewer Intent 与必要 live motion；Camera State 是否先建立后引用；是否出现 `Camera Handoff Serialization Loss`；
+10. **镜头是否跟得上且尊重 Camera 决策层级**：Base Viewing Priority 是否仍允许高价值 Route / Level / Support / Initiative / Perceptual Accent；关键 Cut / Reframe 是否继承 Active Motion；用户明确 One-take / No Cut / Fixed Camera 时是否存在 `Camera Hard Constraint Violation`；
+11. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；Global Camera Baseline 是否短，关键 Camera Accent 是否锚在具体 Action Moment；
+12. **Prompt 是否 Action-first**：是否由可见动作主导，Negative 是否少而有依据。
 
-任一关键项 FAIL：内部回到 Stage-2 Read / Pattern Selection / Action Phrase / Character System / Expression / Action–Camera Handoff / Prompt Assembly 对应层重写，重新执行 Gate，通过后才允许交付。
+任一关键项 FAIL：内部回到 Stage-2 Read / Pattern Selection / Action Phrase / Character System / Expression / Action–Camera Handoff / Prompt Assembly / 当前 Model Adapter 的对应层重写，重新执行 Gate，通过后才允许交付。
+
+其中：
+
+```text
+Action–Camera Decoupling / Realization FAIL
+→ 回 Action–Camera Runtime
+
+Camera Handoff Serialization Loss
+→ 只回 Prompt Assembly / 当前 Model Adapter
+→ 不重新设计 Choreography
+```
 
 ### 表演与音画
 
@@ -554,7 +581,8 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 用户未指定模型时是否使用 Generic；
 - Seedance 是否正确绑定素材职责；
 - LTX 是否使用连贯自然语言并强调运动；
-- Model Combat Capability 未验证时是否诚实标记 Unverified；
+- Model Combat Capability 未验证时是否诚实标记 Unverified，但没有把 Unverified 当作自动降级依据；
+- Model Adapter 后是否执行 Camera Handoff Preservation Gate；
 - 是否删除无价值备选、自动补全说明和重复内容。
 
 ## 失败诊断
@@ -595,5 +623,7 @@ Combat 主诊断：
 - Combat 不用 Camera Shake / 大音效代替真实 Contact；
 - Combat 不因“完整动作可读优先”自动锁成全程固定中大全景；
 - Combat 不因通用单镜头模板自动把高密度连续战斗切成多个 Hard Time Blocks；
+- Combat 不因 `Model Capability = Unverified` 自动删除 / 泛化高价值 Camera Handoff；
+- Combat Model Adapter 不得造成 `Camera Handoff Serialization Loss`；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
 - 不暴露内部 Reference、目录、迁移和维护说明。
