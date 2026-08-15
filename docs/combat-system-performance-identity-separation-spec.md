@@ -75,15 +75,37 @@ Round 2：Performance Identity / Combat Expression
 - Performance Identity 只能修改同一技法体系的表现方式，不能把它替换成另一套武术 / 格斗体系；
 - 系统应把两轮结果在 Runtime 内组合，而不是在候选层提前捆绑。
 
-## 5. 待确认设计分支
+## 5. 已确认：Combat System 属于角色级属性
+
+用户明确选择：**B — 每个角色独立定义 Combat System / Technique Backbone。**
+
+因此 Combat System 不再被建模为“整场战斗只有一个体系”，而是绑定到具体 Combatant：
+
+```text
+Combatant A → Combat System A
+Combatant B → Combat System B
+...
+```
+
+允许：
+
+- 双方使用相同体系：`太极 vs 太极`；
+- 双方使用不同体系：`太极 vs MMA`；
+- 多人场景中不同角色拥有不同体系；
+- 用户只指定其中一方时，另一方继续保持未决，按 Interactive / Quick 规则处理。
+
+因此 `Technique Backbone` 与后续 `Persistent Combat Signature` 应优先按角色维护，而不是整场共享一个固定 Fighting Profile。
+
+角色的 Combat System 仍然不能由职业、性别、年龄、外貌、体型自动决定。
+
+## 6. 待确认设计分支
 
 当前仍需继续 Grill-Me：
 
-1. `Combat System` 是整场统一选择，还是允许每个角色分别拥有独立体系；
-2. `Performance Identity` 是整场统一气质，还是允许每个角色分别定义；
-3. 用户输入已经明确其中某一层时，固定两轮是否仍重复确认，还是把该轮改成确认 / 精炼；
-4. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
-5. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
-6. G01 回归基线如何迁移到新两轴结构。
+1. `Performance Identity / Combat Expression` 是整场统一气质，还是允许每个角色分别定义；
+2. 用户输入已经明确其中某一层时，固定两轮是否仍重复确认，还是把该轮改成确认 / 精炼；
+3. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
+4. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
+5. G01 回归基线如何迁移到新两轴结构。
 
 在上述依赖分支达成共识后，再统一修改 Runtime / Interactive Contract / Choreography / Router，避免边讨论边产生半完成语义。
