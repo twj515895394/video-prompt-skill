@@ -53,11 +53,14 @@ Temporal / Prompt Following: Unverified
 ### Combat 适配策略
 
 - 保留用户 Combat Intent / Coverage / 观看目标；
+- `Unverified` 只表示不能承诺专项能力上限，不自动删除、泛化或保守化上游已成立的高价值 Action–Camera Handoff；
+- 默认保持 Full-fidelity Action–Camera Realization；
 - 把内部 Action Phrase 转成自然、连续、现在时的动作段落；
 - 用“紧接着、随即、在对方尚未恢复前、顺势”等语言保持 Counter / Re-counter 因果；
 - Contact 后直接写身体 / 兵器 / 空间 Consequence；
 - 高密度动作时减少不必要 Camera Complexity 和次要独立事件；
-- 需要降载时拆成连续 Phrase，而不是把高手对决压成少量孤立动作；
+- 只有存在 Verified Limitation 或真实 Generated-video Regression Evidence 时，才允许 Intent-preserving Degradation；
+- 需要降载时拆成连续 Phrase、降低 Camera 实现复杂度，而不是把高手对决压成少量孤立动作；高价值 Camera Moment 优先保留 Action Anchor、Viewer Intent 与 live-motion continuation；
 - 后续由 Golden Benchmark 校准真实 Combat Capability。
 
 ---
@@ -78,7 +81,7 @@ Temporal / Prompt Following: Unverified
 高风险限制
 ```
 
-Action Combat 还应在内部已经完成 Coverage、Rhythm、Action Phrase、Character Identity、Contact Solidity、Signature Moment 与 State / Continuity Validation。
+Action Combat 还应在内部已经完成 Coverage、Rhythm、Action Phrase、Character Identity、Contact Solidity、Signature Moment、State / Continuity Validation，以及上游已经通过 Realization Gate 的高价值 Action–Camera Handoff。
 
 ---
 
@@ -115,7 +118,44 @@ Exchange Depth = High
 - 受力 / 兵器偏转 / 重心怎样改变；
 - 下一动作怎样在未完全 reset 前继续。
 
-自然语言压缩不能删掉关键 Attack → Response → Contact → Consequence 因果。
+自然语言压缩不能删掉关键 Attack → Response → Contact → Consequence 因果，也不能把已经成立的 Action–Camera Handoff 压回“关键时刻推近 / 冲击处切近”之类泛化描述。
+
+### 5.1 Common Camera Handoff Preservation Contract
+
+LTX 继承 `prompt-assembly/control.md` 的 Common Preservation Contract。
+
+LTX 可以：
+
+- 把结构化 Handoff 改写成单个流动自然段；
+- 合并重复 Camera 术语；
+- 使用更自然的摄影语言表达同一 Camera Task；
+- 在 Hard Constraint 或可靠能力证据需要时，把复杂 Cut 改成连续 Camera Movement / Reframe；
+- 合并低价值 Camera Accent。
+
+但自然语言压缩后仍应保留：
+
+```text
+具体 Action Anchor
++
+Camera 为什么此刻介入 / Viewer Experience Intent
++
+动作与摄影的因果绑定
++
+必要 live-motion continuation
+```
+
+禁止无证据地：
+
+- 把具体动作触发改成“关键时刻 / 第一次接触”；
+- 把 Camera Task 改成“使用电影化镜头增强冲击”；
+- 删除 Handoff 所依赖的 Momentum / Contact / Pressure / Recovery 等活跃状态；
+- 用一个总 Camera 句子替代正文中的关键 inline Camera Moment。
+
+若发生上述退化，判：
+
+`Camera Handoff Serialization Loss`
+
+并只回 Prompt Assembly / LTX Adapter 重写，不回 Choreography 重新设计动作。
 
 ---
 
@@ -210,7 +250,7 @@ LTX 需要从零建立完整视觉起点。
 
 镜头移动后，应描述主体在新构图中的状态，帮助运动完成。
 
-Action Combat 中，高 Exchange Depth / 高 Coverage 时优先保持可读的稳定跟随；如果复杂 Camera 会与动作争夺执行预算，优先简化 Camera，而不是先删有效攻防。
+Action Combat 中，高 Exchange Depth / 高 Coverage 时优先保持可读的稳定跟随；如果复杂 Camera 会与动作争夺执行预算，优先简化**有证据表明需要简化的实现手段**，而不是先删有效攻防或把高价值 Handoff 泛化掉。
 
 避免过度数值化的控制，例如精确角度、每秒移动距离或大量机械参数。官方指南更推荐自然语言描述。
 
@@ -244,7 +284,8 @@ Combat 中 Audio Accent Density 不等于 Action Density；重点 Contact / Phra
 - 依赖可读文字、Logo 或复杂排版作为核心结果；
 - 缺少结束状态，导致视频在动作中途被截断；
 - Combat 自然语言压缩后只剩少量动作，Coverage / Exchange Richness 未兑现；
-- Combat 用 Camera Shake / 大音效代替 Contact Solidity。
+- Combat 用 Camera Shake / 大音效代替 Contact Solidity；
+- Combat 把上游已经成立的 Key Camera Handoff 压成泛化 Camera 摘要。
 
 ---
 
@@ -253,6 +294,6 @@ Combat 中 Audio Accent Density 不等于 Action Density；重点 Contact / Phra
 - LTX 官方博客：`LTX-2.3 Prompt Guide: Tips For Prompting LTX-2.3`，2026-03-10。
 - 官方指南用于确认 Prompt 长度、自然语言组织、表演、对白、图生视频和音频描述原则。
 
-Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级。**
+Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级；但 Unverified 不等于默认降级 Action–Camera Handoff。**
 
-资料复核日期：`2026-07-10`。
+资料复核日期：`2026-08-15`。
