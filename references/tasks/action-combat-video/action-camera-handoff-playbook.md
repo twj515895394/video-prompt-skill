@@ -313,6 +313,53 @@ Camera 应优先看到**状态后果**，不是只重复“发生了接触”。
 
 失败时优先扩大到能同时保留该局部机制与双方战斗关系的景别，或直接继续当前 Shot；不要为了保留近景而额外发明一个动作。
 
+### Framing Capacity / Viewer Task Capacity Gate
+
+Camera 先确定当前真正需要观众读取的 **Viewer Task**，再选择能够容纳这些信息的景别；不能先决定“来一个近景”，再把多个互相分离的身体区域和空间关系硬塞进这个近景。
+
+运行时先问：
+
+> **这个 Camera Moment 要成立，观众必须同时看清哪些信息？当前景别是否真的装得下？**
+
+如果 Viewer Task 只需要一个局部因果，例如：
+
+- 手掌撞上玻璃后肩线被带偏；
+- 拳击接触瞬间的面部 / 上身反应；
+- 一次明确低线踢击命中支撑脚；
+- 武器接触或脱手的局部结果；
+
+则 Close-up / Detail Shot 可以成立，只要局部仍在承担当前 Action Cause / Response / Consequence。
+
+如果 Viewer Task 需要同时理解两个或更多相距较远的区域 / 关系，例如：
+
+```text
+手掌 / 肩轴
++ 脚步 / 支撑
++ 对手接触
++ 双方朝向 / 距离
+```
+
+则不得仍然序列化成一个狭窄 Close-up，并同时要求所有元素都清晰可读。优先：
+
+1. 保留最重要的 Viewer Task，删除该镜头不需要的观察要求；或
+2. 扩大到 Medium-close / Medium / 低机位双人中景等足以同时容纳必要因果链的景别；或
+3. 当前 Shot 已能读清时直接继续，不为了信息覆盖新增 Cut。
+
+默认优先使用**一个足够宽、仍有冲击力的有效构图**，而不是为了分别解释手、脚、表情再拆出多个额外 Insert。只有 Action State 本身确实提供多个高价值 Camera Moment，且每次切换都满足 Live-motion Handoff 时，才允许拆开观察。
+
+以下情况判：
+
+`Framing Information Overload / Viewer Task–Framing Mismatch`
+
+```text
+景别明显收窄
+→ Prompt 同时要求读取多个不在同一局部范围内的身体 / 空间信息
+→ Camera 无法在保持该景别的同时完成 Viewer Task
+→ 模型被迫丢信息、上下找信息或产生无意义局部镜头
+```
+
+失败时只重选 Viewer Task / Framing：**不修改 Combat Choreography，不额外发明动作，也不为了补信息机械增加 Shot。**
+
 ---
 
 ## 8. Live-motion Cut Contract
@@ -437,6 +484,8 @@ Hard Constraint 不能反向削弱 Combat Coverage / Derived Choreography Direct
 - Camera Change 后是否继续活跃状态；
 - 如果是局部身体 / 脚步 / 武器 Detail，画面中的局部是否正在承担当前 Combat Cause / Response / Consequence；
 - 下肢机制若必须依赖双方躯干接触 / 整体受力才能读懂，是否保留了足够的双人关系而不是孤立脚部；
+- 所选景别是否足以同时呈现该 Camera Moment 真正需要读取的信息；
+- 是否存在 Close-up / Detail 却同时要求手、肩 / 髋、脚步和双人空间关系全部可读的 Framing Information Overload；
 - 是否服从 Hard Constraint；
 - 是否退化成“第一次接触 / 关键时刻短暂切近”。
 
@@ -477,6 +526,11 @@ Kinetic Handoff FAIL
 Camera Handoff Realization FAIL
 → 回具体 Action Trigger / Camera Task / Inherited Motion State
 → 不用泛化 Camera 摘要补洞
+
+Framing Capacity FAIL
+→ 保留现有 Combat Action
+→ 精简 Viewer Task 或扩大到足以容纳必要信息的景别
+→ 不额外发明动作或机械增加 Shot
 
 Camera Hard Constraint Violation
 → 在同一 Constraint 内重选 Camera 实现
