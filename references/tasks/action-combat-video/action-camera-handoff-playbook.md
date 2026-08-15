@@ -285,6 +285,34 @@ Camera 应优先看到**状态后果**，不是只重复“发生了接触”。
 
 `Perceptual Accent Overuse / Camera Accent Overmapping`
 
+### Body-part Detail Activity Gate
+
+当 Camera Accent / Reframe / Cut 把画面明显收窄到脚、手、武器或其他局部身体区域时，被框住的局部必须在该镜头持续期间**真实承担当前 Combat Cause / Response / Consequence**，而不是只作为静态说明素材。
+
+脚部 / 下肢 Detail 只有在当前瞬间确实存在例如以下高价值信息时才值得孤立近拍：
+
+- 斜切 / 跨步 / 追步等直接改变 Route / Angle；
+- 支撑脚被踢、扫、踩位、绊阻或被迫移步；
+- 明确的 pivot / support transfer 正在制造转轴、失衡或反转；
+- kick / sweep / trip / forced step 本身就是当前攻防关键动作。
+
+如果 Viewer Task 只是“看清脚步、支撑或重心”，但主要 Combat Cause 仍发生在双方躯干接触、抱控、推压、旋转或整体换位关系中，则优先使用：
+
+> **低机位双人中景 / 中广景或保持双方髋部—脚步—接触关系同时可见的 Reframe**
+
+不要把它自动翻译成只剩鞋子 / 双脚的孤立 Close-up / Insert。
+
+以下情况判 `Action–Camera Decoupling / Perceptual Accent Overuse`：
+
+```text
+镜头切到局部
+→ 被框住的脚 / 手 / 武器没有承担当前动作因果
+→ 真正攻防在画外继续
+→ 局部镜头只剩静态或弱相关运动
+```
+
+失败时优先扩大到能同时保留该局部机制与双方战斗关系的景别，或直接继续当前 Shot；不要为了保留近景而额外发明一个动作。
+
 ---
 
 ## 8. Live-motion Cut Contract
@@ -407,6 +435,8 @@ Hard Constraint 不能反向削弱 Combat Coverage / Derived Choreography Direct
 - 是否有具体 Action Anchor；
 - Camera Response 是否匹配当前 Action / Viewer Experience；
 - Camera Change 后是否继续活跃状态；
+- 如果是局部身体 / 脚步 / 武器 Detail，画面中的局部是否正在承担当前 Combat Cause / Response / Consequence；
+- 下肢机制若必须依赖双方躯干接触 / 整体受力才能读懂，是否保留了足够的双人关系而不是孤立脚部；
 - 是否服从 Hard Constraint；
 - 是否退化成“第一次接触 / 关键时刻短暂切近”。
 
