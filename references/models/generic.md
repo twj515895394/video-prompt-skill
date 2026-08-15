@@ -26,7 +26,7 @@ Generic 是默认的模型无关输出协议。
 - 光影、色彩和风格；
 - 当前最危险的失败模式。
 
-Action Combat 还应已经在内部完成 Choreography / State Planning。
+Action Combat 还应已经在内部完成 Choreography / State Planning，以及上游已经选中的高价值 Action–Camera Handoff。
 
 Generic 不重新设计这些内容，只负责组装成稳定、清晰、无平台绑定的输出。
 
@@ -49,6 +49,9 @@ Temporal / Prompt Following: Unverified
 
 - 不凭空假设模型“很强”或“很弱”；
 - 不因为未知就自动把 Combat 压成极少动作；
+- `Unverified` 只代表不能承诺能力上限，**不自动触发高价值 Action–Camera Moment 的删除、泛化或保守中景回退**；
+- 默认保持 Full-fidelity Action–Camera Realization；
+- 只有存在 Verified Limitation 或真实 Generated-video Regression Evidence 时，才允许 Intent-preserving Degradation；
 - 使用 `choreography-playbook.md` 的通用 Action Execution Budget；
 - 优先让动作因果、Contact、空间与 Camera Readability 清楚；
 - 如果用户后续指定模型，再由对应 Adapter 使用其 Verified / Benchmark 能力进行调整。
@@ -75,6 +78,8 @@ Temporal / Prompt Following: Unverified
 
 Action Combat 内部 State / Planning Context 不默认展示。
 
+> `主体运动` 与 `镜头运动` 在规划上分别判断，不等于 Action Combat 的最终 Prompt 必须把两者拆成两个独立段落。已经成立的关键 Action–Camera Handoff 应保持 inline 语义绑定。
+
 ---
 
 ## 5. Prompt 组装顺序
@@ -90,6 +95,8 @@ Action Combat 内部 State / Planning Context 不默认展示。
 → 连续性与失败限制
 ```
 
+上述是信息组织顺序，不得在 Action Combat 中把上游已经耦合的 Key Camera Moment 再拆成“动作段 + 泛化镜头段”。
+
 ### 单镜头
 
 优先写成一个自然连续的动作段落，避免为了显得专业而机械切成过多时间段。
@@ -101,7 +108,8 @@ Action Combat 中使用连续 Action Phrase 语言，明确：
 - Contact / Outcome；
 - Reaction / Consequence；
 - Position / Range 如何变化；
-- 下一动作如何从当前结果继续。
+- 下一动作如何从当前结果继续；
+- 上游已确认的高价值 Camera Accent 在对应具体 Action Moment 中怎样观察，并怎样继续 live motion。
 
 ### 多镜头 / 多片段
 
@@ -115,6 +123,35 @@ Action Combat 中使用连续 Action Phrase 语言，明确：
 声音：
 承接与落点：
 ```
+
+结构化输出仍必须保持 Action Anchor、Camera Intent 与跨镜 Motion Continuation，不因字段拆分而丢失因果关系。
+
+---
+
+## 5.5 Action Combat Camera Handoff Preservation
+
+Generic 继承 `prompt-assembly/control.md` 的 Common Camera Handoff Preservation Contract。
+
+Generic 可以：
+
+- 改写句式；
+- 合并动作与摄影说明；
+- 使用更通用的自然语言替换平台特定摄影术语；
+- 在有可靠证据时降低 Camera 实现复杂度。
+
+Generic 不可以：
+
+- 重新决定上游已经确认的高价值 Camera Moment 是否值得存在；
+- 把具体 Action Anchor 改成“第一次接触 / 关键时刻 / 高潮处”；
+- 把具体 Camera Task 改成“使用电影化近景增强冲击力”；
+- 删除维持该 Handoff 所必需的 live-motion continuation；
+- 用独立 Global Camera Baseline 代替 inline Camera Moment。
+
+若转换后出现上述退化，判：
+
+`Camera Handoff Serialization Loss`
+
+并回 Prompt Assembly / Generic Adapter 重写，不回 Choreography 重新设计动作。
 
 ---
 
@@ -136,14 +173,15 @@ Generic 使用语义化占位，不伪造平台语法：
 ## 7. 通用规则
 
 - 先解决谁在动、如何动、镜头为何动，再补风格；
-- 主体运动与镜头运动分别描述；
+- 主体运动与镜头运动分别判断，但 Action Combat 的关键 Handoff 在最终 Prompt 中保持语义耦合；
 - 一段视频只保留一个主镜头任务；
 - 使用可观察的身体和环境变化表达情绪；
 - 光影、声音和环境变化必须有来源；
 - 连续性限制只保留当前任务高风险项，不堆无关负向词；
 - 不使用未知平台参数，不承诺平台未确认的能力；
 - Combat 遵循 State Machine Internalized, Choreography Externalized；
-- Combat 不因模型未知而使用“宁少而清晰”的动作通缩策略。
+- Combat 不因模型未知而使用“宁少而清晰”的动作通缩策略；
+- Combat 不因 Camera 能力未验证而主动丢失已成立的高价值 Action–Camera Handoff。
 
 ---
 
@@ -155,4 +193,6 @@ Generic 使用语义化占位，不伪造平台语法：
 - 是否能被人工轻松转换到 Seedance 或 LTX；
 - 是否避免互斥镜头、互斥光影和同窗口动作过载；
 - Combat Final Prompt 是否由可见 Action / Reaction / Contact / Consequence 主导；
+- 上游存在高价值 Action–Camera Handoff 时，最终 Generic Prompt 是否仍保留具体 Action Anchor、Camera Intent 与 live-motion continuation；
+- 是否出现 `Camera Handoff Serialization Loss`；
 - 是否留下自然收尾，而不是在动作中途硬截断。
