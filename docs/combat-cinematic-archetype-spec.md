@@ -178,7 +178,43 @@ Stage-2 Gap Detection
 
 ---
 
-## 7. Anti-overdesign
+## 7. Round 1 推荐联动：功夫电影观感优先，不默认把 MMA 放首位
+
+当用户明确表达以下任一目标：
+
+- 中国功夫电影 / 华语武打片观感；
+- 李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙式电影武打；
+- 不要站桩；
+- 希望更丰富的身法、步法、腿法、转身、高低位、路线和空间移动；
+
+Round 1 的 Combat System 推荐必须响应这个**观看目标 / 动作表达意图**，而不是因为场景是“现代、办公室、杀手、警匪”就机械把 MMA 放在默认推荐首位。
+
+推荐策略：
+
+```text
+用户明确中国功夫电影观感
+→ 优先展示更容易支持 Whole-body Movement / Footwork / Body Method / Kick Integration / Route Change 的合理体系
+→ 例如散打、八极、长拳、咏春、截拳道 / JKD，以及其他与角色 / 场景相容的中国武术体系
+→ MMA 仍可作为候选，但不默认占首位
+```
+
+注意：
+
+- 这不是“中国武术永远比 MMA 好”的全局偏置；
+- 用户明确要竞技综合格斗、笼斗、真实 MMA 时，MMA 仍应优先；
+- 不能因为选择某个 Cinematic Archetype 就自动锁定某一 Combat System；
+- 推荐系统只调整候选排序和解释，不把 Archetype 与拳种预绑定；
+- 最终是否能避免 Static Standing Combat，仍由 Choreography / Movement / Stage-2 / Final Preflight 保证，不能只靠换一个体系名称。
+
+核心原则：
+
+> **题材身份不能决定 Combat System，但用户明确的动作观感目标可以影响 Round 1 的推荐排序。**
+
+> **Modern 场景 ≠ MMA 默认。Chinese cinematic kung-fu intent → whole-body-capable systems first.**
+
+---
+
+## 8. Anti-overdesign
 
 本设计明确不做：
 
@@ -193,7 +229,7 @@ Stage-2 Gap Detection
 
 ---
 
-## 8. 当前已确认决策
+## 9. 当前已确认决策
 
 ### CA-01
 
@@ -215,11 +251,17 @@ Round 2 可以同时决定人物气质 / 决策倾向与可选 Archetype；这�
 
 Round 2 采用**同轮双子维度分别选择**：`Character Combat Expression` 与 `Cinematic Combat Archetype` 分开展示、分开选择；不得预先组合成“气质 + 明星型”的绑定套餐。
 
+### CA-06
+
+当用户明确追求中国功夫电影 / 华语武打 / 不站桩 / 明星型功夫电影观感时，Round 1 不再默认优先推荐 MMA；优先给更有利于 Whole-body Movement、身法、步法、腿法、路线与高低位变化的合理中国武术体系。MMA 保留为合法候选，不做全局降级。
+
 ---
 
-## 9. 下一实施点
+## 10. 下一实施点
 
-下一次修改 Interactive Runtime 时，需要把 Round 2 的职责扩展为：
+Interactive Runtime 需要同时落实两件事：
+
+1. Round 2：
 
 ```text
 Combat Expression / Performance Identity
@@ -227,14 +269,12 @@ Combat Expression / Performance Identity
 └─ optional Cinematic Combat Archetype
 ```
 
-交互展示要求：
+2. Round 1 Recommendation Policy：
 
 ```text
-同一 Round 2
-→ 先列人物战斗表达候选
-→ 再列电影武打参考候选（optional）
-→ 用户一次回答两个子维度
-→ 不因此产生 Round 3
+Chinese cinematic kung-fu intent
+→ Chinese whole-body-capable system candidates first
+→ MMA remains available but is not mechanically top-ranked
 ```
 
 并保证：
@@ -243,4 +283,6 @@ Combat Expression / Performance Identity
 - 用户已明确 Archetype 时直接继承；
 - 中国功夫电影参考存在真实分叉时，可以在 Round 2 展示五种参考型；
 - 两个子维度独立，不做组合套餐；
-- 不新增独立 Archetype 问卷轮次。
+- 不新增独立 Archetype 问卷轮次；
+- 不把现代身份 / 场景重新变成 MMA 的快捷映射；
+- 不把某个明星 Archetype 强绑定某个拳种。
