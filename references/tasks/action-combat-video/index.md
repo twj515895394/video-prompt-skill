@@ -35,7 +35,8 @@ core-playbook.md
 + 1 个当前专项 Playbook
 + Planning Gate
 + Stage-2 Pattern Hit Evidence Gate
-+ 按缺口选择的少量 Controls
++ subject-motion/control.md（短时 High Kinetic / Whole-body 条件命中时必经）
++ 按缺口选择的其余少量 Controls
 + 按需展开的少量 Library Detail
 + action-camera-handoff-playbook.md（Camera 允许 Cut / Reframe / 景别变化时必经；one-take 仍用于 Movement/Reframe Handoff）
 + 可选 Model Adapter
@@ -64,7 +65,7 @@ core-playbook.md
 
 负责 Stage-2 Pattern Hit Evidence、Motion / Energy Carry-over 与 Action ↔ Camera Bridge：关键 Cut / Reframe 为什么发生、Shot 如何从仍在发生的 Motion / Contact / Pressure / Recovery 中进入，以及 Camera 如何随 Fight-space / Initiative / Level / Support 的真实变化组织 Coverage。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
 
 ---
 
@@ -194,10 +195,32 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 
 此时提高 Movement Pattern Slot 的路由优先级，但**不使用“每段必须几次换位 / 踢腿”的固定配额**。
 
+#### Subject Motion 条件必读 Gate
+
+当任务同时满足以下条件时，必须在 Concrete Action Phrase 定稿前读取：
+
+`references/controls/subject-motion/control.md`
+
+条件：
+
+- 约 `10–20s` 的短时 Combat；
+- 以持续近身攻防 / High Kinetic Scope 为主体；
+- Fighting Direction / Character Identity 明确依赖 Whole-body、Footwork、Support / Balance、Range / Position / Axis / Route；
+- 或已有上肢锁死、动作断裂、脚步 / 重心只作为上肢动作修饰语的风险。
+
+命中后 `subject-motion/control.md` 占普通 `0-3 Controls` 中 `1` 个名额；不能因为 Core / Choreography 已经描述了 Motion / Continuity 就跳过。
+
+如果命中条件但 Runtime Read List 没有它，判：
+
+`Subject Motion Routing Missing`
+
+必须在 Final Prompt 前补读并重新检查 Whole-body Motor Driver、Support Transfer、Momentum / Recovery、Contact Reaction 与 Continuation。
+
 Stage-2 读取之后必须进入：
 
 ```text
 Execution Knowledge
+→ 必要时读取 subject-motion/control.md
 → Movement / Technique / Transition 按当前状态组合
 → Concrete Action Phrase Construction
 → State / Continuity Validation
@@ -220,7 +243,7 @@ Quick 与 Interactive 使用同一个 Combat Planning Graph 和同一套质量�
 
 > **Quick = Full Planning + Silent Resolution.**
 
-Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Contact Solidity、Environment、Signature Moment、Camera / Execution Budget、Stage-2 Execution Knowledge、Concrete Action Phrase、State / Continuity Validation、Action–Camera Handoff、Final Assembly / Final Preflight。
+Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Contact Solidity、Environment、Signature Moment、Camera / Execution Budget、Stage-2 Execution Knowledge、条件命中的 Subject Motion、Concrete Action Phrase、State / Continuity Validation、Action–Camera Handoff、Final Assembly / Final Preflight。
 
 如果 Fighting Direction 未明确但当前只有一个明显合理方向，Quick 静默推导；如果存在多个方向，也不进入多轮问答，而按上下文选择基线方案。
 
@@ -234,7 +257,7 @@ Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Con
 
 `Fighting Direction / 怎么打` 是上游高价值候选问题：当用户未明确且不同打法会显著改变 Movement / Technique / Range / Physical Scale 时直接询问。候选答案至少 5 个，正常 6–8 个，复杂可到 10 个，并支持自定义；不与旧“核心动作风格 / Choreography Profile”重复询问。
 
-不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Stage-2 Evidence、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Stage-2 Evidence、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
 
 Camera Intent 属于条件高价值节点：只有多个观看策略都合理且会显著改变成片时才暴露，不固定必问。
 
@@ -252,6 +275,7 @@ Action Combat 的最终运行链必须是：
 Combat Planning Context
 → Stage-2 Gap-driven Execution Knowledge
 → Stage-2 Pattern Hit Evidence Gate
+→ 条件命中时读取 subject-motion/control.md
 → Concrete Action Phrase / Battle Beat
 → Core State Validation
 → Motion / Energy Carry-over Check
@@ -261,7 +285,7 @@ Combat Planning Context
 → 读取并执行 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
 → Combat Final Preflight
-→ FAIL：内部回到 Stage-2 Read / Concrete Action Phrase / Pattern Selection / Character Identity / Action–Camera Handoff / Prompt Assembly，并重新检查
+→ FAIL：内部回到 Stage-2 Read / Subject Motion / Concrete Action Phrase / Pattern Selection / Character Identity / Action–Camera Handoff / Prompt Assembly，并重新检查
 → PASS：挂接当前输出模板 / Model Adapter
 → Delivery
 ```
@@ -273,14 +297,15 @@ Combat Planning Context
 1. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；Ending 是否吞掉 Active Exchange；
 2. **动作是否具体**：关键数秒是否由具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果与下一动作入口构成，而不是抽象“连续攻防”；
 3. **Stage-2 是否真的命中**：存在明显 Movement / Technique / Transition Gap 时是否真实读取 leaf knowledge，并把 Pattern / Detail 变成 Concrete Action；否则判 `Stage-2 Routing Evidence Missing`；
-4. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；Initiative 是否在动作链内转移；关键 Transition 是否有 Motion / Energy Carry-over；
-5. **角色是否真实区分**：Character Identity 是否由动作表现，且没有人口属性快捷模板；
-6. **Movement 是否真的在编排战斗**：High / Expert Combat 中若连续多个关键 Phrase 主要由上肢 Contact 主导，而 Movement 没有主动创造 Level / Route / Axis / Range / Position / Support / Ground-State 变化，则判 `Static Standing Combat / Upper-body Technique Dominance` FAIL；
-7. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
-8. **镜头是否由动作触发并继续同一个运动**：关键 Cut / Reframe 是否有 Motion / Contact / Consequence / Initiative / Range / Level / Environment Trigger；Cut 后是否继承 Active Motion，而不只保持位置；否则判 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss`；
-9. **Camera Coverage 是否跟着战斗空间走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；不机械形成 `Medium → Close → Medium → Close`；
-10. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography 与关键 Camera Handoff 不被 Prompt Assembly 压回抽象摘要；
-11. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项。
+4. **Subject Motion 是否按条件命中**：短时 High Kinetic / Whole-body Combat 命中 Gate 时是否真实读取 `subject-motion/control.md`；若没读，判 `Subject Motion Routing Missing`；
+5. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；Initiative 是否在动作链内转移；关键 Transition 是否有 Motion / Energy Carry-over；
+6. **角色是否真实区分**：Character Identity 是否由动作表现，且没有人口属性快捷模板；
+7. **Movement 是否真的在编排战斗**：High / Expert Combat 中若连续多个关键 Phrase 主要由上肢 Contact 主导，而 Movement 没有主动创造 Level / Route / Axis / Range / Position / Support / Ground-State 变化，则判 `Static Standing Combat / Upper-body Technique Dominance` FAIL；
+8. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
+9. **镜头是否由动作触发并继续同一个运动**：关键 Cut / Reframe 是否有 Motion / Contact / Consequence / Initiative / Range / Level / Environment Trigger；Cut 后是否继承 Active Motion，而不只保持位置；否则判 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss`；
+10. **Camera Coverage 是否跟着战斗空间走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；不机械形成 `Medium → Close → Medium → Close`；
+11. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography 与关键 Camera Handoff 不被 Prompt Assembly 压回抽象摘要；
+12. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项。
 
 任一关键项 FAIL，不允许直接交付。
 
