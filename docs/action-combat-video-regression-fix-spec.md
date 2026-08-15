@@ -1,12 +1,13 @@
 # Action Combat Regression Fix Spec
 
-> 状态：**Confirmed Design + Initial Runtime Implemented / 待 G01 Regression 验证**  
+> 状态：**RF-01～RF-21 Initial Runtime Implemented + RF-22 Confirmed / 实施中，待 G01 Regression**  
 > 日期：2026-08-15  
-> 来源：G01 办公室职业杀手 15 秒近身格斗真实 Interactive Regression 及后续 Grill Me 决策  
-> 作用：定义本轮 Action Combat 回归修复的设计真源与验收口径。Runtime 首批实现已经落库；下一步必须重新跑同一个 G01，不继续无证据扩设计。
+> 来源：G01 办公室职业杀手 15 秒近身格斗真实 Interactive Regression、第二轮真实测试及后续 Grill Me 决策  
+> 作用：定义本轮 Action Combat 回归修复的设计真源与验收口径。RF-01～RF-21 首批 Runtime 已落库；第二轮真实 Regression 又暴露 Post-Planning Runtime 的一级接线可靠性问题，新增 RF-22。本轮只实施 RF-22，不扩其他设计。
 
 Runtime 实施入口：
 
+- `SKILL.md`
 - `references/tasks/action-combat-video/interactive-combat-policy.md`
 - `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
 - `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
@@ -14,13 +15,14 @@ Runtime 实施入口：
 当前原则：
 
 > **Routing First, Knowledge Second.**  
-> **Regression → Failure Layer → Minimal Fix → Regression Again.**
+> **Regression → Failure Layer → Minimal Fix → Regression Again.**  
+> **Loader reliability must be enforced by the loader upstream, not by the file being loaded.**
 
 ---
 
 ## 0. 本轮问题定位
 
-上一轮真实 G01 已证明：
+第一轮真实 G01 已证明：
 
 - Interactive 上游比旧版本明显改善；
 - Hybrid Silent Expansion 基本正确；
@@ -28,7 +30,14 @@ Runtime 实施入口：
 - Camera Handoff 基本正常；
 - 但仍存在 Recommendation Breadth、Round 2 Candidate Coverage、Archetype Consumption、Archetype → Stage-2 Weighting、Upper-body Dominance、Ending Signature Drift、Granularity Over-expansion、Exchange Density、Concrete Compression、Serialization Duplication 等问题。
 
-当前没有证据支持继续扩完整武术知识库；先修 Runtime 消费链和 Assembly。
+第二轮真实 G01 测试进一步证明：
+
+- Round 1 推荐宽度、Round 2 Expression、Movement Causality、Per-Character Signature、Ending Compatibility 已看到明显改善；
+- `regression-fix-runtime-policy.md` 虽然在 `interactive-combat-policy.md` 中被声明为 Mandatory Read，但当前真实执行的 Read List 没有实际读取该文件；
+- Stage-2 Trace、Duration-aware Two-pass、Exchange Density、Concrete Compression、Serialization Deduplication 等下游修复因此无法证明真正进入执行链；
+- 这不是 Knowledge Coverage Failure，优先定位为 **Post-Planning Runtime Handoff Reliability / Routing Failure**。
+
+因此当前没有证据支持继续扩完整武术知识库；先修一级 Runtime Routing / Handoff，再用完全相同 G01 Regression。
 
 ---
 
@@ -615,9 +624,249 @@ Final Prompt 同一个控制意图只保留一次最强表达。
 
 ---
 
-# H. Runtime 实施状态
+# H. Post-Planning Runtime Routing
 
-当前首批 Runtime 已完成：
+## RF-22 — Post-Planning Runtime Handoff Reliability
+
+### 22.1 Failure Evidence
+
+第二轮真实 G01 中：
+
+```text
+SKILL.md
+→ READ interactive-combat-policy.md
+→ Policy 文本声明 MUST READ regression-fix-runtime-policy.md
+→ 实际 Read List 没有 regression-fix-runtime-policy.md
+→ 直接进入下游 Choreography / Stage-2 / Assembly
+```
+
+因此原有“二级文档中的 Mandatory Read”只能证明静态 Wiring 意图，不能证明真实 Runtime Consumption。
+
+Failure 定义：
+
+> **Post-Planning Runtime Handoff Reliability Failure**
+
+### 22.2 Scope
+
+RF-22 本轮只作用于：
+
+> **Interactive Action Combat**
+
+明确不修改：
+
+- Quick Mode；
+- Archetype UX；
+- Combat Knowledge；
+- Camera Runtime；
+- RF-14～RF-20 的规则正文。
+
+### 22.3 Routing Truth / Runtime Truth 职责
+
+职责固定为：
+
+```text
+SKILL.md
+= Routing Truth
+= 真正执行 Direct READ / Read Evidence Gate / Recovery
+
+interactive-combat-policy.md
+= Upstream Boundary
+= 只声明 Interactive Planning 完成后不得直接跳 Stage-2 / Final Assembly
+= 不再承担真正的 transitive READ 路由
+
+regression-fix-runtime-policy.md
+= Runtime Truth
+= RF-08～RF-20 的 Runtime 正文
+= 不负责证明“自己有没有被读取”
+
+docs/action-combat-video-regression-fix-spec.md
+= Design / Acceptance Truth
+```
+
+原则：
+
+> **被加载文件不能负责证明自己已经被加载；Loader Reliability 必须由上游 Loader 负责。**
+
+### 22.4 Direct Read Timing
+
+所有高价值 Interactive Combat 决策完成后，在 **Action Combat Post-Planning Mandatory Path 入口第一步**执行：
+
+```text
+Interactive Planning Complete
+→ READ references/tasks/action-combat-video/regression-fix-runtime-policy.md
+→ Runtime Handoff Gate
+→ Confirmed Per-Character Planning Context
+→ Derived Choreography Direction
+→ Duration-aware Choreography Budget
+→ Exchange Spine / Stage-2 / Assembly...
+```
+
+不在 Round 2 刚完成但 Ending / Camera / Physical Scale 等高价值决策尚未完成时提前加载；也不重复加载两次。
+
+### 22.5 Read Evidence Gate
+
+进入任何 Post-Planning 派生执行前必须验证：
+
+> 当前这一次任务执行中，是否发生过对 `regression-fix-runtime-policy.md` 的真实文件 READ。
+
+唯一有效 Evidence：
+
+```text
+Current Execution
+→ actual READ regression-fix-runtime-policy.md
+→ READ 发生在 Post-Planning derived work 之前
+```
+
+以下都不算：
+
+- `SKILL.md` 提到了文件；
+- `interactive-combat-policy.md` 写了 MUST READ；
+- 模型声称“已遵循”；
+- Final Prompt 看起来像用了规则；
+- 以前某次任务读过。
+
+### 22.6 Missing Read Recovery
+
+如果 Handoff Gate 没找到有效 Read Evidence：
+
+```text
+Missing Read detected
+→ 立即 READ regression-fix-runtime-policy.md
+→ invalidate 已产生的全部 Post-Planning 派生结果
+→ 只继承已确认 Interactive Planning Context
+→ 从 Post-Planning Runtime 入口重新执行
+```
+
+必须作废的派生结果至少包括：
+
+- Derived Choreography Direction；
+- legacy Fighting Direction execution-slot 派生结果；
+- Duration-aware Budget；
+- Exchange Spine；
+- Stage-2 Gap / Pattern Selection；
+- Concrete Action Phrase；
+- 下游 Assembly 草稿。
+
+允许继承的只有用户已确认或 Interactive 已确认的上游 Planning Context，例如：
+
+- Combat System / Refinement；
+- Expression；
+- optional Archetype；
+- Ending / Advantage 决策；
+- Camera Base Viewing Priority / Hard Constraint；
+- Physical Presentation Domain；
+- 用户原始场景 / 时长 /限制。
+
+禁止：
+
+```text
+旧 Runtime 下生成骨架
+→ 补读 Policy
+→ 在旧骨架上打补丁
+```
+
+### 22.7 Production / Regression Visibility
+
+普通 Production UX：
+
+> **Silent Recovery**
+
+内部漏读属于 Skill Runtime 故障，不向普通用户暴露目录 / Recovery 细节。
+
+Regression / Debug：
+
+必须能观察：
+
+```text
+RF-22 Handoff Check: PASS-NATIVE / PASS-RECOVERED / FAIL
+Runtime Policy Read: native / repaired / missing
+Post-Planning partial results invalidated: yes/no
+Restart point: Confirmed Interactive Planning Context（when recovered）
+```
+
+这些 Evidence 不进入普通 Final Video Prompt。
+
+### 22.8 RF-22 Result States
+
+#### PASS-NATIVE
+
+```text
+一级 Direct READ 正常命中
+→ Runtime Policy 在任何 Post-Planning 派生之前真实读取
+→ 未触发 Recovery
+```
+
+这是理想状态。
+
+#### PASS-RECOVERED
+
+```text
+一级 Direct READ 漏掉
+→ Handoff Gate 捕获
+→ 自动补读
+→ 污染派生结果全部作废
+→ 从 Confirmed Planning Context 重新执行
+```
+
+语义：最终执行可靠性 PASS，但 Direct Routing 仍有缺陷。
+
+#### FAIL
+
+任一成立：
+
+- 没有真实 READ；
+- 漏读后未被 Gate 捕获；
+- 补读但未作废旧派生结果；
+- 已进入 Final Assembly 后才补救；
+- Recovery 没有从正确入口重新执行。
+
+### 22.9 Close Criteria
+
+RF-22 只有满足：
+
+> **同一 G01、完全相同输入与选择，连续 2 次 `PASS-NATIVE`**
+
+才允许关闭。
+
+如果：
+
+```text
+Run 1 = PASS-NATIVE
+Run 2 = PASS-RECOVERED
+```
+
+则：
+
+```text
+RF-22 = OPEN
+连续 Native 计数重新开始
+```
+
+`PASS-RECOVERED` 仍允许继续检查同一轮 RF-14～RF-20，因为 Recovery 在 Stage-2 前完整重置并重新执行；但它不能替代 Direct Routing 的关闭条件。
+
+### 22.10 Confirmed Grill Decisions / 17 项确认记录
+
+1. `regression-fix-runtime-policy.md` 升级为 `SKILL.md` 一级 Direct Mandatory Read；
+2. Direct Read 时点固定在所有高价值 Interactive 决策完成后、Post-Planning Mandatory Path 入口第一步；
+3. `SKILL.md` 是真正 Routing Truth；`interactive-combat-policy.md` 只保留下游边界声明；
+4. 增加轻量 Runtime Handoff Read Evidence Gate，不建立完整状态机；
+5. Missing Read 时自动补读并从 Post-Planning 入口重新接管，不向用户报错终止；
+6. 本轮只修 Routing / Handoff，其他已发现问题不顺手修改；
+7. 新增正式编号 `RF-22 — Post-Planning Runtime Handoff Reliability`；
+8. 只有当前执行中的真实文件 READ 才算有效 Read Evidence；
+9. RF-22 本轮只适用于 Interactive Action Combat，不迁移 Quick；
+10. RF-22 执行逻辑落 `SKILL.md`，Spec 记录合同，Interactive Policy 只保留边界，Runtime Policy 不承担 Loader 检查；
+11. 漏读后所有 Post-Planning 派生结果作废，只继承 Confirmed Interactive Planning Context；
+12. Production 静默自愈，Regression / Debug 保留 Recovery Evidence；
+13. 正式区分 `PASS-NATIVE / PASS-RECOVERED / FAIL`；
+14. 只有 `PASS-NATIVE` 才具有 RF-22 关闭资格；
+15. 连续 2 次同一 G01 `PASS-NATIVE` 才关闭 RF-22；
+16. 下一轮完全复用当前 G01 输入与选择，不额外加入 Archetype；Archetype Variant 后测；
+17. Regression 顺序固定为 `RF-22 → RF-14～RF-20 → G01-Archetype Variant RF-08～RF-10 → Generated-video Regression`。
+
+---
+
+# I. Runtime 实施状态
 
 ### Interactive Policy
 
@@ -626,7 +875,8 @@ Final Prompt 同一个控制意图只保留一次最强表达。
 负责：
 
 - RF-01～RF-07；
-- Round 2 后 Mandatory Handoff 到 Regression Runtime Policy。
+- 只声明完成 Interactive Planning 后必须移交 Post-Planning Mandatory Path；
+- RF-22 实施后不再把自身作为 `regression-fix-runtime-policy.md` 的真正 Loader。
 
 ### Regression Runtime Policy
 
@@ -634,8 +884,9 @@ Final Prompt 同一个控制意图只保留一次最强表达。
 
 负责：
 
-- RF-08～RF-21 的运行顺序、消费门禁和 Final Preflight additions；
-- Camera 只沿用原 Runtime，不重建。
+- RF-08～RF-20 的运行顺序、消费门禁和 Final Preflight additions；
+- RF-21 Camera Freeze 的 Runtime 边界；
+- 不承担 RF-22 Loader Reliability。
 
 ### Stage-2 Minimum Validation Set
 
@@ -648,49 +899,103 @@ Final Prompt 同一个控制意图只保留一次最强表达。
 - Movement Causality；
 - G01 新验收。
 
-### Main Wiring
+### Main Wiring / RF-22
 
-`SKILL.md` 仍固定读取：
+`SKILL.md` 将作为一级 Routing Truth：
 
-`references/tasks/action-combat-video/interactive-combat-policy.md`
+```text
+Interactive Planning Complete
+→ Direct READ regression-fix-runtime-policy.md
+→ Runtime Handoff Read Evidence Gate
+→ Missing 时 Recovery + Invalidate + Restart
+→ Post-Planning Runtime
+```
 
-而该 Policy 已强制在 Round 1 / Round 2 后读取：
+RF-22 当前状态：
 
-`references/tasks/action-combat-video/regression-fix-runtime-policy.md`
-
-因此本批 Runtime 已进入 Interactive Action Combat 主链。
-
----
-
-# I. 下一次 G01 Regression 验收
-
-继续使用同一个 15 秒办公室职业杀手 Golden Scenario。
-
-至少检查：
-
-1. Round 1 是否出现动态、高差异 Pairing 候选；常见约 6～8 但不机械；
-2. Hybrid 可以推荐，但不是唯一方向；
-3. Round 2 Expression 是否有真实多候选；
-4. 李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙五种是否完整；
-5. 角色 Archetype 是否可独立或共享；
-6. 选中 Archetype 后 Read List 是否实际出现 Archetype Library；
-7. Archetype Bias 是否真实改变 Stage-2 Pattern Selection；
-8. Debug 是否能给 `Gap → Slot → Pattern → Detail → Phrase` Trace；
-9. Movement 是否真实改变 Route / Axis / Range / Position / Support / Level；
-10. 双方 Signature 是否持续可辨识；
-11. Ending 是否不再偷换成不兼容的控制模板；
-12. 是否先形成 Exchange Spine，再选择性展开；
-13. 15 秒是否恢复更多 Active Exchange，而非约 3 个大 Phrase；
-14. Medium / Low 是否更短但仍具体；
-15. Final Prompt 是否减少 Action / Global Rule / Style / Avoid 重复；
-16. Camera Handoff 是否保持当前质量。
+> **Confirmed / Implementing**
 
 ---
 
-# J. 当前禁止继续做的事情
+# J. 下一次 Regression 计划
 
-在新的 G01 证据出现前，不要：
+## J.1 G01-Routing Regression
 
+完全复用第二轮当前 G01：
+
+- 相同原始输入；
+- 相同 Round 1 / Round 2 / Ending / Camera / Physical Scale 选择；
+- 不额外选择 Archetype；
+- 不改变测试 Prompt 目标。
+
+先跑同一 G01，优先检查 RF-22：
+
+```text
+Run 1 → RF-22 Result
+Run 2 → RF-22 Result
+```
+
+目标：
+
+> **连续 2 次 PASS-NATIVE。**
+
+## J.2 同一 G01 的 RF-14～RF-20 检查
+
+只要某次执行是 `PASS-NATIVE` 或完整 `PASS-RECOVERED`，即可继续检查：
+
+1. RF-14 Stage-2 Traceability；
+2. RF-15 Granularity Over-expansion；
+3. RF-16 Exchange Density / Granularity Distribution；
+4. RF-17 Concrete Compression；
+5. RF-18 Duration-aware Planning；
+6. RF-19 Two-pass Choreography；
+7. RF-20 Serialization Deduplication。
+
+同时保留：
+
+- RF-13 Movement Causality；
+- RF-11 Signature Separation；
+- RF-12 Ending Compatibility；
+- RF-21 Camera Preservation。
+
+## J.3 Archetype Variant
+
+只有普通 G01 Prompt-level Runtime 路径明确通过后，再单独运行：
+
+> **G01-Archetype Variant**
+
+用于验证：
+
+- RF-08 Archetype Mandatory Consumption；
+- RF-09 Archetype-to-Stage-2 Weighting；
+- RF-10 Archetype Realization。
+
+不把 Archetype Variant 混入 RF-22 第一轮 Routing Regression。
+
+## J.4 Generated-video Regression
+
+当：
+
+```text
+RF-22 关闭
++ RF-14～RF-20 Prompt-level PASS
++ G01-Archetype Variant RF-08～RF-10 PASS
+```
+
+再进入真实视频生成验证。
+
+如果 Prompt-level 全部 PASS，但成片仍明显失败：
+
+> **进入 Generated-video Regression / Model Capability / Prompt Saturation / Adapter 分析，而不是继续扩 Prompt 架构。**
+
+---
+
+# K. 当前禁止继续做的事情
+
+在 RF-22 + 新 G01 证据出现前，不要：
+
+- 顺手修 Round 2 Archetype Selection Affordance；
+- 顺手改 Concrete Compression / Dedup 规则正文；
 - 扩完整中国武术百科；
 - 建明星独立 Combat Engine；
 - 建明星固定 Combo；
@@ -698,10 +1003,12 @@ Final Prompt 同一个控制意图只保留一次最强表达。
 - 建 Body Method State Machine；
 - 建每拳种独立 Runtime Tree；
 - 建第二套 Camera Runtime；
+- 修改 `action-camera-handoff-playbook.md`；
+- 将 RF-22 扩到 Quick Mode；
 - 使用固定腿法 / 换位 / 动作次数；
 - 把“常见 6～8 个候选”实现成硬配额；
 - 把 Exchange Spine 做成固定模板。
 
 下一步固定为：
 
-> **重新跑 G01 → 看 RF-01～RF-21 是否真实生效 → 只修仍失败的 Layer。**
+> **实施 RF-22 → 静态回读 → 完全相同 G01 × 2 → 先看 Routing，再看 RF-14～RF-20。**
