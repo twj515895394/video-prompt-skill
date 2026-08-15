@@ -537,8 +537,8 @@ Human / Body
 Effective Contact / Force Event
 → Immediate Physical Response
 → plausible Visible State / Appearance Change
-→ Persistent Continuity in later shots
-→ optional escalation only if later force justifies it
+→ Aftermath Lifetime Classification
+→ Transient Decay / Persistent Continuity / Progressive Accumulation
 ```
 
 #### A. Human / Body Aftermath
@@ -549,7 +549,7 @@ Effective Contact / Force Event
 - 额头 / 眉骨 / 脸颊受到明确撞击 → 局部泛红、擦伤或逐渐显现的轻度紫红淤痕；
 - 前臂 / 手背 / 膝部与墙面、地面发生明显摩擦或撞击 → 局部红印、擦痕或轻微磨伤。
 
-不是每次触碰都必须留下伤痕。轻微封挡、擦碰、无明显承伤的 Contact 可以只有运动 / 受力反馈；**只有动作本身已经被描述为有效命中、重撞或持续压迫时，才检查持久可见后果。**
+不是每次触碰都必须留下伤痕。轻微封挡、擦碰、无明显承伤的 Contact 可以只有运动 / 受力反馈；**只有动作本身已经被描述为有效命中、重撞或持续压迫时，才检查可见后果。**
 
 #### B. Clothing / Wearable Aftermath
 
@@ -593,70 +593,108 @@ Effective Contact / Force Event
 
 > **轻到中度电影化写实后果。**
 
-目标是让观众看见“这场战斗留下了代价”，但不自动升级为：
+这只是默认生成强度，不是题材审查 Negative。Runtime 不主动把普通受击升级成极端后果；如果用户明确要求更重、更血腥、更成人化或更破坏性的表现，则按用户目标调整到上层平台 / 模型规则允许的范围，Skill 本身不额外添加题材级禁止词。
 
-- 大量喷血；
-- 严重开放性伤口；
-- 夸张面部变形；
-- 大面积破衣；
-- 玻璃 / 墙体 / 家具无理由大规模毁坏。
+#### Aftermath Lifetime Contract
 
-如果用户明确要求更轻、更重、更血腥或更破坏性的风格，再按用户目标调整；不得由 Runtime 自行升级。
+每个 Aftermath 在进入 Final Prompt 前必须先归类生命周期，禁止把所有反馈都当成“必须一直保持到结尾”。
 
-#### Persistence / Accumulation Contract
+**1. Transient Aftermath / 瞬态后果**
 
-一旦某个可见 Aftermath 已经进入画面，它必须成为后续 Continuity State：
+典型包括：
+
+- 玻璃 / 柜门 / 椅子的短暂振动、晃动；
+- 金属回响、玻璃余响、碰撞尾音；
+- 一次冲击带起的灰尘、衣料回弹；
+- 呼吸被瞬间打断、短暂痛缩 / 眨眼 / 咬牙；
+- 失衡后的短促摆动，只要随后已重新稳定。
+
+规则：
 
 ```text
-嘴角已有少量血迹
-→ 后续仍保持，除非画面内明确擦除 / 清理
-
-额角已出现红肿 / 淤痕
-→ 后续保持，并可随时间 / 再次受击合理加深
-
-领带已松、衣袖已裂
-→ 后续继续保持松动 / 裂口
-
-椅子已被撞开、纸张已散落
-→ 后续保持新的环境状态
+发生
+→ 在当前或紧邻镜头可见 / 可听
+→ 按真实物理自然衰减
+→ 不要求无理由持续到 Ending
 ```
+
+例如玻璃在前段被撞后可以振动并有短促余响，但如果中间已经过去多个 Exchange，Final Ending 不应还机械保留“玻璃持续余振”。
+
+**2. Persistent Aftermath / 持久后果**
+
+典型包括：
+
+- 嘴角 / 鼻侧已经出现的血迹；
+- 淤青、擦伤、明显红印；
+- 衣袖裂口、纽扣脱落、领带松开、衣物明显拉坏；
+- 玻璃裂纹、墙面擦痕 / 掉灰、家具凹痕；
+- 已经翻倒 / 移位的椅子、散落纸张和小物。
+
+规则：
+
+```text
+发生
+→ 成为 Continuity State
+→ 后续保持
+→ 只有画面内明确清理 / 修复 / 移动 / 遮挡等行为才能改变
+```
+
+**3. Progressive / Accumulative Aftermath / 渐进累积后果**
+
+典型包括：
+
+- 淤青随时间或再次受击逐渐加深；
+- 少量血迹在后续同部位再次受创后合理增加；
+- 呼吸负担、疲劳、动作恢复速度随战斗累积而改变；
+- 已有裂纹 / 开线在后续同方向受力后进一步扩大。
+
+规则：
+
+```text
+已有基础状态
++ 时间 / 再次受力 / 体能消耗等明确原因
+→ 合理加深
+```
+
+禁止无因升级：没有新的 Contact / 时间 / 体能依据，轻微红印不能突然变成重伤，轻微裂纹不能突然大面积破碎。
+
+#### Continuity / Reset Contract
+
+只有 `Persistent` 与仍在累积中的 `Progressive` Aftermath 必须进入后续 Continuity State；`Transient` 必须允许自然衰减。
 
 禁止：
 
 > **Damage / Material / Environment Reset**
 
-即：没有画面内原因，伤痕、衣物破损、物体位移或环境损伤在下一镜头自动消失 / 恢复初始状态。
+即：没有画面内原因，持久伤痕、衣物破损、物体位移或环境损伤在下一镜头自动消失 / 恢复初始状态。
 
-后果只能：
+也禁止：
 
-```text
-保持
-→ 被后续动作合理加重
-→ 或被明确的画面内行为改变
-```
+> **Transient Aftermath Over-persistence**
 
-不能无因重置。
+即：一次本应衰减的振动、回响、尘土或短暂身体反应，被机械保持到多个后续阶段甚至 Ending。
 
 #### Aftermath Information Budget
 
-本 Gate 不要求每个 Exchange 都追加一串伤痕说明。只把**当前已经具有可见持续价值**的后果写入最接近的 Action Phrase 或必要 Continuity 描述：
+本 Gate 不要求每个 Exchange 都追加一串伤痕说明。只把**当前具有持续价值或当前镜头明显可感知**的后果写入最接近的 Action Phrase 或必要 Continuity 描述：
 
-- 对当前镜头只是瞬时、低价值且后续不可见的轻微反馈，可以不展开；
-- 对后续画面会持续出现、能强化真实感或影响表演 / 环境状态的后果，应简洁保留；
+- Transient 只写发生与必要衰减，不在后续重复；
+- Persistent / Progressive 对后续画面有持续价值时简洁保留；
 - 同一伤痕 / 破损 / 环境变化后续只需保持，不在每个段落重新解释来源；
 - 不为了“更真实”给每次击打机械添加一种新伤痕。
 
 本 Gate 与 `Granularity Over-expansion` / `Serialization Deduplication` 同时生效：
 
-> **后果要真实存在，但描述只写到足以让模型保持它。**
+> **后果要真实存在，也要有正确寿命；描述只写到足以让模型表现与保持它。**
 
 Failure 可判：
 
 - `Impact Aftermath Missing`：明显有效受创 / 抓扯 / 撞击却完全没有合理可见反馈；
-- `Damage Continuity Reset`：已出现的伤痕 / 衣物损伤在后续无因消失；
-- `Environment State Reset`：已移动 / 受损物体无因恢复；
+- `Damage Continuity Reset`：Persistent / Progressive 伤痕或衣物损伤在后续无因消失；
+- `Environment State Reset`：Persistent 环境位移 / 损伤无因恢复；
+- `Transient Aftermath Over-persistence`：振动、余响、尘土、短暂痛缩等瞬态反馈无理由持续过久；
 - `Material Response Mismatch`：反馈与材质 / 力度明显不符；
-- `Aftermath Overstatement`：轻度接触被自动升级成重伤 / 大破坏。
+- `Aftermath Overstatement`：轻度接触被无因自动升级成重伤 / 大破坏。
 
 ---
 
@@ -783,6 +821,58 @@ Prompt Assembly 后执行一次语义去重。
 
 Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给真实 Exchange。
 
+### 12.1 Final Negative Content-Neutral Contract
+
+Action Combat 的 Final Negative 默认只承担**生成稳定性 / 连续性 / 当前明确失败风险**，不承担题材分级或内容审查职责。
+
+默认可保留的基础 Negative 只应来自当前任务真实风险，例如：
+
+- 不新增用户没有要求的额外人物 / 额外主体；
+- 不出现身份、服装、发型、场景无因漂移；
+- 不出现人物瞬移、位置 / Range / Contact Reset；
+- 不出现与当前 Physical Scale 冲突的无重量运动、超能力或无因飞行（仅当当前任务要求写实 / grounded 时）；
+- 不出现用户已经明确排除的武器、道具、场景切换或剧情元素；
+- 不重复堆叠已经由正向 Action Flow 明确表达的 Avoid。
+
+**禁止 Skill 自行追加题材级 blanket Negative**，例如：
+
+```text
+不要血腥 / no blood
+不要 gore
+不要成人内容 / no adult themes
+不要性内容 / no sexual content
+不要裸体 / no nudity
+不要暴力 / no violence
+不要粗口 / no profanity
+```
+
+这些内容类别在用户没有要求排除时，不应被 Final Negative 自动封死。
+
+特别是 Action Combat 默认 `轻到中度电影化写实 Aftermath` 时：
+
+```text
+嘴角少量血迹
+轻微破皮
+红肿 / 淤青
+衣物拉扯 / 小裂口
+```
+
+都属于合法写实后果，Final Prompt 不得再用笼统的“不要血腥”把它们反向压掉。
+
+同时明确：
+
+> **删除题材级 Negative ≠ 自动要求加入对应内容。**
+
+用户没有要求成人 / 性 / 裸体 / 重度血腥等内容时，Runtime 不需要主动添加；只是不能为了“安全感”额外写一个 blanket ban。用户主动要求这些题材或更高 Damage / Destruction Scale 时，Skill 按用户创作目标处理到**上层平台 / 模型安全规则、年龄 / 同意等适用约束允许的范围**；本 Skill 不试图绕过上层安全规则。
+
+如果用户明确说“不要血 / 不要裸露 / 不要性内容 / PG-13 / 家庭友好”等，则该限制重新成为合法的用户显式约束，可以进入 Final Negative。
+
+Final Preflight 必须扫描 Adapter 后的实际 Final Prompt：如果发现无来源的题材级禁止词，应删除或改写成当前真正需要的具体稳定性限制。
+
+Failure：
+
+> **Unrequested Content-category Negative Injection**
+
 ---
 
 ## 13. Camera Runtime Freeze
@@ -820,11 +910,12 @@ Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给�
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
 9. **Concrete Technique Resolution**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作，是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法` 等 Abstract Action Head？
-10. **Impact Aftermath / Damage Continuity**：明显有效的受击、抓扯、摔撞或环境碰撞是否产生了与部位、力度、材质和 Physical Presentation 相匹配的最小合理可见后果；已出现的人体伤痕、衣物状态、环境位移 / 损伤是否在后续保持，是否存在无因 Reset 或过度升级？
-11. **Exchange Density**：是否因过度展开只剩少量大动作？
-12. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
-13. **Serialization Deduplication**：同一控制语义是否被多段重复？
-14. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
+10. **Impact Aftermath Lifetime / Continuity**：明显有效的受击、抓扯、摔撞或环境碰撞是否产生了与部位、力度、材质和 Physical Presentation 相匹配的合理后果；是否正确区分 Transient / Persistent / Progressive；持久后果是否无因 Reset；瞬态振动 / 回响 / 痛缩是否又无理由持续到很后面？
+11. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
+12. **Exchange Density**：是否因过度展开只剩少量大动作？
+13. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
+14. **Serialization Deduplication**：同一控制语义是否被多段重复？
+15. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
 如果任何关键 Gate 失败，优先回到对应 Failure Layer 修复；不要第一反应扩知识库。
 
@@ -846,4 +937,4 @@ Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给�
 - 第二套 Camera Runtime；
 - 固定 Skeleton 模板。
 
-本轮目标是修复消费顺序、选择权重、动作密度、可见后果连续性与序列化，不是增加系统层数。
+本轮目标是修复消费顺序、选择权重、动作密度、Aftermath 生命周期、Final Negative 边界与序列化，不是增加系统层数。
