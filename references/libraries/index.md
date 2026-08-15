@@ -125,6 +125,34 @@ Combat Libraries 只提供专业知识，不定义 Combat Planning Graph、Battl
 
 它回答“整场动作戏通常怎么组织”，不等于视觉 Style、职业、Character Identity 或 Fighting Profile。
 
+### combat-cinematic-archetypes
+
+读取：
+
+- `combat-cinematic-archetypes/library.md`
+
+包含少量稳定的 **Cinematic Combat Archetype / 电影武打表达参考型**：
+
+- 李连杰型：轻灵流畅 / 武术线条；
+- 吴京型：硬朗爆发 / 全身压迫；
+- 甄子丹型：极速现代融合 / 近身连锁；
+- 成龙型：环境互动 / 空间即武器；
+- 李小龙型：爆发截击 / 节奏破坏 / 极简直接。
+
+它回答“已经确认的 Combat System 在电影里希望怎样呈现”，**不等于 Combat System / Technique Backbone**。明星名称只作为用户易理解的导演参考标签；Final Prompt 应优先转换成中性动作语义。
+
+特别区分：
+
+```text
+截拳道 / JKD
+→ Combat System
+
+李小龙式电影打法
+→ Cinematic Combat Archetype
+```
+
+只有用户明确需要中国功夫电影参考、明星型武打表达或 Combat Expression 细分时按需读取；不把它固定加入所有 Combat Read List。
+
 ### combat-fighting-profiles
 
 读取：
@@ -199,8 +227,9 @@ Slot A：Technique / Execution Knowledge
   / combat-martial-profiles
   / combat-weapon-profiles
 
-Slot B：Choreography Enhancement Knowledge
-→ signature-moment-patterns
+Slot B：Choreography / Expression Enhancement Knowledge
+→ combat-cinematic-archetypes（用户明确需要电影武打参考时）
+  / signature-moment-patterns
   / 其他确有必要的增强知识
 ```
 
@@ -211,7 +240,7 @@ Slot 竞争优先级：
 ```text
 用户明确指定的专业动作 / 武器知识
 → 保证专业正确性所需知识
-→ Character Identity 差异化
+→ 用户明确指定的 Cinematic Combat Archetype / Character Expression 差异化
 → Signature Moment / 创意增强
 ```
 
@@ -236,6 +265,7 @@ Slot 竞争优先级：
 先由 Choreography 选 Profile / Identity，再按需：
 
 - Technique：`combat-fighting-profiles/library.md`；
+- 用户明确中国功夫电影动作参考：`combat-cinematic-archetypes/library.md`；
 - 创意增强：命中的 `signature-moment-patterns/patterns/<id>.md`；
 - 强环境专业知识确实必要时，用 `combat-environment-patterns/library.md` 替换次要增强 Slot。
 
@@ -248,6 +278,10 @@ Slot 竞争优先级：
 兵器 Technique：
 
 - `combat-weapon-profiles/library.md`
+
+如果用户明确要求李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙式电影动作表达，可额外按需读取：
+
+- `combat-cinematic-archetypes/library.md`
 
 Signature / Environment 只按当前 Planning Context 选择，不因“武侠”自动全部加载。
 
@@ -275,7 +309,7 @@ Signature / Environment 只按当前 Planning Context 选择，不因“武侠�
 - 一次不要读取整个资料库；当前任务有明确选项时不额外读取。
 - 同一术语和详细资料只在一个 library 正文真源出现。
 - 不建设 Combat Character Identity / 职业画像 Library。
-- 不把 Pattern 或 Profile 当固定动作模板。
+- 不把 Pattern、Profile 或 Cinematic Combat Archetype 当固定动作模板。
 - `source-cases/` 属于研究证据，不是默认运行时 Reference。
 - 社区长 Prompt 不作为资料库正文，只保留结构、变量、适用条件和失败边界。
 - 风格完整实现读取 `references/styles/`。
