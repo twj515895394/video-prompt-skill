@@ -61,13 +61,13 @@ core-playbook.md
 
 ### `choreography-playbook.md`
 
-负责 Combat Choreography Engine：Fighting Direction / Choreography 执行属性、Active Combat Coverage、Rhythm、Action Phrase、Executable Granularity、Exchange Depth、Character Identity、Tactical Interaction、Environment Affordance、Contact Solidity、Signature Moment、Action Sufficiency / Execution Budget、Kinetic / Temporal / Motion Continuity、Camera Readability / Mobility / Coverage、Combat Audio、Ending Coverage Protection 与 Final Preflight Criteria。
+负责 Combat Choreography Engine：Derived Choreography Direction / legacy Fighting Direction 执行槽、Active Combat Coverage、Rhythm、Action Phrase、Executable Granularity、Exchange Depth、Character Identity、Tactical Interaction、Environment Affordance、Contact Solidity、Signature Moment、Action Sufficiency / Execution Budget、Kinetic / Temporal / Motion Continuity、Camera Readability / Mobility / Coverage、Combat Audio、Ending Coverage Protection 与 Final Preflight Criteria。
 
 ### `action-camera-handoff-playbook.md`
 
 负责 Stage-2 Pattern Hit Evidence、Motion / Energy Carry-over 与 Action ↔ Camera Bridge：关键 Cut / Reframe 为什么发生、Shot 如何从仍在发生的 Motion / Contact / Pressure / Recovery 中进入，以及 Camera 如何随 Fight-space / Initiative / Level / Support 的真实变化组织 Coverage。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Persistent Combat Signature 负责“角色已确认的打法差异不能打一半就消失”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”；Prompt QA / Self-Repair 负责“交付前发现实现问题并自动修正”。**
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；角色级 Combat System / Refinement / Expression 负责上游角色差异；Persistent Combat Signature 负责“已确认打法差异不能打一半就消失”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
 
 ---
 
@@ -79,15 +79,15 @@ Core + Choreography 之后只选择一个主要专项 Playbook。
 
 读取：`modern-combat-playbook.md`
 
-包括写实近身格斗、电影化动作片、拳击 / 泰拳 / 散打 / MMA / 摔跤 / 缠斗等动作语言。
-
 ### 电影武侠
 
 读取：`cinematic-wuxia-playbook.md`
 
-包括空手武术与刀 / 剑 / 枪 / 棍，默认是电影武侠而非仙侠。
+MVP 期间这两个分支继续作为 legacy specialist 路由使用，但必须遵守：
 
-专项 Playbook 只负责具体动作语言、物理尺度、默认 Range / Rhythm / Contact 表现与专业 Profile 使用方式，不得反向重定义 Core / Choreography 的通用质量合同。
+> **Physical Presentation Domain 与 Combat System 正交。太极不自动等于 Wuxia，MMA 不自动等于 Modern。**
+
+专项 Playbook 提供当前物理 / 电影表现域下的动作语言与尺度知识，不得把人物职业或单一体系名称反向当作 Branch 的唯一决定因素。
 
 ---
 
@@ -112,26 +112,32 @@ Task Router
 → Planning Gate
 ```
 
-Planning Context 只保留当前任务需要的轻量变量，例如：
+Interactive MVP 的 Planning Context 优先保留：
 
-- Combat Branch；
-- **Fighting Direction / 怎么打；**
+- Per-Character Primary Combat System；
+- Optional Secondary Combat System；
+- Per-Character System Refinement；
+- Per-Character Combat Expression；
+- Physical Presentation Domain；
+- **Derived Choreography Direction**；
 - Coverage；
 - Rhythm / Realism / Impact 等执行属性；
-- Character Identity 倾向；
 - **用户已确认的 Technique Identity / Persistent Combat Signature；**
 - Contact Modality；
 - Environment Importance；
 - Signature Moment Need；
 - Camera / Model 风险。
 
-不把所有 Library 正文一次性加载。
+`Fighting Direction` 在 Interactive MVP 中只保留为 legacy execution slot，由 `Derived Choreography Direction` 写入，不再是用户独立决策。
 
 Planning Gate 必须先检查：
 
-- Fighting Direction 是否已经由用户明确；若未明确且不同打法会显著改变成片，Interactive 应优先直接询问“怎么打”；
+- Interactive Round 1 是否完成每个关键 Combatant 的 Combat System Selection 或 System Refinement；
+- Interactive Round 2 是否完成每个关键 Combatant 的 Combat Expression Selection 或 Refinement；
+- Character / Narrative Identity 是否被职业、性别、年龄、外貌或体型错误映射成 Combat System；
+- Physical Presentation Domain 是否存在必须条件暴露的高价值歧义；
+- Derived Choreography Direction 是否由上述角色级信息与场景 / Range / Environment / Intent 派生，而不是重新覆盖用户决策；
 - 是否过早锁定结局；
-- Character Identity 是否被职业、性别、年龄、外貌或体型快捷映射；
 - 用户已经明确的角色打法 / Technique Identity 是否被保留为后续 Persistent Combat Signature，而不是一次性标签；
 - 是否把系统应自动保证的质量条件错误变成用户问卷。
 
@@ -162,11 +168,11 @@ Planning / Phrase Gap
 
 `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
 
-只有当前 Gap 与 Fighting Direction 真正需要时才读取。现有 Fighting / Martial / Weapon Profile 仍可作为 Technique Detail 或 source/style evidence 按需使用，但不能只增加打法标签。
+只有当前 Gap 与 Derived Choreography Direction / legacy execution slot 真正需要时才读取。现有 Fighting / Martial / Weapon Profile 仍可作为 Technique Detail 或 source/style evidence 按需使用，但不能只增加打法标签。
 
 #### Stage-2 Pattern Hit Evidence Gate
 
-Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。进入最终 Concrete Action Phrase 前，内部必须能回答：
+进入最终 Concrete Action Phrase 前，内部必须能回答：
 
 ```text
 当前 Execution Gap 是什么
@@ -178,8 +184,8 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 出现以下任一情况时，不能在没有 leaf execution knowledge 的状态下直接进入最终 Phrase：
 
 - High / Expert Combat 且目标是连续高手对决；
-- Fighting Direction 明确要求 Movement / Level / Axis / Route / Support 发生显著变化；
-- 中国武术电影化近身、身法角度争夺、腿法全身攻防、摔控反摔等方向需要具体动作构造差异；
+- Derived Choreography Direction 明确要求 Movement / Level / Axis / Route / Support 发生显著变化；
+- 当前 System / Refinement 要求拳腿摔控混合或明确武术动作构造差异；
 - 连续多个关键 Phrase 主要由 Upper-body Contact 驱动；
 - Movement 只是“给上肢动作补脚步”；
 - Transition 缺少 Contact / Momentum / Axis / Range / Recovery Handoff；
@@ -201,7 +207,7 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 
 #### Persistent Combat Signature Gate
 
-只要用户、Interactive 或高置信度 Planning 已经明确某个角色的 Technique Identity / 打法差异，就必须把它升级为：
+只要用户、Interactive 或高置信度 Planning 已经明确某个角色的 Combat System / System Refinement / Technique Identity / 打法差异，就必须把它升级为：
 
 > **Persistent Combat Signature / 持续打法特征**
 
@@ -209,59 +215,20 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 
 > **这个角色持续通过什么动作逻辑创造下一状态、抢 Initiative、改变 Range / Support / Position？**
 
-内部至少从以下维度中选取当前真正有区分度的组合：
+Combat Expression 可以影响主动 / 反制、节奏、风险和再进入倾向，但不能代替具体 Technique。
 
-- Entry / Range Creation：怎样进入或维持距离；
-- State-change Method：通过 Strike / Kick / Grapple / Throw / Weapon / Movement 如何改变 Guard、Support、Axis、Range、Position；
-- Initiative Method：怎样抢、续、夺回主动权；
-- Continuation Logic：前一动作后果怎样进入下一动作；
-- Recovery / Re-entry：受阻或被反制后怎样继续保持角色打法特征。
-
-例如用户明确：
+例如：
 
 ```text
-女方：拳腿组合
-男方：拳肘 + 抱摔
+女方：MMA / 拳腿 Refinement
+男方：MMA / 拳肘 + 抱摔 Refinement
 ```
 
-不能只实现成：
-
-```text
-女方出现一次低踢
-男方尝试一次 body lock
-→ 后续双方全部回到同一种前臂 / 抓臂 / 肩线短打
-```
-
-应让角色打法在 Combat Spine 的不同阶段持续改变状态，例如：
-
-```text
-拳法制造高位 Guard / Reaction
-→ 腿法攻击 Support / Range
-→ 借 Footwork / Angle 继续进入拳法
-```
-
-以及：
-
-```text
-短打 / 肘击压缩距离
-→ 创造 Clinch / Body-lock Entry
-→ 成功摔控、被反摔、被迫换位，或至少迫使对手改变 Support / Position
-→ 从这个结果继续下一次贴身进入
-```
-
-`Grapple / Throw` 不要求每次成功摔倒，但必须产生真实状态后果；只有“尝试抱住”而没有改变 Balance / Position / Range / Response，不算 Signature Realization。
-
-不做机械次数配额；判断标准是：
-
-- 角色打法是否在整条 Combat Spine 中持续可辨认；
-- Concrete Technique 可以变化，但创造状态和抢主动的逻辑不能中途蒸发；
-- Major Reversal 前后角色仍然以自己的方式解决问题，而不是双方长期塌成同一种 Counter 模板。
+不能只实现一次低踢和一次 body lock 后双方塌成同一种前臂短打；应让已确认 System / Refinement 在 Combat Spine 不同阶段持续形成可见状态后果。
 
 失败判定：
 
 `Technique Identity Evaporation / Persistent Signature Collapse`
-
-修复：回到后续 Concrete Action Phrase / Transition 重写，让打法差异继续产生状态后果；**禁止只补一个孤立踢腿 / 抱摔词来“打卡”。**
 
 #### Subject Motion 条件必读 Gate
 
@@ -273,7 +240,7 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 
 - 约 `10–20s` 的短时 Combat；
 - 以持续近身攻防 / High Kinetic Scope 为主体；
-- Fighting Direction / Character Identity 明确依赖 Whole-body、Footwork、Support / Balance、Range / Position / Axis / Route；
+- Derived Choreography Direction / System Refinement / Character Identity 明确依赖 Whole-body、Footwork、Support / Balance、Range / Position / Axis / Route；
 - 或已有上肢锁死、动作断裂、脚步 / 重心只作为上肢动作修饰语的风险。
 
 命中后 `subject-motion/control.md` 占普通 `0-3 Controls` 中 `1` 个名额；不能因为 Core / Choreography 已经描述了 Motion / Continuity 就跳过。
@@ -281,8 +248,6 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 如果命中条件但 Runtime Read List 没有它，判：
 
 `Subject Motion Routing Missing`
-
-必须在 Final Prompt 前补读并重新检查 Whole-body Motor Driver、Support Transfer、Momentum / Recovery、Contact Reaction 与 Continuation。
 
 Stage-2 读取之后必须进入：
 
@@ -298,50 +263,51 @@ Execution Knowledge
 → Prompt Assembly
 ```
 
-**Stage-2 的职责不是只增加打法标签，而是帮助把当前 Planning Context 实例化成具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果和下一动作入口。**
-
-> **能力很多，不等于每次加载很多；按缺口补知识，而不是按目录读知识。**
-
 ---
 
-## 6. Quick / Interactive 共享规划图
+## 6. Quick / Interactive 共享动作引擎
 
-Quick 与 Interactive 使用同一个 Combat Planning Graph 和同一套质量标准。
+Quick 与 Interactive 使用同一套下游质量标准，但本轮 MVP **只迁移 Interactive 上游角色打斗决策**。
 
 ### Quick Mode
 
 > **Quick = Full Planning + Silent Resolution.**
 
-Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Persistent Combat Signature（如命中）、Contact Solidity、Environment、Signature Moment、Camera / Execution Budget、Stage-2 Execution Knowledge、条件命中的 Subject Motion、Concrete Action Phrase、State / Continuity Validation、Action–Camera Handoff、Final Assembly / Final Preflight、Prompt QA / Self-Repair。
-
-如果 Fighting Direction 未明确但当前只有一个明显合理方向，Quick 静默推导；如果存在多个方向，也不进入多轮问答，而按上下文选择基线方案。
+Quick 暂保留 legacy Fighting Direction 静默规划，避免本次测试一次引入过多变量；仍不得按职业强行套固定 Profile。
 
 ### Interactive Mode
 
-只在以下条件同时成立时暴露一个决策：
+Interactive 角色打斗两个核心节点固定为：
 
-- 存在多个明显不同方向；
-- 方向会显著改变成片；
-- 当前信息不足以高置信度选择。
+```text
+Round 1：Per-Character Combat System / System Refinement
+Round 2：Per-Character Combat Expression / Expression Refinement
+```
 
-`Fighting Direction / 怎么打` 是上游高价值候选问题：当用户未明确且不同打法会显著改变 Movement / Technique / Range / Physical Scale 时直接询问。候选答案至少 5 个，正常 6–8 个，复杂可到 10 个，并支持自定义；不与旧“核心动作风格 / Choreography Profile”重复询问。
+规则：
 
-不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Stage-2 Evidence、Persistent Combat Signature QA、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+- `Unknown → Select`；
+- `Known → Refine`；
+- 1v1 同一轮同时处理双方；
+- 1vN 主角 / 关键对手独立，次要角色允许分组；
+- Character / Narrative Identity 不得替代 Combat System；
+- Physical Presentation Domain 仅在高价值歧义时条件暴露；
+- legacy Fighting Direction 不再作为用户问题；
+- 系统自动形成 Derived Choreography Direction，再写入 legacy execution slot；
+- 不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Stage-2 Evidence、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
 
-Camera Intent 属于条件高价值节点：只有多个观看策略都合理且会显著改变成片时才暴露，不固定必问。
-
-推荐答案不得把人口属性当打法模板。
+用户明确“先实现 / 先测试 / 停止细化”时立即停止继续 Grill 低价值细节。
 
 ---
 
 ## 7. Combat 必经 Final Assembly / Preflight / QA
 
-输入仍由 `references/inputs/` 判断，不在本任务复制素材规则；输出仍挂接现有 single-shot / multi-shot / model-adapted 模板，不建立平行 Combat 模板。
-
 Action Combat 的最终运行链必须是：
 
 ```text
-Combat Planning Context
+Per-Character Combat Context
+→ Derived Choreography Direction
+→ legacy Fighting Direction execution slot（MVP）
 → Stage-2 Gap-driven Execution Knowledge
 → Stage-2 Pattern Hit Evidence Gate
 → Persistent Combat Signature Realization（如命中）
@@ -355,71 +321,41 @@ Combat Planning Context
 → 读取并执行 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
 → Combat Final Preflight
-→ FAIL：内部回到 Stage-2 Read / Persistent Signature / Subject Motion / Concrete Action Phrase / Pattern Selection / Character Identity / Action–Camera Handoff / Prompt Assembly，并重新检查
-→ PASS：进入 Prompt QA / Self-Repair Gate
-→ QA FAIL（实现质量问题）：静默修复对应层并重新 QA
-→ QA FAIL（必须改变用户已确认创作决策）：Interactive 重新暴露当前唯一必要决策；Quick 不得偷改决策
-→ QA PASS：挂接当前输出模板 / Model Adapter
+→ Prompt QA / Self-Repair Gate
 → Delivery
 ```
 
 ### Final Preflight 最小合并 Gate
 
-最终只回答这些高价值问题：
+最终至少检查：
 
-1. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；Ending 是否吞掉 Active Exchange；
-2. **动作是否具体**：关键数秒是否由具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果与下一动作入口构成，而不是抽象“连续攻防”；
-3. **Stage-2 是否真的命中**：存在明显 Movement / Technique / Transition Gap 时是否真实读取 leaf knowledge，并把 Pattern / Detail 变成 Concrete Action；否则判 `Stage-2 Routing Evidence Missing`；
-4. **Subject Motion 是否按条件命中**：短时 High Kinetic / Whole-body Combat 命中 Gate 时是否真实读取 `subject-motion/control.md`；若没读，判 `Subject Motion Routing Missing`；
-5. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；Initiative 是否在动作链内转移；关键 Transition 是否有 Motion / Energy Carry-over；
-6. **Persistent Combat Signature 是否持续**：角色已确认的 Technique / Character Identity 是否在整条 Combat Spine 中持续通过不同的 State-change / Initiative / Continuation 逻辑体现；如果只在前段出现一次，后续双方塌成同一种打法，判 `Technique Identity Evaporation / Persistent Signature Collapse`；
-7. **Movement 是否真的在编排战斗**：High / Expert Combat 中若连续多个关键 Phrase 主要由上肢 Contact 主导，而 Movement 没有主动创造 Level / Route / Axis / Range / Position / Support / Ground-State 变化，则判 `Static Standing Combat / Upper-body Technique Dominance` FAIL；
-8. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
-9. **镜头是否由动作触发并继续同一个运动**：关键 Cut / Reframe 是否有 Motion / Contact / Consequence / Initiative / Range / Level / Environment Trigger；Cut 后是否继承 Active Motion，而不只保持位置；否则判 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss`；
-10. **Camera Coverage 是否跟着战斗空间和观看体验走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；不机械形成 `Medium → Close → Medium → Close`；Perceptual Impact 不过少也不过密；Hard Constraint 不被违反；
-11. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography、Persistent Signature 与关键 Camera Handoff 不被 Prompt Assembly 压回抽象摘要；
-12. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项；
-13. **Model Execution Realizability 是否通过**：没有 Effective High Granularity Everywhere、Instruction Saturation 或明显 Prompt–Video Execution Divergence 高风险结构。
+1. 角色 Identity / Combat System / Refinement / Expression 是否分层且没有互相吞并；
+2. Derived Choreography Direction 是否忠实派生，没有重新覆盖用户确认；
+3. Stage-2 是否真实命中需要的 leaf knowledge；
+4. Subject Motion 是否按条件真实读取；
+5. Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；
+6. 动作是否具体且连续，没有 Neutral Reset / Turn-taking；
+7. Persistent Combat Signature 是否持续；
+8. Movement 是否真正参与编排，而不是上肢动作修饰语；
+9. Contact / Range / Position / Environment 是否真实改变下一拍；
+10. Action–Camera Handoff 是否继承 Active Motion；
+11. Camera 决策层级与 Hard Constraint 是否正确；
+12. Final Prompt 是否保持 Continuous Action Spine、Action-first、低冗余 Negative；
+13. Model Execution Realizability 是否通过。
 
 任一关键项 FAIL，不允许直接交付。
 
 ### Prompt QA / Self-Repair Gate
 
-Combat Final Preflight PASS 后仍执行最后一次成品级 QA。该 Gate 不是重复整个 Planning，而是检查**最终序列化后的成品 Prompt 是否重新引入了问题**。
+Combat Final Preflight PASS 后仍执行成品级 QA。实现质量问题可以静默修；不能静默改：
 
-```text
-Final Prompt Draft
-→ QA
-→ PASS：Delivery
-→ FAIL：定位主失败项
-   ├─ 实现质量问题
-   │  → Silent Self-Repair
-   │  → Re-run QA
-   └─ 只有改变用户已确认 Creative Decision 才能修复
-      → 不得静默改
-      → Interactive：重新问当前唯一必要问题
-      → Quick：保留决策并输出约束内最佳结果 / 最简冲突说明
-```
-
-Combat QA 特别检查：
-
-- Stage-2 Pattern / Detail 是否在 Assembly 后消失；
-- Persistent Combat Signature 是否中后段蒸发；
-- Subject Motion / Whole-body Driver 是否又被压成上肢主导；
-- Action–Camera Handoff / Perceptual Impact 是否被压回一个泛化 Camera 段；
-- Base Viewing Priority 是否被错误固化成固定 Shot Pattern；
-- Camera Hard Constraint 是否被动态镜头偷偷违反；
-- Instruction Saturation 是否因为最终合并 Camera / Audio / Negative 再次出现；
-- Ending / Negative / Continuity 是否吞掉 Active Exchange；
-- 用户确认的 Technique Identity、Camera 选择和剧情约束是否有任何漂移。
-
-### Self-Repair 权限边界
-
-可以静默修：Phrase 组织、动作 / Camera Handoff 外显、Granularity、重复描述、Instruction Saturation、低价值 Negative / Camera / Audio、Ending 占比，以及已经确认内容在序列化中的遗漏。
-
-不能静默改：Fighting Direction、Persistent Combat Signature / Technique Identity、Base Viewing Priority、Camera Hard Constraint、人物身份、剧情关系、胜负 / Ending 意图、用户明确必须保留 / 禁止项。
-
-默认发现问题先执行 `1` 次静默修复并重新 QA；复杂依赖问题可再修一次，但不做无止境循环。
+- Primary / Secondary Combat System；
+- System Refinement；
+- Combat Expression；
+- 用户明确的 Physical Presentation Domain；
+- Persistent Combat Signature / Technique Identity；
+- Base Viewing Priority / Camera Hard Constraint；
+- 人物身份、剧情关系、胜负 / Ending 意图、Must Keep / Must Avoid。
 
 > **质量问题修实现；创作决策要么保留，要么重新问。**
 
