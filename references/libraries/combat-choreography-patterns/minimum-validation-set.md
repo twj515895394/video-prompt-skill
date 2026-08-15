@@ -1,10 +1,10 @@
 # Combat Choreography Patterns — Minimum Validation Set
 
-> 状态：CK-18 最小验证集。用途是验证 Stage-2 是否能真正打破 Upper-body Dominance / Static Standing Combat；不是完整武术知识库，也不是固定套路表。
+> 状态：CK-18 最小验证集 + G01 Regression Trace / Movement Causality 补强。用途是验证 Stage-2 是否能真正打破 Upper-body Dominance / Static Standing Combat；不是完整武术知识库，也不是固定套路表。
 
 ## 1. Runtime 使用规则
 
-仅在当前 Action Combat Planning Context 存在明确 Fighting Direction，且 Stage-2 发现 Movement / Technique / Transition 缺口时按需读取。
+仅在当前 Action Combat Planning Context 存在明确 Fighting Direction / Derived Choreography Direction，且 Stage-2 发现 Movement / Technique / Transition 缺口时按需读取。
 
 ```text
 Planning Gap
@@ -19,9 +19,41 @@ Planning Gap
 - 三类 Pattern 每次全部加载；
 - 为了“丰富”机械凑动作；
 - 直接把样例串成固定 Combo；
-- 用 Pattern 名替代可执行动作句。
+- 用 Pattern 名替代可执行动作句；
+- 只读本文件但不留下 Pattern Hit Evidence；
+- 为了使用某个 Pattern 反过来硬改已经成立的 Exchange Spine。
 
 Pattern 只提供动作生产知识；最终 Phrase 必须结合当前 Range / Contact / Axis / Position / Momentum / Opponent Response 重写。
+
+### 1.1 Pattern Traceability
+
+Regression / Debug 模式下，每次实际实例化本文件 Pattern，都必须能回答：
+
+```text
+当前 Gap 是什么
+→ 命中哪个 Slot
+→ Main Pattern 是什么
+→ optional Auxiliary Pattern 是什么
+→ 哪个字段 / Detail 真正进入了动作
+→ Realized Concrete Action Phrase 是什么
+```
+
+仅仅出现：
+
+```text
+Read: minimum-validation-set.md
+```
+
+不能证明 Stage-2 已正确执行。
+
+### 1.2 Archetype / Signature Weighting
+
+当角色已确认 Cinematic Combat Archetype 或其他 Persistent Combat Signature 时：
+
+- Pattern Selection 必须服从当前 System / Expression / Archetype Bias；
+- Pattern 不是中立随机池；
+- 不得因为本文件只有少量样例，就让不同角色最终都使用同一动作骨架；
+- Archetype 只改变选择权重，不创建固定次数或固定 Combo。
 
 ---
 
@@ -236,14 +268,55 @@ source_tags
 
 ---
 
-## 6. G01 验证要求
+## 6. Movement Causality Gate
+
+Movement Pattern 命中不等于自动 PASS。
+
+每次 Movement Pattern 实例化后必须检查：
+
+```text
+Movement
+→ 是否真实改变 Level / Route / Axis / Range / Position / Support / Balance
+→ 对手是否因此必须产生新的即时响应
+→ 新 State 是否直接成为下一 Technique / Defense / Re-entry 的入口
+```
+
+PASS 示例逻辑：
+
+```text
+对手直线压入
+→ 外侧斜切改变其对线
+→ 对手必须旋髋 / 调步重新追线
+→ 新暴露的 Support / Axis 成为下一动作入口
+```
+
+FAIL 示例逻辑：
+
+```text
+先用上肢完成格挡
+→ 同时侧移一步
+→ 再抓腕
+```
+
+如果去掉“侧移一步”后主要动作链基本不变，则 Movement 很可能只是装饰性 Footwork，判：
+
+> **Movement Causality Failure / Upper-body Technique Dominance**
+
+不能通过再补一个 Movement 词修复，必须重写动作因果。
+
+---
+
+## 7. G01 验证要求
 
 这个验证集只有在以下结果出现时才算有价值：
 
 - Movement 主动创造 Level / Route / Axis / Range / Position / Support 变化；
+- Movement 产生的状态变化真实迫使对手响应，并成为下一动作入口；
 - Lower-body / Balance / Takedown 在合适 Fighting Direction 下真实进入链条；
 - 关键 Exchange 不再反复依赖“前臂偏转 → 肩线封堵 → 抓腕 / 顶肩”；
+- Pattern Hit 可以从 `Gap → Slot → Pattern → Detail → Concrete Phrase` 被追踪；
+- 不同角色已确认的 System / Expression / Archetype 不因共享本最小集而被同质化；
 - 仍保持 V2-49 的具体因果与 Motion / Initiative Handoff；
 - 不因为更具体而把 15 秒压缩回少量大 Phrase。
 
-若最小集正确命中后仍持续退化，才进入 Knowledge Coverage Audit。
+若最小集正确命中、Movement Causality 与 Trace 都 PASS 后仍持续退化，才进入 Knowledge Coverage Audit。
