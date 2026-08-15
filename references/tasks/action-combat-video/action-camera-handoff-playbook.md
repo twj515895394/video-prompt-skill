@@ -12,17 +12,20 @@
 - `camera-direction/control.md` 的通用摄影术语与镜头规则；
 - `prompt-assembly/control.md` 的最终序列化。
 
-它只负责五件事：
+它只负责六件事：
 
 1. Stage-2 Execution Knowledge 是否真的命中；
 2. Concrete Choreography 是否具有 Model Execution Realizability；
 3. 动作之间是否存在 Motion / Energy Carry-over；
 4. Camera 是否由正在发生的动作状态变化触发；
-5. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
+5. 关键动作瞬间是否存在值得改变观看方式的 Viewer Experience Opportunity；
+6. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
 
 核心原则：
 
 > **Action 决定 Camera 为什么变化；Camera 不能把连续动作切成重新开始的动作块。**
+
+> **Camera Accent 不是逐动作配镜头；普通动作继续当前 Shot，只有高价值动作信息或观看体验变化才触发 Camera 介入。**
 
 > **Concrete Detail 必须服务模型执行；Prompt 更细但成片更差，仍然是 FAIL。**
 
@@ -253,6 +256,7 @@ Motion / Energy Carry-over 是 Transition 质量检查，不增加新的 Pattern
 
 ```text
 Current Action State
+→ Viewer Experience Opportunity（可选）
 → Camera Task
 → Shot Entry Trigger
 → Inherited Motion State
@@ -261,6 +265,8 @@ Current Action State
 ```
 
 这是导演规划结构，不默认作为字段表输出。
+
+`Viewer Experience Opportunity` 不是每个 Action 都必须填写；它只用于判断某个动作瞬间是否值得从“看清动作”进一步升级为“让观众感受到威胁 / 冲击 / 失衡 / 距离压缩 / 主动权翻转”。
 
 ### Current Action State
 
@@ -280,7 +286,8 @@ Current Action State
 - 看清 Contact Consequence；
 - 看清 Support / Footwork；
 - 看清 Initiative Reversal；
-- 恢复新的空间关系。
+- 恢复新的空间关系；
+- 让观众短暂体验逼近威胁、冲击、失衡或距离突然压缩。
 
 ---
 
@@ -348,6 +355,88 @@ Fight-space 从开放区域进入墙、门框、走廊、楼梯等边界时，Ca
 
 不是为了环境丰富，而是环境已经改变动作路线。
 
+### 5.8 Perceptual Impact Trigger / 主观体验触发
+
+Camera 不只负责“把动作拍清楚”。少数关键动作瞬间，如果存在明显的**观看体验价值**，可以改变观察方式，让观众直接感受到正在发生的威胁、冲击或身体状态变化。
+
+内部判断：
+
+```text
+Action State Change
++ Viewer Experience Opportunity
+→ 是否值得 Camera Accent？
+```
+
+只有值得时才介入；普通连接动作默认继续当前 Shot / 当前 Camera Path。
+
+可用体验类型包括但不限于：
+
+#### Threat POV / Near-lens
+
+攻击快速逼近某一角色的视觉空间时，可短暂采用主观或近主观视角，让拳、脚、武器或身体压迫快速逼近镜头。
+
+例如：
+
+```text
+男方右拳突然压进女方视线
+→ Camera 短暂贴近她的主观观看位置
+→ 拳锋逼近镜头
+→ 她在命中前侧闪
+→ Camera 顺拳势从她肩侧切出
+→ 继续同一记挥空动作
+```
+
+要求：
+
+- POV / Near-lens 必须短促；
+- 不能把整个 Combat 变成固定第一视角；
+- Cut / Reframe 后继续原来的攻击方向和 Momentum。
+
+#### Impact Consequence Close-up
+
+关键命中值得强化时，可以切近受击区域，但目标不是“展示拳碰到脸”本身，而是强化**Contact 后果**。
+
+例如：
+
+```text
+女方一拳击中男方侧脸
+→ 接触瞬间进入受击侧近景 / 特写
+→ 看见头部、肩轴被冲击带偏
+→ 下一镜直接继承这股偏转
+→ 她从新形成的外侧角度继续进入
+```
+
+如果局部镜头只看到“打中哪里”，却丢失受力、轴线、Reaction 与下一动作入口，则价值不足。
+
+#### Near-miss / Whip-by
+
+攻击几乎擦过人物或镜头时，可利用快速掠过前景 / 镜头边缘形成威胁感和自然 Cut Bridge，但动作方向必须连续。
+
+#### Body-mechanics Detail
+
+当低扫、支撑转移、失衡、膝髋变化、落地、抱摔入口等真正决定后续动作时，可短促观察脚步 / 支撑 / 髋部 / 重心，而不是为了“有特写”机械拍局部。
+
+#### Range-compression Shot
+
+双方从开放距离突然压进贴身、抱摔或身体压迫时，可以通过 Camera 靠近、改变关系角度或短促局部强化距离被压缩的体感。
+
+#### Initiative / Reaction Experience
+
+主动权翻转或突然反制时，可用 Reaction Shot、Relationship Angle Change 或短暂距离变化，让观众直接感到“控制权已经换人”，而不是额外文字解释。
+
+### Perceptual Trigger 约束
+
+- **不是每个动作都配一个 Camera Accent。**
+- 不设置 POV / Close-up / Insert 数量配额；
+- 同一短窗口连续触发多个体验型镜头时，应检查 Camera Complexity 与 Instruction Saturation；
+- 如果当前 Shot 已经能同时看清动作并产生足够冲击，就不为变化而变化；
+- Perceptual Accent 必须依附真实 Action State，不能先决定“这里要一个酷炫 POV”再反向编动作；
+- 体验型镜头之后不默认立刻回中景，只有空间关系真的可能丢失时才 Re-establish。
+
+触发滥用时判：
+
+`Perceptual Accent Overuse / Camera Accent Overmapping`
+
 ---
 
 ## 6. Live-motion Cut Contract
@@ -411,6 +500,25 @@ Medium
 
 Shot Scale / Camera Position 应由当前信息需要决定。
 
+### Camera Accent Density
+
+默认关系是：
+
+```text
+普通连接动作
+→ 继承当前 Shot
+
+动作信息 / 观看体验出现高价值变化
+→ Camera Accent / Reframe / Cut 候选
+```
+
+因此：
+
+- 一段连续 Combination 可以由同一个移动镜头覆盖多个动作；
+- 一个重要动作也可能在内部包含一次高价值 Cut；
+- Camera Accent 数量与 Action 数量没有一一对应关系；
+- **禁止把 Action–Camera Coupling 实现成“每个动作后面附一个镜头说明”。**
+
 ### Re-establish 条件
 
 只有在局部镜头后观众可能丢失：
@@ -428,13 +536,16 @@ Shot Scale / Camera Position 应由当前信息需要决定。
 
 用户选择“中景跟随、关键接触短暂切近”时，Runtime 应把它理解为**观看偏好**，不能序列化成固定 Shot Pattern。
 
-仍允许在真正改变动作理解时：
+仍允许在真正改变动作理解或观看体验时：
 
 - Route / Direction 变化 → 侧跟 / 改关系角度；
 - Level Drop → Camera 随身体降位；
 - Support Change → 必要低位局部；
 - Initiative Reversal → 改 Relationship Angle / Distance；
-- Fight-space Boundary → 重新组织机位。
+- Fight-space Boundary → 重新组织机位；
+- Threat Approach → 短暂 POV / Near-lens；
+- Impact Consequence → 受击侧近景 / Reaction；
+- Range Compression → Camera 靠近或改关系角度。
 
 如果 Camera Preference 被执行成长期稳定中景、只有 Contact 才短暂切近，判：
 
@@ -444,7 +555,22 @@ Shot Scale / Camera Position 应由当前信息需要决定。
 
 ## 8. Action Spine 与 Camera Handoff 的耦合外显
 
-Final Prompt 的关键 Camera Handoff 应锚在具体 Action Moment 上。
+Final Prompt 的关键 Camera Handoff / Perceptual Accent 应锚在具体 Action Moment 上。
+
+### 8.1 Global Camera Baseline 要短
+
+Camera 独立段可以保留，但只承担全局观看基线，例如：
+
+- 动作可读；
+- 空间关系清楚；
+- Camera 随真实 Route / Range / Level 改变；
+- 不无意义碎切。
+
+禁止用一大段总体 Camera 说明替代真正的 Action-triggered Camera Moment。
+
+### 8.2 Key Camera Moment Inline
+
+普通连接动作不需要嵌镜头；真正高价值的 Camera Accent 直接写进对应 Action Phrase。
 
 避免：
 
@@ -454,9 +580,13 @@ Final Prompt 的关键 Camera Handoff 应锚在具体 Action Moment 上。
 
 > 她开始沉身从高线下穿时，镜头随身体短暂降低；脚步跨过对方支撑线、迫使他重新踩稳的一瞬切到低位近景，下一镜继续同一失衡反应，并从新的斜侧关系接住她的再进入。
 
-不要求所有镜头都这样展开；只外显真正改变动作理解的 Handoff。
+体验型示例：
 
-Camera 段仍可保留总体策略，但不能用总体策略替代动作中的关键 Handoff。
+> 男方突然压近挥拳，拳锋快速逼近她的视线，镜头短暂贴近她的主观观看位置；她在拳头几乎占满画面前侧头闪开，镜头顺着拳势从她肩侧切出，继续同一记挥空动作。
+
+> 她趁他回收不及一拳击中侧脸，接触瞬间切到受击侧近景，看到他的头部和肩轴被冲击带偏；下一镜不重演出拳，而是直接从这股偏转继续她的外侧切入。
+
+不要求所有镜头都这样展开；只外显真正改变动作理解或观看体验的 Handoff / Accent。
 
 ---
 
@@ -466,6 +596,7 @@ Camera 段仍可保留总体策略，但不能用总体策略替代动作中的�
 
 - 不要求 CUT Trigger；
 - 仍要求 Camera Movement / Reframe 由 Action State Change 触发；
+- Perceptual Impact 可以通过 Near-lens、距离压缩、短促绕位、Camera Height / Relationship Angle 改变实现，不强制 Cut；
 - Movement 起点、路线、速度变化和停止点继续服从 `camera-direction/control.md`；
 - Fight-space 改变时 Camera 需要重新组织关系，而不是无摩擦漂浮跟随。
 
@@ -531,6 +662,19 @@ Final Prompt 输出前检查：
 `Coverage Patterning / Symmetric Shot Cycling`  
 `Camera Strategy Overconstraint / Camera Mobility Underfill`
 
+### G. Perceptual Impact / Camera Accent Density
+
+- 当前是否存在真正值得强化的 Threat / Impact / Near-miss / Support / Range Compression / Initiative Moment？
+- 如果存在，Camera 是否选择了与该体验相匹配的观察方式，而不是只写“关键接触切近”？
+- 是否反过来给每个动作都加 Camera Accent？
+- POV / Close-up / Insert 是否已经挤压动作连续性或造成 Instruction Saturation？
+- 体验型镜头后是否继续当前 Motion / Reaction / Position，而不是 Reset？
+
+失败：
+
+`Perceptual Impact Underuse`（存在明显高价值体验节点但全部被保守 Coverage 吞掉）  
+`Perceptual Accent Overuse / Camera Accent Overmapping`
+
 ---
 
 ## 11. Failure Rewrite Priority
@@ -553,8 +697,14 @@ Kinetic Handoff FAIL
 Action–Camera FAIL
 → 重新选择 Action Trigger + Inherited Motion State
 
+Perceptual Impact Underuse
+→ 从已有动作中寻找真正的 Threat / Impact / Support / Range / Initiative 高价值节点，再决定观察方式
+
+Perceptual Accent Overuse
+→ 删除低价值 Camera Accent，让普通连接动作回到当前 Shot
+
 Coverage Patterning / Camera Strategy Overconstraint FAIL
-→ 重新按动作信息分配 Shot Task
+→ 重新按动作信息与 Viewer Experience Value 分配 Shot Task
 ```
 
 不要通过增加更多 Pattern、更多动作术语、更多 Shot、更多特写或更多 Camera 术语修复。
