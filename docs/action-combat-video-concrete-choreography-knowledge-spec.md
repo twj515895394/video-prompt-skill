@@ -334,7 +334,39 @@ Planning / Phrase Gap
 
 > **你希望这场战斗具体怎么打？**
 
-### 10.1 暴露条件
+### 10.1 与原“核心动作风格 / Choreography Profile”的关系
+
+确认：**不再把“核心动作风格”与 Fighting Direction 作为两个独立 Interactive 节点。**
+
+原先类似：
+
+- 高手连续攻防型；
+- 写实战术型；
+- 重型硬派型；
+- 凌厉电影动作型；
+
+这些内容不再单独先问一轮，再继续问“怎么打”。其中真正影响动作内容的部分并入 Fighting Direction；其余如节奏、重量感、写实度、电影化程度，作为该 Fighting Direction 的执行属性或 Runtime 推导结果。
+
+新的上游关系：
+
+```text
+Fighting Direction / 怎么打
+→ 决定主要 Movement / Technique / Range / Physical Scale 倾向
+→ 同时携带必要的 Rhythm / Realism / Impact 等执行属性
+→ Character Identity 再解决双方如何在同一方向中形成差异
+→ Camera Intent 决定观众如何观看这场打斗
+```
+
+避免 Interactive 连续询问：
+
+```text
+你要什么核心动作风格？
+→ 你想怎么打？
+```
+
+这种语义高度重叠的问题。
+
+### 10.2 暴露条件
 
 ```text
 Fighting Direction already clear?
@@ -347,7 +379,7 @@ Fighting Direction already clear?
 
 如果用户已经明确指定“咏春”“MMA”“现代杀手近身格斗”“轻功剑战”等，不重复询问。
 
-### 10.2 职责边界
+### 10.3 职责边界
 
 该问题只让用户决定 **打法方向 / Combat Execution Direction**，不要求用户设计具体动作链。
 
@@ -362,7 +394,7 @@ Runtime
 
 用户选择某方向后，Stage-2 Gap Routing 仍负责内部选择和补齐具体 Pattern。
 
-### 10.3 候选答案数量与质量
+### 10.4 候选答案数量与质量
 
 候选答案不能太少，也不能只是同义改写。
 
@@ -444,6 +476,7 @@ Regression 关注结果：
 | CK-13 | Fighting Direction Interactive | 用户未明确且不同打法显著影响结果时，直接询问“怎么打”；用户决定方向，Runtime 负责具体展开 |
 | CK-14 | Fighting Direction Options | 至少 5 个，正常 6–8 个、复杂可到 10 个；必须有实质动作差异并支持自定义 |
 | CK-15 | Static Standing Combat Gate | High / Expert Combat 连续关键 Phrase 上肢主导且 Movement 未创造有效状态 / 空间变化时判定失败 |
+| CK-16 | Fighting Direction 合并旧风格问法 | 原“核心动作风格 / Choreography Profile”不再作为独立 Interactive 问题；与“怎么打”合并为一个上游 Fighting Direction 节点，节奏 / 写实度 / 重量感等作为执行属性 |
 
 ---
 
@@ -459,7 +492,8 @@ Regression 关注结果：
 - 固定每段必须几次踢腿 / 换位 / 腾空；
 - 固定 Stage-2 每次必须加载三槽；
 - 在 Interactive 已经可以直接获得高价值 Fighting Direction 时，用复杂自动推断替代一句清晰用户问题；
-- 把“候选答案 5–10 个”误解成固定凑数，产生同义选项。
+- 把“候选答案 5–10 个”误解成固定凑数，产生同义选项；
+- 将“核心动作风格”和“Fighting Direction”拆成两轮高度重复交互。
 
 原则：
 
@@ -471,9 +505,8 @@ Regression 关注结果：
 
 当前分支已经接近收口。剩余需要 Grill Me 的关键问题主要是：
 
-1. Fighting Direction 与已有 `核心动作风格 / Choreography Profile` 是否需要合并或明确区分，避免 Interactive 重复询问；
-2. 一个 Action Phrase 如何与 Granularity Distribution / Action Execution Budget 协调，避免 CK-01 只停留在原则；
-3. 是否需要在实施前补充最小 Pattern 样例集，用来验证 Stage-2 能真正打破 Upper-body Dominance；
-4. Implementation Plan 与 Regression 如何落地 CK-13～CK-15。
+1. 一个 Action Phrase 如何与 Granularity Distribution / Action Execution Budget 协调，避免 CK-01 只停留在原则；
+2. 是否需要在实施前补充最小 Pattern 样例集，用来验证 Stage-2 能真正打破 Upper-body Dominance；
+3. Implementation Plan 与 Regression 如何落地 CK-13～CK-16。
 
 不再继续横向扩展新的武术知识分类，优先完成上述依赖后进入实施。
