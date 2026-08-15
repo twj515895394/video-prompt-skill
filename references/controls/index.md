@@ -179,24 +179,37 @@
 
 ### 短时高强度 Action Combat
 
-当任务是约 10–20 秒、以持续近身攻防 / 高 Kinetic Scope / 1v1 或 1vN 为主体，且当前最大风险是动作不连续、上肢锁死、脚步 / 支撑 / Range / Position 不充分、Camera 跟不上 Fight-space 时，`0-3 Controls` 默认优先级为：
+当任务同时满足以下条件时，`subject-motion/control.md` 从“优先读取”升级为**条件必读**：
 
-1. `subject-motion/control.md`
-2. `camera-direction/control.md`
-3. `spatial-blocking/control.md`
+- 约 `10–20s` 的短时 Combat；
+- 以持续近身攻防 / High Kinetic Scope 为主体；
+- 成败明显依赖 Whole-body、Footwork、Support / Balance、Range / Position / Axis / Route 变化；
+- 或当前已出现动作断裂、上肢锁死、脚步 / 支撑只作修饰语等风险。
 
-这不是所有 Combat 的固定三件套，而是**缺口相同条件下的优先级**。如果当前三个缺口并不同时存在，仍按实际 Gap 选择。
+命中后必须读取：
 
-`continuity-consistency/control.md` 不作为纯文字、单段、短时高强度 Combat 的默认第三项。只有出现以下一类或多类明显风险时，它才提高优先级并可替换上述某个 Control：
+- `subject-motion/control.md`
+
+它占用普通 `0-3 Controls` 中的 `1` 个名额；剩余名额继续按缺口竞争。不得因为已经读取 Choreography / Combat Core / Continuity，就假定主体运动控制已经覆盖。
+
+在上述条件下，其余 Controls 的默认竞争优先级为：
+
+1. `camera-direction/control.md`
+2. `spatial-blocking/control.md`
+3. 其他当前真实 Gap
+
+这不是所有 Combat 的固定三件套。若 Camera 或 Blocking 当前并非主要风险，剩余名额仍按实际 Gap 选择。
+
+`continuity-consistency/control.md` 不作为纯文字、单段、短时高强度 Combat 的默认第三项。只有出现以下一类或多类明显风险时，它才提高优先级并可替换剩余某个 Control：
 
 - 多参考素材需要锁定人物 / 服装 / 场景主真源；
 - 多镜头 / 多片段需要跨 Shot / Segment 维持身份、道具或场景状态；
 - 已知模型 / 既有测试存在明显变脸、服装跳变、场景结构漂移；
 - 当前任务的主要失败已经是 Identity / Prop / Scene Continuity，而不是 Motion / Camera / Blocking。
 
-对于单段纯文字高强度 Combat，如果 `continuity-consistency` 只是重复“人物、服装、场景保持一致”并带来大量 Negative，而同时 `subject-motion` 未读取，应优先让出 Control 配额给 `subject-motion`。
+对于单段纯文字高强度 Combat，如果 `continuity-consistency` 只是重复“人物、服装、场景保持一致”并带来大量 Negative，而 `subject-motion` 命中了上述条件却未读取，则直接判 Control Routing FAIL，必须让出配额并补读 `subject-motion`。
 
-该优先级只影响 Control Loading，不替代 Combat Task 内部的 State / Continuity Engine；人物、位置、Range、Contact、Momentum 与 Action State 的连续性仍由 Action Combat Core / Choreography / Action–Camera Runtime 必须保证。
+该规则只影响 Control Loading，不替代 Combat Task 内部的 State / Continuity Engine；人物、位置、Range、Contact、Momentum 与 Action State 的连续性仍由 Action Combat Core / Choreography / Action–Camera Runtime 必须保证。
 
 ### 多模态与音频
 
@@ -207,6 +220,7 @@
 ## 选择规则
 
 - 任务页已经能解决的问题，不额外读取控制页。
+- **短时高强度 Action Combat 命中上面的 subject-motion 条件必读时，不得用本条“任务页已能解决”跳过。**
 - 需要具体术语或选项时读取 `libraries/`，而不是继续扩写控制页。
 - 用户明确指定风格时读取 `styles/`。
 - 用户反馈生成失败且原因跨多个维度时，读取 `diagnostics/`。
