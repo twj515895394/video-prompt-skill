@@ -1966,3 +1966,215 @@ Interactive Regression 不以“问题轮数多少”直接判 PASS / FAIL，而
 | # | 决策 | 当前结论 |
 |---|---|---|
 | V2-47 | Interactive High-value Question Budget | Interactive 不追求最少问题、不设固定完成轮数；每轮必须是真正高影响、当前低置信度的用户决策；默认最多 10 轮作为 Safety Cap，若前 4–6 轮或更少已形成完整可执行需求则立即收口，达到上限后剩余低风险项静默补全 |
+
+## 62. V2-48：Interactive Decision Purity + Conditional Camera Intent Exposure / 交互决策纯度与镜头意图条件暴露
+
+最新办公室 G01 回归显示，Interactive 的轮数本身已经合理，但单个问题的推荐答案仍可能提前夹带下游决策。例如在询问 Choreography Profile 时，同时提前决定 Character Identity、Camera 或 Ending，导致后续问题看似仍在讨论，实际选择空间已被上游推荐偷偷收窄。
+
+同时，Camera 不能仅被视为系统自动完成的基础质量机制。固定机位、一镜到底、完整动作可读、冲击型特写覆盖、贴身沉浸等属于真正的导演观看策略；当多个方向都合理且会明显改变成片时，用户应有机会显式参与决定。
+
+因此正式确认：
+
+> **One Question, One Primary Decision Node.**  
+> **单轮问题优先只解决当前一个主要决策节点。**
+
+以及：
+
+> **Camera Quality is automatic; Camera Intent is conditionally exposable.**  
+> **镜头基础质量自动完成；镜头创作意图在高价值分叉存在时条件暴露。**
+
+### 62.1 Interactive Decision Purity
+
+每一轮 Interactive 问题必须明确当前主要决策节点。推荐答案可以解释该选择对下游的影响，但不得把尚未确认的 downstream 选择一起锁死。
+
+例如询问 `Cinematic Choreography Profile` 时，可以说明不同 Profile 会影响节奏、动作重量和镜头倾向，但不应同时默认确定：
+
+- 双方具体 Character Identity；
+- 谁最终占优；
+- 固定镜头 / 一镜到底 / 特写密度等 Camera Intent；
+- 未经用户确认的战斗结果。
+
+如果这些 downstream 节点已经能由用户输入高置信度推导，可以静默补全；如果存在多个高价值方向，应在后续根据 V2-47 的 Question Budget 决定是否单独暴露，而不是塞进当前问题。
+
+### 62.2 Camera Intent 进入条件高价值节点池
+
+Camera 不作为固定必问项，但正式进入 Interactive 的高价值候选节点。
+
+当以下任一情况成立且用户尚未明确时，可以把 Camera Intent 暴露为当前唯一问题：
+
+- 固定 / 克制机位 与主动跟随会显著改变成片；
+- one-take / long-take 与内部 Cut Coverage 都合理；
+- 完整动作可读型与 Impact Close-up / Insert 强调型都合理；
+- 贴身沉浸、商业冲击、观察式宽景等观看策略存在明显不同方向；
+- 武器、关键 Contact、Reaction、Footwork 等是否获得更强局部 Coverage 会显著改变动作观感；
+- 用户已经明确动作设计，但 Camera 仍是剩余最主要的导演意图不确定性。
+
+如果 Camera Intent 已经明确，直接继承，不再询问；如果当前场景只有一个明显合理方案，仍可静默推导。
+
+### 62.3 Camera 问导演意图，不问内部参数
+
+Interactive Camera 问题应使用用户可理解的观看策略语言，例如：
+
+- 电影冲击型 Coverage：中景保持关系，在关键 Contact / Footwork / Weapon / Reaction 上短促切近，再 Re-establish；
+- 完整动作可读型：更宽景、更少 Cut，重点看全身动作、步法与空间；
+- 贴身沉浸型：Camera 更靠近人物，适度手持与近景，强化身体压力；
+- 固定 / 克制机位型：少移动、少切换，让动作在构图内完成；
+- 一镜到底型：连续摄影调度覆盖整段 Combat。
+
+这些只是候选方向示例，不建立固定五选一模板。禁止把 `Camera Complexity = Medium`、`Mobility = High`、`Cut Density = 3` 等内部参数直接作为用户问卷。
+
+### 62.4 与 V2-46 / V2-47 的关系
+
+- V2-46 定义 Camera 能做什么，以及 Cut 后动作状态如何连续；
+- V2-47 决定一个高影响 Camera 分叉是否值得占用一轮交互；
+- V2-48 约束这一轮 Camera 问题必须保持决策纯度，并以导演观看意图而非内部参数表达。
+
+因此 Camera 不是“必问”，也不是“永远自动”。
+
+原则：
+
+> **交互不是把 Planning Graph 每个节点都问一遍，而是在真正高价值的节点把控制权交给用户。**  
+> **Camera 可以自动推导，但不能在存在重大导演分叉时被系统静默替用户决定。**
+
+## 63. V2-49：Executable Action Granularity / 可执行动作颗粒度规范
+
+最新 G01 Prompt 已经解决了大量时间块、镜头固化和明显 Neutral Reset 问题，但仍暴露出更接近执行层的缺口：Final Prompt 中大量出现“连续格挡”“快速反制”“贴身缠斗”“持续压迫”“不断换位”“连续拆招”等概括性动作语言。这些词对人类导演有意义，却可能不足以让视频模型稳定生成丰富、连续、具体的身体动作。
+
+因此正式增加 **Executable Action Granularity / 可执行动作颗粒度** 作为现有 `Choreography → Stage-2 Execution Knowledge → Prompt Assembly → Final Preflight` 的详细度规范。
+
+它不是新的 Combat Engine、不是新的用户参数，也不新增固定 Interactive 问题。
+
+### 63.1 关键 Action Phrase 必须外显可执行身体事实
+
+承担主要战斗因果的 Action Phrase，应尽量让模型看见以下信息中的必要组合：
+
+```text
+Current Body / Range State
+→ Specific Physical or Weapon Action
+→ Contact / Evasion / Interception
+→ Opponent Immediate Response
+→ Footwork / Body Axis / Range / Position Consequence
+→ Immediate Continuation Entry
+```
+
+这是一组信息要求，不是固定六步模板；不同 Strike、Grapple、Weapon、Wuxia、多人战可以使用不同表达。
+
+重点是：下一个动作为什么能从当前身体与空间状态中立即发生，必须通过可见动作事实表达，而不是只用“继续反制”“不断拆招”说明。
+
+### 63.2 抽象动作词不能替代关键动作设计
+
+以下语言可以作为摘要、节奏说明或次要过渡，但如果它们承担关键 Action Phrase 主体，就必须继续实例化：
+
+- 连续攻击；
+- 连续格挡；
+- 快速反制；
+- 贴身缠斗；
+- 持续压迫；
+- 不断换位；
+- 连续拆招；
+- 高频攻防；
+- 双方持续互有来回。
+
+例如：
+
+```text
+过粗：
+双方在移动中连续格挡、压迫、脱离和再进入。
+
+更可执行：
+男方前臂压住女方进入线时，女方不抽手归位，顺接触点旋开前臂并把前脚切到他外侧；男方尚在转髋封线，女方已利用他肩轴未回正的窗口短击迫使其缩肘，随后从缩肘留下的路线继续进入。
+```
+
+示例只说明颗粒度，不构成固定动作模板。
+
+### 63.3 细化不等于逐招机械枚举
+
+Executable Granularity 的目标是让关键因果链可执行，不是把所有动作拆成帧级清单。
+
+禁止走向另一极端：
+
+- 给每一拳、每一脚机械编号；
+- 描述厘米级位移、角度数值或过细关节轨迹；
+- 为了“具体”把一个 Phrase 塞入大量彼此独立动作；
+- 让动作说明长度超过模型对当前时间窗口的 Execution Budget。
+
+正确策略是：
+
+> **关键因果动作具体，次要过渡动作可以压缩；细节服务连续执行，不服务文字复杂度。**
+
+### 63.4 Initiative Handoff 必须落到动作句法
+
+V2-43 已定义 Initiative Handoff，但 Final Prompt 不能只写：
+
+- 双方不断反制；
+- 主动权来回切换；
+- 在对方动作中抢回主动。
+
+关键 Initiative Handoff 应优先使用能够体现动作重叠和状态继承的句法，例如：
+
+- `尚未收势时`；
+- `接触后立即`；
+- `在对方脚步尚未落稳时`；
+- `顺着被偏开的线路`；
+- `借抓控仍未断开的接触点`；
+- `对方肩轴尚未回正便`；
+- `沿前一步形成的新角度直接进入`。
+
+这些不是固定关键词清单；核心是让 Counter / Re-counter 发生在同一运动链内，而不是“甲完成一段 → 乙开始一段”。
+
+### 63.5 Ending 详细度与 Active Exchange 保护
+
+用户可以决定战斗结果与 Ending Intent，例如均势、短暂占优、击倒、外部打断；但 Ending 占用多少时间、是否吞掉主要 Active Exchange 属于系统内部 Coverage / Assembly / Preflight 职责，不新增“最后停几秒”之类的固定用户问题。
+
+对于 High Coverage 短 Combat：
+
+- Ending 应继承最后一次 Contact / Position / Momentum / Advantage 后果；
+- 不得过早进入长时间静止对视、呼吸或 Pose；
+- 如果 Final Prompt 的 Ending 描述长度或事件量明显挤压 Active Exchange，应在 Preflight 内部压缩 Ending，而不是要求用户重新选择结局；
+- 用户明确要求长时间悬停、慢镜或情绪 Ending 时除外。
+
+### 63.6 Stage-2 Execution Knowledge 的责任
+
+Executable Granularity 优先要求现有 Stage-2 加载真正提供当前场景需要的 Technique / Execution Knowledge。
+
+正常顺序：
+
+```text
+Choreography Plan
+→ Stage-2 Technique / Execution Knowledge
+→ Concrete Action Phrase Construction
+→ Prompt Assembly Externalization
+→ Granularity / Interlock / Coverage Preflight
+```
+
+如果 Runtime 已正确执行该链，但相同 Golden Scenario 的 Prompt 仍持续只能生成泛化的“连续格挡 / 快速反制 / 不断换位”，才进入 Fighting / Martial / Weapon Concrete Knowledge Audit，判断 Library 是否真的缺乏可组合、全身化、跨 Range / Transition 的具体动作知识。
+
+不得在证据不足时直接扩建大型 Fighting Library。
+
+### 63.7 Failure Signature 与 Preflight
+
+新增实现级 Failure Signature：
+
+> **Abstract Action Block / Non-executable Choreography Summary**
+
+典型触发：
+
+- 关键数秒主要由“连续攻防 / 快速反制 / 贴身缠斗”等概括词承担；
+- Character Identity 只写成打法标签，没有具体动作表现；
+- Initiative / Advantage 有 Meta 说明，但缺少身体、Contact、Footwork、Axis、Range 后果；
+- Action Phrase 看似丰富，实际没有足够具体的动作入口、响应和继续条件；
+- Camera / Audio 描述比具体身体动作更详细。
+
+Final Preflight 触发时，应优先重写 Choreography / Prompt Assembly 的关键 Action Phrase；不能只追加“高速、连续、专业、电影化”等形容词。
+
+原则：
+
+> **模型需要的不是“这是一场高手连续攻防”的说明，而是足够具体、能从当前身体状态继续执行的动作事实。**  
+> **动作颗粒度解决的是可执行性，不是文字越细越好。**
+
+## 64. 实测反馈增量决策记录（九）
+
+| # | 决策 | 当前结论 |
+|---|---|---|
+| V2-48 | Interactive Decision Purity + Conditional Camera Intent Exposure | 单轮问题优先只解决一个主要 Planning Node，不提前锁死 downstream；Camera 基础质量自动处理，但固定机位 / one-take / 完整动作可读 / Impact Close-up / 贴身沉浸等真正导演观看策略在存在多个高价值方向时可条件暴露，不作为固定必问项，也不直接询问内部 Camera 参数 |
+| V2-49 | Executable Action Granularity | 作为现有 Choreography / Stage-2 Execution Knowledge / Prompt Assembly / Final Preflight 的详细度规范；关键 Action Phrase 必须外显具体身体或武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果与下一动作入口，禁止用“连续格挡 / 快速反制 / 贴身缠斗”等抽象概括替代关键动作，同时避免逐招机械枚举；Initiative Handoff 必须落实到动作句法，Ending 时长由内部 Coverage / Preflight 保护，不新增固定询问轮次 |
