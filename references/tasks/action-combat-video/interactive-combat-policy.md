@@ -7,10 +7,16 @@
 - Per-Character Combat System / Technique Backbone；
 - System Refinement / Hybrid Refinement；
 - Character Combat Expression；
-- optional Cinematic Combat Archetype；
+- optional Per-Character Cinematic Combat Archetype；
 - Derived Choreography Direction 输入。
 
 它只负责 Interactive 决策暴露与推荐策略，不替代 `core-playbook.md`、`choreography-playbook.md`、Stage-2 Pattern Selection、Camera 或 Final Preflight。
+
+本轮 G01 Regression 已确认的下游修复规则由：
+
+`references/tasks/action-combat-video/regression-fix-runtime-policy.md`
+
+负责。**Interactive Round 1 / Round 2 完成后，在进入 Derived Choreography Direction / Stage-2 前必须读取并执行该文件。**
 
 ---
 
@@ -42,6 +48,8 @@ Round 1 回答：
 
 > 每个关键角色主要依靠什么格斗 / 武术技术体系解决战斗？
 
+Round 1 是整场 Combat Design Space 的第一处分叉，默认应比后续节点更宽；目标不是“问题越少越好”，而是让用户能看到真正会改变成片的技术路线。
+
 ### 3.1 Character Identity 不得替代 Combat System
 
 禁止：
@@ -52,20 +60,98 @@ Round 1 回答：
 年轻女性 → 速度型
 年长男性 → 力量抱控
 现代办公室 → MMA
+中国角色 → 必然使用中国传统武术
 ```
 
-职业、年龄、性别、外貌和体型可以影响表现与物理条件，但不能直接锁定 Technique Backbone。
+职业、年龄、性别、外貌、体型、国籍、时代和场景可以影响候选相关性、表现与物理条件，但不能直接锁定 Technique Backbone。
 
-### 3.2 通用候选池
+### 3.2 Dynamic Recommendation Breadth / 动态推荐宽度
+
+Round 1 不使用固定四选一，也不固定展示全部拳种。
+
+运行逻辑：
+
+```text
+当前用户选题
++ Scene / Range / Environment
++ Character Relation / Physical Conditions
++ User Viewing Intent
++ 已确认限制
+→ 分析真实 Combat Design Space
+→ 选择高价值、差异明显的候选方向
+→ 常见情况下约 6～8 个
+→ + 自定义
+```
+
+“约 6～8 个”只是常见目标，不是硬配额：
+
+- 如果只有 4～5 个真正合理的方向，不为凑数加入低价值候选；
+- 如果存在 8～9 个明显不同且都有高决策价值的方向，不机械砍到 6 个；
+- 候选数量必须由当前选题动态决定。
+
+### 3.3 Recommendation Diversity Gate
+
+Round 1 的质量指标不是 Candidate Count，而是：
+
+```text
+Relevance
++ Meaningful Technique Difference
++ Range / Movement Difference
++ Striking / Grappling / Whole-body / Environment 等解决路径差异
++ User Decision Value
+```
+
+禁止：
+
+- 表面列出 6～8 个选项，实际只是相近拳种换名字；
+- 多个候选最终产生近似同一套站立拳腿交换；
+- 推荐理由只围绕职业身份，而不解释不同 Pairing 会怎样改变 Combat。
+
+### 3.4 1v1 默认展示完整 Pairing 方案
+
+对于 1v1，Interactive 默认展示：
+
+> **角色 A Combat System vs 角色 B Combat System 的完整对战组合方案。**
+
+例如：
+
+```text
+1. Chinese Cinematic Kung-fu Hybrid vs 散打
+2. 咏春 vs Wrestling / Grappling
+3. 八极 vs 散打
+4. JKD vs MMA
+5. 散打 vs MMA
+6. Hybrid vs Hybrid
+7. 其他当前场景高价值 Pairing
+8. 自定义双方体系
+```
+
+以上只是示意，禁止固化成固定候选表。
+
+每个 Pairing 的说明应回答：
+
+> **这两套体系碰在一起，会形成什么不同的 Range、Movement、Counterplay、压迫 / 反制和观看体验？**
+
+底层仍分别保存：
+
+```text
+Character A Primary Combat System
+Character B Primary Combat System
+```
+
+Pairing 只是 Interactive Presentation，不是新的 Combat System 类型。
+
+### 3.5 通用候选池
 
 按场景动态筛选真正的 Combat System，例如：
 
 - 散打；
 - 八极；
 - 咏春；
-- 长拳 / 传统武术长桥大马与全身线路；
+- 长拳 / 传统武术全身线路；
 - 太极；
 - 截拳道 / JKD；
+- Chinese Cinematic Kung-fu Hybrid；
 - MMA；
 - 泰拳；
 - Boxing；
@@ -74,9 +160,9 @@ Round 1 回答：
 - 其他当前任务合理体系；
 - 自定义。
 
-候选池不是固定问卷，也不要求每次全部展示。
+候选池是知识来源，不是固定问卷。
 
-### 3.3 Chinese Cinematic Kung-fu Intent 推荐排序
+### 3.6 Chinese Cinematic Kung-fu Intent 推荐排序
 
 当用户明确表达以下任一目标：
 
@@ -89,14 +175,19 @@ Round 1 回答：
 
 ```text
 Chinese cinematic kung-fu intent
-→ 优先展示 Whole-body Movement / Footwork / Body Method / Kick Integration / Route Change 更丰富的合理中国武术体系
-→ 同时提供 Chinese Cinematic Kung-fu Hybrid（当用户不关心严格门派还原时）
+→ 提高 Whole-body Movement / Footwork / Body Method / Kick Integration / Route Change 更丰富的合理体系排序
+→ 可以优先推荐 Chinese Cinematic Kung-fu Hybrid
 → MMA 可以保留，但不得因为“现代 / 杀手 / 办公室 / 警匪”机械放在首位
 ```
 
-这不是全局降低 MMA：用户明确要 MMA、笼斗、竞技综合格斗或写实 MMA 时，MMA 仍应优先。
+边界：
 
-### 3.4 Chinese Cinematic Kung-fu Hybrid
+- 不是全局降低 MMA；
+- 用户明确要 MMA、笼斗、竞技综合格斗或写实 MMA 时，MMA 仍可优先；
+- 即使用户没有显式 Chinese cinematic intent，Hybrid 仍可以作为当前题材下的合法高价值候选；
+- 不得因为角色是中国人就让 Hybrid 成为唯一或事实默认答案；应由 Recommendation Diversity 保留真实设计空间。
+
+### 3.7 Chinese Cinematic Kung-fu Hybrid
 
 合法宽泛 Backbone：
 
@@ -114,9 +205,9 @@ Chinese cinematic kung-fu intent
 - 摔控 / 破平衡；
 - Range / Route / Axis / Support 变化。
 
-但它不是“随机动作大杂烩”。具体动作仍必须由当前 State / Range / Contact 与 Stage-2 Movement / Technique / Transition Knowledge 实例化。
+但它不是随机动作大杂烩。具体动作仍必须由当前 State / Range / Contact 与 Stage-2 Movement / Technique / Transition Knowledge 实例化。
 
-### 3.5 Hybrid 默认不追加门派问卷
+### 3.8 Hybrid 默认不追加门派问卷
 
 用户选择 Hybrid 后：
 
@@ -149,7 +240,7 @@ Chinese cinematic kung-fu intent
 
 Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开展示、分开选择、同轮回答**的子维度。
 
-### 子维度 A：Character Combat Expression
+### 4.1 子维度 A：Character Combat Expression
 
 回答：
 
@@ -166,13 +257,43 @@ Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开
 
 不能直接变成固定 Combo / 具体招式。
 
-### 子维度 B：Cinematic Combat Archetype（optional）
+#### Expression Candidate Coverage
+
+如果用户尚未明确 Expression，不能只提供一个“推荐 A”让用户事实上没有选择。
+
+应根据当前角色和已确认 Combat System 动态生成：
+
+```text
+2～3 个真正不同的 Character Combat Expression 组合
++ 自定义
+```
+
+例如：
+
+```text
+A. 推荐：女方冷静诱导 / 后发反制；男方主动压迫 / 持续再进入
+B. 女方主动快速抢先；男方沉稳等待反击
+C. 双方克制试探，利用节奏变化突然爆发
+D. 自定义
+```
+
+这只是结构示例，不是固定套餐库。
+
+候选差异必须真实改变：
+
+- Initiative；
+- Risk；
+- Counter / Pressure 逻辑；
+- Re-entry；
+- Rhythm。
+
+### 4.2 子维度 B：Cinematic Combat Archetype（optional）
 
 回答：
 
-> 如果希望有明确的华语功夫电影动作表达参考，更接近哪一型？
+> 如果希望有明确的华语功夫电影动作表达参考，每个关键角色更接近哪一型？
 
-当前候选：
+当需要暴露 Archetype Selection 时，默认完整展示五种基础 Archetype：
 
 1. **李连杰型｜轻灵流畅・武术线条**
    - 身法、步法、腿法、转身、高低位与全身线路清晰；
@@ -194,15 +315,66 @@ Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开
    - Stop-hit / Interception / Broken Rhythm / Explosive Entry & Exit / Range Control；
    - 短促爆发后立即换距 / 换线，不原地持续挥拳。
 
-6. 不指定明星参考 / 自定义。
+6. **不指定明星参考 / 自定义**
+
+Runtime 可以：
+
+- 根据当前场景动态排序；
+- 标注当前推荐；
+- 解释不同适配度。
+
+Runtime 不可以：
+
+- 无明确高价值原因静默删掉任何一种基础 Archetype；
+- 再出现 Policy / Library 中存在李小龙型，但实际候选没有李小龙型的情况。
+
+如果基础候选被无理由丢失，判：
+
+> **Archetype Candidate Coverage Failure**
 
 执行语义读取：
 
 `references/libraries/combat-cinematic-archetypes/library.md`
 
-### 4.1 两个子维度不得预绑定
+### 4.3 Archetype 是 Character-level 属性
 
-禁止做成套餐：
+Planning Context 按角色分别保存：
+
+```text
+Character A
+- Combat System
+- Combat Expression
+- Cinematic Combat Archetype
+
+Character B
+- Combat System
+- Combat Expression
+- Cinematic Combat Archetype
+```
+
+允许：
+
+```text
+女方：Hybrid + 冷静后发 + 李连杰型
+男方：散打 + 主动压迫 + 吴京型
+```
+
+也允许：
+
+```text
+双方统一：李连杰型
+```
+
+Interactive 不新增固定轮次：
+
+- Round 2 可以动态推荐双方不同 Archetype；
+- 用户明确说“双方统一某一型”时直接继承；
+- 用户只回复一个 Archetype 且上下文明显指整场统一电影动作表达时，可高置信度理解为双方共享，不机械追问；
+- 存在真实高价值歧义时才精炼，不把角色级存储变成新增问卷。
+
+### 4.4 两个子维度不得预绑定
+
+禁止做成固定套餐：
 
 ```text
 冷静后发 + 李连杰型
@@ -210,17 +382,17 @@ Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开
 高速抢先 + 甄子丹型
 ```
 
-用户可以自由组合任何 Character Combat Expression 与任何 Archetype。
+Expression Candidate 与 Archetype Candidate 必须分别展示、分别选择；当前场景可以给推荐组合，但推荐不是强绑定规则。
 
-例如：
+用户可以一次回复：
 
 ```text
-冷静后发 + 吴京型
-凶狠主动 + 李连杰型
-克制诱导 + 李小龙型
+A + 李连杰型
+A + 女李连杰型 / 男吴京型
+B + 双方统一甄子丹型
 ```
 
-### 4.2 Archetype 继承
+### 4.5 Archetype 继承
 
 如果用户已经明确：
 
@@ -230,8 +402,6 @@ Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开
 - “李小龙式截击节奏”；
 
 直接继承，不重复询问。
-
-如果用户只说“中国功夫电影风格”，且五种参考型存在真实高价值分叉，Round 2 可以展示上述 Archetype 候选。
 
 如果用户不关心明星参考，则 Archetype = none，不强行多问。
 
@@ -261,7 +431,7 @@ MMA → Combat System
 
 ---
 
-## 6. Planning Context 输出
+## 6. Planning Context 输出 + Mandatory Runtime Handoff
 
 Round 1 / 2 完成后，Planning Context 至少保留：
 
@@ -269,21 +439,28 @@ Round 1 / 2 完成后，Planning Context 至少保留：
 Per-Character Primary Combat System
 Optional Secondary Combat System
 System Refinement / Hybrid Refinement（if explicit）
-Character Combat Expression
-Cinematic Combat Archetype（optional）
+Per-Character Combat Expression
+Per-Character Cinematic Combat Archetype（optional）
 Physical Presentation Domain
 Scene / Range / Environment / Intent
+Duration / Coverage Context
 ```
 
-Runtime 再推导：
+然后必须执行：
 
 ```text
-以上角色级信息
-→ Derived Choreography Direction
-→ legacy Fighting Direction execution slot（MVP compatibility only）
-→ Stage-2 Gap Detection
-→ Movement / Technique / Transition Knowledge
-→ Concrete Action Phrase
+READ references/tasks/action-combat-video/regression-fix-runtime-policy.md
+→ Archetype Mandatory Consumption
+→ Archetype-to-Stage-2 Weighting
+→ Duration-aware Choreography Budget
+→ Two-pass Exchange Spine → Selective Stage-2 Expansion
+→ Pattern Traceability
+→ Movement Causality
+→ Per-Character Signature Separation
+→ Ending Signature Compatibility
+→ Exchange Density / Concrete Compression
+→ Serialization Deduplication
+→ Final Preflight
 ```
 
 Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优先外显其中性的动作语义。
@@ -294,25 +471,35 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 
 真实 Interactive 回归至少检查：
 
-1. **MMA Default Bias**
-   - 现代办公室 + 职业杀手不再自动推荐 MMA 首位；
-   - 用户明确中国功夫电影观感时，应优先出现中国武术 / Hybrid 候选。
+1. **Recommendation Breadth / Diversity**
+   - Round 1 是否根据选题动态生成足够宽的高价值 Pairing；
+   - 常见约 6～8 个，但没有机械凑数；
+   - 现代办公室 / 职业杀手不自动 MMA；中国角色也不自动只剩 Hybrid。
 
-2. **Hybrid UX**
+2. **1v1 Pairing Presentation**
+   - 是否用完整双方 Combat System 对战方向帮助用户选择；
+   - 底层仍保持 Per-Character System。
+
+3. **Hybrid UX**
    - 用户选择 Hybrid 后，不应紧接着固定追问“具体混哪些门派”。
 
-3. **Round 2 Double Sub-dimension**
-   - 同一轮分别展示 Character Combat Expression 与 optional Cinematic Archetype；
-   - 不增加固定 Round 3；
-   - 不把气质与明星型预绑定成套餐。
+4. **Round 2 Expression Candidate Coverage**
+   - Expression 是否存在真实可选分叉，而不是只有一个推荐 A。
 
-4. **Archetype Realization**
-   - 选中 Archetype 后，最终动作语言应有可辨识的 Movement / Rhythm / Range / Environment / Transition 偏置；
+5. **Round 2 Archetype Candidate Coverage**
+   - 五种基础 Archetype 是否完整出现；
+   - 李小龙型不得无理由静默消失。
+
+6. **Character-level Archetype**
+   - 双方是否可以不同，也允许共享。
+
+7. **Archetype Consumption / Realization**
+   - 选中 Archetype 后必须进入对应 Runtime Bias；
    - 不能只在 Prompt 写明星名字。
 
-5. **No Static Standing Shortcut**
+8. **No Static Standing Shortcut**
    - 选择 Hybrid 或任何 Archetype 不等于自动 PASS；
-   - Final Preflight 仍必须检查 Static Standing Combat / Upper-body Technique Dominance。
+   - Final Preflight 仍必须检查 Static Standing Combat / Upper-body Technique Dominance / Movement Causality。
 
 ---
 
@@ -325,10 +512,13 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 - 每明星固定 Combo；
 - Hybrid 门派强制问卷；
 - MMA 全局降级；
-- 明星 Archetype → 固定 Combat System 映射。
+- 明星 Archetype → 固定 Combat System 映射；
+- 固定 6～8 候选硬配额。
 
 核心原则：
 
 > **用户决定高价值动作方向；Runtime 负责把专业动作知识补完整。**
 
-> **Modern identity does not imply MMA. Chinese cinematic intent changes recommendation ordering, not technical truth.**
+> **Dynamic recommendation breadth, not a fixed questionnaire.**
+
+> **Modern identity does not imply MMA; Chinese identity does not imply one mandatory kung-fu answer.**
