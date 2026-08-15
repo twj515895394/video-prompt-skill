@@ -99,6 +99,74 @@ Model Adapter 可以改变序列化 / 表达方式和执行复杂度，但不能
 
 ---
 
+## Final Prompt QA / Silent Self-Repair Gate
+
+最终 Prompt 草稿完成后，**不得立即交付**。Quick Mode 必须先执行一次最终核对，并在发现实现质量问题时静默修正。
+
+运行顺序：
+
+```text
+Final Draft
+→ Prompt QA
+→ PASS：Delivery
+→ FAIL：定位主失败项
+→ Silent Self-Repair
+→ Re-run Prompt QA
+→ PASS：Delivery
+```
+
+### QA 最小检查
+
+至少检查：
+
+- 用户明确要求、必须保留 / 必须修改 / 必须禁止项是否全部兑现；
+- 是否出现前后矛盾、主体 / 场景 / 道具 / 时间 / 空间 /动作状态断裂；
+- 主体动作、Camera、Audio、Style 是否存在互相抢指令或因果脱节；
+- 是否因为过度细化造成 Instruction Saturation / 信息过载；
+- 是否把已经具体的动作、镜头或素材职责压回抽象摘要；
+- Camera 是否与主体运动和空间变化相匹配，而不是随机运镜；
+- Negative / Continuity 是否过长、重复或加入用户未要求的剧情限制；
+- Ending 是否过早吞掉主体动作，或没有自然落点；
+- Model Adapter 是否只改变实现方式，没有偷改用户目标；
+- 多模态任务的素材职责与主真源是否仍然一致。
+
+Action Combat 还必须叠加当前 Combat Task 的 Stage-2、Subject Motion、Persistent Combat Signature、Action–Camera、Execution Realizability 与 Combat Final Preflight 检查。
+
+### Silent Self-Repair 权限边界
+
+允许静默修复：
+
+- 重新组织语序 / Phrase；
+- 补回已经确认但在序列化中丢失的动作、镜头或素材职责；
+- 删除重复 / 低价值描述；
+- 降低 Instruction Saturation；
+- 修复动作 / Camera / Continuity / Ending 的实现性问题；
+- 在**不改变用户已确认创作决策**的前提下，调整局部实现。
+
+禁止静默修改：
+
+- 用户明确选择的 Fighting Direction / Character Technique Identity；
+- Base Viewing Priority / Camera Hard Constraint；
+- 人物身份、剧情关系、胜负 / 结局；
+- 必须保留 / 必须禁止项；
+- 素材主真源与用户明确绑定；
+- 其他已经确认的高层创作决策。
+
+Quick Mode 如果发现“只有改变用户明确决策才能消除”的真正硬冲突，不得偷偷改决策；应在最终交付中用最简方式指出冲突，并给出在现有约束下的最佳可执行结果。
+
+### Repair Pass
+
+默认至少执行 `1` 次 QA；发现问题时执行 `1` 次静默修复并重新核对。
+
+如果第一次修复引入新的依赖问题，或复杂任务仍存在明显高价值 FAIL，可再执行一次修复；不进行无止境循环。
+
+原则：
+
+> **Quality Issue → Repair Implementation.**  
+> **Confirmed Creative Decision → Preserve.**
+
+---
+
 ## 不默认输出
 
 除非用户明确要求或确有独立价值，不输出：
