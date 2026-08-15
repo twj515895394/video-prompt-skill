@@ -11,7 +11,7 @@
 > **State Machine Internalized, Choreography Externalized.**  
 > **状态机内化，动作编排外显。**
 
-并追加三条强制原则：
+并追加四条强制原则：
 
 > **Concrete Choreography In, Concrete Choreography Out.**  
 > **前面已经设计具体的动作，组装阶段不能重新压缩成抽象战斗摘要。**
@@ -21,6 +21,9 @@
 
 > **Selective Camera Accent, Not Camera-per-Action.**  
 > **普通连接动作继承当前 Shot；只有高价值动作信息或观看体验变化才把 Camera Accent 嵌入对应 Action Phrase。**
+
+> **Semantic Camera Handoff Preservation, Not Textual Copy.**  
+> **Assembly / Adapter 可以自由改写表达，但不能把已经成立的 Action–Camera Handoff 泛化、拆散或删除。**
 
 ---
 
@@ -402,6 +405,105 @@ Impact 体验可写成：
 
 不要机械生成 `Medium → Close → Medium → Close`。Re-establish 只在局部镜头后 Position / Range / Axis / Fight-space 可能丢失时使用。
 
+### 3.13.5 Common Camera Handoff Preservation Contract
+
+本节是 Action Combat 的跨模型 Preservation 正文真源。
+
+它约束的是**必须存活的导演语义**，不是要求 Assembly / Model Adapter 原文复制。
+
+当上游已经通过 Realization Gate 形成一个高价值 Camera Handoff 时，Assembly 与后续 Adapter 可以自由：
+
+- 改写语言；
+- 合并句子；
+- 将结构化描述压成自然段；
+- 使用目标模型更合适的 Camera 术语；
+- 在有可靠证据时降低 Camera 实现复杂度。
+
+但改写后仍必须保留足以恢复原导演意图的核心语义：
+
+```text
+Concrete Action Anchor
++
+Action ↔ Camera 因果绑定
++
+主要 Camera Task / Viewer Experience Intent
++
+必要 Live Motion / State Continuation
+```
+
+### 语义保真，不是原文保真
+
+允许：
+
+```text
+Cut → 连续 Reframe
+Near-lens 术语 → 自然语言距离压缩
+结构化 Handoff → 单段自然语言
+```
+
+只要核心 Action–Camera Intent 仍然成立。
+
+不允许：
+
+```text
+具体 Action Moment
+→ “第一次接触时”
+
+具体 Viewer Experience
+→ “使用更电影化的近景”
+
+具体 live-motion continuation
+→ 删除，只剩镜头变化
+```
+
+发生这类下游退化时，正式判：
+
+`Camera Handoff Serialization Loss`
+
+该 Failure 的前提是：**上游 Handoff 已经存在且 Realization PASS。**
+
+Rewrite 路径：
+
+```text
+Camera Handoff Serialization Loss
+→ 回 Prompt Assembly / 当前 Model Adapter
+→ 恢复已有 Handoff 的核心语义
+→ 不回 Choreography 重新设计动作
+```
+
+### Camera State Establishment / Reference
+
+Assembly / Adapter 还必须检查 Camera State 的建立与引用：
+
+- 后文写“从近景拉回 / 从主观位退出 / 恢复关系景别”时，前文是否真正建立过对应 Camera State；
+- Camera State 是否能沿当前动作连续性成立；
+- 不把未建立的 Camera State 当作既成事实。
+
+这属于 Preservation / Continuity 检查维度，暂不新增独立 Failure Signature。
+
+### Full-fidelity Default
+
+`Camera Complexity Capacity = Unverified` 不等于“模型做不到”。
+
+在没有 Verified Limitation 或真实 Generated-video Regression Evidence 时，不因为能力未评级就主动删掉 / 泛化高价值 Camera Handoff。
+
+只有有证据需要降载时，才使用 `Intent-preserving Degradation`；优先降低实现复杂度，保留 Action Anchor、Viewer Intent 与 live motion。
+
+### Validation 层级
+
+Prompt Assembly 在交给 Model Adapter 前执行 **assembly-stage preservation validation**。
+
+真正的最终 Preservation Gate / Combat Final Preflight 必须检查 **Model Adapter 之后、实际要交付给用户的 Final Prompt**。
+
+因此：
+
+```text
+Assembly PASS
+≠ Final PASS
+```
+
+如果 Adapter 重新造成 Serialization Loss，必须在 Delivery 前重写。
+
 ### 3.14 Ending Coverage Protection
 
 Ending 的结果可以来自用户已确认的导演意图，但 Assembly 必须保护 Active Exchange Budget。
@@ -458,6 +560,7 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - High / Medium / Low Granularity 的信息层级差异；
 - 高价值 Action-triggered Camera Handoff / Perceptual Impact；
 - 跨 Shot 的 Action Direction / Contact / Momentum / Active Motion 继承；
+- Camera Handoff 的 Concrete Action Anchor / Viewer Intent / live-motion continuation；
 - Ending 的真实收束状态。
 
 > **Clarity Through Structure, Not Action Reduction。**
@@ -482,9 +585,11 @@ Negative 只保留当前明确高风险项。
 
 ---
 
-## 7. Combat Final Preflight Serialization Check
+## 7. Combat Assembly-stage Serialization Check
 
-Prompt Assembly 交付前至少检查：
+本节是在 Prompt Assembly 交给 Model Adapter **之前**的检查，不是最终 Delivery Preflight。
+
+至少检查：
 
 - Action Language 是否占主体；
 - High / Medium Coverage 是否真的被 Action Flow 写满；
@@ -507,6 +612,8 @@ Prompt Assembly 交付前至少检查：
 - 是否把 Continuous Action Spine 错写成 one-take / 单一 Camera Path；
 - 是否长期只有中全景 / 中景，缺少有信息价值或体验价值的 Shot Scale Variation；
 - **关键 Cut / Reframe 是否由具体 Action State Change / Viewer Experience Opportunity 触发，而不是泛化“关键接触切近”；**
+- **上游已通过 Realization Gate 的 Camera Moment，在 Assembly 后是否仍保留具体 Action Anchor / Camera Intent / live-motion continuation；**
+- **Camera State 是否先建立后引用；**
 - **存在明显 Threat / Impact / Near-miss / Support / Range Compression / Initiative Moment 时，是否全部被保守 Coverage 吞掉；**
 - **是否反过来给几乎每个动作都附 Camera Accent / POV / Close-up；**
 - **Cut 是否至少在关键位置保留 Active Motion / Contact / Pressure / Recovery，而不是动作死掉后再切；**
@@ -524,11 +631,15 @@ Prompt Assembly 交付前至少检查：
 
 触发 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss / Coverage Patterning` 时，优先重写 Action Trigger、Inherited Motion State 与 Camera Handoff；不要通过增加更多 Shot / 特写 / Camera 术语修复。
 
+触发 `Camera Handoff Serialization Loss` 时，只回 Prompt Assembly / 当前 Model Adapter 恢复上游已经存在的 Handoff，不重新设计 Choreography。
+
 触发 `Perceptual Impact Underuse` 时，从已有动作中寻找真正的 Threat / Impact / Support / Range / Initiative 高价值节点，再决定观察方式；不是机械追加特写。
 
 触发 `Camera Accent Overmapping / Perceptual Accent Overuse` 时，删除低价值 Camera 指令，让普通连接动作重新继承当前 Shot。
 
-不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage / 压缩结构，再交付。
+Assembly-stage 不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage / 压缩结构，再进入 Model Adapter。
+
+Model Adapter 完成后仍必须再次执行 Preservation Gate + Combat Final Preflight，才能交付。
 
 ---
 
@@ -588,12 +699,15 @@ Model Adapter 入口：
 - Choreography 已分配 Granularity，但 Assembly 又把所有 Phrase 展开成同等体量；
 - Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异；
 - Action–Camera Handoff / Perceptual Impact 已规划，但 Assembly 又压回“关键接触切近 / 随后回中景”；
+- 上游 Handoff 已 Realize，但 Model Adapter 又造成 `Camera Handoff Serialization Loss`；
 - Camera Accent / POV / Close-up 过密，反而挤压动作执行；
 - Cut 只保持 Position，却丢失上一 Shot 仍然存在的 Motion / Pressure / Recovery。
 
-Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果，也不得把关键 Action–Camera Handoff / Perceptual Impact 改成动作完成后的随机 Coverage。
+Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果，也不得把关键 Action–Camera Handoff / Perceptual Impact 改成动作完成后的随机 Coverage或泛化 Camera 摘要。
 
-模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 删除低价值 Camera Accent → 降低无必要 Camera Complexity → 保留少数高价值 Action-triggered / Perceptual Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
+`Unverified` 不构成自动 Camera 降级证据。只有 Verified Limitation / Benchmark / Generated-video Regression Evidence 才允许 Intent-preserving Degradation。
+
+模型确需降载时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 删除低价值 Camera Accent → 降低无必要 Camera 实现复杂度 → 保留少数高价值 Action-triggered / Perceptual Coverage 及其 Anchor / Intent / live motion → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
 
 ---
 
@@ -605,6 +719,7 @@ Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Cam
 - Motion：`subject-motion/control.md`；
 - Spatial：`spatial-blocking/control.md`；
 - Combat Choreography：`references/tasks/action-combat-video/choreography-playbook.md`；
-- Combat Action–Camera Bridge：`references/tasks/action-combat-video/action-camera-handoff-playbook.md`；
+- Combat Action–Camera Bridge / Realization：`references/tasks/action-combat-video/action-camera-handoff-playbook.md`；
+- Action–Camera Realization × Preservation Spec：`docs/action-combat-video-action-camera-handoff-spec.md`；
 - 输出模板：`assets/templates/`；
 - Model 语法 / 能力：`references/models/`。
