@@ -32,6 +32,7 @@
 ```text
 core-playbook.md
 + choreography-playbook.md
++ advantage-structure-contract.md
 + 1 个当前专项 Playbook
 + Planning Gate
 + Stage-2 Pattern Hit Evidence Gate
@@ -46,6 +47,8 @@ core-playbook.md
 + Prompt QA / Self-Repair Gate（必经）
 + 当前输出模板 / Model Serialization
 ```
+
+`advantage-structure-contract.md` 属于 Action Combat 主 Task 固定 Reference，不占普通 Controls / Libraries 预算。它是 `Outcome / Counterplay Shape / Advantage Trajectory / Ending Exposure` 的运行期正文真源。
 
 其中 `prompt-assembly/control.md` 在普通任务中仍可按需读取；**一旦进入 Action Combat，则不占普通 `0-3 Controls` 可选预算，必须在最终交付前读取并执行。**
 
@@ -63,17 +66,38 @@ core-playbook.md
 
 负责 Combat Choreography Engine：Derived Choreography Direction / legacy Fighting Direction 执行槽、Active Combat Coverage、Rhythm、Action Phrase、Executable Granularity、Exchange Depth、Character Identity、Tactical Interaction、Environment Affordance、Contact Solidity、Signature Moment、Action Sufficiency / Execution Budget、Kinetic / Temporal / Motion Continuity、Camera Readability / Mobility / Coverage、Combat Audio、Ending Coverage Protection 与 Final Preflight Criteria。
 
+### `advantage-structure-contract.md`
+
+负责把用户级优势语义映射到现有 Core / Choreography，而不另建第二套状态机：
+
+```text
+Outcome / Advantage
++ Counterplay Shape
++ Advantage Trajectory
+→ Core Advantage State / Turning Event
+→ Choreography Initiative / Counterplay Realization
+→ Final Prompt Visible Advantage
+```
+
+其核心约束：
+
+> **Advantage ≠ Attack Share。**  
+> **Outcome ≠ Advantage Trajectory。**  
+> **Disadvantaged ≠ Passive。**
+
+当用户选择中 / 高 Counterplay 时，不能用“等待 / 准备 / 即将反扑”替代真实 Attack / Counter / Re-entry。
+
 ### `action-camera-handoff-playbook.md`
 
 负责 Stage-2 Pattern Hit Evidence、Motion / Energy Carry-over 与 Action ↔ Camera Bridge：关键 Cut / Reframe 为什么发生、Shot 如何从仍在发生的 Motion / Contact / Pressure / Recovery 中进入，以及 Camera 如何随 Fight-space / Initiative / Level / Support 的真实变化组织 Coverage。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；角色级 Combat System / Refinement / Expression 负责上游角色差异；Persistent Combat Signature 负责“已确认打法差异不能打一半就消失”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Advantage Structure 负责“谁占优不等于谁独占攻击权，以及主动权怎样流动”；角色级 Combat System / Refinement / Expression 负责上游角色差异；Persistent Combat Signature 负责“已确认打法差异不能打一半就消失”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
 
 ---
 
 ## 4. 专项分支路由
 
-Core + Choreography 之后只选择一个主要专项 Playbook。
+Core + Choreography + Advantage Structure 之后只选择一个主要专项 Playbook。
 
 ### 现代格斗
 
@@ -105,6 +129,7 @@ Combat V2 使用：
 Task Router
 + Core
 + Choreography
++ Advantage Structure Contract
 + 当前专项 Playbook
 + 必要轻量 Index
 + 可选 Model Capability 摘要
@@ -119,6 +144,7 @@ Interactive MVP 的 Planning Context 优先保留：
 - Per-Character System Refinement；
 - Per-Character Combat Expression；
 - Physical Presentation Domain；
+- **Advantage Structure：Outcome / Counterplay Shape / Advantage Trajectory；**
 - **Derived Choreography Direction**；
 - Coverage；
 - Rhythm / Realism / Impact 等执行属性；
@@ -136,8 +162,12 @@ Planning Gate 必须先检查：
 - Interactive Round 2 是否完成每个关键 Combatant 的 Combat Expression Selection 或 Refinement；
 - Character / Narrative Identity 是否被职业、性别、年龄、外貌或体型错误映射成 Combat System；
 - Physical Presentation Domain 是否存在必须条件暴露的高价值歧义；
+- **Advantage Structure 是否已由用户明确、条件询问或高置信度静默推导；是否错误把“谁占优”直接推导成“另一方长期不攻击”；**
+- **如果用户只给 Outcome，而 Counterplay / Trajectory 存在两个以上会显著改变成片的合理方向，是否按 `advantage-structure-contract.md` 暴露当前唯一问题；**
+- **Combat Expression 与 Advantage Structure 是否存在真实语义冲突；只有真实高价值冲突才问，不建立机械协调矩阵；**
 - Derived Choreography Direction 是否由上述角色级信息与场景 / Range / Environment / Intent 派生，而不是重新覆盖用户决策；
 - 是否过早锁定结局；
+- **Ending 是否被错误当作固定 Planning Node；没有真实高价值 Final Visual 分叉时应由最后 Active State 自然收束；**
 - 用户已经明确的角色打法 / Technique Identity 是否被保留为后续 Persistent Combat Signature，而不是一次性标签；
 - 是否把系统应自动保证的质量条件错误变成用户问卷。
 
@@ -230,6 +260,26 @@ Combat Expression 可以影响主动 / 反制、节奏、风险和再进入倾�
 
 `Technique Identity Evaporation / Persistent Signature Collapse`
 
+#### Advantage / Counterplay Realization Gate
+
+在 Concrete Action Phrase 定稿前必须执行 `advantage-structure-contract.md`：
+
+- `Advantage ≠ Attack Share`；
+- `Outcome ≠ Advantage Trajectory`；
+- 中 / 高 Counterplay 必须被真实 Attack / Counter / Re-entry 外显；
+- 劣势方攻击可以失败，但必须迫使优势方真实响应或改变 Range / Guard / Position / Balance / Initiative；
+- 不允许用“等待 / 准备 / 即将反扑”替代应发生的 Counterplay；
+- Advantage Shift 必须经过真实 Turning Event；
+- Ending 不得把主要 Counterplay 推到视频之外。
+
+失败判定：
+
+- `Counterplay Starvation`；
+- `Initiative Starvation`；
+- `Deferred Counterplay Collapse`；
+- `Advantage-to-Passivity Shortcut`；
+- `Outcome-Trajectory Collapse`。
+
 #### Subject Motion 条件必读 Gate
 
 当任务同时满足以下条件时，必须在 Concrete Action Phrase 定稿前读取：
@@ -254,6 +304,7 @@ Stage-2 读取之后必须进入：
 ```text
 Execution Knowledge
 → Persistent Combat Signature Realization（如存在明确角色打法差异）
+→ Advantage / Counterplay Realization
 → 必要时读取 subject-motion/control.md
 → Movement / Technique / Transition 按当前状态组合
 → Concrete Action Phrase Construction
@@ -273,7 +324,7 @@ Quick 与 Interactive 使用同一套下游质量标准，但本轮 MVP **只迁
 
 > **Quick = Full Planning + Silent Resolution.**
 
-Quick 暂保留 legacy Fighting Direction 静默规划，避免本次测试一次引入过多变量；仍不得按职业强行套固定 Profile。
+Quick 暂保留 legacy Fighting Direction 静默规划，避免本次测试一次引入过多变量；仍不得按职业强行套固定 Profile。Advantage Structure 可按 `advantage-structure-contract.md` 静默推导，但本批不做 Quick 交互架构扩展。
 
 ### Interactive Mode
 
@@ -292,9 +343,17 @@ Round 2：Per-Character Combat Expression / Expression Refinement
 - 1vN 主角 / 关键对手独立，次要角色允许分组；
 - Character / Narrative Identity 不得替代 Combat System；
 - Physical Presentation Domain 仅在高价值歧义时条件暴露；
+- **Advantage Structure 是后续高价值条件节点，不是固定第三轮 / 第四轮；**
+- **Advantage Structure 一次处理 `Outcome + Counterplay Shape + Advantage Trajectory`，不机械拆成三个问题；**
+- **只给“谁赢 / 谁占优 / 势均力敌”且不同过程会明显改变成片时，才条件询问“怎么占优 / 对方怎么还手 / 主动权怎么流动”；**
+- **势均力敌不自动等于全程 50/50；可以持续胶着、交替占优或一方长期占优但无法终结；**
+- **Ending 不再固定询问；默认从 Final Active State 自然收束，只有真正高价值剧情分叉才单独暴露；**
+- **Combat Expression 与 Advantage Structure 正常直接组合；只有真实语义冲突、存在多个高价值解释时才询问用户；**
 - legacy Fighting Direction 不再作为用户问题；
 - 系统自动形成 Derived Choreography Direction，再写入 legacy execution slot；
 - 不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Stage-2 Evidence、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+
+Action Combat 中 `advantage-structure-contract.md` 对“战斗结果 / 收尾”语义具有专项优先级：通用 Interactive Contract 中的“战斗结果 / 收尾”不得重新解释成固定 Ending 问题。
 
 用户明确“先实现 / 先测试 / 停止细化”时立即停止继续 Grill 低价值细节。
 
@@ -306,11 +365,13 @@ Action Combat 的最终运行链必须是：
 
 ```text
 Per-Character Combat Context
+→ Advantage Structure（用户明确 / 条件询问 / 静默推导）
 → Derived Choreography Direction
 → legacy Fighting Direction execution slot（MVP）
 → Stage-2 Gap-driven Execution Knowledge
 → Stage-2 Pattern Hit Evidence Gate
 → Persistent Combat Signature Realization（如命中）
+→ Advantage / Counterplay / Trajectory Realization
 → 条件命中时读取 subject-motion/control.md
 → Concrete Action Phrase / Battle Beat
 → Core State Validation
@@ -320,6 +381,7 @@ Per-Character Combat Context
 → Camera / Audio / Spatial Coordination
 → 读取并执行 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
+→ Advantage / Counterplay Externalization Check
 → Combat Final Preflight
 → Prompt QA / Self-Repair Gate
 → Delivery
@@ -330,18 +392,23 @@ Per-Character Combat Context
 最终至少检查：
 
 1. 角色 Identity / Combat System / Refinement / Expression 是否分层且没有互相吞并；
-2. Derived Choreography Direction 是否忠实派生，没有重新覆盖用户确认；
-3. Stage-2 是否真实命中需要的 leaf knowledge；
-4. Subject Motion 是否按条件真实读取；
-5. Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；
-6. 动作是否具体且连续，没有 Neutral Reset / Turn-taking；
-7. Persistent Combat Signature 是否持续；
-8. Movement 是否真正参与编排，而不是上肢动作修饰语；
-9. Contact / Range / Position / Environment 是否真实改变下一拍；
-10. Action–Camera Handoff 是否继承 Active Motion；
-11. Camera 决策层级与 Hard Constraint 是否正确；
-12. Final Prompt 是否保持 Continuous Action Spine、Action-first、低冗余 Negative；
-13. Model Execution Realizability 是否通过。
+2. **Advantage Structure 是否保存 Outcome / Counterplay Shape / Advantage Trajectory，且没有把占优错误变成对方不攻击；**
+3. **中 / 高 Counterplay 是否真的出现可见 Attack / Counter / Re-entry，并形成 Defense / Range / Guard / Position / Balance / Initiative 中至少一种状态后果；**
+4. **是否存在 `Counterplay Starvation / Deferred Counterplay Collapse`，尤其是否把主要反击写成“准备 / 即将”并推迟到 Ending 之外；**
+5. **Advantage Trajectory 是否经过真实 Turning Event / Initiative Handoff，Outcome 是否没有吞掉整段状态流动；**
+6. Derived Choreography Direction 是否忠实派生，没有重新覆盖用户确认；
+7. Stage-2 是否真实命中需要的 leaf knowledge；
+8. Subject Motion 是否按条件真实读取；
+9. Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；
+10. 动作是否具体且连续，没有 Neutral Reset / Turn-taking；
+11. Persistent Combat Signature 是否持续；
+12. Movement 是否真正参与编排，而不是上肢动作修饰语；
+13. Contact / Range / Position / Environment 是否真实改变下一拍；
+14. Action–Camera Handoff 是否继承 Active Motion；
+15. Camera 决策层级与 Hard Constraint 是否正确；
+16. **Ending 是否来自最后 Active State，而不是为了悬念吞掉本应发生的有效攻防；**
+17. Final Prompt 是否保持 Continuous Action Spine、Action-first、低冗余 Negative；
+18. Model Execution Realizability 是否通过。
 
 任一关键项 FAIL，不允许直接交付。
 
@@ -353,9 +420,10 @@ Combat Final Preflight PASS 后仍执行成品级 QA。实现质量问题可以�
 - System Refinement；
 - Combat Expression；
 - 用户明确的 Physical Presentation Domain；
+- **用户明确的 Outcome / Counterplay Shape / Advantage Trajectory；**
 - Persistent Combat Signature / Technique Identity；
 - Base Viewing Priority / Camera Hard Constraint；
-- 人物身份、剧情关系、胜负 / Ending 意图、Must Keep / Must Avoid。
+- 人物身份、剧情关系、特定 Ending 意图、Must Keep / Must Avoid。
 
 > **质量问题修实现；创作决策要么保留，要么重新问。**
 
@@ -382,6 +450,8 @@ Medium / Low 仍必须保留基本动作因果，不能退回“连续格挡 / �
 
 明确禁止：固定动作数、固定字数、固定秒数、固定 High/Medium/Low 占比。
 
+Advantage / Counterplay 同样不使用次数配额；只要求用户确认的 Counterplay Shape 与 Trajectory 在 Action Spine 中真实可见。
+
 ---
 
 ## 9. 输出模板覆盖关系
@@ -392,11 +462,14 @@ Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 
 
 如果 Final Prompt 包含关键 Cut / 景别变化 / Reframe，Camera 不能只在动作段后写一句“关键接触切近”；关键 Handoff 应锚定到具体 Action Moment，并保持 Action State / Active Motion 连续。
 
+如果 Advantage Structure 要求 High Counterplay，Prompt Assembly 的压缩不得优先删除用于兑现 Counter / Re-entry / Advantage Shift 的真实 Exchange。Ending 美化、重复 Camera / Audio、重复状态说明应先压缩。
+
 最终 Prompt 遵循：
 
 > **State Machine Internalized, Choreography Externalized.**  
 > **Concrete Choreography In, Concrete Choreography Out.**  
 > **Persistent Combat Signature Across the Spine.**  
+> **Advantage Does Not Mean Opponent Passivity.**  
 > **Action Drives Camera; Camera Preserves Live Motion.**  
 > **时间码服从动作连续性，而不是动作服从时间码。**
 
@@ -407,9 +480,10 @@ Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 
 > **约束错误，不约束创作。**  
 > **Clarity Through Structure, Not Action Reduction.**  
 > **高信息密度，但低混乱度。**  
+> **被压制不等于没有还手；还手很多也完全可以仍然处于下风。**  
 > **质量问题自动修实现，已确认创作决策不偷改。**  
 > **少建运行时概念，多做高价值质量检查。**
 
-Battle Beat、Action Phrase、Pattern、Persistent Combat Signature、Action–Camera Handoff、Golden Scenario 都不是固定动作 / 镜头模板。
+Battle Beat、Action Phrase、Pattern、Persistent Combat Signature、Advantage Trajectory、Action–Camera Handoff、Golden Scenario 都不是固定动作 / 镜头模板。
 
-禁止为了“清晰”默认削减有效攻防；复杂度优先通过结构、Phrase 切分、Camera Readability、Action-triggered Handoff、Persistent Signature 与模型执行预算处理。新增 Failure Signature 不自动意味着新增 Runtime 模块。
+禁止为了“清晰”默认削减有效攻防；复杂度优先通过结构、Phrase 切分、Camera Readability、Action-triggered Handoff、Persistent Signature、Advantage / Counterplay Realization 与模型执行预算处理。新增 Failure Signature 不自动意味着新增 Runtime 模块。
