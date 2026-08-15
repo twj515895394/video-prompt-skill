@@ -1,31 +1,27 @@
 # Video Prompt Skill — Action Combat Current Handoff
 
-> 更新时间：2026-08-15 17:46（UTC+8）  
+> 更新时间：2026-08-15 18:12（UTC+8）  
 > 仓库：`twj515895394/video-prompt-skill`  
 > 分支：`main`  
-> 当前阶段：**Identity × Combat System 已通过真实 Interactive 验证；Advantage × Counterplay 本轮 Spec + Runtime 已实施完成，等待重新跑 G01 真实回归。**
+> 当前阶段：**Identity × Combat System 已通过真实 Interactive 验证；Advantage × Counterplay 已完成 Spec + Runtime；Action–Camera Realization × Preservation 已完成 Spec + Runtime / Assembly / Adapter 静态实施。下一步进入 G01 + 最小 Camera Priority 对照真实回归。**
 
 ---
 
 ## 0. 当前状态一句话
 
-**本轮修改已经完成，不继续扩具体拳种 / 流派知识。下一步唯一高价值动作是重新跑办公室 G01，验证 Advantage × Counterplay 在真实 Interactive、Final Prompt 和 Generated Video 中是否生效。**
+**不要继续扩具体拳种、流派或 Camera Grammar。下一步唯一高价值动作是重新跑办公室 G01，同时验证 Advantage × Counterplay 与 Action–Camera Realization × Preservation；随后再跑 1 个不同 Camera Base Viewing Priority 的最小对照案例。**
 
-本轮由真实生成视频暴露的问题是：
+当前已有两条待真实回归的实施线：
 
 ```text
-女方占优
-→ Runtime 把男方写成长时间防守
-→ 男方 Counterplay 大量停留在“等待 / 准备 / 即将反扑”
-→ Ending 又在真正反击发生前结束
-→ 成片几乎看不到男方真实还击
+A. Advantage × Counterplay
+→ Spec + Runtime 已实施
+→ 需要验证劣势方是否真的会还手，而不是“准备 / 即将反击”
+
+B. Action–Camera Realization × Preservation
+→ Spec + Runtime / Assembly / Adapters 已实施
+→ 需要验证关键 Camera Moment 是否真正绑定具体动作，并在 Adapter 后仍保真
 ```
-
-用户明确纠正了这个语义：
-
-> **被压制不等于一直防守。劣势方完全可以多次还手、主动进攻、反击甚至短暂形成威胁，只是这些 Counterplay 不断被优势方化解、截断或反制，因此总体仍然处于下风。**
-
-因此本批核心不再是“给男方多写几个拳击 / 摔跤动作”，而是把 **Advantage、Counterplay、Advantage Trajectory** 从上游交互一直贯通到最终动作执行。
 
 ---
 
@@ -45,16 +41,15 @@ Derived Choreography Direction：Runtime 自动派生
 legacy Fighting Direction：只保留 compatibility execution slot
 ```
 
-真实办公室 G01 与古代女剑客测试已经提供以下证据：
+真实办公室 G01 与古代女剑客测试已经证明：
 
-- “职业杀手 → Fighting Direction / 打法”混层已明显改善；
+- “职业杀手 → Fighting Direction / 打法”混层明显改善；
 - Round 1 / Round 2 结构真实生效；
-- Physical Presentation Domain 能与 Combat System 正交；
-- Subject Motion / Stage-2 / Action-Camera / Prompt Assembly 的 Runtime Read Routing 已明显改善；
-- Final Prompt 的 Whole-body / Movement / Persistent Signature 比旧版本明显更好；
-- 但办公室 G01 真实生成视频仍暴露 **男方 Counterplay Starvation**。
+- Physical Presentation Domain 与 Combat System 正交；
+- Stage-2 / Subject Motion / Action–Camera / Prompt Assembly 路由明显改善；
+- Final Prompt 的 Whole-body / Movement / Persistent Signature 比旧版本更好。
 
-上一批主 Spec：
+主 Spec：
 
 `docs/combat-system-performance-identity-separation-spec.md`
 
@@ -62,7 +57,7 @@ legacy Fighting Direction：只保留 compatibility execution slot
 
 ---
 
-## 2. 本批：Advantage × Counterplay
+## 2. 已实施：Advantage × Counterplay
 
 主 Spec：
 
@@ -72,19 +67,14 @@ legacy Fighting Direction：只保留 compatibility execution slot
 
 `references/tasks/action-combat-video/advantage-structure-contract.md`
 
-### 2.1 核心 Planning 结构
+核心 Planning 结构：
 
 ```text
 Advantage Structure
 ├─ Outcome / Advantage
-│  → 最终谁占优、是否分胜负
 ├─ Counterplay Shape
-│  → 劣势方怎样还手 / 被压制 / 丢失主动
 └─ Advantage Trajectory
-   → 整段战斗中主动权怎样流动
 ```
-
-三者属于**同一个 Primary Planning Node**，不要机械拆成三个连续问题。
 
 核心原则：
 
@@ -94,557 +84,556 @@ Outcome ≠ Advantage Trajectory
 Disadvantaged ≠ Passive
 ```
 
----
-
-## 3. 已确认 Counterplay Shape 基础模型
-
-当一方总体占优时，至少允许三类高层结构：
-
-### A. Sustained Suppression / 持续压制型
+推荐默认 Counterplay Shape：
 
 ```text
-优势方持续控制 Range / Route / Initiative
-→ 劣势方主要防守 / 闪避 / 退让
-→ 真正反攻机会较少
+High Counterplay, Repeatedly Neutralized
 ```
 
-只有用户明确想要“碾压 / 基本还不了手 / 全程压制”或上下文高度支持时才优先使用。
-
-### B. High Counterplay, Repeatedly Neutralized / 高频还手但持续被化解型
+即：
 
 ```text
 优势方总体占优
-→ 劣势方多次真实发动 Attack / Counter / Re-entry
+→ 劣势方多次真实 Attack / Counter / Re-entry
 → 这些动作真实形成威胁或状态变化
-→ 优势方不断截断 / 化解 / 闪避 / 借势反制
-→ 整体 Advantage 仍属于优势方
+→ 优势方不断化解 / 截断 / 借势反制
+→ 总体 Advantage 仍属于优势方
 ```
 
-**这是没有其他强约束时的推荐默认。**
+Counterplay 只能在真实发生主动战斗行为并造成状态后果时算 Realized；“等待 / 准备 / 即将反扑”只能算 Setup。
 
-### C. Back-and-forth Then Advantage / 多次拉锯后最终占优型
+Ending 已降级为条件节点，不能吞掉主要 Combat Budget。
 
-```text
-双方都阶段性取得主动
-→ Advantage 经过真实 Turning Event 多次转移
-→ 最终一方在关键交换后占优
-```
+当前重要 Failure Signatures：
 
-禁止实现成机械“你一下我一下”。
+- `Counterplay Starvation`
+- `Initiative Starvation`
+- `Deferred Counterplay Collapse`
+- `Advantage-to-Passivity Shortcut`
+- `Outcome-Trajectory Collapse`
 
 ---
 
-## 4. Advantage Structure 的 Interactive Exposure Policy
+## 3. 新增真实 Regression：Camera Intent 存在，但没有落到具体动作
 
-Advantage Structure 是**高价值条件节点**，不是固定 Round 3 / Round 4。
-
-### 直接继承
-
-如果用户已经明确：
+本次真实 Interactive 中，用户选择：
 
 ```text
-Outcome
-+ Counterplay Shape
-+ 大致 Advantage Trajectory
+Camera Base Viewing Priority = 电影冲击优先
 ```
 
-直接继承，不再确认。
-
-### 条件询问
-
-如果用户只说：
-
-- 谁赢；
-- 谁占优；
-- 势均力敌；
-- 谁压制谁；
-
-并且至少存在两个会显著改变成片的合理过程，则把 **Advantage Structure** 作为当前唯一 Primary Planning Node。
-
-问题应一次让用户理解：
-
-> **谁总体占优 + 对方怎么还手 + 主动权大致怎么流动。**
-
-例如办公室 G01 可以出现：
+最终 Prompt 却出现：
 
 ```text
-A. 女方持续压制，男方主要被迫防守，真正反攻很少
-B. 女方总体占优，但男方频繁拳击反击 / 进入摔控，女方不断化解并反制（推荐）
-C. 双方多次拉锯，男方中段短暂占优，女方最终重新夺回主动
+“第一次真实接触发生时，镜头短暂切近……”
 ```
 
-候选必须与已确认 Combat System / Combat Expression 相容，但不能提前锁死具体 Combo。
+但：
 
-### 静默推导
+- 没有明确是哪一个具体 Action Moment 触发该切近；
+- Camera Change 没有与某一段正在发生的动作绑定；
+- 没有明确继承哪一类 live motion；
+- 后文又出现“从冲击近景重新拉回中景”等 Camera State 引用，而该状态没有被可靠建立。
 
-只有一个明显合理结构时可静默推导。
+现有 `action-camera-handoff-playbook.md` 与 `prompt-assembly/control.md` 其实已经明确禁止“关键接触时短暂切近”这种泛化写法。
 
-禁止为了“完整”机械增加 Advantage 问题。
+因此本次问题正式定性为：
+
+> **Camera Handoff Realization / Preservation Regression，而不是缺 Camera 知识，也不是缺一个新的 Interactive 问题。**
 
 ---
 
-## 5. Outcome = 势均力敌时的 Trajectory
+## 4. Action–Camera V2 Spec
 
-`Outcome = 势均力敌 / 未分胜负` 不能自动等于全程 50/50。
+沿用既有 Spec，不建立第二份 Camera 设计真源：
 
-允许：
+`docs/action-combat-video-action-camera-handoff-spec.md`
 
-### Continuous Deadlock / 持续胶着
+已升级为 V2：
 
-双方持续互相破解，很少形成持续 Advantage。
+`Camera Handoff Realization × Preservation`
 
-### Alternating Advantage / 交替占优
-
-```text
-A 先拿主动
-→ B 通过 Turning Event 夺回
-→ 再次转移
-→ 最终仍未分胜负
-```
-
-### One-sided Pressure Without Finish / 一方长期占优但无法终结
-
-一方大部分时间保持压迫，但另一方始终能化解关键威胁，因此最终没有真正输掉。
-
-因此：
-
-> **Outcome 与 Advantage Trajectory 必须分别满足，不能用“平局 / 胜负结果”吞掉整段主动权流动。**
-
----
-
-## 6. Advantage Trajectory 边界
-
-Trajectory 只描述：
-
-> **主动权 / 控制关系怎样变化。**
-
-它不负责具体招式，也不写 Hard Timeline。
-
-推荐内部语义可以类似：
+V2 核心新增：
 
 ```text
-Opening Initiative
-→ First Counterplay Window
-→ Turning Event / Temporary Advantage Shift
-→ Reversal / Re-entry
-→ Final Advantage State
-```
-
-这些是语义位置，不是固定五段模板。
-
-禁止默认：
-
-```text
-0–4s A
-4–7s B
-7–11s A
-11–15s Ending
-```
-
-除非用户、外部同步或 Model Adapter 明确需要严格时间块。
-
----
-
-## 7. Combat Expression × Advantage Structure
-
-用户最终确认：**不要继续设计复杂自动协调矩阵。**
-
-正常组合由 Runtime 直接实现。
-
-只有出现真实语义冲突，而且存在两个以上明显不同、会显著改变成片的高价值解释时，才询问用户。
-
-例如：
-
-```text
-男方 Combat Expression：沉稳、防守反击
+Realization Gate
 +
-Advantage Trajectory：中段男方短暂夺回主动
+Preservation Gate
 ```
 
-本身不冲突，应直接实现成：
+Spec Commit：
+
+`ed454d5f145faf411c4435b89d5ba7ce8bfe71dc`
+
+---
+
+## 5. 实施计划
+
+新增实施计划：
+
+`docs/action-combat-video-camera-realization-preservation-implementation-plan.md`
+
+Commit：
+
+`40124a6ce1aa161de104a381c4d2b697a6fec7a1`
+
+实施原则：
+
+- 只正式作用于 Action Combat；
+- 不建立平行 Camera Runtime；
+- 不增加固定字段 / 固定 Shot 数量；
+- 不把 Camera Gate 做成关键词计数；
+- 不因为 Model Capability = Unverified 就自动降级；
+- 不扩完整 Camera Benchmark；
+- 不扩具体武术 / 拳种知识。
+
+---
+
+## 6. 双层 Gate 已确认并实施
+
+正式结构：
 
 ```text
-接住 / 避开一轮
-→ 捕捉窗口
-→ 真正 Counter
-→ 迫使女方响应
-→ 短暂拿回主动
+Action–Camera Runtime
+→ Camera Handoff Realization Gate
+
+Prompt Assembly / Model Adapter
+→ Camera Handoff Preservation Gate
 ```
 
-不能翻译成：
+职责：
 
 ```text
-男方长期只防守
-→ 最后才准备反击
+Realization Gate
+= 有没有真正设计并落到具体 Action Moment
+
+Preservation Gate
+= Assembly / Adapter 改写后，核心 Action–Camera 语义还在不在
 ```
 
-但如果用户要求类似：
+两层都是：
+
+> **语义合同，不是模板合同。**
+
+不要求固定字段、固定句式、固定顺序、固定 Camera Accent 数量。
+
+---
+
+## 7. Realization Gate 最小语义合同
+
+对**已经被选中的高价值 Camera Moment**，语义上至少要求：
 
 ```text
-男方始终避免主动交锋
+Concrete Action Anchor
 +
-男方全程持续主动压制
+Camera Response / Viewer Task
++
+Live Motion / State Continuation
++
+Camera Hard Constraint Compliance
 ```
 
-这种真实冲突再询问用户，不建立复杂规则矩阵自动猜。
+解释：
 
----
+### Concrete Action Anchor
 
-## 8. Counterplay Realization 强制合同
+Camera Change 必须依附正在发生的具体动作 / 状态变化。
 
-当 Counterplay Shape = 中 / 高时，以下内容**只能算 Setup，不能算 Counterplay 已实现**：
-
-- 等待反击；
-- 寻找机会；
-- 保持防守；
-- 准备抱摔；
-- 即将反扑；
-- 反击刚刚开始；
-- 手臂开始发力；
-- 在真正反击发生前结束。
-
-必须真实发生：
-
-- Attack；
-- Counter；
-- Re-counter；
-- Re-entry；
-- Grapple Entry；
-- Weapon Counter；
-- 其他符合当前 System / Refinement 的主动战斗行为。
-
-而且至少造成一种真实状态后果：
-
-- 迫使对方 Defense；
-- 改变 Range / Route / Guard；
-- 迫使对方退步 / 重新支撑；
-- 改变 Balance / Position / Axis；
-- 形成真实 Clinch / Grapple Window；
-- 抢到短暂 Initiative。
-
-**Counterplay 可以失败，但必须真实发生。**
-
-不使用“每个角色必须攻击 N 次”的机械配额。
-
----
-
-## 9. Ending 已降级为条件节点
-
-Ending / Final Visual Ending 不再固定询问。
-
-默认：
+以下不能单独判 PASS：
 
 ```text
-Final Advantage State
-+ Last Active Contact / Motion / Position / Momentum
-→ Runtime 自然收束
+第一次接触时
+关键时刻
+高潮处
 ```
 
-只有以下情况才单独暴露 Ending：
+### Camera Response / Viewer Task
 
-- 用户明确要求击倒 / 制服 / 死亡 / 撤离；
-- 用户明确要求相互架剑 / 某个定格动作；
-- 存在多个真正高价值 Final Visual 分叉，而且无法高置信度代替用户决定。
+要能理解 Camera 为什么此刻介入，以及主要要看见 / 感受到什么。
 
-特别禁止：
+### Live Motion / State Continuation
 
-```text
-男方本应有高 Counterplay
-→ 但所有反击都写成“准备 / 即将”
-→ 在真正反击发生前 Ending
-```
+Camera Change 后必须继续至少一类活着的：
 
-Ending 不能吞掉主要 Combat Budget。
+- Momentum；
+- Contact；
+- Pressure；
+- Rotation；
+- Support Transfer；
+- Forced Step；
+- Recovery；
+- unfinished motion。
+
+### Hard Constraint Compliance
+
+必须服从 One-take / No-cut / Fixed Camera 等用户明确边界。
+
+注意：以上是语义合同，不要求输出为四字段。
 
 ---
 
-## 10. Advantage Structure 如何接现有 Runtime
+## 8. Preservation Gate
 
-本批没有建立第二套状态机。
+Prompt Assembly / Model Adapter 可以自由：
 
-正式映射：
+- 改写句式；
+- 合并句子；
+- 把结构化描述压成自然段；
+- 使用目标模型更适合的 Camera 语言；
+- 在有可靠证据时降低实现复杂度。
+
+但核心语义必须存活：
 
 ```text
-Advantage Structure.Outcome
-→ Core Final / Global Advantage Intent
-
-Advantage Structure.Advantage Trajectory
-→ Core Battle Beat Advantage State + Turning Event sequence
-
-Advantage Structure.Counterplay Shape
-→ Choreography Initiative / Attack / Counter / Re-entry realization
+具体 Action Anchor
++
+Action ↔ Camera 因果绑定
++
+主要 Camera Task / Viewer Experience Intent
++
+必要 Live Motion Continuation
 ```
 
-Core 继续维护：
+这叫：
 
-- Current Advantage；
-- Advantage Source；
-- Turning Event；
-- Range / Position / Condition；
-- Beat State Contract。
+```text
+Semantic Preservation
+```
 
-Choreography 继续负责：
+而不是：
 
-- Action Phrase；
-- Initiative Handoff；
-- Exchange Depth；
-- Movement / Technique / Transition；
-- Counter / Re-counter；
-- Persistent Combat Signature。
-
-Prompt Assembly 继续负责把这些内容外显成具体动作，而不是把内部状态字段 Dump 给模型。
+```text
+Textual Copy
+```
 
 ---
 
-## 11. 本批新 Failure Signatures
+## 9. 新增唯一正式 Failure Signature
 
-本批 Runtime / Final Preflight 已正式识别：
+本批不扩大量 Failure Taxonomy。
 
-### Counterplay Starvation
+Realization 失败继续复用：
 
-用户选择中 / 高 Counterplay，但劣势方几乎没有真实主动动作。
+- `Action–Camera Decoupling`
+- `Perceptual Impact Underuse`
+- `Camera Strategy Overconstraint / Camera Mobility Underfill`
+- `Dead-motion Cut / Post-action Cut`
+- `Kinetic Handoff Loss`
+- `Camera Hard Constraint Violation`
 
-### Initiative Starvation
-
-角色理论上有反击 / 再进入倾向，但成片动作链里长期无法真正获得 Initiative Window。
-
-### Deferred Counterplay Collapse
-
-主要 Counterplay 被持续推迟成：
+只新增：
 
 ```text
-等待
-→ 准备
-→ 即将
-→ Ending
+Camera Handoff Serialization Loss
 ```
 
-### Advantage-to-Passivity Shortcut
+定义：
 
-Runtime 把“处于劣势”错误简化成“低 Attack Share / 长期只防守”。
+> 上游已经形成有效 Action–Camera Handoff，但经过 Prompt Assembly / Model Adapter 后，Action Anchor、Camera Intent、Viewer Experience 或 Live Motion Continuation 的关键语义被泛化、拆散或删除。
 
-### Outcome-Trajectory Collapse
+Rewrite 路径：
 
-Runtime 只保留最终胜负 / 平局，丢失用户确认的整段主动权流动。
+```text
+Action–Camera Decoupling / Realization FAIL
+→ 回 Action–Camera Runtime
+
+Camera Handoff Serialization Loss
+→ 只回 Prompt Assembly / 当前 Model Adapter
+→ 不重新设计 Choreography
+```
+
+Camera State 未建立却被后文引用，当前作为 Preservation / Continuity 检查维度，不新增独立 Failure Signature。
 
 ---
 
-## 12. 本批 Runtime 已实施完成
+## 10. 默认 Full-fidelity，不因 Unverified 自动降级
 
-### 12.1 新增 Spec
+正式默认：
 
-`docs/combat-advantage-counterplay-spec.md`
+```text
+Full-fidelity Action–Camera Realization
+```
+
+禁止：
+
+```text
+Camera Complexity Capacity = Unverified
+→ 自动减少高价值 Camera Moment
+→ 自动回退保守中景
+```
+
+只有存在以下证据时才允许：
+
+```text
+Intent-preserving Degradation
+```
+
+证据：
+
+- Verified Model Limitation；
+- 可靠专项 Benchmark；
+- 相同 Golden Scenario 的真实 Generated-video Regression Evidence。
+
+降级时：
+
+```text
+降低 Camera 实现复杂度
+≠
+删除 Camera Intent
+```
+
+低价值 / 装饰性 Accent 可以删除；高价值 Moment 优先保留 Anchor、Viewer Intent 与 Motion Continuation。
+
+---
+
+## 11. Common Preservation Contract + Adapter-specific Expression
+
+共同真源：
+
+`references/controls/prompt-assembly/control.md`
+
+负责：
+
+```text
+What must survive
+```
+
+各 Model Adapter 负责：
+
+```text
+How it is expressed
+```
+
+Generic / Seedance 2.0 / LTX-2.3 都继承同一 Preservation Contract，不复制一套新的 Camera Runtime。
+
+---
+
+## 12. 最终执行顺序已修正
+
+真正的 Action Combat Final Path 现在是：
+
+```text
+Confirmed Per-Character Combat Context
+→ Derived Choreography Direction
+→ Stage-2 Gap Detection
+→ Stage-2 Pattern Hit Evidence Gate
+→ 必要 leaf knowledge Read
+→ Concrete Action Phrase
+→ State / Continuity Validation
+→ Model Execution Realizability
+→ Motion / Energy Carry-over
+→ Action–Camera Handoff Planning
+→ Camera Handoff Realization Gate
+→ Camera / Spatial Coordination
+→ Prompt Assembly
+→ 当前 Model Adapter
+→ Camera Handoff Preservation Gate
+→ Combat Final Preflight（检查 Adapter 后实际 Final Prompt）
+→ Output Template / Delivery
+```
+
+核心变化：
+
+> **Adapter 之前的检查不再冒充真正 Final Preflight。真正 Final Preflight 必须检查最终实际交付 Prompt。**
+
+---
+
+## 13. 本批已实际修改的 Runtime / Adapter
+
+### 13.1 Action–Camera Runtime
+
+`references/tasks/action-combat-video/action-camera-handoff-playbook.md`
+
+新增 / 强化：
+
+- Camera Handoff Realization Gate；
+- 4 类最小语义合同；
+- Full-fidelity default；
+- Unverified 不自动降级；
+- Runtime-stage Preflight 与 Final Preflight 分离；
+- Realization FAIL 回路。
 
 Commit：
 
-`859e8321fa0b2cd296dd2b9dd027db61d9b97a29`
+`599a3f5b4435b2d1bd91b978d23904f68a3f5df5`
 
-### 12.2 新增运行期正文真源
+### 13.2 Prompt Assembly
 
-`references/tasks/action-combat-video/advantage-structure-contract.md`
+`references/controls/prompt-assembly/control.md`
+
+新增 / 强化：
+
+- Common Camera Handoff Preservation Contract；
+- Semantic Preservation；
+- `Camera Handoff Serialization Loss`；
+- Camera State Establishment / Reference Check；
+- Assembly-stage validation 与 Adapter 后 Final Preflight 分离；
+- Serialization Loss 只回 Assembly / Adapter。
 
 Commit：
 
-`b4ec63c483010d37638ae85138122f18530501ca`
+`339a0e5d40a57af4109882900afcba2917a35acf`
 
-### 12.3 Tasks Index 接入主 Task
+### 13.3 SKILL 主路由
 
-`references/tasks/index.md`
+`SKILL.md`
 
-Action Combat 复合主 Task 现在包含：
+新增 / 强化：
+
+- Realization Gate；
+- Model Adapter 后 Preservation Gate；
+- Final Preflight 后移；
+- Model Adapter Common Preservation Invariant；
+- Combat 自查增加 Realization / Preservation / Camera State；
+- `Unverified ≠ auto downgrade`。
+
+Commit：
+
+`cde212958534161de4480b25de7a997598b32abb`
+
+### 13.4 Generic Adapter
+
+`references/models/generic.md`
+
+Commit：
+
+`506aa32c8d4d573c0eff1f300eaec0f34626c8c2`
+
+### 13.5 Seedance 2.0 Adapter
+
+`references/models/seedance-2.md`
+
+Commit：
+
+`d4880e87ef28746192abd7bcb9e6a397439843ae`
+
+### 13.6 LTX-2.3 Adapter
+
+`references/models/ltx-2-3.md`
+
+Commit：
+
+`64463f607e8224409489c7bbe30d4e18243ce937`
+
+三个 Adapter 都已经明确：
+
+- 继承 Common Preservation Contract；
+- Adapter 可以灵活改写；
+- 不重新决定上游高价值 Camera Moment 是否值得存在；
+- `Unverified` 不自动触发 Camera 降级；
+- 发生 `Camera Handoff Serialization Loss` 时只回 Assembly / Adapter。
+
+---
+
+## 14. 本批静态实施状态
+
+当前已完成：
 
 ```text
-action-combat-video/index.md
-+ core-playbook.md
-+ choreography-playbook.md
-+ advantage-structure-contract.md
-+ 一个 specialist
+Spec V2
+✓
+Implementation Plan
+✓
+Action–Camera Realization Runtime
+✓
+Prompt Assembly Preservation Contract
+✓
+SKILL Mandatory Path
+✓
+Generic Adapter
+✓
+Seedance Adapter
+✓
+LTX Adapter
+✓
 ```
 
-Commit：
+这只代表：
 
-`88249a28a994db5b536ba2c502a53ce56896f4f2`
+> **Static Implementation PASS / Routing Contract 已接通。**
 
-### 12.4 Action Combat Router 接入
+不代表：
 
-`references/tasks/action-combat-video/index.md`
-
-已经加入：
-
-- `advantage-structure-contract.md` 固定 Runtime Read；
-- Planning Context 的 Advantage Structure；
-- Advantage Structure 条件询问；
-- Ending 条件暴露；
-- Expression × Advantage 真冲突才问；
-- Counterplay Realization Gate；
-- Advantage / Counterplay / Trajectory Realization；
-- 新 Failure Signatures；
-- Final Preflight 的 Counterplay / Trajectory / Ending 检查；
-- Prompt QA 中保护用户已确认 Outcome / Counterplay / Trajectory。
-
-Commit：
-
-`7880e7797082baa89ce4450b7647d3231e864830`
-
-### 12.5 当前 Handoff
-
-`.handoff/current.md`
-
-本文件已更新为本轮最新交接状态。
+- 真实 Interactive 已 PASS；
+- Final Prompt Runtime 已 PASS；
+- Generated Video 已 PASS。
 
 ---
 
-## 13. 静态实施验证结论
+## 15. 下一轮固定 G01 Regression
 
-已经确认 Router 当前会把：
+继续使用办公室职业杀手 15 秒场景。
 
-`references/tasks/action-combat-video/advantage-structure-contract.md`
+本次回归应同时验证两条实施线：
 
-作为 Action Combat 主 Task 的固定 Reference，而不是“只写了一份文档但 Runtime 不读”。
+### Advantage × Counterplay
 
-Planning Gate 已包含：
+检查：
 
-- Advantage Structure 是否已明确 / 条件询问 / 静默推导；
-- 是否错误把“谁占优”映射成“另一方长期不攻击”；
-- Outcome 只有粗结果时是否存在高价值 Counterplay / Trajectory 分叉；
-- Expression 与 Advantage 是否存在真实语义冲突；
-- Ending 是否被错误固定询问。
+- Advantage Structure 是否按条件暴露；
+- 劣势方 Counter / Re-entry 是否真实发生；
+- Counterplay 是否迫使优势方真实响应；
+- Ending 是否不再吞掉主要 Counterplay；
+- Outcome / Trajectory 是否没有 Collapse。
 
-Execution / Final Preflight 已包含：
+### Action–Camera Realization × Preservation
 
-- 中 / 高 Counterplay 是否真实发生；
-- 劣势方攻击是否迫使对方真实响应；
-- Advantage Shift 是否经过真实 Turning Event；
-- 是否出现 Counterplay Starvation / Deferred Counterplay Collapse；
-- Ending 是否吞掉本应发生的有效攻防。
+Camera Base Viewing Priority 继续使用：
 
-**这些只是静态 / 配置级实施验证，不等于真实 Runtime PASS，更不等于 Generated-video PASS。**
+```text
+电影冲击优先
+```
+
+检查：
+
+- 高价值 Camera Moment 是否真正绑定具体 Action Moment；
+- 不再用“第一次真实接触时短暂切近”冒充 Handoff；
+- Camera Response 是否有明确 Viewer Task；
+- Camera Change 后是否继续 live motion；
+- Adapter 后 Action Anchor / Camera Intent / live-motion continuation 是否仍存在；
+- 是否出现 `Camera Handoff Serialization Loss`；
+- Camera State 是否先建立后引用；
+- Camera 增强没有挤压有效 Combat Coverage。
 
 ---
 
-## 14. 本批故意没有做的事情
+## 16. 最小 Camera Priority 对照 Regression
 
-为了继续控制测试变量，本轮明确没有：
+G01 之后，再选 1 个已有 Action Combat 场景。
 
-- 扩散打 / 拳击 / 摔跤 / MMA / 太极 / 剑法细节；
-- 新增固定攻击次数；
-- 建立 Expression × Advantage 自动组合矩阵；
-- 大重构 Modern / Wuxia Specialist；
-- 扩大 Stage-2 Pattern Library；
-- 全量迁移 Quick Mode 上游架构；
-- 因每个 Failure Signature 新建独立 Runtime 子系统；
-- 为 Advantage / Counterplay 新建第二套 Battle State。
+Camera Base Viewing Priority 改成：
+
+- `完整动作可读`；或
+- `贴身沉浸`。
+
+目标不是验证“有没有更多镜头”，而是验证双层 Gate 没有机械化。
+
+必须确认：
+
+- 不机械复用 G01 的 Near-lens / Close-up / Cut Pattern；
+- 普通连接动作继续当前 Shot；
+- Camera Accent 仍由 Action Information / Viewer Experience Value 决定；
+- 不设 Cut / Close-up 数量配额。
+
+---
+
+## 17. 本批不要做的事
+
+在真实回归之前，不继续：
+
+- 扩 MMA / 散打 / 拳击 / 摔跤 / 太极 / 咏春 / 八极等具体知识；
+- 扩 Camera Grammar；
+- 新建第二套 Camera Runtime；
+- 为 Camera Moment 增加固定字段表；
+- 设置固定 Cut / POV / Close-up 数量；
+- 因 `Unverified` 主动降级所有 Adapter；
+- 把双层 Gate 扩散到所有普通视频任务；
+- 建完整 Model Camera Benchmark；
+- 新增更多 Camera Failure Signature。
 
 原则仍然是：
 
 > **先跑真实回归，再决定下一刀。**
-
----
-
-## 15. 固定办公室 G01 — 下一轮 Regression 输入
-
-继续使用原始请求：
-
-```text
-使用交互模式，帮我做一段一个女生和男生再办公室打架的15秒电影片段，实际两个人穿着正常的职场服装但其实是2个杀手组织的职业杀手。中国男女，女的22岁长发高马尾漂亮身材完美，男性是一个秃顶又矮又胖的55岁领导，贴身搏斗，不要隔着什么办公桌
-```
-
-上一轮实际选择可作为回归参考：
-
-```text
-女方 Combat System：散打
-男方 Combat System：拳击 + 摔跤
-
-女方 Combat Expression：主动切线、强势抢节奏
-男方 Combat Expression：沉稳防守、等待反击
-```
-
-但不要把 Advantage Structure 偷偷预填成唯一答案；应该观察新 Runtime 是否在真正存在高价值分叉时正确暴露 Advantage Structure。
-
----
-
-## 16. G01 下一轮重点验证
-
-### 16.1 Runtime Read List
-
-必须确认实际读取：
-
-`references/tasks/action-combat-video/advantage-structure-contract.md`
-
-仍应继续命中已有关键执行 Reference：
-
-- `minimum-validation-set.md`（条件命中时）；
-- `subject-motion/control.md`（本 G01 应继续命中）；
-- `action-camera-handoff-playbook.md`；
-- `prompt-assembly/control.md`。
-
-### 16.2 Interactive
-
-如果用户只确定粗粒度：
-
-```text
-女方占优
-或
-不分胜负但女方稍占优势
-```
-
-而 Counterplay / Trajectory 存在明显不同方向，应出现 Advantage Structure 条件问题。
-
-理想回归方向可以是：
-
-```text
-Outcome：女方总体占优但未完全制服
-
-Counterplay：
-男方高频还手但持续被化解
-
-Trajectory：
-女方先抢主动
-→ 男方通过拳击 / 拳摔真正 Counter 并短暂夺回
-→ 女方利用散打切线 / 反制重新压住
-→ 男方后续仍有真实 Counter / Re-entry
-→ 女方最终保持总体优势
-```
-
-这是 Regression 推荐，不是固定模板。
-
-### 16.3 Final Prompt
-
-必须看见：
-
-- 男方的 Counter / Re-entry 是**已经发生的动作**，而不是意图词；
-- 男方攻击能迫使女方真实 Defense / Footwork / Range / Guard / Position Response；
-- 男方可以持续打不赢，但不能持续不打；
-- 女方仍通过自己的散打 System / Expression 保持总体优势；
-- Advantage Shift 有真实 Turning Event；
-- Ending 不把男方主要 Counterplay 推到 15 秒之外；
-- Whole-body / Persistent Signature / Motion Handoff / Camera Readability 不因本轮修正而回退。
-
----
-
-## 17. Generated-video PASS 标准
-
-只有真实生成视频同时满足：
-
-- 男方可见地多次还击 / Counter / Re-entry；
-- 这些还击真实迫使女方响应，而不是空挥；
-- 女方总体仍然占优；
-- 男方“防守反击”的 Expression 仍然成立，没有被改成疯狂主动压迫；
-- 散打 vs 拳击 + 摔跤的 Persistent Combat Signature 仍清楚；
-- Whole-body / Footwork / Balance / Range / Position 连续性没有回退；
-- Ending 没有再次吞掉主要 Counterplay；
-
-才算本批真正 Generated-video PASS。
-
-如果 Prompt 看起来 PASS，但视频仍然表现为男方长期只防守，应优先诊断：
-
-```text
-Prompt Execution Load
-/ Instruction Saturation
-/ Model-specific Serialization
-```
-
-而不是马上继续扩 Combat System / 武术流派知识。
 
 ---
 
@@ -653,38 +642,46 @@ Prompt Execution Load
 严格按以下顺序：
 
 ```text
-重新跑 G01 Interactive
-→ 收集完整实际对话
-→ 检查 Runtime Read List 是否包含 advantage-structure-contract.md
-→ 检查 Advantage Structure 是否按条件暴露
-→ 检查是否没有机械固定 Ending 问题
-→ 检查 Final Prompt 中 Counterplay 是否真实发生
-→ Prompt-level PASS / FAIL
-→ PASS 后生成真实视频
-→ Generated-video PASS / FAIL
-→ 再决定下一批修改
+1. 重新跑办公室 G01 Interactive
+2. 收集完整实际 Read List
+3. 检查 Advantage Structure Runtime
+4. 检查 Counterplay 是否真实发生
+5. 检查 Camera Handoff Realization Gate 是否真实生效
+6. 检查 Prompt Assembly / Model Adapter 后是否仍 Semantic Preservation
+7. 对最终实际 Prompt 执行 Combat Final Preflight
+8. Prompt-level PASS / FAIL
+9. PASS 后生成真实视频
+10. Generated-video PASS / FAIL
+11. 再跑 1 个不同 Camera Priority 的最小对照案例
+12. 再决定是否需要下一批修改
 ```
 
-如果 FAIL：
+如果 Camera FAIL：
 
-- 先诊断最小语义 / Routing / Serialization 原因；
-- 优先修 Advantage / Counterplay Realization；
-- 不继续扩具体格斗流派细节；
-- 不重新从头 Grill 已经确认的 Identity × Combat System 架构。
+```text
+Action–Camera Decoupling / Realization FAIL
+→ 回 Action–Camera Runtime
+
+Camera Handoff Serialization Loss
+→ 回 Prompt Assembly / 当前 Model Adapter
+
+Perceptual Accent Overuse
+→ 删除低价值 Accent
+
+Camera Strategy Overconstraint
+→ 重新按 Action Information / Viewer Experience 分配 Camera Task
+```
+
+不要直接扩 Camera 知识。
 
 ---
 
-## 19. 下一会话不要做的事
+## 19. 当前最终目标
 
-- 不重新讨论“职业杀手是不是一种打法”；
-- 不重新讨论 Combat System 与 Combat Expression 是否要分开；
-- 不重新讨论 Physical Presentation Domain 是否与 Combat System 正交；
-- 不继续细化太极 / MMA / 散打 / 咏春 / 八极 / 剑法内部知识；
-- 不新增固定“每人至少攻击几次”的动作配额；
-- 不为了 Advantage Structure 再增加固定三轮问卷；
-- 不把 Ending 恢复成固定 Planning Node；
-- 不在没有真实 G01 回归证据前继续扩大 Runtime 设计。
+本轮真正要验证的不是：
 
-当前最重要的是：
+> “Prompt 里有没有写近景 / 特写 / POV”。
 
-> **验证这一轮“Advantage ≠ Attack Share”是否真的让成片中的劣势方能够真实还手，同时仍保持正确的总体优势关系。**
+而是：
+
+> **当某个 Action Moment 真正值得改变观看方式时，Camera 是否因为这个具体动作而变化；变化后是否继续同一条活着的运动链；并且这个导演意图是否能一路穿过 Prompt Assembly 与 Model Adapter，直到最终交付 Prompt。**
