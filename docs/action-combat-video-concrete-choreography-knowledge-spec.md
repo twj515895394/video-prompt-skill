@@ -555,6 +555,55 @@ Transition Samples
 
 > **先用最小知识证明结构能工作，再决定知识库要扩多大。**
 
+### 12.4 Two-Stage Implementation Gate / 两阶段实施门禁
+
+确认实施与知识扩展分成两个阶段，不边开发边无限扩库：
+
+```text
+Phase 1｜Minimum Runtime Change
+→ Interactive：Fighting Direction
+→ 合并原“核心动作风格”重复交互
+→ Stage-2 Gap-driven Routing
+→ Minimum Pattern Validation Set
+→ Lightweight Action Phrase Budget
+→ Static Standing Combat / Upper-body Dominance Preflight
+
+Phase 2｜Fixed G01 Prompt Regression
+→ 验证 Fighting Direction 是否真实改变动作内容
+→ 验证动作链数量没有因 Concrete Granularity 再次下降
+→ 验证 Upper-body Dominance / Static Standing Combat 是否明显改善
+```
+
+只有 Phase 2 的核心 Gate 通过，才允许进入更大规模的 Knowledge Expansion。
+
+核心 Gate：
+
+1. **Fighting Direction Effective**：用户选择的“怎么打”必须真实映射到 Movement / Technique / Transition，而不是只换几个风格词；
+2. **Choreography Richness Non-regression**：Concrete Granularity 提升后，15 秒动作链不能再次被 2–3 个超长 Phrase 吃满；
+3. **Upper-body Dominance Improved**：关键 Exchange 不能仍主要依赖前臂 / 肩线 / 抓腕 / 顶肩等站立上肢结构，Movement 必须主动创造可见的 Level / Route / Axis / Range / Position 变化。
+
+Gate 失败时优先定位失败层：
+
+```text
+Interactive 没给对方向
+→ 修 Fighting Direction 候选 / 映射
+
+方向正确但 Pattern 没被用到
+→ 修 Stage-2 Routing / Selection
+
+Pattern 正确加载但动作仍单一
+→ 再进入 Knowledge Coverage Audit
+
+动作丰富但 Phrase 过长、Exchange 变少
+→ 修 CK-17 Granularity Distribution / Prompt Assembly
+```
+
+禁止在 Gate 尚未通过时直接扩大型武术知识库来掩盖 Routing / Prompt Assembly 问题。
+
+原则：
+
+> **先让最小 Runtime 改动在固定 G01 上证明有效，再扩知识覆盖。**
+
 ---
 
 ## 13. 当前已确认决策
@@ -579,6 +628,7 @@ Transition Samples
 | CK-16 | Fighting Direction 合并旧风格问法 | 原“核心动作风格 / Choreography Profile”不再作为独立 Interactive 问题；与“怎么打”合并为一个上游 Fighting Direction 节点，节奏 / 写实度 / 重量感等作为执行属性 |
 | CK-17 | Lightweight Action Phrase Budget | 只定义何时详细、何时压缩；连续高颗粒度后普通 Exchange 主动降为中 / 低颗粒度；不使用固定动作数、字数、秒数或占比配额 |
 | CK-18 | Minimum Pattern Validation Set | 实施前只准备少量 Movement / Technique / Transition 样例验证 Stage-2 是否真正打破 Upper-body Dominance；验证有效后才按失败扩 Knowledge |
+| CK-19 | Two-Stage Implementation Gate | Phase 1 只做 Interactive + Stage-2 Routing + 最小 Pattern + 轻量颗粒度 / Preflight；Phase 2 固定 G01 回归，只有 Fighting Direction 生效、动作链数量不下降、Upper-body Dominance 明显改善后才允许更大 Knowledge Expansion |
 
 ---
 
@@ -597,7 +647,8 @@ Transition Samples
 - 把“候选答案 5–10 个”误解成固定凑数，产生同义选项；
 - 将“核心动作风格”和“Fighting Direction”拆成两轮高度重复交互；
 - 用固定动作数、字数、秒数或 Granularity 占比实现所谓“动作丰富度”；
-- 在最小 Pattern 验证集尚未证明架构有效前，直接建设大型完整武术知识库。
+- 在最小 Pattern 验证集尚未证明架构有效前，直接建设大型完整武术知识库；
+- 在两阶段 Gate 未通过时，通过扩大 Knowledge 覆盖掩盖 Routing / Prompt Assembly / Granularity 问题。
 
 原则：
 
@@ -607,9 +658,9 @@ Transition Samples
 
 ## 15. 当前未决设计树
 
-当前知识与交互设计分支已经基本收口。剩余需要 Grill Me 的关键问题主要是：
+当前知识、交互和实施门禁设计已经基本收口。剩余需要 Grill Me 的关键问题主要是：
 
-1. Implementation Plan 如何分阶段落地 CK-13～CK-18；
-2. Regression 如何把 Fighting Direction、Granularity、Stage-2 Pattern 命中与 Static Standing Combat Gate 串成一条可执行验收链。
+1. Regression 是否需要把本轮三个核心 Gate 直接写进现有 `docs/action-combat-video-v2-regression.md`，作为后续实现的正式验收真源；
+2. 然后再形成对应 Implementation Plan 的具体文件级修改清单。
 
-不再继续横向扩展新的武术知识分类，下一步优先进入实施与验收设计。
+不再继续横向扩展新的武术知识分类，下一步优先完成验收真源与实施计划。
