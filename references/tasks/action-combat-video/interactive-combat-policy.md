@@ -12,11 +12,13 @@
 
 它只负责 Interactive 决策暴露与推荐策略，不替代 `core-playbook.md`、`choreography-playbook.md`、Stage-2 Pattern Selection、Camera 或 Final Preflight。
 
-本轮 G01 Regression 已确认的下游修复规则由：
+本轮 G01 Regression 已确认的下游修复规则正文仍由：
 
 `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
 
-负责。**Interactive Round 1 / Round 2 完成后，在进入 Derived Choreography Direction / Stage-2 前必须读取并执行该文件。**
+负责。
+
+**RF-22 边界：本文件不再承担该 Runtime Policy 的真正 Loader。所有高价值 Interactive Combat 决策完成后，不得从本 Policy 直接进入 Derived Choreography / Stage-2 / Final Assembly；必须移交 `SKILL.md` 的 Action Combat Post-Planning Mandatory Path，由主路由一级 Direct READ Runtime Policy、验证本次执行的真实 Read Evidence，再进入下游。**
 
 ---
 
@@ -431,7 +433,7 @@ MMA → Combat System
 
 ---
 
-## 6. Planning Context 输出 + Mandatory Runtime Handoff
+## 6. Planning Context 输出 + Post-Planning Boundary
 
 Round 1 / 2 完成后，Planning Context 至少保留：
 
@@ -446,22 +448,19 @@ Scene / Range / Environment / Intent
 Duration / Coverage Context
 ```
 
-然后必须执行：
+本文件只负责把这些确认结果交给上游主路由继续收集 / 继承仍有必要的高价值 Combat 决策；**当所有高价值 Interactive Combat 决策完成后，必须移交 `SKILL.md` 的 `Action Combat Post-Planning Mandatory Path`。**
+
+边界：
 
 ```text
-READ references/tasks/action-combat-video/regression-fix-runtime-policy.md
-→ Archetype Mandatory Consumption
-→ Archetype-to-Stage-2 Weighting
-→ Duration-aware Choreography Budget
-→ Two-pass Exchange Spine → Selective Stage-2 Expansion
-→ Pattern Traceability
-→ Movement Causality
-→ Per-Character Signature Separation
-→ Ending Signature Compatibility
-→ Exchange Density / Concrete Compression
-→ Serialization Deduplication
-→ Final Preflight
+Interactive Planning Context complete
+→ hand off to SKILL.md Post-Planning Mandatory Path
+→ SKILL.md Direct READ regression-fix-runtime-policy.md
+→ RF-22 Read Evidence Gate
+→ Runtime Policy 接管 Derived Choreography / Duration / Exchange Spine / Stage-2 / Assembly
 ```
+
+本 Policy 不再通过“这里写了一句 READ”来承担真实 Loader；这可以避免静态声明存在但当前执行没有实际 Read Evidence 的情况。
 
 Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优先外显其中性的动作语义。
 
@@ -493,11 +492,15 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 6. **Character-level Archetype**
    - 双方是否可以不同，也允许共享。
 
-7. **Archetype Consumption / Realization**
-   - 选中 Archetype 后必须进入对应 Runtime Bias；
+7. **Post-Planning Handoff Boundary**
+   - 本 Policy 完成 Interactive 角色级决策后是否没有直接进入 Stage-2 / Final Assembly；
+   - 是否交回 `SKILL.md` 主路由，由 RF-22 负责真实 Direct READ / Read Evidence Gate。
+
+8. **Archetype Consumption / Realization**
+   - 选中 Archetype 后必须在 Post-Planning Runtime 中进入对应 Runtime Bias；
    - 不能只在 Prompt 写明星名字。
 
-8. **No Static Standing Shortcut**
+9. **No Static Standing Shortcut**
    - 选择 Hybrid 或任何 Archetype 不等于自动 PASS；
    - Final Preflight 仍必须检查 Static Standing Combat / Upper-body Technique Dominance / Movement Causality。
 
@@ -513,12 +516,9 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 - Hybrid 门派强制问卷；
 - MMA 全局降级；
 - 明星 Archetype → 固定 Combat System 映射；
-- 固定 6～8 候选硬配额。
+- 固定 6～8 候选硬配额；
+- 本 Policy 内第二套 RF-22 Loader / Recovery Runtime。
 
 核心原则：
 
 > **用户决定高价值动作方向；Runtime 负责把专业动作知识补完整。**
-
-> **Dynamic recommendation breadth, not a fixed questionnaire.**
-
-> **Modern identity does not imply MMA; Chinese identity does not imply one mandatory kung-fu answer.**
