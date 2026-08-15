@@ -17,7 +17,8 @@
 - **优化目标不是“问题越少越好”，而是每一个问题都必须值得问；**
 - **One Question, One Primary Decision Node：单轮问题优先只解决一个主要 Planning Node；**
 - 用户要求收口，或剩余问题只影响轻微细节时，立即停止提问并完成交付；
-- **Interactive 默认最多 10 轮追问。10 轮是上限保护，不是目标轮数，也不是必须问满；如果前 4–6 轮甚至更少已经足以形成完整可执行需求，应立即提前收口。**
+- **不设置固定硬轮数上限。** 常见任务通常 2–6 轮即可，复杂任务可继续到 7–10 轮甚至更多；只要后续仍存在高价值、会显著改善结果的真实分叉，就可以继续。
+- **第 10 轮只作为 Quality Review Checkpoint / 质量复核点，不是强制停止线。** 到达该点时重新判断后续问题的边际价值；若用户明确“质量优先 / 可以继续深挖 / 只追求最优结果”，允许超过 10 轮。
 
 ---
 
@@ -40,15 +41,17 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 - 可能 2–3 轮就已经足够；
 - 4–6 轮在复杂一点的动作 / 叙事任务中完全合理；
-- 必要时可以继续到 7–10 轮；
+- 必要时可以继续到 7–10 轮或更多；
 - **不得为了“显得完整”或走完 Planning Graph 而强行问满；**
-- 达到第 10 轮后，不再新增用户问题；剩余低风险 / 次要不确定项按当前上下文和推荐方案静默补全并收口；
-- 如果第 10 轮前仍存在真正会导致方案不可执行的核心冲突，应优先在前面的高价值问题中暴露，而不是把关键冲突拖到最后。
+- 到达第 10 轮时执行一次价值复核：若剩余问题低价值则收口；若仍有高价值设计分叉，且用户没有要求停止，则继续；
+- 用户明确表达“质量优先 / Grill Me 到共识 / 可以多交互几次”时，**质量优先于轮数限制**；
+- 即使超过 10 轮，仍坚持一次只问一个问题，不把多个未决节点打包轰炸用户；
+- 如果后续只剩系统应自动保证的质量机制，不继续追问，进入内部规划 / QA / 修复。
 
 原则：
 
 > **High-value Questions, Not Minimum Questions.**  
-> **追求高价值问题覆盖，不追求最少问题，也不追求问满上限。**
+> **Quality First, No Mechanical Turn Cap.**
 
 ---
 
@@ -361,7 +364,7 @@ One-take / Fixed / No-cut 等不同选择会根本改变可执行摄影方案
 - 用户已经明确 One-take / Fixed Camera / No Cut 等 Hard Constraint 时直接继承，不再重复询问；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件；
-- **不以固定 4 轮、6 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行。**
+- **不以固定 4 轮、6 轮、10 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行，或后续问题已不再值得问。**
 
 ### Character Identity Recommendation Guard
 
@@ -462,10 +465,11 @@ Fighting Direction 属于例外的“多候选单问题”：仍然只问一个�
 - 剩余节点可高置信度自动补全；
 - 再问只会影响轻微细节；
 - 用户明确不希望继续深挖；
-- **虽然尚未达到 10 轮，但当前需求已经达到完整可执行状态；**
-- **已达到 10 轮上限：剩余非核心不确定项按推荐静默补全并交付。**
+- 当前经过 Quality Review 后，后续问题的边际价值已经很低。
 
-> **收口由“需求是否足够完整”驱动，不由轮数驱动；10 轮只负责防止无休止追问。**
+**达到 10 轮本身不是收口条件。** 用户明确质量优先时，只要仍存在真实高价值分叉，可以继续超过 10 轮。
+
+> **收口由“需求是否足够完整 + 后续问题是否仍有高价值”驱动，不由轮数驱动。**
 
 ---
 
@@ -479,13 +483,80 @@ Action Combat 收口后，系统内部继续执行：
 - State / Continuity；
 - Contact / Kinetic / Temporal Continuity；
 - Stage-2 Gap-driven Pattern Selection；
+- Persistent Combat Signature Realization；
 - Camera Readability / Mobility / Coverage；
 - **Combat-aware Prompt Assembly；**
 - **Final Preflight Gate；**
 
 Final Preflight FAIL 时先内部重写并重新检查，不允许因为交互已经结束就直接交付；也不把失败自动转成新的用户问题。
 
-这些内部机制不作为大段 Meta 说明输出给用户。
+---
+
+## Final Prompt QA / Self-Repair Gate
+
+最终 Prompt 草稿完成后，Interactive 也**不得立即交付**，必须执行最终核对。
+
+```text
+Final Draft
+→ Prompt QA
+→ PASS：Delivery
+→ FAIL：判断失败类型
+   ├─ Implementation / Quality Issue
+   │  → Silent Self-Repair
+   │  → Re-run QA
+   └─ 必须改变用户已确认 Creative Decision 才能修复
+      → 不允许静默修改
+      → 重新暴露当前唯一必要决策
+```
+
+### QA 最小检查
+
+至少检查：
+
+- 用户已确认的创作决策、必须保留 / 必须修改 / 必须禁止项是否全部兑现；
+- Prompt 是否存在内部矛盾、动作 / 空间 / 时间 / 人物 / 道具 / 素材职责断裂；
+- 是否存在过度抽象、过度细化或 Instruction Saturation；
+- 主体动作与 Camera 是否有因果关系，Camera 是否抢走动作主体；
+- 多模态主真源与绑定是否在最终序列化中漂移；
+- Negative / Continuity 是否重复、过长或新增无依据限制；
+- Ending 是否自然且没有提前吞掉主要内容；
+- Model Adapter 是否只改变实现方式，没有偷改目标。
+
+Action Combat 还必须叠加：Stage-2 Evidence、Subject Motion、Persistent Combat Signature、Upper-body Semantic Dominance、Motion / Energy Carry-over、Action–Camera / Perceptual Impact、Camera Hard Constraint、Instruction Saturation 与 Combat Final Preflight。
+
+### Silent Self-Repair 权限边界
+
+可以静默修：
+
+- Phrase / 语序 / 信息层级；
+- 已确认内容在最终 Prompt 中的遗漏或弱化；
+- 动作、Camera、Continuity、Ending 的实现质量；
+- Instruction Saturation、重复描述、低价值 Camera / Audio / Negative；
+- 不改变高层决策的局部动作 / 镜头组织。
+
+不能静默改：
+
+- 用户已确认的 Fighting Direction / Persistent Combat Signature / Technique Identity；
+- Base Viewing Priority / Camera Hard Constraint；
+- 人物身份、剧情关系、胜负 / Ending 意图；
+- 素材主真源和明确绑定；
+- 必须保留 / 必须禁止项；
+- 其他已确认的高层创作决策。
+
+如果唯一修复路径会改变上述已确认决策，必须重新问用户，而且**每次仍只问一个最关键问题**。
+
+### Repair Pass
+
+默认至少执行 `1` 次 QA；发现实现质量问题时先静默修复一次并重新 QA。
+
+如果第一次修复引入新的依赖问题，或复杂任务仍存在明显高价值 FAIL，可以再内部修复一次；不做无意义无限循环。
+
+原则：
+
+> **Quality Issue → Repair Implementation.**  
+> **Confirmed Creative Decision → Preserve or Re-ask.**
+
+这些内部 QA / Repair 过程不作为大段 Meta 说明输出给用户。
 
 ---
 
@@ -498,4 +569,5 @@ Final Preflight FAIL 时先内部重写并重新检查，不允许因为交互�
 - 两者共用同一动作引擎和质量标准；
 - Interactive 不能因为问得更多就获得更高质量上限；
 - Interactive 的价值是让用户控制关键创作分叉，而不是最小化问答次数；
+- 用户明确质量优先时，允许为了高价值决策继续深入，而不是被固定轮数截断；
 - 用户在交互中要求直接生成时，立即收口，不继续追问。
