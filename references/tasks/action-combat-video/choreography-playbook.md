@@ -34,6 +34,7 @@ Combat Intent / 观看目标
 → Per-Character Combat System / System Refinement
 → Per-Character Combat Expression
 → Physical Presentation Domain（必要时条件暴露）
+→ Combat Rhythm / Macro Tempo Strategy（必要时条件暴露；默认 Dynamic Wave）
 → Derived Choreography Direction（Runtime 自动派生）
 → legacy Fighting Direction execution slot（兼容下游，不再询问用户）
 → Active Combat Coverage
@@ -59,7 +60,8 @@ Quick Mode 暂保留 legacy Planning，等待本轮 Interactive 回归通过后�
 - Interactive Round 2 是否完成关键 Combatant 的 Combat Expression Selection 或 Refinement；
 - Character / Narrative Identity 是否被职业、性别、年龄、体型、外貌错误映射成 Combat System；
 - Physical Presentation Domain 是否存在真正必须询问的高价值歧义；
-- Derived Choreography Direction 是否从角色级 System / Refinement / Expression 与场景状态派生，而不是重新覆盖用户确认；
+- Combat Rhythm 若已作为高价值分叉暴露，是否已经 resolved；未暴露时是否使用 `Dynamic Wave + Adaptive by Combat State` 默认；
+- Derived Choreography Direction 是否从角色级 System / Refinement / Expression、Rhythm 与场景状态派生，而不是重新覆盖用户确认；
 - Coverage 等上游高影响决策是否已经足够执行；
 - Interactive 是否把真正改变成片的分叉暴露给用户，而不是浪费问题在可自动推导的 Contact / Sufficiency / Camera 基础质量上；
 - 目标战斗结果是否没有过早锁死整个编排路径；
@@ -80,6 +82,7 @@ Per-Character Combat System
 + System Refinement
 + Per-Character Combat Expression
 + Physical Presentation Domain
++ Combat Rhythm / Macro Tempo Strategy
 + Scene / Range / Environment / Intent
 → Derived Choreography Direction
 ```
@@ -140,6 +143,10 @@ Kinetic Scope 回答“身体和空间到底动了多大、多丰富”。重点
 不设置“必须踢几次、跑几米、绕桌几圈”等固定配额。
 
 > **Coverage 解决“打多久”；Depth 解决“攻防有多深”；Kinetic Scope 解决“身体和空间动多大”。三者互不替代。**
+
+另外：
+
+> **Combat Tempo 解决“正在打的时候多快、什么时候自然升降”。Tempo 也不等于 Coverage。**
 
 ---
 
@@ -349,13 +356,140 @@ Major Advantage Reversal 必须真实改变至少一类控制关系，并由后�
 
 ---
 
-## 9. Combat Intensity Curve
+## 9. Combat Rhythm / Intensity Curve
 
-Continuous Spine 不等于全程同速。
+Continuous Spine 不等于全程同速，也不等于全程同强度。
+
+### 9.1 两层 Rhythm Model
+
+Combat Rhythm 使用两层结构：
+
+```text
+Macro Rhythm Strategy
+→ 决定整场导演层节奏倾向
+
+Adaptive by Combat State
+→ 决定当前 Exchange 的 Local Tempo
+```
+
+默认：
+
+```text
+Macro Rhythm Strategy = Dynamic Wave
+Tempo Adaptation = Adaptive by Combat State
+```
+
+除非用户明确要求固定节拍 / 严格时间比例，否则 **Macro Strategy 不是硬曲线**，不能为了“按曲线走”而覆盖正在发生的身体状态。
+
+### 9.2 Macro Rhythm Strategy
+
+Interactive 可使用以下高价值 Macro Strategy：
+
+- `Dynamic Wave`：中速 → 高速 → 压力型降速 → 再爆发；默认推荐；
+- `Sustained High Pressure`：大部分时间高密度，但仍允许极短 Recovery Window；
+- `Escalation`：克制 / 中速 → 加速 → 高密度 Peak；
+- `Burst → Pressure → Burst`：高速碰撞 → 慢速高压贴身控制 → 再爆发；
+- `Impact Drop → Recovery → Rebuild`：高速 → 重击 / 摔倒 / 撞墙 → 明显降速恢复 → 再带起节奏；
+- `Attrition / Fatigue Curve`：前段更快，伤势 / 体能 / 呼吸负担累积后整体下降，只保留短促爆发；
+- `Tactical Pulse`：高速 Exchange 与很短的判断 / 绕位 / 呼吸 / 再进入交替；
+- `Asymmetric Tempo`：Local Tempo 跟随谁掌握 Initiative / Advantage / Range 而变化；
+- `Custom`：用户自定义阶段顺序或 High / Medium / Low 软比例。
+
+百分比只作为分布偏好，不自动换算成固定秒数、固定动作数或固定阶段长度。
+
+### 9.3 Adaptive by Combat State（默认开启）
+
+Local Tempo 由当前真实战斗状态决定：
+
+```text
+Macro Rhythm Strategy
++ Current Range / Contact
++ Initiative / Advantage
++ Heavy Impact / Pain Reaction
++ Knockdown / Throw / Wall Impact
++ Loss of Balance / Recovery Burden
++ Clinch / Grappling Compression
++ Breath / Fatigue Accumulation
++ Separation / Reassessment
++ Environment Shock
+→ Local Tempo
+```
+
+典型合法变化：
+
+```text
+高速 Striking
+→ 进入 Clinch / Grappling
+→ Tempo ↓
+→ Pressure / Intensity 可以继续 HIGH
+```
+
+```text
+高速交换
+→ 一方被重击 / 踢飞 / 摔倒 / 撞墙
+→ 呼吸被打断、疼痛反应、撑地 / 扶墙、重新找支撑
+→ Tempo 明显下降
+→ 恢复威胁与支撑后逐步 Rebuild
+→ 再次加速进入
+```
+
+这类降速不是失败，而是把 Contact 的真实代价变成节奏。
+
+### 9.4 Recovery Burden ≠ Neutral Reset
+
+角色不能像不会疼、不会喘、不会累一样，在每次重击后立刻满速恢复；但也不能把恢复写成双方停战。
+
+受创后的 Recovery Window 优先外显：
+
+- 疼痛 / 保护性身体反应；
+- 呼吸被打乱、短促换气；
+- 眨眼、咬牙、短暂视线恢复；
+- 撑地 / 扶墙 / 补步 / 调整支撑；
+- 对手仍在逼近、封路、观察、控制空间或准备再进入。
+
+只要这些状态仍直接推动下一次攻防，就继续计入 Active Combat Coverage。
+
+禁止默认：
+
+```text
+重击
+→ 双方一起停下休息
+→ 完全恢复默认姿态
+→ 再重新起架开打
+```
+
+### 9.5 Tempo ≠ Intensity ≠ Camera Pace
 
 Combat Intensity 由 Exchange Frequency、Contact Weight / Pressure、Advantage Pressure、Kinetic Scope、Exchange Depth / Tactical Complexity、Environment Stakes、Camera / Audio Accent 等共同形成。
 
-局部降速仍可以保持高强度。约 15 秒电影化高手 1v1 默认至少应有一次清楚的 Intensity Turning Point，但禁止固定“低→中→高”。
+因此：
+
+```text
+Tempo ↓
+不代表
+Intensity ↓
+```
+
+Clinch / Grappling / Wall Pressure 可以是：
+
+```text
+Tempo = LOW / MID
+Pressure = HIGH
+Intensity = HIGH
+```
+
+同时：
+
+```text
+Combat Tempo
+≠ Camera Cut Frequency
+```
+
+人物高速对打可以由连续 Tracking / Medium Shot 承担；人物重击后局部降速也可以出现快速 Reaction Cut。Camera 只服从自己的 Viewer Task / Handoff 规则，不机械同步人物速度。
+
+### 9.6 Intensity Turning Point
+
+约 15 秒电影化高手 1v1 默认至少应有一次清楚的 Intensity / Tempo Turning Point，但禁止固定“低→中→高”。Turning Point 应由真实 Action State、Advantage、Impact、Range 或 Recovery 产生，而不是为了曲线好看硬插停顿。
 
 ---
 
@@ -470,7 +604,7 @@ action-combat-video/index
 → Combat Planning Context
 ```
 
-Interactive Planning Context 至少保留：角色级 Combat System / Refinement / Expression、Physical Presentation Domain 与 Derived Choreography Direction。legacy Fighting Direction 只作为兼容执行槽。
+Interactive Planning Context 至少保留：角色级 Combat System / Refinement / Expression、Physical Presentation Domain、Combat Rhythm / Macro Tempo Strategy、`Adaptive by Combat State` 默认与 Derived Choreography Direction。legacy Fighting Direction 只作为兼容执行槽。
 
 不要在正常运行加载维护文档、研究档案或未命中的叶子知识。
 
@@ -608,6 +742,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 - System Refinement 是否真实改变 Technique / Entry / Range / State-change 逻辑；
 - Combat Expression 是否影响主动 / 反制、节奏和再进入方式，但没有取代 Technique；
 - Character / Narrative Identity 是否没有偷偷重写 Combat System；
+- Combat Rhythm / Macro Tempo Strategy 是否真实影响节奏组织，但没有覆盖当前 Combat State 的合理局部调速；
 - Derived Choreography Direction 是否真实体现角色级输入，而不是只写顶部标签；
 - legacy Fighting Direction execution slot 是否只承担兼容执行，没有重新成为用户创作真源。
 
@@ -622,10 +757,15 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 - Major Advantage Reversal 是否有可见控制权变化；
 - 双方抢主动方式是否长期同质化。
 
-### G. Contact / Intensity
+### G. Contact / Rhythm / Intensity
 
 - 重要 Contact 是否有 Transfer → Reaction → Consequence；
-- 连续 Combat 是否存在可感知的强度变化，而不是全程同速 / 同重量 / 同压力。
+- 连续 Combat 是否存在可感知的速度 / 强度变化，而不是全程同速 / 同重量 / 同压力；
+- 重击、踢飞、摔倒、撞墙后是否存在合理 Recovery Burden，而不是立刻满速恢复；
+- Clinch / Grappling 是否允许 `Tempo ↓ but Pressure / Intensity remains HIGH`；
+- 疼痛、喘息、疲劳是否作为局部节奏状态参与下一动作，而不是被完全忽略；
+- Recovery 是否保持威胁与 Continuation，没有退化成 Neutral Reset；
+- Camera Cut Frequency 是否没有被错误绑定到 Combat Tempo。
 
 ### H. Camera Coverage
 
@@ -661,6 +801,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 
 - Core 是 State / Continuity 真源；
 - Character / Narrative Identity、Combat System / Refinement、Combat Expression 必须分层；
+- Combat Rhythm / Macro Tempo Strategy 是导演层意图；Local Tempo 默认由 `Adaptive by Combat State` 决定；
 - Derived Choreography Direction 是 Runtime 派生结果，不是 Interactive 独立用户问题；
 - legacy Fighting Direction 只作为 MVP 兼容执行槽；
 - Modern / Wuxia 当前继续提供具体表现与物理尺度知识，但不得由单一 Combat System 或职业身份自动决定；
@@ -676,6 +817,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 > **身体本身就在打，Movement 不是给上肢动作补脚步说明。**  
 > **连续打斗不是动作排得更近，而是后一个动作从前一个动作的身体与空间状态里长出来。**  
 > **Initiative 要在动作链里被抢走，不是在“你的回合结束后”轮到下一方。**  
+> **Macro Rhythm 决定整场倾向，Combat State 决定局部快慢；疼痛、抱控、摔倒、喘息、疲劳都可以真实改变节奏。**  
 > **镜头可以稳定，也可以切；Action Continuity ≠ Shot Continuity。**  
 > **Ending 服从 Coverage，不让静止收尾吞掉有效交战。**  
 > **状态机留在内部，最终 Prompt 交付一条真正连续、具体、可见、可执行的动作主链。**
