@@ -12,16 +12,19 @@
 - `camera-direction/control.md` 的通用摄影术语与镜头规则；
 - `prompt-assembly/control.md` 的最终序列化。
 
-它只负责四件事：
+它只负责五件事：
 
 1. Stage-2 Execution Knowledge 是否真的命中；
-2. 动作之间是否存在 Motion / Energy Carry-over；
-3. Camera 是否由正在发生的动作状态变化触发；
-4. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
+2. Concrete Choreography 是否具有 Model Execution Realizability；
+3. 动作之间是否存在 Motion / Energy Carry-over；
+4. Camera 是否由正在发生的动作状态变化触发；
+5. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
 
 核心原则：
 
 > **Action 决定 Camera 为什么变化；Camera 不能把连续动作切成重新开始的动作块。**
+
+> **Concrete Detail 必须服务模型执行；Prompt 更细但成片更差，仍然是 FAIL。**
 
 ---
 
@@ -75,6 +78,128 @@ FAIL
 ```
 
 禁止只在旧 Phrase 上追加“侧切 / 转髋 / 高低位”等词来伪装 Pattern Realization。
+
+---
+
+## 2.5 Model Execution Realizability Gate
+
+真实 G01 成片已经证明：**Prompt-level textual specificity 上升，不保证 Generated-video quality 上升。**
+
+当动作描述越来越细，却同时要求模型追踪过多独立肢体、Contact、状态、Camera 和 Negative 时，模型可能发生：
+
+- 动作碎片化；
+- 上肢动作被优先保留；
+- Footwork / Support / Route 丢失；
+- Camera 退回保守中景；
+- Motion Handoff 在成片中消失。
+
+因此 Concrete Action Phrase 除“够具体”外，还必须通过下面的可执行性检查。
+
+### A. Motor Driver First
+
+对于 Whole-body / Movement-driven Fighting Direction，Phrase 应先让模型理解主要身体运动驱动：
+
+```text
+Whole-body / Support / Route Driver
+→ Technique
+→ Opponent Response
+→ Position / Balance Consequence
+→ Continuation
+```
+
+避免长期：
+
+```text
+Forearm / Wrist / Shoulder / Arm Technique
+→ 最后补一句侧步 / 转髋 / 降低重心
+```
+
+具体上肢动作可以存在，但不能连续多个关键 Phrase 都成为主要因果驱动。
+
+### B. Feet-fixed Test
+
+内部检查：
+
+> 如果删除脚步、支撑、Route、Level、Axis、Position 变化，这段主要攻防是否仍几乎可以原地完成？
+
+若 yes，且当前 Fighting Direction 明确需要 Whole-body / Movement-driven Combat，则 FAIL：
+
+`Upper-body Semantic Dominance / Static Standing Combat`
+
+修复必须改变动作主驱动，不是机械再加一个踢腿词。
+
+### C. Instruction Saturation
+
+同一短动作窗口若同时要求模型精确追踪：
+
+```text
+多个独立肢体动作
++ 多个 Contact 点
++ 多个 State Consequence
++ 精细 Footwork / Axis
++ Camera Change
++ Audio Accent
++ 多条 Negative
+```
+
+应视为 `Instruction Saturation / Micro-choreography Overconstraint` 风险。
+
+压缩时优先：
+
+```text
+删除重复身体局部细节
+→ 合并同一动力链中的次要上肢动作
+→ 删除重复 State 解释
+→ 删除低价值 Camera / Audio 细节
+→ 删除重复 Negative
+```
+
+必须保留：
+
+```text
+Motor Driver
++ 关键 Technique
++ Opponent Response
++ Balance / Position / Range 后果
++ Continuation Entry
+```
+
+**压描述复杂度，不压动作连续性。**
+
+### D. Effective High Granularity Everywhere
+
+High / Medium / Low 不能只看文字长短。
+
+如果多个连续 Phrase 都要求模型追踪多个肢体、多个 Contact、多个空间状态，即使标成 Medium / Low，仍属于：
+
+`Effective Granularity Flattening / Instruction Saturation`
+
+- High：只展开 Major Reversal / Signature 所需关键局部因果；
+- Medium：优先整身运动 + 关键 Technique + 后果；
+- Low：只保留 Motion Handoff 所需动作桥梁。
+
+### E. Upper-body Semantic Dominance
+
+不做机械词频配额，但要检查：
+
+> 连续多个关键 Phrase 的主要因果是否仍由 Hand / Forearm / Wrist / Shoulder / Arm Control 驱动？
+
+如果 yes，而 Movement 只作为修饰语出现，则即使 Prompt 中写了“侧切 / 转髋 / 降低重心”，也不能判 Whole-body PASS。
+
+### F. Prompt–Video Execution Divergence
+
+真实成片反馈优先级高于 Prompt 文本观感。
+
+如果相同 Golden Scenario 的新版 Prompt：
+
+- 文本更具体；
+- Static Gate 更多；
+
+但真实视频的 Action Continuity / Whole-body Contribution / Camera Mobility 明显下降，则判：
+
+`Prompt–Video Execution Divergence / Generated Video Regression`
+
+此时优先检查 Instruction Saturation、Upper-body Semantic Dominance、Camera Strategy Overconstraint，不继续增加更多动作术语。
 
 ---
 
@@ -299,6 +424,22 @@ Shot Scale / Camera Position 应由当前信息需要决定。
 
 因此“特写后立刻回中景”不是默认规则。
 
+### Camera Strategy Interpretation
+
+用户选择“中景跟随、关键接触短暂切近”时，Runtime 应把它理解为**观看偏好**，不能序列化成固定 Shot Pattern。
+
+仍允许在真正改变动作理解时：
+
+- Route / Direction 变化 → 侧跟 / 改关系角度；
+- Level Drop → Camera 随身体降位；
+- Support Change → 必要低位局部；
+- Initiative Reversal → 改 Relationship Angle / Distance；
+- Fight-space Boundary → 重新组织机位。
+
+如果 Camera Preference 被执行成长期稳定中景、只有 Contact 才短暂切近，判：
+
+`Camera Strategy Overconstraint / Camera Mobility Underfill`
+
 ---
 
 ## 8. Action Spine 与 Camera Handoff 的耦合外显
@@ -344,33 +485,51 @@ Final Prompt 输出前检查：
 
 失败：`Stage-2 Routing Evidence Missing`。
 
-### B. Kinetic Handoff
+### B. Model Execution Realizability
+
+- Whole-body / Movement-driven Combat 是否有清楚的 Motor Driver？
+- 是否通过 Feet-fixed Test？
+- 连续多个关键 Phrase 是否仍由上肢语义主导？
+- 是否存在 Effective High Granularity Everywhere？
+- 同一短窗口是否塞入过多独立肢体 / Contact / State / Camera / Negative？
+
+失败：
+
+`Upper-body Semantic Dominance`  
+`Instruction Saturation / Micro-choreography Overconstraint`  
+`Effective Granularity Flattening`
+
+### C. Kinetic Handoff
 
 - 下一动作是否利用前一动作仍未消失的 Momentum / Contact / Support / Recovery / Axis？
 - 是否出现大量完整收势 + Neutral Reset？
 
 失败：`Kinetic Handoff Loss`。
 
-### C. Camera Motivation
+### D. Camera Motivation
 
 - 每个关键 Cut / Reframe 是否有 Action Trigger？
 - 是否只是“为了电影感”随机改变景别？
 
 失败：`Action–Camera Decoupling`。
 
-### D. Live Motion Across Cut
+### E. Live Motion Across Cut
 
 - 至少关键 Cut 是否在 Motion alive 时发生？
 - Shot B 是否继续 Shot A 的动作 / Contact / Reaction / Pressure？
 
 失败：`Dead-motion Cut / Post-action Cut`。
 
-### E. Coverage Patterning
+### F. Coverage Patterning / Strategy Overconstraint
 
 - 是否机械 Medium → Close → Medium 循环？
 - Re-establish 是否只在真的需要空间恢复时使用？
+- 用户 Camera Preference 是否被错误固化成保守 Shot Pattern？
 
-失败：`Coverage Patterning / Symmetric Shot Cycling`。
+失败：
+
+`Coverage Patterning / Symmetric Shot Cycling`  
+`Camera Strategy Overconstraint / Camera Mobility Underfill`
 
 ---
 
@@ -382,17 +541,23 @@ Final Prompt 输出前检查：
 Stage-2 Evidence FAIL
 → 先补 Read / Pattern Realization
 
+Execution Realizability FAIL
+→ 先重写 Motor Driver / 压缩局部描述 / 恢复 Granularity 层级
+
+Upper-body Semantic Dominance FAIL
+→ 改变 Whole-body / Support / Route 主驱动，不机械补腿法
+
 Kinetic Handoff FAIL
 → 重写 Transition / Phrase
 
 Action–Camera FAIL
 → 重新选择 Action Trigger + Inherited Motion State
 
-Coverage Patterning FAIL
+Coverage Patterning / Camera Strategy Overconstraint FAIL
 → 重新按动作信息分配 Shot Task
 ```
 
-不要通过增加更多 Shot、更多特写或更多 Camera 术语修复。
+不要通过增加更多 Pattern、更多动作术语、更多 Shot、更多特写或更多 Camera 术语修复。
 
 ---
 
@@ -401,7 +566,8 @@ Coverage Patterning FAIL
 - Fighting Direction / Coverage / Granularity：`choreography-playbook.md`；
 - Range / Advantage / Position：`core-playbook.md`；
 - 具体动作知识：当前专项 Playbook + Stage-2 leaf knowledge；
+- Generated-video Execution Regression 设计真源：`docs/action-combat-video-generated-video-execution-regression-spec.md`；
 - 通用 Camera 术语与轴线：`references/controls/camera-direction/control.md`；
 - 最终序列化：`references/controls/prompt-assembly/control.md`。
 
-本文件只做 Action ↔ Camera 与 Stage-2 Evidence 的桥接，不扩成新的大系统。
+本文件只做 Stage-2 Evidence、Model Execution Realizability 与 Action ↔ Camera 的轻量桥接，不扩成新的大系统。
