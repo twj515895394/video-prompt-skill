@@ -1,9 +1,9 @@
 # Video Prompt Skill — Action Combat Regression Fix Handoff
 
-> 更新时间：2026-08-15 20:32（UTC+8）  
+> 更新时间：2026-08-15 20:45（UTC+8）  
 > 仓库：`twj515895394/video-prompt-skill`  
 > 分支：`main`  
-> 当前阶段：**G01 第一轮真实 Regression 已完成分析；RF-01～RF-21 已确认并完成首批 Runtime 接线。停止继续扩设计，下一步直接重新跑同一个 G01 Interactive Regression。**
+> 当前阶段：**G01 第一轮真实 Regression 已完成分析；RF-01～RF-21 已确认并完成首批 Runtime 接线与静态回读。下一会话不继续扩设计，直接接收用户重新测试后的完整材料并执行第二轮 Regression Analysis。**
 
 ---
 
@@ -15,34 +15,43 @@
 2. `docs/action-combat-video-regression-fix-spec.md`
 3. `references/tasks/action-combat-video/interactive-combat-policy.md`
 4. `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
+5. 如需核对 Stage-2，再读取 `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
 
-不要重新 Grill 已确认的 RF-01～RF-21，不要重新讨论为什么要做 Archetype / Hybrid，也不要先扩完整拳种知识库。
+**不要重新 Grill RF-01～RF-21，不要重新讨论为什么要做 Archetype / Hybrid，不要先扩完整武术知识库。**
 
-**下一步不是继续设计，而是重新跑 G01，验证本批 Runtime 修复是否真正生效。**
+用户下一会话会直接带回新的测试内容。第一目标是：
+
+> **基于新测试证据判断本批 Runtime 修复是否真正生效，并把失败定位到 Recommendation / Interactive / Archetype Consumption / Stage-2 Selection / Choreography Realization / Assembly / Model 中的具体层。**
 
 核心原则：
 
 > **Regression → Failure Layer → Minimal Fix → Regression Again.**
 >
 > **Routing First, Knowledge Second.**
+>
+> **Prompt PASS ≠ Generated Video PASS。**
+
+如果新测试已经 PASS，不要为了“更完整”继续扩系统。
 
 ---
 
-## 1. 本轮真实 Regression 输入
+## 1. 固定 Golden Scenario / G01
 
-固定 Golden Scenario：
+继续使用同一场景，便于和上一轮横向比较：
 
 - 15 秒；
 - 普通现代中国公司办公室；
-- 中国女性，22 岁，长高马尾，正常职场服装；
+- 中国女性，22 岁，漂亮，长高马尾，正常职场服装；
 - 中国男性，55 岁，矮胖、秃顶领导，正常职场服装；
 - 两人分别属于敌对杀手组织，都是职业杀手；
-- Close Combat；
-- 双方之间不要隔办公桌或大型障碍；
+- Close Combat / 贴身搏斗；
+- 两人之间不要隔办公桌或大型障碍物；
 - 无枪械、无刀具；
-- Interactive Mode。
+- Interactive Mode；
+- 原始输入不要主动指定 MMA；
+- 如非测试目标，不主动在第一句直接指定某个明星 Archetype，让 Runtime 自己暴露选择。
 
-上一轮用户实际选择：
+上一轮实际选择：
 
 ```text
 Round 1
@@ -61,55 +70,59 @@ Ending
 女方阶段性明显优势
 ```
 
-上一轮 Final Prompt 的主要问题：
+上一轮主要失败：
 
 - Round 1 推荐空间偏窄；
-- Round 2 Expression 只有推荐 A，没有真实分叉；
-- 李小龙型在实际候选中消失；
+- Round 2 Expression 只有推荐 A，没有真实可选分叉；
+- 李小龙型在实际 Archetype 候选中消失；
 - 用户选中李连杰型，但 Read List 没有读取 Archetype Library；
-- Stage-2 最小 Pattern 有进入动作，但缺乏可追踪 Pattern Hit Evidence；
+- Stage-2 最小 Pattern 有进入动作，但缺少 `Gap → Slot → Pattern → Phrase` 可追踪证据；
 - Movement 有增加，但关键主动权仍大量由前臂 / 肩线 / 抓控 / 腕肘驱动；
-- Ending 推荐“墙边 + 控腕”反向吸走上游李连杰型动作 Signature；
+- Ending 推荐“墙边 + 控腕”反向吸走上游李连杰型 Signature；
 - 15 秒仍约 3 个大 Exchange + Ending；
 - 普通 Exchange 被过度展开，产生 Granularity Over-expansion；
 - Final Prompt 存在“掌根或前臂”“低线动作”等未决 / 模糊动作；
 - 同一控制语义在 Action / Global Rule / Style / Avoid 中重复；
-- Camera Handoff 本轮基本正常，不作为修复重点。
+- Camera Handoff 基本正常。
 
 ---
 
-## 2. 已确认 Spec
+## 2. 已确认设计真源
 
-主真源：
+主 Spec：
 
 `docs/action-combat-video-regression-fix-spec.md`
 
-本批确认项编号：
+当前状态：
+
+> **Confirmed Design + Initial Runtime Implemented / 待 G01 Regression 验证**
+
+本批编号：
 
 `RF-01 ～ RF-21`
 
 ### Round 1
 
-- RF-01：不禁止 Hybrid 出现在普通中国角色题材；解决点是 Recommendation Breadth，而不是禁止 Hybrid。
-- RF-02：Round 1 默认更宽，常见约 6～8 个高价值方向，但数量动态决定，不是硬配额。
-- RF-03：Recommendation Diversity Gate 检查设计空间差异，不检查单纯数量。
-- RF-04：1v1 默认展示完整双方 Combat System Pairing；底层仍 Per-Character 独立存储。
+- RF-01：不禁止 Hybrid 出现在普通中国角色题材；核心修复是 Recommendation Breadth，而非禁止 Hybrid。
+- RF-02：Round 1 作为第一处分叉，常见约 6～8 个高价值方向，但数量必须动态分析，不是硬配额。
+- RF-03：Recommendation Diversity Gate 检查真正设计空间差异，不检查单纯数量。
+- RF-04：1v1 默认展示双方完整 Combat System Pairing；底层仍 Per-Character 独立保存。
 
 ### Round 2
 
 - RF-05：Expression 必须提供 2～3 个真实动态候选 + 自定义；不能只有推荐 A。
-- RF-06：Archetype 选择默认完整展示李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙 + none/custom；可以动态排序，不得无理由静默删除。
-- RF-07：Archetype 是 Character-level 属性；双方可以不同，也可共享；不新增固定轮次。
+- RF-06：Archetype Selection 默认完整展示李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙 + none/custom；可排序，不得无理由静默删除。
+- RF-07：Archetype 是 Character-level 属性；双方可以不同，也可以共享；不新增固定轮次。
 
 ### Archetype Runtime
 
 - RF-08：Archetype != none 时必须实际读取 `combat-cinematic-archetypes/library.md`。
 - RF-09：Archetype Runtime Bias 必须真实影响 Stage-2 Pattern Selection 权重。
-- RF-10：Library Read 不是 PASS；最终动作本身必须可辨识 Archetype，失败为 `Archetype Realization Failure`。
+- RF-10：Library Read 不是 PASS；最终动作本身必须可辨识 Archetype，否则为 `Archetype Realization Failure`。
 
 ### Character / Ending / Movement
 
-- RF-11：Per-Character Signature Separation Gate，双方不能打到后面同质化。
+- RF-11：Per-Character Signature Separation Gate；双方不能打到后面同质化。
 - RF-12：Ending Signature Compatibility Gate；Ending 只定义结束优势状态，不得偷换 dominant technique。
 - RF-13：Movement Causality Gate；Movement 必须真实改变下一战斗问题，不是给上肢动作补脚步。
 
@@ -118,14 +131,14 @@ Ending
 - RF-14：Stage-2 Pattern Traceability：`Gap → Slot → Pattern → Detail → Concrete Phrase`。
 - RF-15：正式识别 `Granularity Over-expansion`。
 - RF-16：Exchange Density / Granularity Distribution Gate。
-- RF-17：Concrete Compression Gate：更短但仍明确，不允许“A or B / 某种低线动作”。
+- RF-17：Concrete Compression Gate：更短但仍明确，不允许 “A or B / 某种低线动作”。
 - RF-18：Duration-aware Choreography Budget；时长前置影响展开深度，但不产生固定动作数。
 - RF-19：Two-pass Choreography：先 Exchange Spine / Battle Beat Skeleton，再选择性 Stage-2 Expansion。
 
 ### Assembly / Camera
 
-- RF-20：Serialization Deduplication Gate；具体正向动作 > 必要全局正向规则 > 少量高价值 Negative。
-- RF-21：本轮 Camera Runtime Freeze；不顺手重构 Camera，只做 Regression Preservation。
+- RF-20：Serialization Deduplication Gate；优先级：`具体正向动作 > 必要全局正向规则 > 少量高价值 Negative`。
+- RF-21：Camera Runtime Freeze；本轮不顺手重构 Camera，只做 Regression Preservation。
 
 ---
 
@@ -137,21 +150,22 @@ Ending
 
 `references/tasks/action-combat-video/interactive-combat-policy.md`
 
-Commit：
+实施 Commit：
 
 `1a314bfe64f7b3636f0c2269bf107fe738a7b80a`
 
-已实施：
+已经接入：
 
 - Round 1 Dynamic Recommendation Breadth；
-- 常见约 6～8 个、非固定数量；
+- 常见约 6～8 个但非固定；
 - Recommendation Diversity Gate；
 - 1v1 Pairing Presentation；
-- Chinese Cinematic intent 与 Hybrid 边界；
+- Hybrid 合法存在但不做身份硬映射；
 - Round 2 Expression Candidate Coverage；
-- 五种基础 Archetype 完整覆盖，李小龙型不得静默消失；
+- 五种基础 Archetype 完整覆盖；
+- 李小龙型不得静默消失；
 - Per-Character Archetype；
-- Round 2 完成后 Mandatory Handoff 到新的 Regression Runtime Policy。
+- Round 2 后 Mandatory Handoff 到 Regression Runtime Policy。
 
 ### 3.2 Regression Fix Runtime Policy
 
@@ -159,52 +173,67 @@ Commit：
 
 `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
 
-Commit：
+创建 Commit：
 
 `b99931ce0fe3602e12086fe5792c171333fa2a70`
 
-负责：
+强制运行链：
 
 ```text
-Archetype Mandatory Consumption
-→ Archetype-to-Stage-2 Weighting
-→ Per-Character Signature Separation
-→ Ending Signature Compatibility
+Confirmed Per-Character Planning Context
+→ Archetype Mandatory Consumption
+→ Derived Choreography Direction
 → Duration-aware Choreography Budget
-→ Pass 1 Exchange Spine
-→ Stage-2 Gap / Pattern Selection
-→ Pattern Traceability
-→ Pass 2 Selective Expansion
-→ Movement Causality
-→ Exchange Density / Granularity
+→ Pass 1: Exchange Spine / Battle Beat Skeleton
+→ Per-Character Signature + Advantage / Ending Compatibility
+→ Stage-2 Gap Detection
+→ Archetype-weighted Pattern Selection
+→ Stage-2 Pattern Trace
+→ Pass 2: Selective Concrete Expansion
+→ Movement Causality Check
+→ Granularity / Exchange Density Check
 → Concrete Compression
-→ Action-Camera（沿用旧 Runtime）
+→ Action–Camera Handoff（沿用原 Runtime）
 → Prompt Assembly
 → Serialization Deduplication
-→ Final Preflight additions
+→ Final Preflight
 ```
 
-该文件是轻量运行期补强，不是第二套 Combat Engine。
+该文件是轻量 Runtime 补强层，不是第二套 Combat Engine。
 
-### 3.3 Minimum Validation Set
+### 3.3 Stage-2 Minimum Validation Set
 
 文件：
 
 `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
 
-Commit：
+实施 Commit：
 
 `5cf7d28a7835a04122aac2ab3cd48893e2af8993`
 
-已增加：
+新增：
 
 - Pattern Traceability；
 - Archetype / Signature Weighting 边界；
-- Movement Causality Gate；
+- Movement Causality；
 - G01 新验收要求；
 - 明确“只读文件 ≠ Stage-2 已成功执行”。
 
-### 3.4 主 Wiring 静态确认
+### 3.4 Spec 状态同步
+
+文件：
+
+`docs/action-combat-video-regression-fix-spec.md`
+
+最新状态 Commit：
+
+`1ab0d9c1ddec4fbd4375be717b23fa30561c8d54`
+
+状态已经更新为：
+
+> **Confirmed Design + Initial Runtime Implemented / 待 G01 Regression 验证**
+
+### 3.5 主 Wiring 静态确认
 
 `SKILL.md` 仍固定：
 
@@ -213,7 +242,7 @@ Interactive Action Combat
 → READ references/tasks/action-combat-video/interactive-combat-policy.md
 ```
 
-而新的 `interactive-combat-policy.md` 已强制：
+新的 `interactive-combat-policy.md` 再强制：
 
 ```text
 Round 1 / Round 2 完成
@@ -221,28 +250,28 @@ Round 1 / Round 2 完成
 → 再进入 Derived Choreography Direction / Stage-2
 ```
 
-因此新 Runtime Policy 已经进入 Interactive Action Combat 主链，不是孤立文档。
+因此新 Runtime Policy 已进入 Interactive Action Combat 主链，不是孤立文档。
 
 ---
 
-## 4. 本轮明确没有修改
+## 4. 本轮明确冻结 / 不做
 
-### Camera Runtime
+### Camera Runtime Freeze
 
 没有修改：
 
 `references/tasks/action-combat-video/action-camera-handoff-playbook.md`
 
-原因：上一轮真实 Regression 的 Action-triggered Camera Handoff 基本正常，没有足够证据要求重构。
+原因：上一轮真实 Regression 中 Action-triggered Camera Handoff 基本正常，没有证据要求重构。
 
-后续只验证：
+下一轮只验证：
 
 - Camera 是否被其他修改破坏；
 - Cut / Reframe 后 Motion 是否继续；
 - Viewer Task 是否保留；
 - Adapter / Assembly 是否仍 Preserve Handoff。
 
-### Knowledge Expansion
+### Knowledge Expansion Freeze
 
 暂不扩：
 
@@ -253,154 +282,28 @@ Round 1 / Round 2 完成
 - Body Method State Machine；
 - 每拳种独立 Runtime Tree。
 
-只有当：
+只有当下面全部成立：
 
 ```text
-Routing / Read / Pattern Hit / Archetype Weighting / Prompt 都正确
+Routing 正确
++ Required Read 正确
++ Pattern Hit 正确
++ Archetype Weighting 正确
++ Concrete Choreography 正确
++ Final Prompt 正确
 +
-真实输出仍明显缺动作能力
+真实生成结果仍明显缺能力
 ```
 
-才进入 Knowledge Coverage Audit。
+才进入 Knowledge Coverage Audit / Model Capability 分析。
 
 ---
 
-## 5. 下一步固定：重新跑 G01
+## 5. 下一会话用户最好直接提供的测试材料
 
-不要继续设计新规则，直接用同一个 Golden Scenario 测试 Interactive。
+用户不需要重新解释项目背景，直接粘贴最新测试即可。
 
-建议原始输入保持接近上一轮，不主动在输入里指定 MMA 或具体明星，以便观察推荐链是否改变。
-
-### Gate A — Round 1 Recommendation
-
-检查：
-
-- 是否出现更宽的动态 Pairing 候选；
-- 常见是否约 6～8 个，但不是机械数量；
-- 候选是否真的覆盖不同 Combat Design Space；
-- Hybrid 可以被推荐，但不是唯一方向；
-- 不因为“现代杀手”机械 MMA；
-- 不因为“中国角色”机械只剩中国功夫。
-
-### Gate B — Hybrid UX
-
-选择 Hybrid 后：
-
-- 不固定追问“具体混哪些门派”；
-- 直接进入 Round 2 或其他真正高价值节点。
-
-### Gate C — Round 2
-
-检查：
-
-- Expression 是否有多个真实候选；
-- Archetype 是否完整展示 5 种；
-- 李小龙型是否出现；
-- Expression 与 Archetype 是否分开展示、同轮选择；
-- 是否可以女方 / 男方分别设置 Archetype，也可以双方共享。
-
-### Gate D — Archetype Consumption
-
-如果选李连杰型：
-
-Read List 必须出现：
-
-`references/libraries/combat-cinematic-archetypes/library.md`
-
-并且 Trace / Choreography 应能看出：
-
-- Footwork；
-- Route；
-- Axis；
-- Level；
-- Kick Integration；
-- Whole-body Linkage；
-
-真实提高，而不是只写“轻灵流畅”。
-
-### Gate E — Stage-2 Trace
-
-必须能提供类似：
-
-```text
-Gap
-→ Slot
-→ Main Pattern
-→ optional Auxiliary Pattern
-→ Detail
-→ Realized Phrase
-```
-
-不能只给 Read List。
-
-### Gate F — Two-pass / Density
-
-检查：
-
-- 是否先有完整 Exchange Spine；
-- 15 秒是否恢复更多真实 Active Exchange；
-- 是否不再只有约 3 个大 Phrase；
-- Signature / Reversal High-detail；
-- 普通 Exchange Medium；
-- Connector Low；
-- 没有固定动作数配额。
-
-### Gate G — Movement Causality
-
-检查 Movement 是否真实改变：
-
-- Route；
-- Axis；
-- Range；
-- Position；
-- Support / Balance；
-- Level；
-
-并迫使对手产生新的响应。
-
-如果只是：
-
-```text
-挡拳 + 同时移一步 + 抓腕
-```
-
-仍 FAIL。
-
-### Gate H — Signature / Ending
-
-检查：
-
-- 双方打法能否持续区分；
-- Ending 是否与 System / Expression / Archetype 相容；
-- 李连杰型不能再次被默认“抓腕 + 压墙”吸走；
-- Grappling 角色如果符合自身 Signature，则控制型 Ending 仍合法。
-
-### Gate I — Final Prompt Assembly
-
-检查：
-
-- 是否没有“掌根或前臂”这类未决动作；
-- 是否没有“低线动作”这种模糊类别替代 Technique；
-- Medium / Low 是否更短但仍具体；
-- 是否减少 Action / Global Rule / Style / Avoid 重复；
-- Prompt 变短时，真实 Exchange 反而更多。
-
-### Gate J — Camera Preservation
-
-只做回归：
-
-- Action Anchor；
-- Viewer Task；
-- Live Motion Continuation；
-- Spatial Re-establish；
-
-是否仍保持。
-
-Camera 不作为本轮主动优化目标。
-
----
-
-## 6. 下一次最好带回的材料
+推荐一次提供：
 
 ```text
 【原始需求】
@@ -411,16 +314,17 @@ Camera 不作为本轮主动优化目标。
 
 【每轮最终选择】
 Round 1：...
-Round 2：...
+Round 2 Expression：...
+女方 Archetype：...
+男方 Archetype：...
 Camera：...
 Advantage / Ending：...
 
 【Read List】
 ...
 
-【Stage-2 Pattern Trace】
-Exchange 1: Gap → Slot → Pattern → Phrase
-Exchange 2: ...
+【Pattern / Trace Evidence】
+...
 
 【Final Prompt】
 ...
@@ -428,89 +332,374 @@ Exchange 2: ...
 【模型】
 Generic / Seedance / LTX / 其他
 
-【如果生成了视频】
-最满意：...
-最明显失败：...
-是否站桩：...
-Archetype 是否可辨识：...
-动作数量 / 连续性：...
-Camera：...
+【如果已生成视频】
+1. 最满意：...
+2. 最明显失败：...
+3. 是否站桩：...
+4. 是否能看出双方不同打法：...
+5. 是否能看出所选 Archetype：...
+6. 动作数量 / 连续性：...
+7. Camera：...
 ```
 
-材料不全时基于已有证据分析，不让用户重复已经提供的信息。
+材料不全时，先用已有证据分析；不要要求用户重复已经提供的信息。
 
 ---
 
-## 7. 故障分流
+## 6. 第二轮 Regression 固定检查顺序
 
-### Round 1 仍然候选很少 / 同质
+下一会话严格优先检查 Runtime 是否执行正确，再判断 Knowledge 是否不足。
+
+### Gate A — Round 1 Recommendation Breadth
+
+检查：
+
+- 是否出现更宽的动态 Pairing 候选；
+- 数量是否由当前选题动态决定；
+- 常见可以约 6～8 个，但不能机械凑数；
+- Pairing 是否真的覆盖不同 Combat Design Space；
+- Hybrid 可以被推荐，但不是唯一方向；
+- 不因为“现代杀手”机械 MMA；
+- 不因为“中国角色”机械只剩中国功夫。
+
+失败优先归类：
+
+- `Recommendation Breadth Failure`
+- `Recommendation Diversity Failure`
+- `Identity-to-System Shortcut`
+
+### Gate B — Hybrid UX
+
+如果选择 Hybrid：
+
+- 不固定追问“具体混哪些门派”；
+- 直接进入 Round 2 或其他真正高价值节点；
+- 用户主动指定主 / 辅体系时才进入 Hybrid Refinement。
+
+### Gate C — Round 2 Double Sub-dimension
+
+检查：
+
+- Expression 是否有多个真实候选；
+- Expression 候选是否真的改变 Initiative / Risk / Pressure / Counter / Re-entry / Rhythm；
+- Archetype 是否完整展示 5 种；
+- 李小龙型是否出现；
+- Expression 与 Archetype 是否分开展示、同轮选择；
+- 是否允许女方 / 男方分别设置 Archetype；
+- 是否允许双方共享同一 Archetype。
+
+失败优先归类：
+
+- `Expression Candidate Coverage Failure`
+- `Archetype Candidate Coverage Failure`
+
+### Gate D — Archetype Mandatory Consumption
+
+如果选中任何 Archetype：
+
+Read List 必须出现：
+
+`references/libraries/combat-cinematic-archetypes/library.md`
+
+如果没有：
+
+> `Archetype Consumption Missing`
+
+不要继续讨论知识覆盖，先修 Runtime Read / Handoff。
+
+### Gate E — Archetype-to-Stage-2 Weighting
+
+例如李连杰型，应能从 Pattern Selection / Choreography 看到：
+
+- Footwork；
+- Route；
+- Axis；
+- Level；
+- Kick Integration；
+- Whole-body Linkage；
+
+真实提高。
+
+不能只出现“轻灵流畅 / 李连杰型”等标签。
+
+Library Read 正确但动作不体现时：
+
+> `Archetype Realization Failure`
+
+### Gate F — Stage-2 Pattern Traceability
+
+Regression / Debug Evidence 应能回答：
 
 ```text
-→ Interactive Recommendation Breadth / Diversity Failure
-→ 修 interactive-combat-policy / presentation
+当前 Gap 是什么
+→ Slot 是什么
+→ Main Pattern 是什么
+→ optional Auxiliary Pattern 是什么
+→ 实际读取了哪个 leaf knowledge
+→ 哪个 Detail 被实例化
+→ 对应 Final / Concrete Phrase 是哪一句
 ```
 
-### 李小龙再次消失
+只出现 `minimum-validation-set.md` 在 Read List，不算 Stage-2 PASS。
+
+### Gate G — Two-pass / Duration-aware Choreography
+
+检查是否先形成整段轻量 Exchange Spine，再局部展开。
+
+重点看：
+
+- 15 秒是否仍只有约 3 个大 Exchange；
+- 是否恢复更多真实 Re-counter / Re-entry / Initiative Handoff；
+- 是否没有出现所有 Exchange 都 High-detail；
+- 是否没有固定“15 秒必须 N 招”的机械配额。
+
+失败：
+
+- `Granularity Over-expansion`
+- `Exchange Density Collapse`
+
+### Gate H — Movement Causality
+
+不是检查有没有“斜切 / 转轴 / 沉身”等词，而是检查：
 
 ```text
-→ Archetype Candidate Coverage Failure
+Movement
+→ 是否改变 Route / Axis / Range / Position / Support / Balance / Level
+→ 是否迫使对手重新响应
+→ 是否真实创造下一 Technique / Defense / Re-entry
 ```
 
-### 选了 Archetype 但 Library 没读
+如果主链仍是：
 
 ```text
-→ Archetype Consumption Missing
-→ 修 Mandatory Handoff / Runtime Read
+挡拳
+→ 抓腕
+→ 压肩
 ```
 
-### Library 读了但动作仍无 Archetype 特征
+旁边只是补脚步，则仍 FAIL。
+
+### Gate I — Per-Character Signature Separation
+
+删除角色姓名后，仅看动作逻辑：
+
+- 双方是否仍能大致区分；
+- System / Expression / Archetype 是否持续影响进入、Range、节奏、Technique、Re-entry；
+- 是否后半段又塌成同一套动作骨架。
+
+失败：
+
+> `Per-Character Signature Collapse`
+
+### Gate J — Ending Signature Compatibility
+
+检查 Ending 是否：
+
+- 只表达最终优势状态；
+- 与当前 Combat System / Expression / Archetype / Trajectory 相容；
+- 没有重新引入不匹配的 dominant technique；
+- 没有因为“谁占优”自动变成抓腕 / 锁臂 / 压墙模板。
+
+失败：
+
+> `Ending Signature Compatibility Failure`
+
+### Gate K — Concrete Compression
+
+Medium / Low Phrase 应更短，但仍明确。
+
+禁止：
+
+- “掌根或前臂”；
+- “低线动作”；
+- “踢 / 扫 / 蹬其中一种”；
+- “快速反制”；
+- “连续换位”代替真实动作。
+
+目标：
+
+> **更短，但不是更模糊。**
+
+### Gate L — Serialization Deduplication
+
+Final Prompt 检查：
+
+- 同一控制意图是否只保留一次最强表达；
+- 具体动作已经表达连续性时，是否还在 Global / Style / Avoid 重复解释；
+- Negative 是否只留下真正高价值、模型易犯的错误；
+- Prompt 空间是否更多留给真实 Exchange。
+
+### Gate M — Camera Preservation
+
+Camera Runtime 本轮冻结，只做回归：
+
+- Action Anchor 是否仍然明确；
+- Camera Change 是否有 Viewer Task；
+- Cut / Reframe 后 live motion 是否继续；
+- 是否没有被其他修复误伤。
+
+Camera PASS 时不要顺手重构。
+
+---
+
+## 7. 第二轮 Failure 分流
+
+### A. Interactive 仍有问题
 
 ```text
-→ Archetype-to-Stage-2 Weighting / Realization Failure
+Round 1 / Round 2 Candidate Failure
+→ 修 Interactive Policy / Exposure
+→ 不动 Stage-2 Knowledge
 ```
 
-### Pattern 文件读了但无法给 Trace
+### B. Archetype 选中了但没 Read Library
 
 ```text
-→ Stage-2 Routing Evidence Missing
+→ Archetype Consumption / Mandatory Handoff Failure
+→ 修 Routing / Runtime
 ```
 
-### Movement 有词但不改变战斗状态
+### C. Library Read 正确但 Pattern 没被加权
 
 ```text
-→ Movement Causality Failure / Upper-body Dominance
+→ Archetype-to-Stage-2 Weighting Failure
+→ 修 Selection Logic / Derived Direction
 ```
 
-### 动作具体但数量再次变少
+### D. Pattern Selection 正确但动作仍上肢主导
+
+先看：
 
 ```text
-→ Granularity Over-expansion
-→ 检查 Duration Budget / Two-pass / Density / Compression
+Movement Causality
++ Pattern Realization
++ Per-Character Signature
 ```
 
-### Prompt 正确但视频仍站桩 / 动作不足
+如果 Pattern 已正确消费但表现仍不足，再考虑 Knowledge Coverage。
+
+### E. Choreography 正确但 Final Prompt 变差
+
+```text
+→ Assembly / Concrete Compression / Serialization Dedup Failure
+```
+
+### F. Prompt-level 全部 PASS，但生成视频仍差
 
 ```text
 → Generated-video Regression
-→ 再检查 Model Capability / Adapter / Prompt Saturation
-→ 不自动扩 Knowledge
+→ Model Capability / Prompt Saturation / Adapter
 ```
+
+此时才考虑模型限制或进一步 Knowledge Coverage Audit。
 
 ---
 
-## 8. 当前结束条件
+## 8. 当前禁止继续做的事情
 
-下一轮不要以“增加多少规则”为完成标准。
+除非第二轮真实 Regression 明确证明必要，不要：
+
+- 扩完整中国武术百科；
+- 给每位明星建独立 Engine；
+- 给每位明星建固定 Combo Library；
+- 强制 Hybrid 选择几个门派；
+- 把 MMA 全局降级；
+- 把 Archetype 当 Combat System；
+- 建 Lower-body Engine；
+- 建 Body Method State Machine；
+- 建每拳种独立 Runtime Tree；
+- 建第二套 Camera Runtime；
+- 用固定动作数 / 踢腿次数 / 换位次数解决 Density / Standing；
+- 把“常见 6～8 个 Round 1 候选”实现成硬配额；
+- 把 Exchange Spine 实现成固定 Beat 模板；
+- 在没有真实第二轮 Regression 证据前继续增加复杂机制。
+
+Anti-overdesign：
+
+> **Simple Interactive Choice Upstream; Professional Execution Downstream.**
+>
+> **Duration constrains expansion depth, not fixed action count.**
+>
+> **Concrete but compressed; rich in exchanges, not rich in redundant explanation.**
+
+---
+
+## 9. 当前关键文件
+
+### Spec
+
+- `docs/action-combat-video-regression-fix-spec.md`
+- `docs/combat-cinematic-archetype-spec.md`
+
+### Interactive
+
+- `references/tasks/action-combat-video/interactive-combat-policy.md`
+- `assets/templates/mode-interactive-output-contract.md`
+
+### Regression Runtime
+
+- `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
+
+### Choreography / Stage-2
+
+- `references/tasks/action-combat-video/choreography-playbook.md`
+- `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
+- `references/libraries/combat-cinematic-archetypes/library.md`
+
+### Advantage / Ending
+
+- `references/tasks/action-combat-video/advantage-structure-contract.md`
+
+### Assembly
+
+- `references/controls/prompt-assembly/control.md`
+
+### Camera — Frozen
+
+- `references/tasks/action-combat-video/action-camera-handoff-playbook.md`
+
+### Main Wiring
+
+- `SKILL.md`
+
+---
+
+## 10. 当前关键提交
+
+本批核心提交：
+
+- Regression Fix Spec 初始：`2ea173ccfd48f30eb6f23719e5c318be00f96e43`
+- Interactive Runtime：`1a314bfe64f7b3636f0c2269bf107fe738a7b80a`
+- Regression Runtime Policy：`b99931ce0fe3602e12086fe5792c171333fa2a70`
+- Stage-2 Minimum Validation Set：`5cf7d28a7835a04122aac2ab3cd48893e2af8993`
+- Handoff 第一版实施态：`a1686204d1f877f02389162293a7c754ae1419eb`
+- Spec 状态同步：`1ab0d9c1ddec4fbd4375be717b23fa30561c8d54`
+
+---
+
+## 11. 下一会话完成条件
+
+下一会话不要以“新增了多少规则”为完成标准。
 
 完成标准：
 
 ```text
-同场景重新 Regression
-→ RF-01～RF-21 是否真实生效
-→ 定位仍失败的具体 Layer
-→ 只修该 Layer
+新的真实 G01 测试
+→ 对照 RF-01～RF-21 Gate
+→ 定位 PASS / FAIL
+→ 失败映射到具体 Failure Layer
+→ 只修那个 Layer
+→ 再 Regression
 ```
 
-如果 G01 已 PASS：
+如果新的 Interactive / Read / Trace / Prompt 已经明显 PASS：
 
-> **停止继续为“更完整”扩设计。进入真实视频生成 Regression。**
+> **停止扩设计，进入生成视频验证。**
+
+如果 Prompt-level PASS，但视频仍明显不符合：
+
+> **进入 Generated-video Regression，而不是继续改 Prompt 架构。**
+
+最终判断口令：
+
+> **先看真实结果，再决定修哪里。**
