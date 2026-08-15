@@ -242,6 +242,51 @@ Chinese cinematic kung-fu intent
 
 Round 2 仍然只占一个 Primary Planning Node，但内部包含两个**分开展示、分开选择、同轮回答**的子维度。
 
+### 4.0 Round 2 Atomic Interaction Contract
+
+当 `Character Combat Expression` 与 `optional Cinematic Combat Archetype` 都需要向用户暴露时，必须在**同一条 assistant 消息、同一个 Round 2 问题**中分成两个子区块展示，并明确要求用户一次回复两项。
+
+正确：
+
+```text
+Round 2
+1. Character Combat Expression：A / B / C / 自定义
+2. optional Cinematic Combat Archetype：李连杰型 / 吴京型 / 甄子丹型 / 成龙型 / 李小龙型 / 不指定 / 自定义
+
+请一次回复两项，例如：
+A；女方李连杰型，男方吴京型
+```
+
+禁止：
+
+```text
+先问 Expression
+→ 用户回答
+→ 下一轮再单独问“电影动作表达 / 动作风格 / 明星型”
+```
+
+也禁止在 Expression 与 Cinematic Archetype 之间发明第三个新的用户决策节点，例如：
+
+- `电影动作表达参考 A/B/C/D`；
+- `轻灵清晰 / 利落爆发 / 流畅身法 / 写实表达`；
+- 任何本质上只是重新包装 Expression 或 Archetype 的额外“动作表达”问卷。
+
+如果当前没有足够高价值理由暴露 Cinematic Archetype：
+
+```text
+Archetype = inherited / none
+→ Round 2 只问 Expression
+→ 后续不得为了“补电影感”再新增一轮 Archetype / 动作表达问题
+```
+
+如果用户在已经同时展示两个子维度的 Round 2 中只回答 Expression，而没有回答 optional Archetype：
+
+- 用户明显不关心明星参考或上下文支持合法 `none` 时，直接解析 `Archetype = none`，不机械追加一轮；
+- 已存在高置信度继承时直接继承；
+- 只有遗漏项仍存在真实高价值歧义、无法合法解析时，才允许做一次最小精炼；不得把它常态化成固定 Round 3。
+
+本合同只约束 UX 原子性，不把两个子维度预绑定成套餐；Expression 与 Archetype 仍分别保存、分别消费。
+
 ### 4.1 子维度 A：Character Combat Expression
 
 回答：
@@ -485,8 +530,10 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 4. **Round 2 Expression Candidate Coverage**
    - Expression 是否存在真实可选分叉，而不是只有一个推荐 A。
 
-5. **Round 2 Archetype Candidate Coverage**
-   - 五种基础 Archetype 是否完整出现；
+5. **Round 2 Atomic UX / Archetype Candidate Coverage**
+   - 当 Expression 与 Archetype 都需要暴露时，是否在同一条 Round 2 消息中一次展示、一次回复；
+   - 是否没有把 Archetype 拆成下一轮，也没有发明额外 generic“电影动作表达”问卷；
+   - 暴露 Archetype 时五种基础 Archetype 是否完整出现；
    - 李小龙型不得无理由静默消失。
 
 6. **Character-level Archetype**
@@ -511,6 +558,7 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 不新增：
 
 - Round 3；
+- generic `电影动作表达参考` 独立问卷；
 - 明星独立 Combat Engine；
 - 每明星固定 Combo；
 - Hybrid 门派强制问卷；
