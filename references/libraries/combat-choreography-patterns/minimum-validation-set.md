@@ -55,6 +55,79 @@ Read: minimum-validation-set.md
 - 不得因为本文件只有少量样例，就让不同角色最终都使用同一动作骨架；
 - Archetype 只改变选择权重，不创建固定次数或固定 Combo。
 
+### 1.3 Pattern-to-Action Resolution
+
+本文件中的 Pattern 名、`intent`、`contact_modality` 与含多个候选值的字段只是**动作生成范围**，不是可直接序列化进 Final Prompt 的招式。
+
+Technique Pattern 命中后，Runtime 必须结合当前：
+
+```text
+Combat System / Refinement
++ Character Expression / Archetype Bias
++ Range / Contact / Axis / Position / Support
++ Opponent Current Action / Response
++ Exchange Spine 所需 Resulting State
+```
+
+把 Pattern 中的候选收敛成**一个具体动作**。
+
+例如：
+
+```text
+T01 Short Strike Interception
+attacking_surface_or_weapon: fist / palm / forearm / elbow as context fits
+
+≠ Final：用一次短打截入 / 全身连动短击
+
+= Runtime 必须选定：
+掌根推击 / 短拳截击 / 前臂撞开 / 肘击……中的一个当前合理动作
++ 明确目标 / 接触关系
++ 可见响应
+```
+
+```text
+T02 Low-line Base Disruption
+contact_modality: low-line kick / sweep / stomp-like disruption by context
+
+≠ Final：用低线腿法破坏支撑
+
+= Runtime 必须选定：
+勾扫承重脚 / 低位踢击小腿外侧 / 脚步踩位迫使换支撑……中的一个当前合理动作
++ 明确支撑后果
+```
+
+```text
+T03 Off-balance Takedown Entry
+attacking_surface_or_weapon: body frame / arms / leg reap when appropriate
+
+≠ Final：用身体控制改变朝向 / 完成破平衡控制
+
+= Runtime 必须选定具体身体关系，例如：
+前臂横架胸口并外侧带转 / 躯干贴靠后用髋线转向 / 腿部绊阻配合上身带转
++ 明确对手被迫跨步 / 转身 / 下沉等结果
+```
+
+```text
+T04 Whole-body Linked Counter
+attacking_surface_or_weapon: context-dependent
+
+≠ Final：全身连动反击 / 短促全身连动截入
+
+= Runtime 必须先决定真正的 Technique Head：
+掌根推击 / 短拳 / 肩部撞击 / 身体顶靠……中的一个当前合理动作，
+“全身连动”只能作为动力链修饰，不得替代动作本身。
+```
+
+最小检查：
+
+> **如果删除 Pattern 名、intent 与“全身连动 / 低线 / 破平衡 / 身体控制”等类别词后，仍无法看出人物到底做了什么，则 Pattern Realization 尚未完成。**
+
+失败：
+
+> **Pattern-to-Action Resolution Missing / Technique Category Leakage**
+
+修复只回当前 Pattern Realization，不扩知识库、不改 Exchange Spine、不机械增加动作数量。
+
 ---
 
 ## 2. Shared Core Schema
@@ -315,6 +388,7 @@ FAIL 示例逻辑：
 - Lower-body / Balance / Takedown 在合适 Fighting Direction 下真实进入链条；
 - 关键 Exchange 不再反复依赖“前臂偏转 → 肩线封堵 → 抓腕 / 顶肩”；
 - Pattern Hit 可以从 `Gap → Slot → Pattern → Detail → Concrete Phrase` 被追踪；
+- Technique Pattern 不得以 Pattern 名 / intent / 类别词直接进入 Final Prompt，必须完成 Pattern-to-Action Resolution；
 - 不同角色已确认的 System / Expression / Archetype 不因共享本最小集而被同质化；
 - 仍保持 V2-49 的具体因果与 Motion / Initiative Handoff；
 - 不因为更具体而把 15 秒压缩回少量大 Phrase。
