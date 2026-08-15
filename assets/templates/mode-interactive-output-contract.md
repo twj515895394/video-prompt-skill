@@ -173,39 +173,81 @@ Combat 追问前先内部检查：
 
 用户只需要决定**打法方向**，不需要设计具体动作链；后续 Runtime 负责把方向展开成 Movement + Technique + Transition，并保证连续性、颗粒度与可执行性。
 
-### Camera Intent / 镜头意图的条件暴露
+### Camera Intent / Base Viewing Priority 的条件暴露
 
 Camera 不固定必问，但正式进入 Combat Interactive 的高价值候选节点。
+
+这里的 `Camera Intent` 默认不是“选择一套固定 Shot Template”，而是选择 **Base Viewing Priority / 基础观看优先级**：
+
+> **它决定这段 Combat 在没有更强 Action Trigger 时，摄影优先让观众看清 / 感受什么；它不锁死景别、机位、Cut 数量、POV 数量或 Camera Path。**
 
 满足以下逻辑时，Camera Intent 可以成为当前唯一问题：
 
 ```text
 用户尚未明确 Camera Intent
 + 当前动作 / 空间设计已基本确定
-+ 存在至少两个明显不同、都合理的观看策略
++ 存在至少两个明显不同、都合理的 Base Viewing Priority
 + 不同选择会显著改变成片观感
 → 暴露 Camera Intent
 ```
 
-典型高价值分叉包括：
+#### Base Viewing Priority 候选原则
 
-- 固定 / 克制机位 vs 主动跟随；
-- one-take / long-take vs 内部 Cut Coverage；
-- 完整动作可读型 vs 更多 Impact Close-up / Insert；
-- 贴身沉浸型 vs 更宽的关系镜头；
-- 武器 / Contact / Footwork / Reaction 是否获得更强局部 Coverage。
+候选项应描述**观看优先级**，而不是固定镜头编排。典型高价值分叉包括：
 
-Camera 问题必须使用用户能理解的**导演观看策略**，而不是内部参数。可用方向示例：
+- **完整动作可读优先**：默认更重视全身动作、Footwork、Support、Range / Position 与双方关系可读；
+- **电影冲击体验优先**：默认更重视关键 Threat / Impact / Reaction / Near-miss 的体验强化；
+- **贴身沉浸优先**：默认更重视近距离身体压力、Range Compression 与局部主观体验；
+- **空间关系优先**：默认更重视 Route / Axis / Environment Boundary 与双方位置关系；
+- **技巧细节优先**：在武器、Footwork、Support、抓控入口等真正改变动作理解时，更愿意使用局部 Coverage。
 
-- 电影冲击型 Coverage：中景保持关系，在关键 Contact / Footwork / Weapon / Reaction 上短促切近，再 Re-establish；
-- 完整动作可读型：更宽景、更少 Cut，重点看全身动作、步法与空间；
-- 贴身沉浸型：Camera 更靠近人物，适度手持与近景，强化身体压力；
-- 固定 / 克制机位型：少移动、少切换，让动作在构图内完成；
-- 一镜到底型：连续摄影调度覆盖整段 Combat。
+这些是候选池，不是固定五选一模板；实际问题应按当前 Combat 内容筛选互有明显差异的方向。
 
-这些只是候选表达，不是固定五选一模板。
+#### Base Priority 不是 Camera Lock
 
-禁止直接问：
+例如用户选择“完整动作可读优先”，Runtime 应理解为：
+
+```text
+默认：优先保持 Whole-body / Footwork / Spatial Relationship 可读
++
+当 Action State / Viewer Experience 出现高价值变化时：
+仍允许 POV / Near-lens / Impact Close-up / Low-angle Detail /
+Relationship Reframe / Reaction Shot / 有动机的 Cut
+```
+
+因此禁止把它序列化成：
+
+```text
+全程中大全景
++ 少量 Tracking
++ 尽量不切
+```
+
+同理，“电影冲击体验优先”也不等于高 Cut Density 或每个 Contact 都切特写；“贴身沉浸优先”也不等于全程手持近景。
+
+Camera Accent 的具体触发与选择由 Action–Camera Runtime 决定：普通连接动作继承当前 Shot；只有 Route / Level / Support / Range / Initiative / Contact Consequence 或 Perceptual Impact 等高价值节点，才动态决定是否 Reframe / Cut / POV / Close-up / Reaction。
+
+#### Camera 问题表达规则
+
+Camera 问题必须使用用户能理解的**观看体验 / 导演优先级**，而不是内部参数。
+
+可以表达为：
+
+- 完整动作可读优先：先看清全身动作和脚步，但关键威胁、命中、失衡仍允许短促 POV / 特写 / 低位镜头；
+- 电影冲击体验优先：整体仍保持空间清楚，但更积极强化关键 Threat / Impact / Reaction；
+- 贴身沉浸优先：更靠近身体压力和距离压缩，但 Route / Position 变化时仍恢复关系可读性；
+- 空间关系优先：优先看清双方路线和位置变化，关键动作节点仍可短促切近；
+- 技巧细节优先：对真正影响下一动作的 Footwork / Support / Weapon / Grapple Entry 提高局部 Coverage 权重。
+
+禁止把候选写成已经锁死的 Shot Pattern，例如：
+
+- “全程中大全景 + 少切镜”；
+- “每次命中都切特写”；
+- “固定 Medium → Close → Medium”；
+- “全程手持近景”；
+- 其他把 Base Viewing Priority 直接等同为固定景别 / Cut 结构的描述。
+
+也禁止直接问：
 
 - `Camera Complexity = Low / Medium / High`；
 - `Mobility = High`；
