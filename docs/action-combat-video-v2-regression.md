@@ -1,12 +1,16 @@
 # Action Combat Video V2 Regression & Quality Benchmark
 
-> 状态：**Phase 11 Mandatory-path Rewire 已完成；V2-46～V2-49 Runtime 已实施；Concrete Choreography Knowledge CK-1 Runtime 已完成并通过 Static Read，下一步进入固定 G01 Prompt Regression。真实成片必须重新生成，不得沿用旧 PASS。**
+> 状态：**Phase 11 Mandatory-path Rewire 已完成；V2-46～V2-49 Runtime 已实施；Concrete Choreography Knowledge CK-1 Runtime 已完成并通过 Static Read；固定 G01 已完成一次真实 Interactive → Final Prompt → Generated Video Regression，结果 FAIL。当前进入 Stage-2 Routing + Action–Camera + Model Execution Realizability 修复后的同场景 rerun。**
 >
 > 设计依据：`docs/action-combat-video-v2-spec.md`
 >
 > Concrete Choreography Knowledge Spec：`docs/action-combat-video-concrete-choreography-knowledge-spec.md`
 >
 > Concrete Choreography Implementation Plan：`docs/action-combat-video-concrete-choreography-implementation-plan.md`
+>
+> Action–Camera Handoff Spec：`docs/action-combat-video-action-camera-handoff-spec.md`
+>
+> Generated-video Execution Regression Spec：`docs/action-combat-video-generated-video-execution-regression-spec.md`
 >
 > 上游历史实施计划：`docs/action-combat-video-v2-implementation-plan.md`
 >
@@ -23,9 +27,12 @@ Level 1｜Static / Structural Regression
 
 Level 2｜Generated Video Quality Regression
 → 成片是否真正连续打起来，同时具有电影化 Camera Coverage
+→ 新版成片不得明显劣于同一 Golden Scenario 的既有较好基线
 ```
 
 > **静态规则正确只是必要条件；Prompt 本身不合格时禁止直接进入真实视频；真实成片质量是最终验收。**
+
+> **Prompt 更具体、Static Gate 更多，不构成质量提升证据。如果真实成片的动作连续性、Whole-body Movement 或 Camera Mobility 明显下降，直接判 Generated Video Regression。**
 
 本轮特别避免：
 
@@ -35,7 +42,9 @@ Level 2｜Generated Video Quality Regression
 4. 为了少问，把真正会显著改变成片的 Camera Intent 静默替用户决定；
 5. 为了自动化而替用户猜“怎么打”，忽略可直接询问的高价值 Fighting Direction；
 6. 为了动作丰富而建立固定动作数 / 固定字数 / 固定秒数配额；
-7. 在最小 Pattern 验证集尚未证明有效前直接扩建完整武术知识库。
+7. 在最小 Pattern 验证集尚未证明有效前直接扩建完整武术知识库；
+8. 把“更细的 Prompt”误判成“更容易执行的 Prompt”；
+9. 成片退化时继续增加更多肢体术语、Camera 术语或 Negative，进一步制造 Instruction Saturation。
 
 ---
 
@@ -57,12 +66,44 @@ Level 2｜Generated Video Quality Regression
 
 - Mandatory Prompt Assembly 已生效；
 - Continuous Action Spine 与 Temporal Packing 已改善；
-- V2-46 修正后 Camera Coverage 已明显改善；
-- V2-49 Executable Granularity 已明显改善；
+- V2-46 修正后 Camera Coverage 在 Prompt-level 已明显改善；
+- V2-49 Executable Granularity 在 Prompt-level 已明显改善；
 - 但颗粒度变细后，15 秒主要仍只有约 3 组较大的 Exchange；
 - 动作内容长期偏 `前臂 / 肩线 / 抓腕 / 上臂控制 / 顶肩`；
 - 脚步、转髋、重心常只是服务上肢控制，并未成为独立 Choreography Source；
-- 最新 G01 Runtime 没有真正命中 Fighting / Technique Detail，Stage-2 Knowledge Loading 仍需验证。
+- 最新 G01 Runtime 没有真正命中 `minimum-validation-set.md`，Stage-2 Pattern Hit 失败。
+
+### 2.1 2026-08-15 G01 真实 Generated-video Regression
+
+用户对本轮最初贴出的 Final Prompt 进行了真实视频生成，并明确反馈：
+
+> 相比上一版，当前这版视频效果 **差很多很多**。
+
+实际观察：
+
+- 动作明显不连贯；
+- 镜头明显不灵活；
+- 几乎全部是上肢动作；
+- 整体动作电影感下降。
+
+该 Prompt 就是本轮修改 Action–Camera / Stage-2 Runtime **之前**生成的版本，因此不能与后续修复版混淆。
+
+正式判定：
+
+```text
+Prompt-level textual specificity ↑
+Generated Action Continuity ↓
+Generated Camera Mobility ↓
+Generated Whole-body Choreography ↓
+```
+
+说明当前不仅有 `Stage-2 Pattern Non-realization`，还存在：
+
+- `Prompt–Video Execution Divergence`；
+- `Instruction Saturation / Micro-choreography Overconstraint`；
+- `Upper-body Semantic Dominance`；
+- `Effective Granularity Flattening`；
+- `Camera Strategy Overconstraint`。
 
 当前重点 Failure Signatures：
 
@@ -70,20 +111,30 @@ Level 2｜Generated Video Quality Regression
 Upper-body Combat Lock / Kinetic Underfill
 Static Standing Combat
 Upper-body Technique Dominance
+Upper-body Semantic Dominance
 Temporal Combat Stretch / Action Underpacking
 Action Segmentation / Excessive Neutral Reset
 Timeline-induced Action Segmentation
 Abstract Action Block / Non-executable Choreography Summary
+Instruction Saturation / Micro-choreography Overconstraint
+Effective Granularity Flattening
+Prompt–Video Execution Divergence
 Turn-taking Combat / Initiative Segmentation
 Invisible Advantage / Nominal Reversal
 Homogeneous Initiative Style / Identity-by-Demographic Shortcut
 Camera Mobility Underfill
+Camera Strategy Overconstraint
 Combat Camera Coverage Lock / Medium-wide Overconstraint
 Cut-induced Action Reset
+Action–Camera Decoupling
+Dead-motion Cut / Post-action Cut
+Kinetic Handoff Loss
+Coverage Patterning / Symmetric Shot Cycling
 Flat Combat Intensity
 Fighting Direction Non-realization
 Granularity Over-expansion / Exchange Count Collapse
 Stage-2 Pattern Non-realization
+Stage-2 Routing Evidence Missing
 ```
 
 这些属于统一 Gate 下的 Failure Signatures，不建立同等数量独立模块。
@@ -98,7 +149,10 @@ Stage-2 Pattern Non-realization
 - [x] Combat Prompt Assembly 不再占普通 `0-3 Controls` 可选预算；
 - [x] `action-combat-video/index.md` 明确 `Final Assembly → Final Preflight → FAIL rewrite → PASS template` 必经链；
 - [x] Quick / Interactive 均不能跳过 Final Assembly / Preflight；
-- [x] Stage-2 Execution Knowledge 后必须进入 Concrete Action Phrase Construction。
+- [x] Stage-2 Execution Knowledge 后必须进入 Concrete Action Phrase Construction；
+- [x] Stage-2 Pattern Hit Evidence Gate 已接入 Router；
+- [x] `action-camera-handoff-playbook.md` 已进入 Combat Mandatory Path；
+- [x] Model Execution Realizability / Feet-fixed / Instruction Saturation Gate 已进入 Action–Camera bridge。
 
 ### 3.2 Interactive Runtime — V2-47 / V2-48
 
@@ -121,13 +175,17 @@ Stage-2 Pattern Non-realization
 - [x] Ending Coverage Protection 已接入；
 - [x] `Abstract Action Block` 已进入 Final Preflight。
 
-### 3.4 Camera Runtime — V2-46
+### 3.4 Camera Runtime — V2-46 + Action–Camera Handoff
 
 - [x] Camera Complexity 与 Camera Mobility 分离；
 - [x] Action Continuity 与 Shot Continuity 分离；
 - [x] Camera Coverage 可使用 Master / Medium / Close-up / Insert / Reaction / Impact / Re-establish；
 - [x] Cut 后必须继承 Position / Direction / Contact / Momentum / Axis / Range；
-- [x] Final Preflight 可拦截 Camera Coverage Lock。
+- [x] Final Preflight 可拦截 Camera Coverage Lock；
+- [x] Action-triggered Cut / Reframe 已接入；
+- [x] Live-motion Cut / Motion Energy Carry-over 已接入；
+- [x] Camera Preference 不得机械序列化成 `Medium → Close → Medium`；
+- [x] `Camera Strategy Overconstraint` 已进入 Action–Camera Preflight。
 
 ### 3.5 Prompt Assembly / Template
 
@@ -139,7 +197,9 @@ Stage-2 Pattern Non-realization
 - [x] Ending 文本过长时优先压缩 Ending；
 - [x] Camera Mobility 与 Editorial Coverage 分开；
 - [x] 不设置镜头数量 / 特写数量配额；
-- [x] Negative Constraints 少而有针对性。
+- [x] Negative Constraints 少而有针对性；
+- [x] Action–Camera Handoff Preservation 已接入 Assembly；
+- [x] Motion / Energy Carry-over 不得压回泛化“随后继续攻击”。
 
 ### 3.6 Concrete Choreography Knowledge — CK-13～CK-19（CK-1 Static PASS）
 
@@ -153,9 +213,9 @@ Stage-2 Pattern Non-realization
 - [x] Lightweight Action Phrase Budget 接入：关键转折 High、普通 Exchange Medium、连接 Low；
 - [x] 连续两个 High Granularity 后，普通 Exchange 应优先压缩，不继续堆第三个同等长度大段；
 - [x] Final Preflight 能识别 `Static Standing Combat / Upper-body Technique Dominance`；
-- [x] CK-2 未通过三个核心 Gate 时，禁止进入大规模 Knowledge Expansion。
+- [x] CK-2 未通过核心 Gate 时，禁止进入大规模 Knowledge Expansion。
 
-Static Read 已确认运行闭环：
+CK-1 Static Read 曾确认运行闭环：
 
 ```text
 Fighting Direction
@@ -166,6 +226,8 @@ Fighting Direction
 → Prompt Assembly Preservation
 → Static Standing / Upper-body Dominance / Richness Preflight
 ```
+
+但真实 G01 证明当时 **Pattern Hit 并未在实际运行中发生**，因此后续已经增加 `Stage-2 Pattern Hit Evidence Gate`，不能再用旧 Static PASS 替代真实 Runtime Evidence。
 
 ---
 
@@ -179,6 +241,8 @@ Fixed Input
 ```
 
 > **Benchmark 锁质量，不锁固定动作答案，也不锁固定镜头答案。**
+
+> **同一 Golden Scenario 的新版真实成片不得明显劣于已有较好基线；否则即使 Prompt-level / Static PASS，也判 Generated Video Regression。**
 
 ---
 
@@ -229,20 +293,26 @@ Final Prompt 必须满足：
 - 不默认使用多个 1–3 秒 Hard Time Blocks；
 - Active Exchange 主要是一条 Continuous Action Spine；
 - 较长动作窗口包含连续因果动作流；
-- 动作链存在 Motion Handoff；
+- 动作链存在 Motion Handoff / Energy Carry-over；
 - 关键 Active Exchange 不是抽象“连续攻防”，而是具体可执行动作链；
 - 关键 Phrase 能看出具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果与下一动作入口；
 - 删除“高速 / 连续 / 专业 / 高密度 / 反制 / 缠斗”等抽象词后，仍能理解主要动作因果；
 - Fighting Direction 必须真正改变主要动作内容，而不是只在开头写一个风格标签；
 - Movement 必须主动创造 Level / Route / Angle / Axis / Range / Position / Support / Balance 中至少一种有意义变化；
 - Whole-body / Footwork / Hip / Torso / Position / Range / Axis 合理外显；
+- Whole-body / Movement-driven Fighting Direction 的关键 Phrase 有清楚 Motor Driver；
+- 关键 Phrase 通过 Feet-fixed Test：删掉 Movement 后不能仍几乎原地完成同一套主攻防；
 - Character Identity 不由人口属性快捷映射；
 - Counter / Re-counter 在对手动作尚未完全结束时通过 Contact / Footwork / Axis / Range / Recovery Window 抢 Initiative；
 - Granularity 分布有层级：重大 Reversal / Signature 可 High，普通 Exchange 应适度压缩；
+- 不能出现 Effective High Granularity Everywhere；
 - 不能因为具体化而把 15 秒重新压缩成仅 2–3 个大型 Exchange；
+- 单一短窗口不能同时塞入过多独立肢体 / Contact / State / Camera / Negative，避免 Instruction Saturation；
 - Camera 跟随真实 fight-space；
+- 用户 Camera Intent 是观看偏好，不得固化成机械 Shot Pattern；
 - 动作连续不等于 Camera one-take；
-- Cut 后 Position / Direction / Contact / Momentum / Axis / Range 连续；
+- Cut / Reframe 由 Action State Change 触发；
+- Cut 后 Position / Direction / Contact / Momentum / Axis / Range 连续，且尽量保留 Active Motion；
 - Ending 只做短收束，不提前吞掉 Active Exchange。
 
 ### Prompt-level Failure Contract
@@ -257,9 +327,13 @@ Final Prompt 必须满足：
 - Initiative / Advantage 只有 Meta 说明，没有身体、Contact、Footwork、Axis、Range 后果；
 - 连续多个关键 Phrase 主要由前臂、肩线、抓腕、顶肩等上肢 Contact 主导；
 - Prompt 虽写“转髋 / 脚步 / 降低重心”，但这些没有改变 Level / Route / Axis / Range / Position；
+- 删除 Footwork / Support / Route 后主要动作骨架几乎不变；
+- 连续多个 Phrase 实际都要求多个独立肢体 + Contact + State，形成 Effective High Granularity Everywhere；
+- 局部动作、状态、Camera、Audio、Negative 同时过载，形成 Instruction Saturation；
 - 连续多个 High Granularity 大段导致普通 Exchange 数量明显下降；
 - A 做完一段才轮到 B；
 - Camera 因“稳定”几乎不移动；
+- Camera Intent 被机械序列化成 `Medium → Close → Medium → Close`；
 - 全程几乎只有中全景 / 中景；
 - 特写 / Insert 后人物空间关系无故重置；
 - Camera / Audio 比主要身体动作写得更具体；
@@ -273,7 +347,8 @@ Final Prompt 必须满足：
 - 多个连续且可读的 Action Phrase；
 - Fighting Direction Realization；
 - Concrete Choreography Realization；
-- Temporal Packing / Motion Handoff；
+- Model Execution Realizability；
+- Temporal Packing / Motion Handoff / Energy Carry-over；
 - Whole-body / Position / Range / Angle / Axis；
 - Movement 真实改变空间 / 高低位 / 重心关系；
 - Upper-body Dominance 明显降低；
@@ -285,9 +360,11 @@ Final Prompt 必须满足：
 - Intensity Variation；
 - Camera Mobility；
 - Shot Scale / Editorial Coverage；
+- Action-triggered Camera Handoff；
 - Action Continuity Across Cuts；
 - Signature Moment；
-- Ending 短收束。
+- Ending 短收束；
+- 与上一较好版本相比，核心质量维度不得明显回退。
 
 ---
 
@@ -361,6 +438,15 @@ Movement 是否作为独立 Choreography Source 创造 Level / Route / Axis / Ra
 ### M18｜Upper-body Dominance / Static Standing Combat
 关键交换是否仍长期被前臂 / 肩线 / 抓腕等上肢结构主导；人物是否仍主要在原地完成战斗。
 
+### M19｜Model Execution Realizability
+Prompt 的具体信息是否被成片稳定执行，而不是因为 Instruction Saturation 退化成动作碎片、上肢优先或 Camera 保守化。
+
+### M20｜Prompt–Video Execution Divergence
+Prompt-level 指标提高时，Generated-video 的 Continuity / Whole-body / Camera Mobility 是否反而下降。
+
+### M21｜Action-triggered Camera Handoff
+Camera Change 是否由 Motion / Contact / Consequence / Initiative / Level / Support / Fight-space 变化触发，并继续同一 Active Motion。
+
 ---
 
 ## 8. Prompt Intent → Generated Result Gap
@@ -375,19 +461,37 @@ Planned Coverage: High
 Observed Coverage: Low / Medium
 
 Planned Granularity: mixed High / Medium / Low
-Observed Granularity: three oversized detailed chains, few exchanges
+Observed Granularity: effective high-detail micro-choreography, fragmented execution
 
 Planned Movement: route + level + axis changes
 Observed Movement: mostly stationary, footwork only decorative
 
 Planned Flow: continuous counter / re-counter
-Observed Flow: one action every 1–2 seconds with reset
+Observed Flow: discontinuous / fragmented actions
 
 Planned Initiative: stolen during opponent motion
-Observed Initiative: turn-taking attacks
+Observed Initiative: turn-taking / reset-prone attacks
 
 Planned Camera: mobile + varied coverage
-Observed Camera: medium-wide locked / near-static
+Observed Camera: conservative medium / inflexible coverage
+
+Planned Whole-body Driver: movement creates attack entry
+Observed Driver: forearm / shoulder / arm-control dominant
+```
+
+### 2026-08-15 G01 Regression Record Summary
+
+```text
+Prompt Version: pre Action–Camera / Pattern Evidence repair
+Fighting Direction: 中国武术电影化近身
+Camera Intent: 中景跟随、关键接触短暂切近
+Stage-2 Pattern Read: minimum-validation-set.md NOT READ
+Prompt-level: more concrete than prior version
+Generated-video: substantially worse than prior version
+Observed Action: discontinuous
+Observed Camera: inflexible
+Observed Kinetic Scope: upper-body dominant
+Pass / Partial / Fail: FAIL
 ```
 
 ---
@@ -400,6 +504,7 @@ Date:
 Golden Scenario ID:
 Skill / Commit:
 Prompt Version:
+Previous Baseline Version:
 Model / Version:
 Generation Parameters:
 Seed (if supported):
@@ -410,13 +515,19 @@ Interactive Questions / Answers:
 Fighting Direction Choice:
 Stage-2 Pattern Read / Hit Evidence:
 Granularity Distribution Evidence:
+Model Execution Realizability Evidence:
+Feet-fixed Test:
 Movement Contribution Evidence:
+Action–Camera Handoff Evidence:
 Observed Exchange Richness:
 Upper-body Dominance / Static Standing Combat:
+Camera Mobility / Strategy Overconstraint:
+Instruction Saturation:
 Planned Quality Contract:
 Observed Result:
 Metric Notes:
 Prompt Intent → Generated Result Gap:
+Comparison vs Previous Baseline:
 Failure Signature:
 Pass / Partial / Fail:
 Next Adjustment:
@@ -426,7 +537,7 @@ Next Adjustment:
 
 ## 10. Concrete Choreography Knowledge Two-Stage Gate
 
-### Phase CK-1｜Runtime + Minimum Pattern Validation — ✅ Static PASS
+### Phase CK-1｜Runtime + Minimum Pattern Validation — ✅ Static PASS（历史）
 
 已实施：
 
@@ -439,47 +550,81 @@ Fighting Direction Interactive
 + Prompt Assembly Granularity / Fighting Direction Preservation
 ```
 
-Static Read 已确认：
+历史 Static Read 确认：
 
 - Fighting Direction 可被正确询问 / 继承；
 - 候选答案数量与质量规则已接入；
-- Stage-2 可命中最小 Pattern；
+- Stage-2 规则上可命中最小 Pattern；
 - Pattern 之后强制进入 Concrete Action Phrase；
 - Movement 缺席会触发 `Static Standing Combat Risk`；
 - High / Medium / Low Granularity 已贯穿 Choreography → Assembly；
 - Knowledge Expansion 仍被 Gate 锁定。
 
-### Phase CK-2｜固定 G01 Prompt Regression — ⏳ 下一步
+但实际 G01 Read List 证明：**Stage-2 在真实运行中未命中 minimum-validation-set.md。**
 
-使用同一 G01 输入重新跑 Interactive → Final Prompt，三个核心 Gate 必须同时通过：
+因此已新增 `Stage-2 Pattern Hit Evidence Gate`，后续必须以真实 Read / Hit 为准。
+
+### Phase CK-2｜固定 G01 Prompt + Generated-video Regression — ❌ FAIL
+
+本轮已经真实执行 Interactive → Final Prompt → Generated Video。
+
+失败：
 
 ```text
 Gate A｜Fighting Direction Realization
-→ 用户选择真实改变动作内容
+→ PARTIAL：Prompt 有武术电影化语言，但成片仍高度上肢化
 
 Gate B｜Choreography Richness Preservation
-→ 颗粒度变具体后，动作链 / Exchange 数量不得再次明显下降
+→ FAIL：Prompt 具体化没有转成更好的连续成片，反而出现动作碎片化
 
 Gate C｜Upper-body Dominance Improvement
-→ Movement 真正参与编排，Static Standing Combat / Upper-body Technique Dominance 明显改善
+→ FAIL：真实成片几乎全是上肢动作
+
+Gate D｜Stage-2 Pattern Hit Evidence
+→ FAIL：minimum-validation-set.md 未读取
+
+Gate E｜Camera Mobility / Action–Camera
+→ FAIL：真实镜头明显不灵活
+
+Gate F｜Model Execution Realizability
+→ FAIL：Prompt-level specificity 提高但 Generated-video 明显退化
 ```
 
-**只有 A + B + C 同时 PASS，才允许进入更大的 Knowledge Expansion。**
+因此 Knowledge Expansion Gate 继续关闭。
 
-任一 Gate FAIL：
+修复优先级：
 
-1. 先检查 Interactive / Stage-2 Routing 是否正确；
-2. 再检查 Minimum Pattern 是否被真正使用；
-3. 再检查 Prompt Assembly / Granularity 序列化；
-4. 只有上述正确仍失败，才进入 Knowledge Coverage Audit。
+1. Stage-2 Pattern Hit Evidence；
+2. Motor Driver / Feet-fixed / Upper-body Semantic Dominance；
+3. High / Medium / Low 的真实执行层级；
+4. Instruction Saturation；
+5. Motion / Energy Carry-over；
+6. Action-triggered Camera Handoff；
+7. Camera Strategy Overconstraint；
+8. 只有上述正确仍失败，才进入 Knowledge Coverage Audit。
 
 禁止直接用“大量新增武术知识”绕过 Gate。
+
+### Phase CK-2R｜修复后同 G01 Rerun — ⏳ NEXT
+
+继续使用完全相同 G01 输入，不换案例。
+
+必须重新验证：
+
+```text
+Pattern Hit
++ Prompt-level Execution Realizability
++ Whole-body Motor Driver
++ Action Continuity
++ Camera Mobility / Handoff
++ Generated-video Baseline Comparison
+```
 
 ---
 
 ## 11. Generated Video 验收口径
 
-Prompt-level Gate PASS 后才重新生成 G01。
+Prompt-level Gate PASS 后重新生成 G01。
 
 至少需要看到：
 
@@ -488,23 +633,29 @@ Prompt-level Gate PASS 后才重新生成 G01。
 - Fighting Direction 在画面中可辨；
 - 具体 Action Phrase 真正在画面中被执行；
 - Movement 真实改变路线、角度、高低位、轴线或支撑关系；
-- 动作不再每 1–2 秒归零；
+- 动作不再每 1–2 秒归零或碎片化；
 - Initiative 不再明显回合制；
-- Camera 既能稳定跟随空间，也有电影化局部 Coverage；
+- Camera 既能稳定跟随空间，也有电影化动态 Coverage；
+- Camera Preference 不再退化为长期稳定中景；
+- Cut / Reframe 与 Action State Change 有明显耦合；
 - Cut 不破坏 Action Continuity；
 - 优势 / 主动权变化可见；
 - Contact 与 Intensity 不因动作增加而崩坏；
-- Ending 不吞掉有效动作时间。
+- Ending 不吞掉有效动作时间；
+- **相比既有较好 G01 基线，不得出现明显质量回退。**
 
 如果仍失败，优先回溯：
 
 1. Stage-2 Routing / Pattern Realization；
-2. Concrete Choreography Knowledge Coverage；
-3. Model Temporal / Motion Capability；
-4. Model-specific Serialization；
-5. Camera / Action simultaneous capacity。
+2. Upper-body Semantic Dominance / Feet-fixed；
+3. Effective Granularity / Instruction Saturation；
+4. Motion / Energy Carry-over；
+5. Action–Camera Handoff / Camera Strategy Overconstraint；
+6. Model Temporal / Motion Capability；
+7. Model-specific Serialization；
+8. 最后才检查 Concrete Choreography Knowledge Coverage。
 
-不回到“继续增加抽象机制”的路径。
+不回到“继续增加抽象机制 / 更多动作术语”的路径。
 
 ---
 
@@ -517,11 +668,15 @@ Prompt-level Gate PASS 后才重新生成 G01。
 - V2-48 Decision Purity + Conditional Camera Intent：✅ Runtime 已实施；
 - V2-49 Executable Action Granularity：✅ Runtime 已实施；
 - Concrete Choreography Knowledge Spec CK-01～CK-19：✅ 已记录；
-- Fighting Direction Interactive：✅ 已实施并回读；
-- Stage-2 Gap-driven Pattern Routing：✅ 已实施并回读；
+- Fighting Direction Interactive：✅ 已实施并真实命中；
+- Stage-2 Gap-driven Pattern Routing：⚠️ 规则已实施，但真实 G01 曾未命中；已增加 Pattern Hit Evidence Gate；
 - Minimum Pattern Validation Set：✅ 已建立；
 - Lightweight Action Phrase Budget：✅ 已贯穿 Choreography / Router / Assembly；
 - Static Standing Combat / Upper-body Dominance Gate：✅ 已实施；
-- CK-1 Runtime / Minimum Pattern Validation：✅ **Static PASS**；
-- CK-2 Fixed G01 Prompt Regression：⏳ **下一步**；
-- G01 Actual Generated Video：⏳ 未执行，不得宣称质量 PASS。
+- Action–Camera Handoff Spec / Runtime：✅ 已新增；
+- Model Execution Realizability / Feet-fixed / Instruction Saturation Gate：✅ 已新增；
+- CK-1 Runtime / Minimum Pattern Validation：✅ **历史 Static PASS，但不足以代表真实运行 Hit**；
+- CK-2 Fixed G01 Prompt + Generated-video Regression：❌ **FAIL**；
+- 本次 G01 Actual Generated Video：❌ **相较上一版明显退化**；
+- CK-2R 修复后同 G01 Rerun：⏳ **NEXT**；
+- Knowledge Expansion Gate：🔒 **继续关闭**。
