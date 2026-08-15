@@ -12,18 +12,21 @@
 - `camera-direction/control.md` 的通用摄影术语与镜头规则；
 - `prompt-assembly/control.md` 的最终序列化。
 
-它只负责六件事：
+它只负责七件事：
 
 1. Stage-2 Execution Knowledge 是否真的命中；
 2. Concrete Choreography 是否具有 Model Execution Realizability；
 3. 动作之间是否存在 Motion / Energy Carry-over；
-4. Camera 是否由正在发生的动作状态变化触发；
-5. 关键动作瞬间是否存在值得改变观看方式的 Viewer Experience Opportunity；
-6. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
+4. Base Viewing Priority 与 Camera Hard Constraint 是否被正确区分；
+5. Camera 是否由正在发生的动作状态变化触发；
+6. 关键动作瞬间是否存在值得改变观看方式的 Viewer Experience Opportunity；
+7. Cut / Reframe 后是否继承仍然活着的运动，而不只是位置连续。
 
 核心原则：
 
 > **Action 决定 Camera 为什么变化；Camera 不能把连续动作切成重新开始的动作块。**
+
+> **Base Viewing Priority 决定默认怎么看；Camera Hard Constraint 决定什么绝对不能违反。两者正交。**
 
 > **Camera Accent 不是逐动作配镜头；普通动作继续当前 Shot，只有高价值动作信息或观看体验变化才触发 Camera 介入。**
 
@@ -256,6 +259,8 @@ Motion / Energy Carry-over 是 Transition 质量检查，不增加新的 Pattern
 
 ```text
 Current Action State
+→ Camera Hard Constraint Check
+→ Base Viewing Priority
 → Viewer Experience Opportunity（可选）
 → Camera Task
 → Shot Entry Trigger
@@ -265,6 +270,10 @@ Current Action State
 ```
 
 这是导演规划结构，不默认作为字段表输出。
+
+`Camera Hard Constraint Check` 先判断当前摄影手段是否被 One-take / Fixed Camera / No Cut 等明确边界限制；只有通过 Hard Constraint 的实现方式才进入后续 Camera Task。
+
+`Base Viewing Priority` 不是固定 Shot Template，只决定在没有更强 Action Trigger 时默认优先看清 / 感受什么。
 
 `Viewer Experience Opportunity` 不是每个 Action 都必须填写；它只用于判断某个动作瞬间是否值得从“看清动作”进一步升级为“让观众感受到威胁 / 冲击 / 失衡 / 距离压缩 / 主动权翻转”。
 
@@ -291,13 +300,54 @@ Current Action State
 
 ---
 
+## 4.5 Camera Decision Hierarchy
+
+Camera 运行时按以下优先级处理：
+
+```text
+用户明确 Camera Hard Constraint
+> Base Viewing Priority
+> Action-triggered Camera Handoff
+> Perceptual Impact Accent
+> 装饰性 Camera Variation
+```
+
+其中：
+
+- `Camera Hard Constraint` 只限制摄影手段，不改变 Combat 动作目标；
+- `Base Viewing Priority` 是默认观看倾向，不是固定景别 / Cut Pattern；
+- Action-triggered Handoff 与 Perceptual Accent 必须在 Hard Constraint 允许范围内寻找实现；
+- 如果一个 Camera Accent 会违反 Hard Constraint，必须换实现方式，而不是忽略 Hard Constraint。
+
+例如：
+
+```text
+Base Viewing Priority = 电影冲击体验优先
+Hard Constraint = One-take
+```
+
+可以使用：Near-lens、快速推近 / 拉开、绕侧、Camera Height Change、关系角度变化；不能使用 Editorial Cut。
+
+```text
+Base Viewing Priority = 完整动作可读优先
+Hard Constraint = Fixed Camera
+```
+
+必须保持固定机位，但仍可通过动作进入 / 离开构图、前景遮挡、景深、主体距离变化和构图内关系来强化动作；不能偷偷跟拍。
+
+---
+
 ## 5. Action-triggered Camera Change
 
 Action Combat 的 Camera Change 优先由动作信息变化触发，而不是为了“更电影”随机切换。
 
+所有 Trigger 先经过 Camera Hard Constraint Check：如果当前 Hard Constraint 禁止 Cut / 禁止 Camera 位移，则将触发转换为允许的 Reframe / 机内关系变化 / 动作调度方式，而不是直接丢掉动作信息。
+
 ### 5.1 Cut on Motion
 
 动作已经开始，在 Motion 尚未结束时 Cut；下一镜继续同一个动作。
+
+仅在 Camera Hard Constraint 允许 Cut 时使用。
 
 正确：
 
@@ -322,11 +372,11 @@ Camera 应尽量看到 Contact 的**后果**，而不是只重复“打到了哪
 
 ### 5.3 Direction / Axis Change
 
-人物发生明显 Route / Direction / Body Axis 改变时，可改变机位或跟拍方向，让新关系变得可读。
+人物发生明显 Route / Direction / Body Axis 改变时，可改变机位或跟拍方向，让新关系变得可读；若 Hard Constraint 禁止位移，则改用构图内动作路线 / 允许的 Reframe 表达。
 
 ### 5.4 Initiative Reversal
 
-主动权翻转时，可改变 Relationship Angle / Distance，使新的控制关系视觉化。
+主动权翻转时，可改变 Relationship Angle / Distance，使新的控制关系视觉化；若 Hard Constraint 限制 Camera Movement，则优先让角色关系在当前 Camera Boundary 内完成视觉翻转。
 
 ### 5.5 Range / Level / Support Change
 
@@ -347,7 +397,8 @@ Camera 应尽量看到 Contact 的**后果**，而不是只重复“打到了哪
 
 - Action Direction 连续；
 - Momentum 连续；
-- Cut 后人物不能无原因换侧 / 换位。
+- Cut 后人物不能无原因换侧 / 换位；
+- Camera Hard Constraint 允许 Cut；若 No-cut / One-take，则遮挡只作为连续镜头中的视觉过渡，不形成 Editorial Cut。
 
 ### 5.7 Environment Boundary
 
@@ -364,10 +415,11 @@ Camera 不只负责“把动作拍清楚”。少数关键动作瞬间，如果�
 ```text
 Action State Change
 + Viewer Experience Opportunity
-→ 是否值得 Camera Accent？
++ Camera Hard Constraint Check
+→ 是否值得且允许 Camera Accent？
 ```
 
-只有值得时才介入；普通连接动作默认继续当前 Shot / 当前 Camera Path。
+只有值得且允许时才介入；普通连接动作默认继续当前 Shot / 当前 Camera Path。
 
 可用体验类型包括但不限于：
 
@@ -390,7 +442,8 @@ Action State Change
 
 - POV / Near-lens 必须短促；
 - 不能把整个 Combat 变成固定第一视角；
-- Cut / Reframe 后继续原来的攻击方向和 Momentum。
+- Cut / Reframe 后继续原来的攻击方向和 Momentum；
+- 若 Hard Constraint 禁止 Cut，则以连续 Camera Movement / Near-lens pass-by 完成同样体验。
 
 #### Impact Consequence Close-up
 
@@ -408,9 +461,11 @@ Action State Change
 
 如果局部镜头只看到“打中哪里”，却丢失受力、轴线、Reaction 与下一动作入口，则价值不足。
 
+若 Hard Constraint 不允许切近 / Camera 位移，不强行生成 Close-up；改为让 Impact Consequence 在当前允许观察边界中变得更可读。
+
 #### Near-miss / Whip-by
 
-攻击几乎擦过人物或镜头时，可利用快速掠过前景 / 镜头边缘形成威胁感和自然 Cut Bridge，但动作方向必须连续。
+攻击几乎擦过人物或镜头时，可利用快速掠过前景 / 镜头边缘形成威胁感和自然 Cut Bridge，但动作方向必须连续；No-cut 时仍可作为镜内 Whip-by。
 
 #### Body-mechanics Detail
 
@@ -418,11 +473,11 @@ Action State Change
 
 #### Range-compression Shot
 
-双方从开放距离突然压进贴身、抱摔或身体压迫时，可以通过 Camera 靠近、改变关系角度或短促局部强化距离被压缩的体感。
+双方从开放距离突然压进贴身、抱摔或身体压迫时，可以通过 Camera 靠近、改变关系角度或短促局部强化距离被压缩的体感；Fixed Camera 时改由角色向 Camera / 构图边界的距离变化完成。
 
 #### Initiative / Reaction Experience
 
-主动权翻转或突然反制时，可用 Reaction Shot、Relationship Angle Change 或短暂距离变化，让观众直接感到“控制权已经换人”，而不是额外文字解释。
+主动权翻转或突然反制时，可用 Reaction Shot、Relationship Angle Change 或短暂距离变化，让观众直接感到“控制权已经换人”，而不是额外文字解释；Hard Constraint 不允许 Cut 时，用连续关系变化实现。
 
 ### Perceptual Trigger 约束
 
@@ -431,7 +486,8 @@ Action State Change
 - 同一短窗口连续触发多个体验型镜头时，应检查 Camera Complexity 与 Instruction Saturation；
 - 如果当前 Shot 已经能同时看清动作并产生足够冲击，就不为变化而变化；
 - Perceptual Accent 必须依附真实 Action State，不能先决定“这里要一个酷炫 POV”再反向编动作；
-- 体验型镜头之后不默认立刻回中景，只有空间关系真的可能丢失时才 Re-establish。
+- 体验型镜头之后不默认立刻回中景，只有空间关系真的可能丢失时才 Re-establish；
+- 任何 Accent 都必须服从 Camera Hard Constraint。
 
 触发滥用时判：
 
@@ -440,6 +496,8 @@ Action State Change
 ---
 
 ## 6. Live-motion Cut Contract
+
+本节只在 Camera Hard Constraint 允许 Cut 时生效。
 
 优先：
 
@@ -498,7 +556,7 @@ Medium
 → Close-up
 ```
 
-Shot Scale / Camera Position 应由当前信息需要决定。
+Shot Scale / Camera Position 应由当前信息需要和 Camera Hard Constraint 共同决定。
 
 ### Camera Accent Density
 
@@ -534,9 +592,9 @@ Shot Scale / Camera Position 应由当前信息需要决定。
 
 ### Camera Strategy Interpretation
 
-用户选择“中景跟随、关键接触短暂切近”时，Runtime 应把它理解为**观看偏好**，不能序列化成固定 Shot Pattern。
+Base Viewing Priority 只能解释为**观看偏好**，不能序列化成固定 Shot Pattern。
 
-仍允许在真正改变动作理解或观看体验时：
+例如选择“完整动作可读优先”时，仍允许在真正改变动作理解或观看体验、且 Hard Constraint 允许时：
 
 - Route / Direction 变化 → 侧跟 / 改关系角度；
 - Level Drop → Camera 随身体降位；
@@ -547,9 +605,13 @@ Shot Scale / Camera Position 应由当前信息需要决定。
 - Impact Consequence → 受击侧近景 / Reaction；
 - Range Compression → Camera 靠近或改关系角度。
 
-如果 Camera Preference 被执行成长期稳定中景、只有 Contact 才短暂切近，判：
+如果 Base Viewing Priority 被执行成长期稳定中景、只有 Contact 才短暂切近，判：
 
 `Camera Strategy Overconstraint / Camera Mobility Underfill`
+
+如果 Camera 实现违反用户明确 Hard Constraint，判：
+
+`Camera Hard Constraint Violation`
 
 ---
 
@@ -559,18 +621,18 @@ Final Prompt 的关键 Camera Handoff / Perceptual Accent 应锚在具体 Action
 
 ### 8.1 Global Camera Baseline 要短
 
-Camera 独立段可以保留，但只承担全局观看基线，例如：
+Camera 独立段可以保留，但只承担全局观看基线和必要 Hard Constraint，例如：
 
-- 动作可读；
-- 空间关系清楚；
-- Camera 随真实 Route / Range / Level 改变；
+- Base Viewing Priority；
+- One-take / Fixed / No Cut 等真正硬约束；
+- Camera 随真实 Route / Range / Level 改变（在 Hard Constraint 允许范围内）；
 - 不无意义碎切。
 
 禁止用一大段总体 Camera 说明替代真正的 Action-triggered Camera Moment。
 
 ### 8.2 Key Camera Moment Inline
 
-普通连接动作不需要嵌镜头；真正高价值的 Camera Accent 直接写进对应 Action Phrase。
+普通连接动作不需要嵌镜头；真正高价值、且符合 Hard Constraint 的 Camera Accent 直接写进对应 Action Phrase。
 
 避免：
 
@@ -586,21 +648,50 @@ Camera 独立段可以保留，但只承担全局观看基线，例如：
 
 > 她趁他回收不及一拳击中侧脸，接触瞬间切到受击侧近景，看到他的头部和肩轴被冲击带偏；下一镜不重演出拳，而是直接从这股偏转继续她的外侧切入。
 
+如果当前 Hard Constraint 为 No-cut / One-take，上述示例中的 Cut 必须改写为连续摄影内的 Reframe / Near-lens / Height / Distance / Relationship Change，不能原样保留 Cut。
+
 不要求所有镜头都这样展开；只外显真正改变动作理解或观看体验的 Handoff / Accent。
 
 ---
 
-## 9. One-take 例外
+## 9. Camera Hard Constraint
+
+Camera Hard Constraint 是**不可违反的摄影实现边界**，不是观看风格。
+
+### 9.1 One-take / Long-take
 
 如果用户明确要求 One-take / 一镜到底：
 
-- 不要求 CUT Trigger；
+- 禁止 Editorial Cut；
 - 仍要求 Camera Movement / Reframe 由 Action State Change 触发；
 - Perceptual Impact 可以通过 Near-lens、距离压缩、短促绕位、Camera Height / Relationship Angle 改变实现，不强制 Cut；
 - Movement 起点、路线、速度变化和停止点继续服从 `camera-direction/control.md`；
 - Fight-space 改变时 Camera 需要重新组织关系，而不是无摩擦漂浮跟随。
 
-Action–Camera Handoff 高于“是否剪辑”，它描述的是摄影怎样响应动作。
+### 9.2 No Cut
+
+如果用户明确要求 No Cut：
+
+- 禁止 Editorial Cut；
+- 如果 Camera 仍允许移动，则可使用连续 Tracking / Orbit / Push / Pull / Height Change / Reframe；
+- Action-triggered Camera Moment 必须转换为同一 Shot 内的连续观察变化。
+
+### 9.3 Fixed Camera
+
+如果用户明确要求 Fixed Camera：
+
+- Camera Position 不做空间位移；
+- 不偷偷通过 Tracking / Orbit / Dolly 破坏 Fixed；
+- 是否允许 Pan / Tilt / Zoom 取决于用户具体描述；未明确时采用最小风险、克制的机内 Reframe；
+- 动作路线、前景遮挡、角色距离、构图内 Level / Position 变化承担主要动态表达。
+
+### 9.4 Hard Constraint 冲突处理
+
+如果多个用户明确 Hard Constraint 互相冲突，例如“固定机位”同时要求“围绕人物高速环绕”，不能静默平均；应优先按用户当前最新明确要求处理，仍无法消解时才进入交互决策。
+
+Hard Constraint 不能反向削弱 Fighting Direction / Combat Coverage；Runtime 应在边界内重新设计 Camera，而不是把动作戏改简单。
+
+Action–Camera Handoff 高于“是否剪辑”，它描述的是摄影怎样响应动作；Hard Constraint 决定这种响应可以使用哪些手段。
 
 ---
 
@@ -646,6 +737,8 @@ Final Prompt 输出前检查：
 
 ### E. Live Motion Across Cut
 
+仅当 Hard Constraint 允许 Cut 时检查：
+
 - 至少关键 Cut 是否在 Motion alive 时发生？
 - Shot B 是否继续 Shot A 的动作 / Contact / Reaction / Pressure？
 
@@ -655,7 +748,7 @@ Final Prompt 输出前检查：
 
 - 是否机械 Medium → Close → Medium 循环？
 - Re-establish 是否只在真的需要空间恢复时使用？
-- 用户 Camera Preference 是否被错误固化成保守 Shot Pattern？
+- Base Viewing Priority 是否被错误固化成保守 Shot Pattern？
 
 失败：
 
@@ -675,6 +768,17 @@ Final Prompt 输出前检查：
 `Perceptual Impact Underuse`（存在明显高价值体验节点但全部被保守 Coverage 吞掉）  
 `Perceptual Accent Overuse / Camera Accent Overmapping`
 
+### H. Camera Hard Constraint
+
+- 用户是否明确 One-take / No Cut / Fixed Camera 等不可违反边界？
+- 当前 Cut / Camera Movement / Reframe 是否全部在这些边界内？
+- 是否为了实现 Base Viewing Priority / Perceptual Impact 偷偷违反 Hard Constraint？
+- Hard Constraint 是否只限制 Camera，而没有反向把 Combat 动作缩水？
+
+失败：
+
+`Camera Hard Constraint Violation`
+
 ---
 
 ## 11. Failure Rewrite Priority
@@ -693,6 +797,9 @@ Upper-body Semantic Dominance FAIL
 
 Kinetic Handoff FAIL
 → 重写 Transition / Phrase
+
+Camera Hard Constraint Violation
+→ 先移除违规摄影手段，在同一 Constraint 内重选 Camera Task 实现
 
 Action–Camera FAIL
 → 重新选择 Action Trigger + Inherited Motion State
@@ -716,6 +823,7 @@ Coverage Patterning / Camera Strategy Overconstraint FAIL
 - Fighting Direction / Coverage / Granularity：`choreography-playbook.md`；
 - Range / Advantage / Position：`core-playbook.md`；
 - 具体动作知识：当前专项 Playbook + Stage-2 leaf knowledge；
+- Camera Base Viewing Priority / Hard Constraint 的交互暴露：`assets/templates/mode-interactive-output-contract.md`；
 - Generated-video Execution Regression 设计真源：`docs/action-combat-video-generated-video-execution-regression-spec.md`；
 - 通用 Camera 术语与轴线：`references/controls/camera-direction/control.md`；
 - 最终序列化：`references/controls/prompt-assembly/control.md`。
