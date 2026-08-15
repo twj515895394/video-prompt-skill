@@ -34,7 +34,7 @@
 ```text
 1. 正向可见 Action Flow / Reaction / Contact / Consequence
 2. Position / Range / Environment 的可见变化
-3. Character Identity / Rhythm / Intensity / Signature 的可见表现
+3. Fighting Direction / Character Identity / Rhythm / Intensity / Signature 的可见表现
 4. Camera / Audio 支持
 5. 少量真正必要的 Continuity / Negative Constraints
 ```
@@ -109,7 +109,48 @@ Current Body / Range State
 
 Assembly 也不能走向另一极端：不要求逐拳逐脚编号、厘米级位移或关节角度。原则是：**关键因果动作具体，次要过渡压缩。**
 
-### 3.3 Continuous Action Spine
+### 3.3 Granularity Distribution Preservation
+
+如果 Choreography 已经把 Phrase 标定为 High / Medium / Low Granularity，Assembly 必须保留这种**信息展开深度差异**，不得重新把所有 Phrase 展开成同等长度的大段，也不得把 Medium / Low 压成不可执行摘要。
+
+```text
+High Granularity
+→ Major Reversal / Initiative Theft / Signature Moment
+→ 保留完整关键因果、Contact / Response、空间 / 轴线后果与 continuation entry
+
+Medium Granularity
+→ 普通 Exchange / Re-counter / Range Change
+→ 保留具体动作因果与关键状态变化，压缩次要身体细节
+
+Low Granularity
+→ 纯连接 / 非关键过渡
+→ 只写连续性所需的具体连接，不膨胀成新的大段
+```
+
+组装规则：
+
+- 连续两个 High 后，后续普通 Exchange 优先维持 Medium / Low，不把其重新扩写成第三个同等体量的 High；
+- High 不等于“越长越好”，只展开承担重大转折的信息；
+- Medium / Low 不能退化成“继续快速攻防 / 双方不断换位”；
+- 不根据字数、动作数、秒数做机械配额；
+- 压缩目标是给更多真实 Exchange 留执行空间，而不是追求更短文字本身。
+
+### 3.4 Fighting Direction Realization
+
+如果用户已经明确或 Interactive 已确认 `Fighting Direction / 怎么打`，Final Prompt 必须通过**可观察的动作语言**兑现，而不是只在标题或风格段写一个标签。
+
+至少应能从以下一项或多项看出区别：
+
+- Movement：侧切 / 绕位 / Level Change / Ground↔Air / 直线压迫等；
+- Technique：Strike / Kick / Grapple / Throw / Weapon 的实际选择；
+- Range / Level：主要距离与高低位变化；
+- Physical Scale：realistic / martial-grounded / wuxia cinematic；
+- Rhythm / Impact / Contact 气质；
+- Environment / Signature 的使用方式。
+
+如果不同 Fighting Direction 最终仍被组装成近似同一套“前臂偏转 → 肩线封堵 → 抓腕 / 顶肩”的骨架，应判定 Assembly / Pattern Realization 失败，而不是继续堆风格形容词。
+
+### 3.5 Continuous Action Spine
 
 高密度 Combat 默认使用 **Continuous Action Spine + Soft Time Anchors**。
 
@@ -145,7 +186,7 @@ First Contact（软时间锚点）
 
 即使使用 Hard Time Blocks，也必须写清跨块 Motion Handoff。
 
-### 3.4 Action Continuity ≠ Shot Continuity
+### 3.6 Action Continuity ≠ Shot Continuity
 
 > **Continuous Action Spine 约束战斗动作与状态，不约束摄影必须一镜到底。**
 
@@ -176,7 +217,7 @@ Position / Left-Right
 
 不要把“动作可读”组装成全程中全景 / 中景 + 轻微 tracking，也不要反向规定固定数量的特写。
 
-### 3.5 Temporal Packing + Motion Handoff
+### 3.7 Temporal Packing + Motion Handoff
 
 不要用“高速”代替动作密度。
 
@@ -193,7 +234,7 @@ Position / Left-Right
 
 压缩时必须保留至少一类 Motion Handoff：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position。
 
-### 3.6 Initiative Handoff Externalization
+### 3.8 Initiative Handoff Externalization
 
 不要只写：
 
@@ -219,7 +260,7 @@ A 完成一组攻击
 → B 开始反击
 ```
 
-### 3.7 Kinetic Scope Externalization
+### 3.9 Kinetic Scope Externalization
 
 如果内部规划存在明显 Whole-body / Position / Range / Axis 变化，Final Prompt 必须把它们写出来。
 
@@ -234,7 +275,7 @@ A 完成一组攻击
 
 不要求固定动作配额；只要求最终动作语言真实兑现当前 Kinetic Scope。
 
-### 3.8 Visible Advantage
+### 3.10 Visible Advantage
 
 不要写“男方占优 / 女方逆转”作为主要表达。
 
@@ -248,7 +289,7 @@ A 完成一组攻击
 
 角色抢主动方式应符合 Character Identity，不把双方都写成同一种 Counter 模板。
 
-### 3.9 Combat Intensity
+### 3.11 Combat Intensity
 
 Continuous 不等于全程同速。
 
@@ -256,7 +297,7 @@ Continuous 不等于全程同速。
 
 局部降速可以仍然很强，只要 Combat Pressure 没有消失。
 
-### 3.10 Camera Mobility + Editorial Coverage
+### 3.12 Camera Mobility + Editorial Coverage
 
 > **Stable ≠ Static；Mobile ≠ One-take。**
 
@@ -280,7 +321,7 @@ Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Rout
 
 不设置 Shot 数量或景别配额。
 
-### 3.11 Ending Coverage Protection
+### 3.13 Ending Coverage Protection
 
 Ending 的结果可以来自用户已确认的导演意图，但 Assembly 必须保护 Active Exchange Budget。
 
@@ -330,6 +371,8 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - Motion / Initiative Handoff；
 - 关键 Footwork / Range / Position / Axis 变化；
 - Major Reversal / Signature 前后的因果；
+- Fighting Direction 在 Movement / Technique / Range / Physical Scale 上的真实差异；
+- High / Medium / Low Granularity 的信息层级差异；
 - 跨 Shot 的 Action Direction / Contact / Momentum 继承；
 - Ending 的真实收束状态。
 
@@ -361,6 +404,9 @@ Prompt Assembly 交付前至少检查：
 
 - Action Language 是否占主体；
 - High / Medium Coverage 是否真的被 Action Flow 写满；
+- Fighting Direction 是否在动作语言而非标签中兑现；
+- High / Medium / Low Granularity 是否保持不同信息展开深度；
+- 是否连续多个普通 Exchange 被重新展开成同等长度的大段，导致 Choreography Richness 被吃掉；
 - **关键 Active Exchange 是否仍主要由“连续格挡 / 快速反制 / 贴身缠斗 / 不断换位”等摘要承担；**
 - **删除抽象动作形容词后，是否仍能清楚理解关键身体动作因果；**
 - 是否出现 3–4 秒只有一个宏动作的 Temporal Underpacking；
@@ -368,6 +414,7 @@ Prompt Assembly 交付前至少检查：
 - Counter / Re-counter 是否在对方动作尚未完成时具体抢走 Initiative；
 - 是否把高密度战斗切成多个硬时间盒；
 - Kinetic Scope 是否在最终文字中可见；
+- High / Expert Combat 是否仍主要由上肢 Contact 主导，而 Movement 没有创造 Level / Route / Axis / Range / Position / Support / Balance 变化；
 - Character Identity / Advantage / Initiative 是否通过动作外显；
 - Ending 是否过早进入静止 Pose / 对视并吞掉 Active Exchange；
 - Camera 是否 Stable 但不是 Static；
@@ -380,7 +427,9 @@ Prompt Assembly 交付前至少检查：
 
 触发 `Abstract Action Block / Non-executable Choreography Summary` 时，优先重写具体 Action Phrase，而不是追加“高速、连续、专业、电影化”等形容词。
 
-不通过时先内部重写 Action Spine / Concrete Phrase / Camera Coverage / 压缩结构，再交付。
+触发 `Static Standing Combat / Upper-body Technique Dominance` 时，优先回到 Movement Pattern / Concrete Phrase，改变真实空间与身体状态，而不是机械补一句“多用腿法”。
+
+不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Camera Coverage / 压缩结构，再交付。
 
 ---
 
@@ -435,11 +484,13 @@ Model Adapter 入口：
 - “动作连续”被误实现为“不能 Cut”；
 - 高密度 Combat 被锁成全程中全景 / 中景；
 - 用户要求连续高手战，但时间结构是多个独立动作槽；
-- Choreography 已经具体，但 Assembly 为了缩短 Prompt 又退回抽象动作块。
+- Choreography 已经具体，但 Assembly 为了缩短 Prompt 又退回抽象动作块；
+- Choreography 已分配 Granularity，但 Assembly 又把所有 Phrase 展开成同等体量；
+- Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异。
 
-Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、核心动作因果、战斗结果。
+Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果。
 
-模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 降低无必要 Camera Complexity → 保留高价值局部 Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
+模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 降低无必要 Camera Complexity → 保留高价值局部 Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
 
 ---
 
