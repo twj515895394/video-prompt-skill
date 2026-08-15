@@ -522,3 +522,7 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 核心原则：
 
 > **用户决定高价值动作方向；Runtime 负责把专业动作知识补完整。**
+
+> **Dynamic recommendation breadth, not a fixed questionnaire.**
+
+> **Modern identity does not imply MMA; Chinese identity does not imply one mandatory kung-fu answer.**
