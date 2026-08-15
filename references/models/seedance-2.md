@@ -53,9 +53,12 @@ Temporal / Prompt Following: Unverified
 在评级未验证前：
 
 - 保留用户 Combat Intent / Coverage / 观看目标；
+- `Unverified` 只表示不能承诺专项能力上限，不自动删除或泛化上游已经成立的高价值 Action–Camera Handoff；
+- 默认保持 Full-fidelity Action–Camera Realization；
 - 高密度 Combat 优先使用清楚的 Action Phrase 分段；
 - 同一时间窗口避免同时加入多个人物独立复杂动作 + 复杂 Camera + 多个环境事件；
-- 需要降载时先降低 Camera Complexity、拆 Phrase，再减少次要分支；
+- 只有存在 Verified Limitation 或真实 Generated-video Regression Evidence 时，才允许 Intent-preserving Degradation；
+- 需要降载时先降低 Camera 实现复杂度、拆 Phrase，再减少次要分支；高价值 Camera Moment 优先保留 Action Anchor、Viewer Intent 与 live-motion continuation；
 - 不把 High Coverage 自动改成极少交换；
 - 后续由 Golden Benchmark 按模型版本持续校准本 Contract。
 
@@ -124,18 +127,43 @@ Seedance 实践中使用 `@图片N`、`@视频N`、`@音频N` 指定素材。
 - Character Identity；
 - Contact Solidity；
 - Environment / Signature Moment；
-- State / Continuity Validation。
+- State / Continuity Validation；
+- 上游已经通过 Realization Gate 的高价值 Action–Camera Handoff。
 
 Seedance 输出时：
 
 - 把内部状态转译成可见动作，不输出状态表；
 - 用清楚分时段 / 分镜承载复杂 Phrase，但保持动作因果连续；
+- **分时段 / 分镜只是承载结构，不能把具体 Action Anchor 与对应 Camera Response 拆成互不关联的两个泛化段落；**
 - 多模态动作参考要明确只继承动作 / 节奏 / Camera 中指定维度；
 - Contact 后描述 Reaction / Position / Advantage 后果；
 - 高动作复杂度时优先 Camera Readability；
 - Negative 只保留当前明确高风险项。
 
-> **Model Adapter 只改变实现与表达，不改变 Combat Intent / Coverage。**
+> **Model Adapter 只改变实现与表达，不改变 Combat Intent / Coverage，也不重新决定上游已经确认的高价值 Camera Moment 是否值得存在。**
+
+### 6.1 Common Camera Handoff Preservation Contract
+
+Seedance 继承 `prompt-assembly/control.md` 的 Common Preservation Contract。
+
+允许：
+
+- 把同一 Handoff 改写成 Seedance 更容易理解的分时段 / 分镜自然语言；
+- 在 Hard Constraint 或可靠能力证据需要时，把 Cut 改成连续 Reframe / Push / Near-lens 等实现；
+- 合并低价值 Camera Accent。
+
+禁止无证据地：
+
+- 把具体动作触发改成“关键时刻 / 第一次接触”；
+- 把具体 Viewer Experience 改成“使用电影化近景增强冲击”；
+- 删除维持 Handoff 所需的 Momentum / Contact / Pressure / Recovery 等 live state；
+- 用独立 Camera 总结段替代已经存在的 inline Camera Moment。
+
+转换后发生上述退化，判：
+
+`Camera Handoff Serialization Loss`
+
+并只回 Prompt Assembly / Seedance Adapter 重写，不回 Choreography 重新设计动作。
 
 ---
 
@@ -240,7 +268,8 @@ Seedance 转换：
 - 延长视频时忽略原视频最后一帧的动作和镜头速度；
 - 视频编辑没有声明必须保留的内容；
 - Combat 因为时间轴分段而让每段重新起势 / 摆 Pose；
-- Combat 用大量 Negative 代替实际 Action Phrase。
+- Combat 用大量 Negative 代替实际 Action Phrase；
+- Combat 将上游已成立的 Action–Camera Handoff 压回泛化 Camera 摘要。
 
 ---
 
@@ -258,6 +287,6 @@ Seedance 转换：
 - `YouMind-OpenLab/awesome-seedance-2-prompts`。
   - 只用于分析高质量案例结构，不将社区长 Prompt 原样复制为规则。
 
-Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级。**
+Combat Capability 当前状态：**未完成 Golden Benchmark 校准，不给出伪精确等级；但 Unverified 不等于默认降级 Action–Camera Handoff。**
 
-规格更新时间：`2026-07-10`。
+规格更新时间：`2026-08-15`。
