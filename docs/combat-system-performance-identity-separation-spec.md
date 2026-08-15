@@ -198,12 +198,73 @@ Round 1 不再问“是否确认太极 / MMA”，而可以精炼为：
 
 这样既保留用户希望的两轮精确交互，又不会浪费已经明确的信息。
 
-## 8. 待确认设计分支
+## 8. 已确认：Combat Branch 与 Combat System 正交
+
+用户明确选择：**B — Combat System 与 Combat Branch 完全独立。**
+
+`Combat System / Technique Backbone` 只回答：
+
+> 角色具体会什么、主要依靠什么技法体系解决战斗。
+
+例如：太极、MMA、咏春、八极、泰拳、拳击、柔术、散打等。
+
+`Combat Branch` 不再被理解为“技法分类”，而应被解释为整场战斗的：
+
+> **Combat World / Physical Presentation Domain：当前世界允许什么物理尺度，以及动作以什么电影表现尺度呈现。**
+
+因此：
+
+```text
+Combat System
+→ Technique Backbone / 怎么打
+
+Combat World / Physical Presentation Domain
+→ 物理尺度 / 电影化尺度 / 世界表现规则
+```
+
+两者合法自由组合，例如：
+
+```text
+太极 + Modern Grounded
+→ 现代办公室中的写实太极实战
+
+太极 + Cinematic Wuxia
+→ 太极技法骨架 + 更武侠电影化的身法与动作尺度
+
+MMA + Modern Grounded
+→ 写实 / 电影化现代 MMA
+
+MMA + Cinematic Wuxia
+→ MMA 技术骨架仍保留，但动作运行在更武侠电影化的物理与表现域中
+```
+
+禁止以下反向推导：
+
+```text
+太极 → 自动 Wuxia
+MMA → 自动 Modern
+职业杀手 → 自动 Modern Tactical
+武术宗师 → 自动 Wuxia
+```
+
+因此 Runtime 应组合：
+
+```text
+Per-Character Combat System
++ Per-Character Combat Expression
++ Global Combat World / Physical Presentation Domain
+→ Choreography
+```
+
+当前 `modern-combat-playbook.md` 与 `cinematic-wuxia-playbook.md` 可以继续存在，但其职责需要从“决定角色具体使用哪套技法”收敛为“提供当前 Physical Presentation Domain 下的动作物理尺度、表现约束与可用表达知识”。
+
+暂不废除现有 Branch 架构，先通过语义修正和路由解耦解决混层问题。
+
+## 9. 待确认设计分支
 
 当前仍需继续 Grill-Me：
 
-1. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
-2. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
-3. G01 回归基线如何迁移到新两轴 / 角色级三元组结构。
+1. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
+2. G01 回归基线如何迁移到新角色级三元组 + Combat World 结构。
 
 在上述依赖分支达成共识后，再统一修改 Runtime / Interactive Contract / Choreography / Router，避免边讨论边产生半完成语义。
