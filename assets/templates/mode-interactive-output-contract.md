@@ -74,7 +74,8 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 - 问 Fighting Direction，却同时替用户决定双方具体 Character Identity、最终谁占优和 Camera Coverage；
 - 问 Character Identity，却顺手把 Ending 或 Camera 定死；
-- 问 Camera Intent，却偷偷改变用户已经确认的 Fighting Direction 或战斗结果。
+- 问 Camera Base Viewing Priority，却偷偷改变用户已经确认的 Fighting Direction / Technique Identity / 战斗结果；
+- 问 Camera Hard Constraint，却顺手替用户决定 Base Viewing Priority。
 
 如果 downstream 节点已经由用户输入高置信度明确，则直接继承；如果仍有多个高价值方向，应留到后续按 High-value Question Budget 判断是否单独暴露。
 
@@ -124,11 +125,14 @@ Combat 追问前先内部检查：
 → Fighting Direction / 怎么打（条件暴露）
 → Active Combat Coverage（只有存在真实方向分叉时）
 → Combat Character Identity 的关键差异
-→ Environment / Camera Intent（只有会明显改变成片时）
+→ Environment / Camera Base Viewing Priority（只有会明显改变成片时）
+→ Camera Hard Constraint（只在用户明确提出或它本身成为高价值分叉时）
 → 战斗结果 / 收尾
 ```
 
 这是**依赖顺序，不是固定问卷顺序**。任一节点如果已经由用户明确、可高置信度自动补全，或不会显著改变成片，应直接跳过。
+
+`Camera Hard Constraint` 不因为出现在依赖图中就自动增加一轮问题。绝大多数任务默认没有特殊 Hard Constraint；只有用户明确说“一镜到底 / 固定机位 / 不要切镜”等，或不同 Constraint 会根本改变摄影实现时，才进入该节点。
 
 ### Fighting Direction / “怎么打”的条件暴露
 
@@ -173,25 +177,44 @@ Combat 追问前先内部检查：
 
 用户只需要决定**打法方向**，不需要设计具体动作链；后续 Runtime 负责把方向展开成 Movement + Technique + Transition，并保证连续性、颗粒度与可执行性。
 
-### Camera Intent / Base Viewing Priority 的条件暴露
+### Camera Intent = Base Viewing Priority + Camera Hard Constraint
 
-Camera 不固定必问，但正式进入 Combat Interactive 的高价值候选节点。
-
-这里的 `Camera Intent` 默认不是“选择一套固定 Shot Template”，而是选择 **Base Viewing Priority / 基础观看优先级**：
-
-> **它决定这段 Combat 在没有更强 Action Trigger 时，摄影优先让观众看清 / 感受什么；它不锁死景别、机位、Cut 数量、POV 数量或 Camera Path。**
-
-满足以下逻辑时，Camera Intent 可以成为当前唯一问题：
+Combat Camera 决策正式拆成两个不同层级：
 
 ```text
-用户尚未明确 Camera Intent
-+ 当前动作 / 空间设计已基本确定
-+ 存在至少两个明显不同、都合理的 Base Viewing Priority
-+ 不同选择会显著改变成片观感
-→ 暴露 Camera Intent
+Base Viewing Priority
+→ 默认优先让观众看清 / 感受什么
+
+Camera Hard Constraint
+→ 摄影实现中什么绝对不能违反
 ```
 
-#### Base Viewing Priority 候选原则
+两者不能混成一个候选池，也不能互相替代。
+
+#### 1. Base Viewing Priority 的条件暴露
+
+`Base Viewing Priority / 基础观看优先级` 决定：在没有更强 Action Trigger 时，Camera 默认优先展示什么信息或体验。
+
+它**不锁死**：
+
+- 景别；
+- Camera Position；
+- Cut 数量；
+- POV / Close-up 数量；
+- Camera Path；
+- 是否允许在高价值 Action Moment 临时改变观察方式。
+
+满足以下逻辑时，它可以成为当前唯一问题：
+
+```text
+用户尚未明确 Base Viewing Priority
++ 当前动作 / 空间设计已基本确定
++ 存在至少两个明显不同、都合理的观看优先级
++ 不同选择会显著改变成片观感
+→ 暴露 Base Viewing Priority
+```
+
+##### Base Viewing Priority 候选原则
 
 候选项应描述**观看优先级**，而不是固定镜头编排。典型高价值分叉包括：
 
@@ -203,7 +226,7 @@ Camera 不固定必问，但正式进入 Combat Interactive 的高价值候选�
 
 这些是候选池，不是固定五选一模板；实际问题应按当前 Combat 内容筛选互有明显差异的方向。
 
-#### Base Priority 不是 Camera Lock
+##### Base Priority 不是 Camera Lock
 
 例如用户选择“完整动作可读优先”，Runtime 应理解为：
 
@@ -227,9 +250,9 @@ Relationship Reframe / Reaction Shot / 有动机的 Cut
 
 Camera Accent 的具体触发与选择由 Action–Camera Runtime 决定：普通连接动作继承当前 Shot；只有 Route / Level / Support / Range / Initiative / Contact Consequence 或 Perceptual Impact 等高价值节点，才动态决定是否 Reframe / Cut / POV / Close-up / Reaction。
 
-#### Camera 问题表达规则
+##### Base Viewing Priority 问题表达规则
 
-Camera 问题必须使用用户能理解的**观看体验 / 导演优先级**，而不是内部参数。
+问题必须使用用户能理解的**观看体验 / 导演优先级**，而不是内部参数。
 
 可以表达为：
 
@@ -254,13 +277,88 @@ Camera 问题必须使用用户能理解的**观看体验 / 导演优先级**，
 - `Cut Density = 3`；
 - 其他只有内部系统才需要理解的参数。
 
-如果用户已经明确 Camera Intent，直接继承；如果当前只有一个明显合理方案，则静默推导，不浪费一轮问题。
+如果用户已经明确 Base Viewing Priority，直接继承；如果当前只有一个明显合理方案，则静默推导，不浪费一轮问题。
+
+#### 2. Camera Hard Constraint / 摄影硬约束
+
+`Camera Hard Constraint` 只表达真正不可违反的摄影边界，例如：
+
+- **One-take / Long-take**：整段禁止 Editorial Cut；
+- **Fixed Camera**：机位保持固定，不做空间位移；
+- **No Cut**：禁止 Cut，但允许当前机位规则下的连续移动 / Reframe；
+- 用户明确指定的其他摄影不可违反项。
+
+Hard Constraint 与观看优先级是正交关系。例如：
+
+```text
+Base Viewing Priority：完整动作可读优先
+Camera Hard Constraint：One-take
+```
+
+Runtime 仍可在一个连续镜头中通过：
+
+```text
+跟随
+→ 降位
+→ 绕侧
+→ 推近 / 拉开
+→ 主观贴近感
+→ Reframe
+```
+
+动态响应动作；只是不能违反 `No Cut`。
+
+同理：
+
+```text
+Base Viewing Priority：电影冲击体验优先
+Camera Hard Constraint：Fixed Camera
+```
+
+此时不能为了追求冲击感让 Camera 离开固定机位；应通过动作进入构图、前景掠过、景深 / 构图关系和有限的机内观察变化实现，而不是偷偷破坏 Fixed Camera。
+
+##### Hard Constraint 暴露规则
+
+默认：
+
+```text
+没有用户明确要求
++ 没有真实高价值分叉
+→ 不单独询问 Hard Constraint
+→ Runtime 按正常动态 Coverage 执行
+```
+
+只有以下情况才值得单独成为当前唯一问题：
+
+```text
+用户明确表达了可能互相冲突的摄影限制
+或
+One-take / Fixed / No-cut 等不同选择会根本改变可执行摄影方案
++ 当前无法高置信度替用户决定
+→ 暴露 Camera Hard Constraint
+```
+
+因此**拆分概念不等于增加固定交互轮次**。
+
+##### Hard Constraint 优先级
+
+当 Base Viewing Priority 与用户明确的 Camera Hard Constraint 冲突时：
+
+```text
+用户明确 Camera Hard Constraint
+> Base Viewing Priority
+> 动态 Camera Accent
+```
+
+但 Hard Constraint 只限制摄影实现，不允许反向改写已经确认的 Fighting Direction、Technique Identity、动作因果或 Combat Coverage 目标。Runtime 应在约束内寻找最接近 Base Viewing Priority 的实现。
 
 ### 重要约束
 
 - **不要过早先问“谁赢”**，除非胜负本身就是用户的核心观看目标或会彻底改变前面所有设计；
 - Fighting Direction 已经明确时，不再重新问“核心动作风格”；
-- Camera 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Fighting Direction / Character Identity；
+- Camera Base Viewing Priority 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Fighting Direction / Character Identity；
+- Camera Hard Constraint 默认静默为空，不因为系统拆成两个概念就机械增加一轮问题；
+- 用户已经明确 One-take / Fixed Camera / No Cut 等 Hard Constraint 时直接继承，不再重复询问；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件；
 - **不以固定 4 轮、6 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行。**
@@ -293,7 +391,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 
 但这些也只是当前场景的可选设计，不是某类人的固定模板。
 
-例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Fighting Direction、双方打法差异，或在动作方案明确后的 Camera Intent，而不是让用户回答十几个内部参数。
+例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Fighting Direction、双方打法差异，或在动作方案明确后的 Base Viewing Priority，而不是让用户回答十几个内部参数。
 
 ---
 
