@@ -1,13 +1,12 @@
 # Action Combat Stage-2 Routing + Action–Camera Handoff Spec
 
-> 状态：V1 / 2026-08-15 G01 Regression 后新增
+> 状态：V2 / 2026-08-15 Camera Realization × Preservation Regression 增量
 >
 > 触发来源：固定 G01「15 秒办公室职业杀手近身对决」真实 Interactive → Final Prompt Regression。
 >
-> 目标：一次性解决本轮暴露的两个问题：
+> V1 目标：解决 Stage-2 Routing Evidence 与 Action ↔ Camera Handoff。
 >
-> 1. Stage-2 Gap-driven Routing 规则存在，但真实运行没有读取 `minimum-validation-set.md`；
-> 2. Camera 已具备 Cut Continuity Safety，但动作与镜头仍是“先编动作，再挑位置切镜”，缺少动作电影式 Action ↔ Camera Handoff。
+> V2 增量目标：解决“Action–Camera 规则已经存在，但 Final Prompt 仍退化成泛化 Camera 摘要”的 Runtime / Serialization Regression。
 
 ---
 
@@ -509,3 +508,385 @@ AC-Step 6
 当前目标只是：
 
 > **让真实 Runtime 先正确命中已经存在的执行知识，并让动作与摄影共享同一个运动状态与连续性链。**
+
+---
+
+# V2 增量｜Camera Handoff Realization × Preservation
+
+## 18. V2 Regression 证据
+
+V1 之后的真实 Interactive 测试中，用户选择：
+
+```text
+Camera Base Viewing Priority = 电影冲击优先
+```
+
+Final Prompt 却仍出现：
+
+```text
+“第一次真实接触发生时，镜头短暂切近……”
+```
+
+同时后续动作段没有把该“短暂切近”绑定到一个明确的 Action Moment，最后又出现“从冲击近景重新拉回中景”之类未被可靠建立的 Camera State。
+
+这说明问题已经从 V1 的“缺少 Action–Camera 设计”推进到新的 Regression：
+
+> **Action–Camera 规则已经存在，但 Runtime 没有把关键 Camera Moment 真正 Realize 到 Concrete Action Phrase，或 Prompt Assembly / Model Adapter 在序列化时把已形成的 Handoff 压回了泛化 Camera 摘要。**
+
+因此 V2 不继续扩 Camera 知识，而是补强：
+
+```text
+Realization
++
+Preservation
+```
+
+---
+
+## 19. 决策 AC-11｜双层 Gate
+
+正式采用：
+
+```text
+Action–Camera Runtime
+→ Camera Handoff Realization Gate
+
+Prompt Assembly / Model Adapter
+→ Camera Handoff Preservation Gate
+```
+
+两层职责分离：
+
+- `Realization Gate`：检查关键 Camera Moment 有没有真正设计并锚定到具体 Action；
+- `Preservation Gate`：检查 Assembly / Adapter 改写以后，核心 Action–Camera 语义是否仍然存在。
+
+禁止只在 Final Prompt 最后补一句“电影化运镜 / 关键时刻切近”来冒充两层 Gate 已通过。
+
+---
+
+## 20. 决策 AC-12｜Gate 是语义合同，不是模板合同
+
+两层 Gate 都必须保持灵活。
+
+不要求：
+
+- 固定字段；
+- 固定句式；
+- 固定顺序；
+- 固定 Cut / Close-up / POV 数量；
+- 关键词计数；
+- 每个 Action 都配一个 Camera Accent。
+
+Gate 检查的是导演语义是否成立，而不是文本是否长得像某个模板。
+
+核心原则：
+
+> **约束错误，不约束摄影创作。**
+
+---
+
+## 21. 决策 AC-13｜Realization Gate 的最小语义合同
+
+一个被选中的高价值 Camera Moment 要判定为 Realized，至少应在语义上满足以下四类信息：
+
+### A. Concrete Action Anchor
+
+Camera Change 必须依附正在发生的具体动作 / 状态变化。
+
+不能只写：
+
+- 第一次接触时；
+- 关键时刻；
+- 发生冲击时；
+- 打斗高潮处。
+
+这些可以作为辅助定位，但不能替代具体 Action Anchor。
+
+### B. Camera Response
+
+要能理解 Camera 此刻为什么介入、主要如何观察或让观众体验什么。
+
+例如：
+
+- Threat Approach → Near-lens / 距离压缩；
+- Support / Balance Change → 低位观察；
+- Initiative Reversal → Relationship Angle / Distance Change；
+- Impact Consequence → 受击侧近景 / Reaction。
+
+不是要求固定术语，而是要求摄影响应与动作信息匹配。
+
+### C. Live Motion / State Continuation
+
+Camera Change 前后动作不能死亡。
+
+至少应继续一类仍然活着的状态，例如：
+
+- Momentum；
+- Contact；
+- Pressure；
+- Rotation；
+- Support Transfer；
+- Forced Step；
+- Recovery；
+- unfinished attack / defense motion。
+
+### D. Camera Hard Constraint Compliance
+
+任何 Camera Accent 都必须服从用户明确 One-take / No-cut / Fixed Camera 等硬约束。
+
+以上四项是**语义最小合同**，不是必须输出成四个字段。
+
+---
+
+## 22. 决策 AC-14｜Semantic Preservation，而不是原文保真
+
+Prompt Assembly / Model Adapter 可以：
+
+- 改写语言；
+- 合并句子；
+- 使用目标模型更适合的摄影表达；
+- 将 Cut 改为连续 Reframe / Push / Near-lens 等等，前提是 Hard Constraint 或模型证据确实需要；
+- 调整 Camera Complexity。
+
+但不能无依据地把高价值 Handoff 压成：
+
+```text
+“关键动作时使用更有冲击力的近景”
+```
+
+Preservation Gate 检查的是核心语义是否仍活着：
+
+```text
+具体 Action Anchor
++
+Action ↔ Camera 因果绑定
++
+主要 Viewer Experience / Camera Task
++
+必要 Live Motion Continuation
+```
+
+不要求 Adapter 输出和上游原文一致。
+
+---
+
+## 23. 决策 AC-15｜默认 Full-fidelity，不因 Unverified 自动降级
+
+当前主流模型的 Camera / Action 能力不应因为 Capability Contract 标记 `Unverified` 就被 Runtime 主动降级。
+
+正式默认：
+
+```text
+Full-fidelity Action–Camera Realization
+```
+
+禁止：
+
+```text
+Camera Complexity Capacity = Unverified
+→ 自动删掉高价值 Camera Moment
+→ 自动退回保守中景
+```
+
+只有存在以下证据之一，才允许进入 `Intent-preserving Degradation`：
+
+- Model Adapter 有 Verified Limitation；
+- 当前模型版本有可靠专项 Benchmark；
+- 相同 Golden Scenario 的 Generated Video 已证明当前 Camera Complexity 导致执行退化。
+
+降级时优先：
+
+```text
+降低摄影实现复杂度
+≠
+删除 Action–Camera Intent
+```
+
+低价值 / 装饰性 Accent 可以合并、简化或删除；高价值 Moment 应优先保留动作锚点、观看目的和运动连续性。
+
+---
+
+## 24. 决策 AC-16｜Failure Taxonomy 最小化
+
+不为 V2 创建大量新 Failure Signature。
+
+Realization Gate 失败继续复用已有：
+
+- `Action–Camera Decoupling`；
+- `Perceptual Impact Underuse`；
+- `Camera Strategy Overconstraint / Camera Mobility Underfill`；
+- `Dead-motion Cut / Post-action Cut`；
+- `Kinetic Handoff Loss`；
+- `Camera Hard Constraint Violation`。
+
+V2 只新增一个正式 Signature：
+
+```text
+Camera Handoff Serialization Loss
+```
+
+定义：
+
+> 上游已经形成有效 Action–Camera Handoff，但经过 Prompt Assembly / Model Adapter 后，Action Anchor、Camera Intent、Viewer Experience 或 Live Motion Continuation 的关键语义被泛化、拆散或删除。
+
+责任回路：
+
+```text
+Action–Camera Decoupling
+→ 回 Action–Camera Runtime 重建 Handoff
+
+Camera Handoff Serialization Loss
+→ 不重新设计 Choreography
+→ 回 Prompt Assembly / Model Adapter 恢复已有 Handoff 语义
+```
+
+Camera State 未建立却被后文引用等问题暂作为 Preservation / Continuity 检查维度，不新增独立 Signature。
+
+---
+
+## 25. 决策 AC-17｜Common Preservation Contract + Adapter-specific Expression
+
+`Camera Handoff Preservation Gate` 是 Action Combat 的跨模型共同合同。
+
+Common Contract 负责：
+
+```text
+What must survive
+```
+
+Model Adapter 负责：
+
+```text
+How it is expressed
+```
+
+Generic、Seedance 2.0、LTX-2.3 都继承同一合同，不各自复制一套 Camera Runtime。
+
+Adapter 只保留模型特有：
+
+- Prompt 组织；
+- 素材绑定；
+- 自然语言风格；
+- 经过验证的能力边界；
+- 有证据时的复杂度调整。
+
+---
+
+## 26. 决策 AC-18｜Final Preflight 必须位于 Model Adapter 之后
+
+V2 修正真正的最终执行链：
+
+```text
+Concrete Action Phrase
+→ Action–Camera Handoff Planning
+→ Camera Handoff Realization Gate
+→ Camera / Spatial Coordination
+→ Prompt Assembly
+→ Model Adapter
+→ Camera Handoff Preservation Gate
+→ Combat Final Preflight
+→ Output Template / Delivery
+```
+
+Prompt Assembly 可以进行 assembly-stage validation，但不能把 Adapter 之前的检查当成最终交付 Preflight。
+
+如果 Adapter 造成：
+
+```text
+具体动作 + inline Camera Handoff
+→ “关键时刻短暂切近”
+```
+
+必须在 Delivery 前触发：
+
+```text
+Camera Handoff Serialization Loss
+```
+
+并只回 Assembly / Adapter 重写。
+
+---
+
+## 27. 决策 AC-19｜本轮作用域只正式覆盖 Action Combat
+
+本轮不把双层 Gate 强行扩展到普通剧情、广告、情绪、产品视频。
+
+正式作用域：
+
+```text
+Action Combat
+```
+
+规则结构保持可复用；未来其他任务真实出现同类 Regression 时再接入，不顺手进行全局 Camera 系统重构。
+
+---
+
+## 28. 决策 AC-20｜最小 Runtime 真源修改
+
+本轮不新增平行 Camera 子系统 Runtime 文件。
+
+正式修改：
+
+1. `references/tasks/action-combat-video/action-camera-handoff-playbook.md`
+2. `references/controls/prompt-assembly/control.md`
+3. `SKILL.md`
+4. `references/models/generic.md`
+5. `references/models/seedance-2.md`
+6. `references/models/ltx-2-3.md`
+
+其中：
+
+- Action–Camera Playbook = Realization 真源；
+- Prompt Assembly = Common Preservation 真源；
+- SKILL = Mandatory Path / Final Ordering；
+- Model Adapters = 继承共同合同，只写 Adapter-specific Expression。
+
+---
+
+## 29. 决策 AC-21｜Regression 验收
+
+本轮采用：
+
+```text
+G01 主回归
++
+1 个不同 Camera Base Viewing Priority 的最小对照案例
+```
+
+### G01
+
+复用本轮办公室职业杀手 Interactive 路径，重点检查：
+
+- `电影冲击优先` 是否真实形成少量具体 inline Camera Moment；
+- 不再使用“第一次接触时短暂切近”冒充 Camera Handoff；
+- Camera Accent 是否绑定具体 Action Anchor；
+- Cut / Reframe 后是否继续 Live Motion；
+- Adapter 后核心 Handoff 是否仍存在；
+- 不出现未建立的 Camera State 被后文引用。
+
+### 最小对照
+
+选择一个已有 Action Combat 场景，将 Camera Base Viewing Priority 改成例如：
+
+- 完整动作可读；或
+- 贴身沉浸。
+
+验证：
+
+- 双层 Gate 没有机械生成同一种 Near-lens / Close-up / Cut Pattern；
+- 普通连接动作仍继承当前 Shot；
+- Camera Accent Density 由信息价值决定，不使用数量配额。
+
+本轮不扩成完整 Model Benchmark。
+
+---
+
+## 30. V2 实施状态边界
+
+本 Spec 记录已确认设计，不把 Spec 本身当 Runtime 真源。
+
+实施完成后仍需真实回归验证，不能因为 Static Rule 已写入就宣称 Generated Video PASS。
+
+本轮实施目标是：
+
+> **让被选中的高价值 Camera Moment 真正落在具体 Action 上，并在 Prompt Assembly 与 Model Adapter 改写后保持其导演语义，直到最终交付 Prompt。**
