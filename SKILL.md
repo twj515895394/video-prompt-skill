@@ -61,7 +61,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - **Action Combat Interactive 的角色打斗决策必须把 Character / Narrative Identity、Combat System / Technique Backbone、System Refinement、Combat Expression 分开；职业 / 性别 / 年龄 / 外貌 / 体型不能直接替代 Combat System。**
 - **Action Combat Interactive 还必须执行 `references/tasks/action-combat-video/interactive-combat-policy.md`：中国功夫电影观感不得机械默认 MMA；Round 1 可使用 `Chinese Cinematic Kung-fu Hybrid`；Round 2 在同一 Primary Node 下分别处理 Character Combat Expression 与 optional Cinematic Combat Archetype；Hybrid 默认静默展开，不固定追问门派混合。**
 - **Interactive 不再把 legacy `Fighting Direction` 作为独立用户问卷；它由角色级 System / Refinement / Expression / optional Archetype 与 Physical Presentation Domain 自动合成为 `Derived Choreography Direction`，MVP 阶段仅映射进旧 execution slot 兼容下游。**
-- **RF-22：Interactive Action Combat 的所有高价值 Interactive 决策完成后，必须由本 `SKILL.md` 在 Post-Planning Mandatory Path 入口一级直接读取 `references/tasks/action-combat-video/regression-fix-runtime-policy.md`；不得依赖下游 Policy 的 transitive MUST READ。进入任何 Post-Planning 派生前必须存在本次执行中的真实 Read Evidence。**
+- **RF-22：Interactive Action Combat 必须先通过 Interactive Planning Completion Gate，确认所有当前高价值 Interactive 决策均已 resolved，之后才允许本 `SKILL.md` 在 Post-Planning Mandatory Path 入口一级直接读取 `references/tasks/action-combat-video/regression-fix-runtime-policy.md`；不得提前读取，也不得依赖下游 Policy 的 transitive MUST READ。进入任何 Post-Planning 派生前必须存在本次执行中的真实 Read Evidence。**
 - Action Combat 的 `Stage-2 Pattern Hit Evidence + action-camera-handoff-playbook.md + Camera Handoff Realization Gate + prompt-assembly/control.md + Model Adapter + Camera Handoff Preservation Gate + Combat Final Preflight` 是最终交付必经路径；其中真正命中条件的 leaf execution knowledge 不能被“按需”预算跳过。
 - Action Combat 的 Camera Gate 是语义合同，不是固定字段 / 固定镜头数量；普通连接动作不因为 Gate 存在而强制增加 Camera Accent。
 - 不向用户暴露内部目录、维护路径、资料迁移和加载过程。
@@ -167,10 +167,38 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 **RF-22 适用范围：仅 Interactive Action Combat；本轮不改变 Quick Mode。**
 
-Interactive 中所有高价值 Combat 决策完成后，包括已经需要暴露并确认的 Combat System / System Refinement、Character Combat Expression / optional Cinematic Combat Archetype、Advantage / Ending、Camera Base Viewing Priority / Camera Hard Constraint、Physical Presentation Domain 等，进入任何 Derived Choreography / Stage-2 派生之前，由本主路由直接执行：
+Interactive 中所有高价值 Combat 决策完成后，包括已经需要暴露并确认、继承或按当前 Policy 合法解析为默认/none 的 Combat System / System Refinement、Character Combat Expression / optional Cinematic Combat Archetype、Advantage / Ending、Camera Base Viewing Priority / Camera Hard Constraint、Physical Presentation Domain 等，进入任何 Derived Choreography / Stage-2 派生之前，由本主路由执行以下 Completion Gate。
+
+#### RF-22 Interactive Planning Completion Gate
+
+在 Direct READ `regression-fix-runtime-policy.md` 之前，必须先检查当前 Interactive Planning Context 是否已经完成。至少逐项判断：
 
 ```text
-Interactive Planning Complete
+Combat System / required Refinement resolved?
+Character Combat Expression resolved?
+optional Cinematic Combat Archetype resolved as selected / inherited / none?
+Advantage / Ending resolved?
+Camera Base Viewing Priority resolved?
+Camera Hard Constraint resolved when user-specified or high-value ambiguous?
+Physical Presentation Domain resolved?
+```
+
+`resolved` 不等于“每一项都必须新增一轮问卷”。允许沿用当前 Interactive Policy 的 `Known → Refine`、高置信度继承、合法默认值、`none` 与条件暴露逻辑；本 Gate 只负责阻止**尚未 resolved 的高价值决策**被误判成 Planning Complete，不改变既有 UX 轮次设计。
+
+如果任一当前高价值项仍是 unresolved：
+
+```text
+Interactive Planning NOT Complete
+→ DO NOT READ regression-fix-runtime-policy.md
+→ 不得产生 Derived Choreography / Duration Budget / Exchange Spine / Stage-2 / Assembly
+→ 返回 Interactive，继续解决当前最上游的 unresolved 高价值决策
+```
+
+只有全部当前高价值项 resolved 后：
+
+```text
+Interactive Planning Completion Gate PASS
+→ Interactive Planning Complete
 → READ references/tasks/action-combat-video/regression-fix-runtime-policy.md
 → RF-22 Runtime Handoff Read Evidence Gate
 → Confirmed Per-Character Combat Context
@@ -199,31 +227,42 @@ Interactive Planning Complete
 - 不能只因为 `interactive-combat-policy.md` 提到它就假定已经加载；
 - 不能只因为 Final Prompt 看起来符合其中规则就假定已经加载；
 - 不能使用历史任务的 Read 作为当前任务 Evidence；
-- 只有当前这一次执行中真实发生的文件 READ 才有效。
+- 不能在 Interactive Planning Completion Gate PASS 之前提前读取；
+- 只有当前这一次执行中、Completion Gate PASS 之后真实发生的文件 READ 才有效。
 
 #### RF-22 Runtime Handoff Read Evidence Gate
 
 在任何 Post-Planning 派生开始前检查：
 
 ```text
+Interactive Planning Completion Gate = PASS ?
 Current Execution
-→ actual READ regression-fix-runtime-policy.md ?
+→ actual READ regression-fix-runtime-policy.md after Completion Gate PASS ?
 ```
 
-如果存在真实 Read Evidence：
+如果两项 Evidence 都存在：
 
 ```text
 → PASS-NATIVE
 → 正常继续 Post-Planning Runtime
 ```
 
-如果不存在：
+如果 Completion Gate 已 PASS、但不存在有效 Runtime Read Evidence：
 
 ```text
 → 立即 READ regression-fix-runtime-policy.md
 → 作废当前已经产生的全部 Post-Planning 派生结果
 → 只保留 Confirmed Interactive Planning Context
 → 从本 Post-Planning Mandatory Path 入口重新执行
+```
+
+如果 Runtime Policy 在 Completion Gate PASS 前已经被提前读取：
+
+```text
+→ Early Direct Read
+→ RF-22 FAIL
+→ 该提前 Read 不得作为有效 Evidence
+→ 不得把该执行计入 PASS-NATIVE 连续关闭计数
 ```
 
 必须作废的派生结果包括已经产生的：
@@ -251,14 +290,17 @@ Recovery 必须发生在 Stage-2 / Final Assembly 之前，并从 Confirmed Inte
 普通 Production UX 中该 Recovery 静默执行，不向用户暴露内部文件 / 路由细节。Regression / Debug 时保留内部 Evidence，用于区分：
 
 ```text
+Planning Completion Gate: PASS / FAIL
+Runtime Policy Read Timing: after-complete / early / missing
+
 PASS-NATIVE
-= Direct READ 首次正常命中，未触发 Recovery
+= Completion Gate PASS 后 Direct READ 首次正常命中，未触发 Recovery
 
 PASS-RECOVERED
-= Direct READ 漏掉，但 Gate 捕获并完整重置后恢复
+= Completion Gate PASS 后 Direct READ 漏掉，但 Handoff Gate 捕获并完整重置后恢复
 
 FAIL
-= 没有真实 READ / 未捕获 / 未作废旧派生 / 太晚补救 / 未从正确入口重启
+= Early Direct Read / 没有真实 READ / 未捕获 / 未作废旧派生 / 太晚补救 / 未从正确入口重启
 ```
 
 `PASS-RECOVERED` 可以继续检查同一轮下游 RF-14～RF-20，但不能视为 Direct Routing 已关闭；RF-22 的关闭标准由 Regression Spec 管理。
@@ -386,7 +428,7 @@ Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准�
 - Camera Hard Constraint 只限制摄影实现，不得反向改变已经确认的 Combat System / System Refinement / Combat Expression / Technique Identity / Combat Coverage；
 - Camera Base Viewing Priority 与 Camera Hard Constraint 不因为概念拆分而固定增加两轮问题；Hard Constraint 只有用户明确提出或本身成为高价值分叉时才暴露。
 
-用户完成最后一个高价值 Combat 选择后，必须执行上面的 **Action Combat Post-Planning Mandatory Path**；该主路径负责 RF-22 Direct Read / Handoff Gate，不能从 Interactive 直接跳到 Derived Choreography、Stage-2 或 Final Assembly。
+用户完成最后一个高价值 Combat 选择后，必须先通过上面的 **RF-22 Interactive Planning Completion Gate**；Gate PASS 后才允许执行 **Action Combat Post-Planning Mandatory Path** 的 Runtime Direct READ / Handoff Gate。不能从 Interactive 直接跳到 Runtime Read、Derived Choreography、Stage-2 或 Final Assembly。
 
 ## 第四步：按缺口读取控制页
 
@@ -549,7 +591,7 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 Action Combat 额外固定读取：
 
 - Interactive Action Combat 时的 `interactive-combat-policy.md`，负责角色级交互与推荐策略；
-- Interactive Action Combat 在所有高价值 Interactive 决策完成后的 `regression-fix-runtime-policy.md`，由 `SKILL.md` 一级 Direct READ，作为 RF-08～RF-20 Post-Planning Runtime Truth；
+- Interactive Action Combat 在 Interactive Planning Completion Gate PASS 后的 `regression-fix-runtime-policy.md`，由 `SKILL.md` 一级 Direct READ，作为 RF-08～RF-20 Post-Planning Runtime Truth；
 - `action-camera-handoff-playbook.md`，作为 Stage-2 Evidence / Realizability / Action–Camera Bridge / Realization Gate；
 - `prompt-assembly/control.md`，作为 Final Assembly / Common Preservation Contract 必经 Reference；
 - 条件命中的 Stage-2 leaf execution knowledge（当前最小验证阶段通常为 `minimum-validation-set.md`）。
@@ -735,6 +777,7 @@ Combat 主诊断：
 - Combat 不因通用单镜头模板自动把高密度连续战斗切成多个 Hard Time Blocks；
 - Combat 不因 `Model Capability = Unverified` 自动删除 / 泛化高价值 Camera Handoff；
 - Combat Model Adapter 不得造成 `Camera Handoff Serialization Loss`；
+- Combat Interactive 不允许在 RF-22 Interactive Planning Completion Gate PASS 之前提前读取 `regression-fix-runtime-policy.md`；Early Direct Read 直接判 RF-22 FAIL；
 - Combat Interactive 不允许从最后一个高价值选择直接跳过 RF-22 Direct READ / Read Evidence Gate 进入 Derived Choreography、Stage-2 或 Final Assembly；
 - Combat Interactive 触发 RF-22 Recovery 后，不允许复用漏读状态下的 Post-Planning 派生骨架；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
