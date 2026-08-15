@@ -15,6 +15,7 @@
 - 能从请求、上下文和素材高置信度推断的内容不追问；
 - 只追问会实质改变视频目标、动作、镜头、节拍、连续性或模型实现路径的变量；
 - **优化目标不是“问题越少越好”，而是每一个问题都必须值得问；**
+- **One Question, One Primary Decision Node：单轮问题优先只解决一个主要 Planning Node；**
 - 用户要求收口，或剩余问题只影响轻微细节时，立即停止提问并完成交付；
 - **Interactive 默认最多 10 轮追问。10 轮是上限保护，不是目标轮数，也不是必须问满；如果前 4–6 轮甚至更少已经足以形成完整可执行需求，应立即提前收口。**
 
@@ -51,6 +52,34 @@ Interactive 使用**价值驱动的动态轮数**，而不是固定问卷。
 
 ---
 
+## Decision Purity / 决策纯度
+
+每轮问题必须先标定当前唯一的 **Primary Planning Node**。推荐答案可以解释该选择对 downstream 的影响，但不能把尚未确认的 downstream 决策一起写成既定事实。
+
+在发问前内部检查：
+
+```text
+当前问题的 Primary Planning Node 是什么？
+→ 推荐是否真正只在解决这个节点？
+→ 是否提前锁死尚未确认的 Character Identity / Camera / Ending / Result？
+```
+
+允许：
+
+- 解释“这个选择会影响后续动作节奏 / 镜头 / 收尾”；
+- 明确给出推荐；
+- 说明为什么推荐。
+
+不允许：
+
+- 问 Choreography Profile，却同时替用户决定双方具体打法、最终谁占优和 Camera Coverage；
+- 问 Character Identity，却顺手把 Ending 或 Camera 定死；
+- 问 Camera Intent，却偷偷改变用户已经确认的动作风格或战斗结果。
+
+如果 downstream 节点已经由用户输入高置信度明确，则直接继承；如果仍有多个高价值方向，应留到后续按 High-value Question Budget 判断是否单独暴露。
+
+---
+
 ## Combat Interactive Mode
 
 Action Combat 与 Quick Mode 共用同一 Combat Planning Graph、Choreography Engine、State / Continuity Engine、Final Preflight Gate 和质量上限。
@@ -80,6 +109,7 @@ Combat 追问前先内部检查：
 - 当前问题是否比尚未解决的 Character Identity / Rhythm / Profile 更重要；
 - 是否把 Contact Solidity、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制误做成问卷；
 - 当前推荐是否把职业、性别、年龄、外貌或体型直接转换成固定打法；
+- 当前推荐是否夹带未确认的 downstream 决策；
 - **如果当前信息已经足以完整规划 Combat Sequence，是否应立即收口而不是继续沿 Planning Graph 逐节点发问。**
 
 如果当前问题只是系统应该自己做好的质量机制，不问用户。
@@ -101,11 +131,52 @@ Combat 追问前先内部检查：
 
 这是**依赖顺序，不是固定问卷顺序**。任一节点如果已经由用户明确、可高置信度自动补全，或不会显著改变成片，应直接跳过。
 
+### Camera Intent / 镜头意图的条件暴露
+
+Camera 不固定必问，但正式进入 Combat Interactive 的高价值候选节点。
+
+满足以下逻辑时，Camera Intent 可以成为当前唯一问题：
+
+```text
+用户尚未明确 Camera Intent
++ 当前动作 / 空间设计已基本确定
++ 存在至少两个明显不同、都合理的观看策略
++ 不同选择会显著改变成片观感
+→ 暴露 Camera Intent
+```
+
+典型高价值分叉包括：
+
+- 固定 / 克制机位 vs 主动跟随；
+- one-take / long-take vs 内部 Cut Coverage；
+- 完整动作可读型 vs 更多 Impact Close-up / Insert；
+- 贴身沉浸型 vs 更宽的关系镜头；
+- 武器 / Contact / Footwork / Reaction 是否获得更强局部 Coverage。
+
+Camera 问题必须使用用户能理解的**导演观看策略**，而不是内部参数。可用方向示例：
+
+- 电影冲击型 Coverage：中景保持关系，在关键 Contact / Footwork / Weapon / Reaction 上短促切近，再 Re-establish；
+- 完整动作可读型：更宽景、更少 Cut，重点看全身动作、步法与空间；
+- 贴身沉浸型：Camera 更靠近人物，适度手持与近景，强化身体压力；
+- 固定 / 克制机位型：少移动、少切换，让动作在构图内完成；
+- 一镜到底型：连续摄影调度覆盖整段 Combat。
+
+这些只是候选表达，不是固定五选一模板。
+
+禁止直接问：
+
+- `Camera Complexity = Low / Medium / High`；
+- `Mobility = High`；
+- `Cut Density = 3`；
+- 其他只有内部系统才需要理解的参数。
+
+如果用户已经明确 Camera Intent，直接继承；如果当前只有一个明显合理方案，则静默推导，不浪费一轮问题。
+
 ### 重要约束
 
 - **不要过早先问“谁赢”**，除非胜负本身就是用户的核心观看目标或会彻底改变前面所有设计；
 - 高手对决若“高手连续攻防型”明显相关，不能因为选项设计漏掉它；
-- Camera 通常可以在动作与空间计划后自动推导，不应为了问 Camera 跳过更高价值的 Character Identity；
+- Camera 通常在动作与空间计划后判断是否值得条件暴露，不应为了问 Camera 跳过更高价值的 Character Identity；
 - Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Final Preflight 等不作为固定交互问题；
 - 用户已明确“连续、高密度、电影化”时，不再逐项追问这些基础质量条件；
 - **不以固定 4 轮、6 轮或其他轮数作为完成标准；完成标准是高影响需求已经足以执行。**
@@ -138,7 +209,7 @@ Character Identity 必须动态推导。推荐答案中不得出现以下快捷�
 
 但这些也只是当前场景的可选设计，不是某类人的固定模板。
 
-例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Choreography Profile 或双方打法差异，而不是让用户回答十几个内部参数。
+例如用户要求“15 秒办公室两名职业高手连续近身对决”，系统可以静默补全 High Coverage、Contact Solidity、Continuous Action Spine 等质量机制；真正值得暴露的可能是 Choreography Profile、双方打法差异，或在动作方案明确后的 Camera Intent，而不是让用户回答十几个内部参数。
 
 ---
 
