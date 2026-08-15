@@ -65,6 +65,7 @@ core-playbook.md
 - Active Combat Coverage；
 - Rhythm；
 - Action Phrase；
+- **Executable Action Granularity；**
 - Exchange Depth；
 - Character Identity；
 - Tactical Interaction；
@@ -73,11 +74,12 @@ core-playbook.md
 - Signature Moment；
 - Action Sufficiency / Execution Budget；
 - Kinetic / Temporal / Motion Continuity；
-- Camera Readability / Mobility；
+- Camera Readability / Mobility / Coverage；
 - Combat Audio；
+- Ending Coverage Protection；
 - Final Preflight Criteria。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、好看、有实感”；Prompt Assembly 负责“把内部设计真正序列化成模型可执行的最终 Prompt”。**
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
 
 ---
 
@@ -157,6 +159,17 @@ Slot B：Choreography Enhancement Knowledge
 
 优先级：专业正确性 > Character Identity 差异化 > 创意增强。
 
+Stage-2 读取之后必须进入：
+
+```text
+Execution Knowledge
+→ Concrete Action Phrase Construction
+→ State / Continuity Validation
+→ Prompt Assembly
+```
+
+**Stage-2 的职责不是只增加打法标签，而是帮助把当前 Planning Context 实例化成具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果和下一动作入口。**
+
 > **能力很多，不等于每次加载很多。**
 
 ---
@@ -178,6 +191,8 @@ Quick 不因输入简短而跳过：
 - Environment；
 - Signature Moment；
 - Camera / Execution Budget；
+- Stage-2 Execution Knowledge；
+- Concrete Action Phrase；
 - State / Continuity Validation；
 - Final Assembly / Final Preflight。
 
@@ -191,7 +206,9 @@ Quick 不因输入简短而跳过：
 - 方向会显著改变成片；
 - 当前信息不足以高置信度选择。
 
-不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+
+Camera Intent 属于条件高价值节点：只有多个观看策略都合理且会显著改变成片时才暴露，不固定必问。
 
 推荐答案不得把人口属性当打法模板。例如年龄、性别、外貌、体型可以影响能力边界，但不能单独推出“年轻女性必然速度闪避”“矮胖年长男性必然力量抓控”。
 
@@ -206,13 +223,13 @@ Quick 不因输入简短而跳过：
 ```text
 Combat Planning Context
 → Stage-2 Execution Knowledge
-→ Action Phrase / Battle Beat
+→ Concrete Action Phrase / Battle Beat
 → Core State Validation
 → Camera / Audio / Spatial Coordination
 → 读取并执行 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
 → Combat Final Preflight
-→ FAIL：内部重写 Action Phrase / Character Identity / Prompt Assembly，并重新检查
+→ FAIL：内部重写 Concrete Action Phrase / Character Identity / Prompt Assembly，并重新检查
 → PASS：挂接当前输出模板 / Model Adapter
 → Delivery
 ```
@@ -221,13 +238,14 @@ Combat Planning Context
 
 不把所有 Failure Signature 输出成 Checklist；最终只回答这些高价值问题：
 
-1. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；
-2. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；
-3. **角色是否真实区分**：Character Identity 是否由动作表现，且没有人口属性快捷模板；
-4. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
-5. **镜头是否跟着战斗空间走**：Stable ≠ Static；高 Kinetic Scope 不能配长期近固定 Camera；
-6. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，不被通用模板重新切成硬时间盒；
-7. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项。
+1. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标匹配；Ending 是否吞掉 Active Exchange；
+2. **动作是否具体**：关键数秒是否由具体身体 / 武器动作、Contact / Evasion、即时响应、Footwork / Axis / Range / Position 后果与下一动作入口构成，而不是抽象“连续攻防”；
+3. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；Initiative 是否在动作链内转移；
+4. **角色是否真实区分**：Character Identity 是否由动作表现，且没有人口属性快捷模板；
+5. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
+6. **镜头是否跟着战斗空间走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；
+7. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography 不被 Prompt Assembly 压回抽象摘要；
+8. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项。
 
 任一关键项 FAIL，不允许直接交付。
 
@@ -242,11 +260,13 @@ Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 
 - 通用模板的“时长较长 / 3+ 阶段可使用绝对时间轴”不能自动触发；
 - 默认继承 Choreography / Prompt Assembly 的 `Continuous Action Spine + Soft Time Anchors`；
 - 只有用户明确逐秒、外部同步、多镜头边界或 Model Adapter 有实测依据时才使用 Hard Time Blocks；
-- 即使使用 Hard Time Blocks，也必须跨块保持 Motion Handoff，时间边界不得成为 Neutral Reset。
+- 即使使用 Hard Time Blocks，也必须跨块保持 Motion Handoff，时间边界不得成为 Neutral Reset；
+- 输出模板不能把已经具体的 Action Phrase 重新概括成高层动作标签。
 
 最终 Prompt 遵循：
 
 > **State Machine Internalized, Choreography Externalized.**  
+> **Concrete Choreography In, Concrete Choreography Out.**  
 > **时间码服从动作连续性，而不是动作服从时间码。**
 
 ---
