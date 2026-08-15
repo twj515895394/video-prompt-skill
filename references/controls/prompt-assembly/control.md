@@ -11,10 +11,13 @@
 > **State Machine Internalized, Choreography Externalized.**  
 > **状态机内化，动作编排外显。**
 
-并追加一条强制原则：
+并追加两条强制原则：
 
 > **Concrete Choreography In, Concrete Choreography Out.**  
 > **前面已经设计具体的动作，组装阶段不能重新压缩成抽象战斗摘要。**
+
+> **Action Drives Camera; Camera Preserves Live Motion.**  
+> **关键镜头变化必须由正在发生的动作信息触发，跨镜不能只保位置而丢掉仍在发生的运动。**
 
 ---
 
@@ -35,7 +38,7 @@
 1. 正向可见 Action Flow / Reaction / Contact / Consequence
 2. Position / Range / Environment 的可见变化
 3. Fighting Direction / Character Identity / Rhythm / Intensity / Signature 的可见表现
-4. Camera / Audio 支持
+4. Action-triggered Camera Handoff / Camera / Audio 支持
 5. 少量真正必要的 Continuity / Negative Constraints
 ```
 
@@ -234,6 +237,8 @@ Position / Left-Right
 
 压缩时必须保留至少一类 Motion Handoff：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position。
 
+当上游 `action-camera-handoff-playbook.md` 已形成 Motion / Energy Carry-over，Assembly 不能把它压缩成“随后继续攻击”。至少保留决定下一动作入口的 Momentum / Rotation / Support / Pressure / Recovery 之一。
+
 ### 3.8 Initiative Handoff Externalization
 
 不要只写：
@@ -321,7 +326,37 @@ Camera Mobility 描述单个 Shot 内如何跟随 Position / Range / Axis / Rout
 
 不设置 Shot 数量或景别配额。
 
-### 3.13 Ending Coverage Protection
+### 3.13 Action–Camera Handoff Preservation
+
+如果上游已经设计 Action–Camera Handoff，Assembly 必须保留“为什么此时 Camera Change”与“下一镜继续什么 Motion State”，不能压缩成泛化 Camera 摘要。
+
+优先保留的 Trigger 包括：
+
+- Cut on Motion；
+- Contact / Consequence；
+- Direction / Axis Change；
+- Initiative Reversal；
+- Range / Level / Support Change；
+- Occlusion / Match Motion；
+- Environment Boundary。
+
+不要求把 Trigger 名写给用户，而要锚定到具体 Action Moment。
+
+避免：
+
+> 关键接触时短暂切近，然后立刻回到中景。
+
+优先：
+
+> 她开始沉身从高线下穿时，镜头随身体短暂降低；脚步跨过对方支撑线、迫使他重新踩稳的一瞬切到低位近景，下一镜继续同一失衡反应，并从新的斜侧关系接住她的再进入。
+
+跨镜不仅保留 Position / Direction，还要尽量保留一类 Active Motion：Momentum、Contact、Pressure、Rotation、Support Transfer、Forced Step 或 Recovery。
+
+如果 Cut 总发生在动作完整结束、双方站稳之后，判 `Dead-motion Cut / Post-action Cut`；如果 Camera 只在动作段后作为独立说明出现，判 `Action–Camera Decoupling`。
+
+不要机械生成 `Medium → Close → Medium → Close`。Re-establish 只在局部镜头后 Position / Range / Axis / Fight-space 可能丢失时使用。
+
+### 3.14 Ending Coverage Protection
 
 Ending 的结果可以来自用户已确认的导演意图，但 Assembly 必须保护 Active Exchange Budget。
 
@@ -369,11 +404,13 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - Specific Action → Immediate Response → Counter / Continuation；
 - Contact → Reaction → Consequence；
 - Motion / Initiative Handoff；
+- Motion / Energy Carry-over；
 - 关键 Footwork / Range / Position / Axis 变化；
 - Major Reversal / Signature 前后的因果；
 - Fighting Direction 在 Movement / Technique / Range / Physical Scale 上的真实差异；
 - High / Medium / Low Granularity 的信息层级差异；
-- 跨 Shot 的 Action Direction / Contact / Momentum 继承；
+- Action-triggered Camera Handoff；
+- 跨 Shot 的 Action Direction / Contact / Momentum / Active Motion 继承；
 - Ending 的真实收束状态。
 
 > **Clarity Through Structure, Not Action Reduction。**
@@ -405,6 +442,7 @@ Prompt Assembly 交付前至少检查：
 - Action Language 是否占主体；
 - High / Medium Coverage 是否真的被 Action Flow 写满；
 - Fighting Direction 是否在动作语言而非标签中兑现；
+- **存在明显 Movement / Technique / Transition Gap 时，是否有真实 Stage-2 leaf knowledge hit / Pattern Realization Evidence；**
 - High / Medium / Low Granularity 是否保持不同信息展开深度；
 - 是否连续多个普通 Exchange 被重新展开成同等长度的大段，导致 Choreography Richness 被吃掉；
 - **关键 Active Exchange 是否仍主要由“连续格挡 / 快速反制 / 贴身缠斗 / 不断换位”等摘要承担；**
@@ -412,6 +450,7 @@ Prompt Assembly 交付前至少检查：
 - 是否出现 3–4 秒只有一个宏动作的 Temporal Underpacking；
 - 是否出现每 1–2 秒归位再起手的 Action Segmentation；
 - Counter / Re-counter 是否在对方动作尚未完成时具体抢走 Initiative；
+- 关键 Transition 是否利用前一动作残余 Momentum / Contact / Support / Recovery / Axis，而不是只在逻辑上“接得上”；
 - 是否把高密度战斗切成多个硬时间盒；
 - Kinetic Scope 是否在最终文字中可见；
 - High / Expert Combat 是否仍主要由上肢 Contact 主导，而 Movement 没有创造 Level / Route / Axis / Range / Position / Support / Balance 变化；
@@ -420,16 +459,23 @@ Prompt Assembly 交付前至少检查：
 - Camera 是否 Stable 但不是 Static；
 - 是否把 Continuous Action Spine 错写成 one-take / 单一 Camera Path；
 - 是否长期只有中全景 / 中景，缺少有信息价值的 Shot Scale Variation；
+- **关键 Cut / Reframe 是否由具体 Action State Change 触发，而不是泛化“关键接触切近”；**
+- **Cut 是否至少在关键位置保留 Active Motion / Contact / Pressure / Recovery，而不是动作死掉后再切；**
+- **是否机械形成 `Medium → Close → Medium → Close`，而没有信息变化动机；**
 - Cut 后 Position / Direction / Contact / Momentum / Axis / Range 是否连续；
 - Contact → Reaction → Consequence 是否可见；
 - Camera / Audio 是否比身体动作更具体；
 - Negative 是否少而有针对性。
 
+触发 `Stage-2 Routing Evidence Missing` 时，先回到 Stage-2 真实读取 leaf knowledge 并重写 Phrase，不允许只润色已有动作。
+
 触发 `Abstract Action Block / Non-executable Choreography Summary` 时，优先重写具体 Action Phrase，而不是追加“高速、连续、专业、电影化”等形容词。
 
 触发 `Static Standing Combat / Upper-body Technique Dominance` 时，优先回到 Movement Pattern / Concrete Phrase，改变真实空间与身体状态，而不是机械补一句“多用腿法”。
 
-不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Camera Coverage / 压缩结构，再交付。
+触发 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss / Coverage Patterning` 时，优先重写 Action Trigger、Inherited Motion State 与 Camera Handoff；不要通过增加更多 Shot / 特写 / Camera 术语修复。
+
+不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage / 压缩结构，再交付。
 
 ---
 
@@ -441,7 +487,7 @@ Prompt Assembly 交付前至少检查：
 场景 / 人物初始关系：
 连续且具体的动作主链（Combat 时为主体）：
 关键软时间锚点 / Turning Point：
-Camera Coverage / Audio：
+Action-triggered Camera Handoff / Camera Coverage / Audio：
 必要连续性与高风险限制：
 ```
 
@@ -469,7 +515,7 @@ Segment 2：
 Model Adapter 入口：
 ```
 
-多镜头 Shot 边界可以精确，但 Combat Action State 必须跨镜继承。
+多镜头 Shot 边界可以精确，但 Combat Action State 与 Active Motion 必须跨镜继承。
 
 ---
 
@@ -486,11 +532,13 @@ Model Adapter 入口：
 - 用户要求连续高手战，但时间结构是多个独立动作槽；
 - Choreography 已经具体，但 Assembly 为了缩短 Prompt 又退回抽象动作块；
 - Choreography 已分配 Granularity，但 Assembly 又把所有 Phrase 展开成同等体量；
-- Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异。
+- Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异；
+- Action–Camera Handoff 已规划，但 Assembly 又压回“关键接触切近 / 随后回中景”；
+- Cut 只保持 Position，却丢失上一 Shot 仍然存在的 Motion / Pressure / Recovery。
 
-Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果。
+Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Camera Complexity、Shot Coverage 和 Phrase 序列化；不得改写剧情、人物身份、Combat Intent、Coverage 目标、Fighting Direction、核心动作因果、战斗结果，也不得把关键 Action–Camera Handoff 改成动作完成后的随机 Coverage。
 
-模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 降低无必要 Camera Complexity → 保留高价值局部 Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
+模型能力较弱时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 降低无必要 Camera Complexity → 保留高价值 Action-triggered Coverage → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
 
 ---
 
@@ -502,5 +550,6 @@ Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Cam
 - Motion：`subject-motion/control.md`；
 - Spatial：`spatial-blocking/control.md`；
 - Combat Choreography：`references/tasks/action-combat-video/choreography-playbook.md`；
+- Combat Action–Camera Bridge：`references/tasks/action-combat-video/action-camera-handoff-playbook.md`；
 - 输出模板：`assets/templates/`；
 - Model 语法 / 能力：`references/models/`。
