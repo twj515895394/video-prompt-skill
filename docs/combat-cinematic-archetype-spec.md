@@ -1,54 +1,72 @@
 # Combat Cinematic Archetype Spec
 
-> 状态：已确认
+> 状态：已确认，CA-01～CA-08 已收口
 > 日期：2026-08-15
-> 作用：定义少量华语电影武打明星参考型在 Action Combat Interactive / Runtime 中的职责边界与交互位置。
+> 作用：定义少量华语电影武打明星参考型、中国功夫电影混合体系，以及它们在 Action Combat Interactive / Runtime 中的职责边界。
 
-## 1. 背景
+## 1. 核心目标
 
-用户明确希望将李连杰、吴京、甄子丹、成龙、李小龙这类具有稳定电影武打表达差异的参考型引入 Action Combat，但不希望它们被错误当作 MMA、咏春、八极、截拳道等 `Combat System / Technique Backbone`。
+本设计解决三个问题：
 
-当前已确认：这类参考型数量有限，具有明显差异，不属于无边界扩张的明星名单；只在确实存在稳定、可复用、能显著改变生成动作结果的情况下扩展。
+1. 不再把 `MMA / 太极 / 咏春 / 八极 / 截拳道` 等真实技法体系，与“李连杰式 / 吴京式 / 甄子丹式 / 成龙式 / 李小龙式”电影动作表达混在同一层；
+2. 用户明确追求中国功夫电影观感时，不再因为“现代 / 办公室 / 杀手 / 警匪”机械优先推荐 MMA；
+3. 用户只想要“中国武打电影动作”，又不关心严格门派时，允许使用宽泛但受控的 `Chinese Cinematic Kung-fu Hybrid`，而不是被迫选择单一拳种。
 
 ---
 
-## 2. 核心分层
-
-正式结构：
+## 2. 正式分层
 
 ```text
+Character / Narrative Identity
+→ 职业、年龄、性别、关系、题材身份
+→ 不直接决定 Combat System
+
 Combat System / Technique Backbone
-→ 角色真正会什么体系
-→ 太极 / 咏春 / 八极 / 散打 / MMA / 泰拳 / 拳击 / 截拳道 / JKD / 中国功夫电影混合体系 ...
+→ 角色真正使用什么技法体系
+→ 太极 / 咏春 / 八极 / 散打 / MMA / 泰拳 / 拳击 / 截拳道 / JKD
+→ 中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid
+
+System Refinement
+→ 当前体系具体偏什么技术逻辑
 
 Combat Expression / Performance Identity
-→ 角色以什么气质、决策方式和电影动作表达去使用该体系
-   ├─ 子维度 A：Character Combat Expression
-   │  ├─ 冷静 / 凶狠 / 克制 / 从容
-   │  ├─ 主动压迫 / 后发反制 / 诱导 / 节奏破坏
-   │  └─ 风险偏好 / 杀意 / 留手 / 再进入倾向
-   └─ 子维度 B：Cinematic Combat Archetype（可选）
-      ├─ 李连杰型
-      ├─ 吴京型
-      ├─ 甄子丹型
-      ├─ 成龙型
-      └─ 李小龙型
+├─ 子维度 A：Character Combat Expression
+│  → 冷静 / 凶狠 / 克制 / 从容
+│  → 主动压迫 / 后发反制 / 诱导 / 节奏破坏
+│  → 风险偏好 / 杀意 / 留手 / 再进入倾向
+└─ 子维度 B：Cinematic Combat Archetype（optional）
+   → 李连杰型 / 吴京型 / 甄子丹型 / 成龙型 / 李小龙型
+
+Physical Presentation Domain
+→ Modern Grounded / Modern Cinematic / Cinematic Wuxia 等物理表现尺度
+
+以上信息
+→ Derived Choreography Direction
+→ Stage-2 Movement / Technique / Transition
+→ Concrete Action Phrase
+→ Prompt Assembly / Final Preflight
 ```
 
-因此：
+核心边界：
 
-> **Cinematic Combat Archetype 是 Combat Expression 的可选子维度，不是新的一级 Planning Node。**
+> **Combat System = 会什么。**
+>
+> **Character Combat Expression = 以什么人物气质和决策方式使用。**
+>
+> **Cinematic Combat Archetype = 在电影里希望呈现成什么动作表达。**
 
 ---
 
-## 3. Interactive 决策：Round 2 同轮双子维度，不新增 Round 3
+## 3. Interactive 结构
 
-Action Combat Interactive 继续保持两个核心角色打斗节点：
+Action Combat 继续保持两个核心角色打斗节点：
 
 ```text
 Round 1：Combat System / System Refinement
 Round 2：Combat Expression / Performance Identity
 ```
+
+### Round 2：同轮双子维度
 
 Round 2 内部采用两个**分别选择、分别表达、同轮完成**的子维度：
 
@@ -60,17 +78,15 @@ Round 2 内部采用两个**分别选择、分别表达、同轮完成**的子�
 → 李连杰型 / 吴京型 / 甄子丹型 / 成龙型 / 李小龙型 / 不指定 / 自定义
 ```
 
-已确认：
+规则：
 
-- Cinematic Combat Archetype 挂在 **Round 2** 内；
 - 不新增固定 `Round 3：明星武打风格`；
-- **两个子维度分开展示，不提前组合成套餐候选**；
-- 用户可以选择任意人物战斗表达，再独立选择任意 Archetype；
-- 系统不得把 `冷静后发 + 李连杰型`、`凶狠压迫 + 吴京型` 等预绑定成唯一组合；
-- 用户不需要明星参考时，Archetype 可以为空 / 不指定；
-- 用户已经明确“李连杰式 / 吴京式 / 甄子丹式 / 成龙式 / 李小龙式”时，Round 2 直接继承，不重复确认；
-- 用户只说“想要中国功夫电影那种打法”且不同 Archetype 会显著改变成片时，Round 2 可以把五种 Archetype 作为导演参考候选；
-- 仍然遵守 `One Question, One Primary Decision Node`，因为两个子维度都属于 `Combat Expression / Performance Identity`。
+- 两个子维度分开展示，不提前组合成套餐；
+- 用户可以自由组合任意 Expression 与任意 Archetype；
+- 不得默认绑定“李连杰型 = 冷静”“吴京型 = 凶狠”等人物性格；
+- 用户不需要明星参考时，Archetype 可以为空；
+- 用户已明确 Archetype 时直接继承，不重复确认；
+- 仍然属于同一个 Primary Planning Node，因此不违反 `One Question, One Primary Decision Node`。
 
 示例：
 
@@ -86,44 +102,55 @@ Round 2｜Combat Expression / Performance Identity
 男方 = 吴京型
 ```
 
-这仍然只占 Round 1 + Round 2 两个核心节点。
-
 ---
 
-## 4. 五种 Archetype
+## 4. 五种 Cinematic Combat Archetype
 
 执行语义真源：
 
 `references/libraries/combat-cinematic-archetypes/library.md`
 
-当前五种：
+### 4.1 李连杰型｜轻灵流畅 / 武术线条
 
-1. **李连杰型｜轻灵流畅 / 武术线条**
-   - 身法、步法、腿法、转身、高低位、动作线条清楚；
-   - 全身流动，避免站桩。
+- 身法、步法、腿法、转身、高低位明显参与；
+- 全身动作线条清楚；
+- 快而不乱，强调连续流动与技术可读性；
+- 避免长期原地站桩交换。
 
-2. **吴京型｜硬朗爆发 / 全身压迫**
-   - 爆发进入、重接触、逼退、破平衡、再进入；
-   - 强冲击但仍保持空间移动。
+### 4.2 吴京型｜硬朗爆发 / 全身压迫
 
-3. **甄子丹型｜极速现代融合 / 近身连锁**
-   - 高速截击、拳腿肘膝、短控、快速换距与 Counter Chain；
-   - 现代融合不等于 MMA 站桩互殴。
+- 爆发进入、重接触、逼退、破平衡、再进入；
+- 短打、腿法、摔控可以快速串联；
+- 重量感、压迫感更强；
+- 仍必须保持 Position / Range / Balance 的动态变化。
 
-4. **成龙型｜环境互动 / 空间即武器**
-   - 跑、绕、翻、钻、跌扑恢复、障碍穿越；
-   - Environment Affordance 是动作链核心；
-   - Comedy Tone 可选，不强制。
+### 4.3 甄子丹型｜极速现代融合 / 近身连锁
 
-5. **李小龙型｜爆发截击 / 节奏破坏 / 极简直接**
-   - Interception / Stop-hit / Broken Rhythm / Explosive Entry / Exit / Range Control；
-   - 短促爆发 + 快速换距，不写成长时间原地连打。
+- 高速截击、拳腿肘膝、短控、快速换距与 Counter Chain；
+- 现代融合，但不等于 MMA；
+- 上肢动作密集时必须由 Footwork / Axis / Level / Position 变化打断静态模式；
+- 禁止退化成笼斗式站桩互殴。
+
+### 4.4 成龙型｜环境互动 / 空间即武器
+
+- 跑、绕、翻、钻、跌扑恢复、障碍穿越；
+- 桌椅、门框、栏杆、楼梯、墙面、道具等成为动作链原因；
+- Environment 必须改变 Position / Range / Axis / Advantage；
+- Comedy Tone 可选，不强制绑定。
+
+### 4.5 李小龙型｜爆发截击 / 节奏破坏 / 极简直接
+
+- Interception / Stop-hit / Broken Rhythm；
+- Explosive Entry / Exit / Range Control；
+- 假动作、突然提速、短促爆发、立即换距 / 换线；
+- Footwork 承担进入、退出、诱导和重新定距；
+- 禁止写成长时间原地高速挥拳。
 
 ---
 
 ## 5. Combat System 与 Archetype 的边界
 
-禁止把明星参考直接当体系：
+禁止混层：
 
 ```text
 李小龙型 ≠ 截拳道 / JKD
@@ -141,45 +168,17 @@ Round 2｜Combat Expression / Performance Identity
 咏春 + 甄子丹型
 八极 + 吴京型
 太极 + 李连杰型
-中国功夫电影混合体系 + 任意合理 Archetype
+Chinese Cinematic Kung-fu Hybrid + 任意合理 Archetype
 任意合理 Combat System + 成龙型环境编排
 ```
 
-Archetype 只改变电影动作表达权重，不覆盖已确认的 Technique Backbone。
+Archetype 只改变电影动作表达权重，不覆盖已确认 Technique Backbone。
+
+最终 Prompt 优先外显为中性动作语义，而不是仅写明星姓名。
 
 ---
 
-## 6. Runtime 合成
-
-Runtime 使用：
-
-```text
-Per-Character Combat System
-+ System Refinement
-+ Character Combat Expression
-+ Cinematic Combat Archetype（optional）
-+ Physical Presentation Domain
-+ Scene / Range / Environment / Intent
-→ Derived Choreography Direction
-```
-
-随后进入现有：
-
-```text
-Stage-2 Gap Detection
-→ Pattern / Technique Knowledge
-→ Concrete Action Phrase
-→ Subject Motion / Motion Carry-over
-→ Action–Camera
-→ Prompt Assembly
-→ Final Preflight
-```
-
-最终 Prompt 优先使用中性动作语义实现 Archetype，不只写明星姓名。
-
----
-
-## 7. Round 1 推荐联动：功夫电影观感优先，不默认把 MMA 放首位
+## 6. Round 1 推荐联动
 
 当用户明确表达以下任一目标：
 
@@ -188,56 +187,56 @@ Stage-2 Gap Detection
 - 不要站桩；
 - 希望更丰富的身法、步法、腿法、转身、高低位、路线和空间移动；
 
-Round 1 的 Combat System 推荐必须响应这个**观看目标 / 动作表达意图**，而不是因为场景是“现代、办公室、杀手、警匪”就机械把 MMA 放在默认推荐首位。
-
-推荐策略：
+Round 1 推荐策略必须响应这个观看目标：
 
 ```text
-用户明确中国功夫电影观感
-→ 优先展示更容易支持 Whole-body Movement / Footwork / Body Method / Kick Integration / Route Change 的合理体系
-→ 例如散打、八极、长拳、咏春、截拳道 / JKD、中国功夫电影混合体系，以及其他与角色 / 场景相容的中国武术体系
-→ MMA 仍可作为候选，但不默认占首位
+Chinese cinematic kung-fu intent
+→ 优先展示 Whole-body Movement / Footwork / Body Method / Kick Integration / Route Change 更丰富的合理体系
+→ 散打 / 八极 / 长拳 / 咏春 / 截拳道 / JKD / Chinese Cinematic Kung-fu Hybrid ...
+→ MMA 仍可作为候选，但不机械占首位
 ```
 
-注意：
+边界：
 
-- 这不是“中国武术永远比 MMA 好”的全局偏置；
-- 用户明确要竞技综合格斗、笼斗、真实 MMA 时，MMA 仍应优先；
-- 不能因为选择某个 Cinematic Archetype 就自动锁定某一 Combat System；
-- 推荐系统只调整候选排序和解释，不把 Archetype 与拳种预绑定；
-- 最终是否能避免 Static Standing Combat，仍由 Choreography / Movement / Stage-2 / Final Preflight 保证，不能只靠换一个体系名称。
+- 不是全局贬低 MMA；
+- 用户明确要竞技综合格斗、笼斗或真实 MMA 时，MMA 仍优先；
+- Modern 场景不等于 MMA 默认；
+- 某个 Archetype 不得自动锁定某个 Combat System；
+- 最终避免 Static Standing Combat 仍由 Movement / Stage-2 / Choreography / Final Preflight 保证。
 
-核心原则：
+原则：
 
-> **题材身份不能决定 Combat System，但用户明确的动作观感目标可以影响 Round 1 的推荐排序。**
-
-> **Modern 场景 ≠ MMA 默认。Chinese cinematic kung-fu intent → whole-body-capable systems first.**
+> **题材身份不能决定 Combat System，但用户明确的动作观感目标可以影响 Round 1 推荐排序。**
 
 ---
 
-## 8. 中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid
+## 7. 中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid
 
-当用户明确想要“李连杰 / 吴京那种中国武打电影动作”，但**并不关心角色严格属于某一真实拳种 / 门派**时，Round 1 允许提供：
+### 7.1 定位
+
+当用户想要“中国武打电影动作”，但不关心角色严格属于某一真实拳种 / 门派时，Round 1 允许提供：
 
 > **中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid**
 
-它属于合法的宽泛 `Combat System / Technique Backbone` 选择，用来表达：
+它属于合法宽泛 `Combat System / Technique Backbone`：
 
 - 以中国武术电影动作语言为主；
-- 允许在同一角色上组合合理的拳法、掌法、腿法、身法、步法、摔控、转身、高低位与路线变化；
-- 目标是形成完整 Whole-body Choreography，而不是严格还原单一门派。
+- 允许合理组合拳法、掌法、腿法、身法、步法、摔控、转身、高低位与路线变化；
+- 目标是完整 Whole-body Choreography，而不是严格门派还原。
 
-但它**不是**：
+### 7.2 不是万能动作池
 
-- “什么招都可以随便混”的万能标签；
-- 不受 State / Range / Contact / Axis / Position 约束的动作大杂烩；
-- 跳过 Stage-2 Technique / Movement / Transition Knowledge 的捷径；
-- 某一个明星 Archetype 的同义词。
+Hybrid 不是：
 
-Runtime 仍必须通过：
+- “什么招都可以随便混”的标签；
+- 无视 State / Range / Contact / Axis / Position 的动作大杂烩；
+- 跳过专业动作知识的捷径；
+- 任一明星 Archetype 的同义词。
+
+Runtime 仍必须执行：
 
 ```text
-当前 State / Range / Contact
+Current State / Range / Contact
 → Movement / Technique / Transition Gap
 → 合理 Pattern / Technique Knowledge
 → Concrete Action Phrase
@@ -246,35 +245,89 @@ Runtime 仍必须通过：
 → Immediate Continuation
 ```
 
-把这个宽泛 Backbone 具体化。
-
-### 与 Cinematic Combat Archetype 的关系
-
-两者可以自由组合，例如：
+### 7.3 Hybrid × Archetype
 
 ```text
-Combat System：Chinese Cinematic Kung-fu Hybrid
-Archetype：李连杰型
+Hybrid + 李连杰型
 → 更轻灵、流畅、全身线条清楚
 
-Combat System：Chinese Cinematic Kung-fu Hybrid
-Archetype：吴京型
+Hybrid + 吴京型
 → 更硬朗、爆发、重接触和压迫
 
-Combat System：Chinese Cinematic Kung-fu Hybrid
-Archetype：成龙型
+Hybrid + 甄子丹型
+→ 更高速现代融合、近身连锁和快速换距
+
+Hybrid + 成龙型
 → 更强环境互动、空间穿越和失衡恢复
+
+Hybrid + 李小龙型
+→ 更强截击、Broken Rhythm、爆发进退和距离控制
 ```
 
-因此：
-
 > **Hybrid 决定“不被单一门派锁死的 Technique Backbone”；Archetype 决定“这套动作在电影里怎么呈现”。**
+
+### 7.4 CA-08：Hybrid 默认自动编排，不固定追问混哪些门派
+
+用户选择 `Chinese Cinematic Kung-fu Hybrid` 后：
+
+```text
+默认
+→ 不再追加“具体混哪些拳种 / 门派？”的固定问题
+→ Runtime 根据 Archetype + Character Combat Expression + Scene + Range + 当前动作缺口
+→ 静默选择合理 Movement / Technique / Transition Knowledge
+→ 生成具体可执行 Choreography
+```
+
+原因：Hybrid 本身就是为了避免用户被迫先锁定具体门派。如果选择 Hybrid 后又固定追问“到底混八极还是散打”，会抵消这个选项的价值并增加低收益交互。
+
+只有用户**主动明确具体混合偏好**时才进入 `Hybrid Refinement`，例如：
+
+```text
+“以八极为主，混一些散打腿法”
+“主要想要长拳身法，但近身加入咏春”
+“截拳道式进退，再混中国武术电影腿法”
+```
+
+此时：
+
+```text
+用户明确的主 / 辅倾向
+→ 作为 Hybrid Refinement 继承
+→ Runtime 不再自行改成另一套主要体系
+```
+
+如果用户没有明确：
+
+> **Do not ask by default. Resolve silently.**
+
+这不是取消专业性，而是把专业选择从用户问卷下沉到 Stage-2 Runtime。
+
+---
+
+## 8. Runtime 合成
+
+```text
+Per-Character Combat System
++ System Refinement / Hybrid Refinement（if explicit）
++ Character Combat Expression
++ Cinematic Combat Archetype（optional）
++ Physical Presentation Domain
++ Scene / Range / Environment / Intent
+→ Derived Choreography Direction
+→ Stage-2 Gap Detection
+→ Pattern / Technique Knowledge
+→ Concrete Action Phrase
+→ Subject Motion / Motion Carry-over
+→ Action–Camera
+→ Prompt Assembly
+→ Final Preflight
+```
 
 ---
 
 ## 9. Anti-overdesign
 
-本设计明确不做：
+明确不做：
 
 - 不新增固定 Round 3；
 - 不给每位明星建立独立 Combat Engine；
@@ -283,79 +336,46 @@ Archetype：成龙型
 - 不因为存在明星 Archetype 就跳过 Combat System；
 - 不把五种 Archetype 固定展示给所有 Combat 用户；
 - 不把人物战斗表达和明星 Archetype 预组合成套餐；
-- 不把“中国功夫电影混合体系”做成无约束万能动作池；
-- 不无限收录“知名动作演员”，只有动作语言足够独立、稳定、可执行且能显著改变生成结果时才扩展。
+- 不把 Hybrid 做成无约束万能动作池；
+- **不在用户选择 Hybrid 后固定追问具体混哪些门派；**
+- 不无限收录知名动作演员；只有动作语言足够独立、稳定、可执行且能显著改变生成结果时才扩展。
 
 ---
 
 ## 10. 当前已确认决策
 
 ### CA-01
-
-李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙作为少量稳定 `Cinematic Combat Archetype` 存在，明星名称用于用户易理解的导演参考，Runtime / Final Prompt 转换成中性动作语义。
+李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙作为少量稳定 `Cinematic Combat Archetype`；明星名称用于用户易理解的导演参考，Runtime / Final Prompt 转换成中性动作语义。
 
 ### CA-02
-
-`Cinematic Combat Archetype ≠ Combat System`；例如 `截拳道 / JKD` 是 Combat System，而 `李小龙型` 是电影动作表达。
+`Cinematic Combat Archetype ≠ Combat System`；例如 `截拳道 / JKD` 是 Combat System，`李小龙型` 是电影动作表达。
 
 ### CA-03
-
-Cinematic Combat Archetype 正式挂在 **Round 2 `Combat Expression / Performance Identity`** 下作为可选子维度，**不新增固定 Round 3**。
+Cinematic Combat Archetype 挂在 Round 2 `Combat Expression / Performance Identity` 下作为可选子维度，不新增固定 Round 3。
 
 ### CA-04
-
-Round 2 可以同时决定人物气质 / 决策倾向与可选 Archetype；这仍属于同一个 Primary Planning Node，不违反 `One Question, One Primary Decision Node`。
+Round 2 可以同时决定人物气质 / 决策倾向与可选 Archetype，仍属于同一 Primary Planning Node。
 
 ### CA-05
-
-Round 2 采用**同轮双子维度分别选择**：`Character Combat Expression` 与 `Cinematic Combat Archetype` 分开展示、分开选择；不得预先组合成“气质 + 明星型”的绑定套餐。
+Round 2 采用同轮双子维度分别选择：`Character Combat Expression` 与 `Cinematic Combat Archetype` 分开展示，不预组合套餐。
 
 ### CA-06
-
-当用户明确追求中国功夫电影 / 华语武打 / 不站桩 / 明星型功夫电影观感时，Round 1 不再默认优先推荐 MMA；优先给更有利于 Whole-body Movement、身法、步法、腿法、路线与高低位变化的合理中国武术体系。MMA 保留为合法候选，不做全局降级。
+用户明确追求中国功夫电影 / 华语武打 / 不站桩 / 明星型功夫电影观感时，Round 1 不默认优先 MMA；优先给 Whole-body Movement 更丰富的合理中国武术体系。MMA 保留合法候选。
 
 ### CA-07
+Round 1 允许提供 `Chinese Cinematic Kung-fu Hybrid` 作为宽泛 Technique Backbone；它必须由 Stage-2 Movement / Technique / Transition Knowledge 具体化，不能退化成无约束大杂烩。
 
-Round 1 在中国功夫电影观感下允许提供 **`中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid`** 作为合法宽泛 Technique Backbone。它适用于用户想要电影武打动作语言、但不想被单一真实门派锁死的情况；仍必须由 Stage-2 Movement / Technique / Transition Knowledge 具体化，不能退化成无约束大杂烩。
+### CA-08
+选择 `Chinese Cinematic Kung-fu Hybrid` 后，**默认不再追问具体混哪些拳种 / 门派**；Runtime 根据 Archetype、Character Combat Expression、Scene、Range 与当前动作缺口静默完成具体编排。只有用户主动给出主 / 辅体系倾向时才进入 `Hybrid Refinement`。
 
 ---
 
-## 11. 下一实施点
+## 11. 下一实施批
 
-Interactive Runtime 需要同时落实三件事：
+Interactive Runtime 下一批一次性落实 CA-05～CA-08：
 
-1. Round 2：
-
-```text
-Combat Expression / Performance Identity
-├─ Character Combat Expression
-└─ optional Cinematic Combat Archetype
-```
-
-2. Round 1 Recommendation Policy：
-
-```text
-Chinese cinematic kung-fu intent
-→ Chinese whole-body-capable system candidates first
-→ include Chinese Cinematic Kung-fu Hybrid when user does not need strict school fidelity
-→ MMA remains available but is not mechanically top-ranked
-```
-
-3. Hybrid Execution Boundary：
-
-```text
-Chinese Cinematic Kung-fu Hybrid
-≠ random move soup
-→ still requires State-aware Stage-2 Movement / Technique / Transition realization
-```
-
-并保证：
-
-- 用户不需要明星参考时不会多问；
-- 用户已明确 Archetype 时直接继承；
-- 中国功夫电影参考存在真实分叉时，可以在 Round 2 展示五种参考型；
-- 两个子维度独立，不做组合套餐；
-- 不新增独立 Archetype 问卷轮次；
-- 不把现代身份 / 场景重新变成 MMA 的快捷映射；
-- 不把某个明星 Archetype 强绑定某个拳种；
-- 不把 Hybrid 变成跳过专业动作知识的捷径。
+1. **Round 2 双子维度**：Character Combat Expression + optional Cinematic Combat Archetype；
+2. **Round 1 推荐排序**：Chinese cinematic intent 下 whole-body-capable systems first，MMA 不机械首位；
+3. **Hybrid 合法候选**：不要求严格门派时可选 Chinese Cinematic Kung-fu Hybrid；
+4. **Hybrid 默认静默展开**：不固定追加门派混合问卷；只有用户主动指定时做 Hybrid Refinement；
+5. Archetype / Hybrid 最终都必须进入 Derived Choreography Direction 与 Stage-2 具体化，不允许停留在标签层。
