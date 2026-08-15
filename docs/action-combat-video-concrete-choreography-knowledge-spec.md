@@ -252,42 +252,9 @@ Transition Pattern 回答：
 
 确认选择：**Pattern-first，而不是 Style/School-first。**
 
-不把 Runtime 构造成：
+不把 Runtime 构造成门派招式树；南拳、长拳、八极、咏春、太极等作为知识来源、风格倾向、动作气质、Pattern 证据 / 标签，以及用户明确指定某武术风格时的优先检索条件。
 
-```text
-南拳
-→ 招式树
-
-长拳
-→ 招式树
-
-八极
-→ 招式树
-...
-```
-
-而是把南拳、长拳、八极、咏春、太极等作为：
-
-- 知识来源；
-- 风格倾向；
-- 动作气质；
-- Pattern 证据 / 标签；
-- 用户明确指定某武术风格时的优先检索条件。
-
-Runtime 真正消费的是可组合 Pattern，例如：
-
-```text
-外侧切入
-沉身换位
-支撑腿攻击
-斜向穿步
-轴线旋转脱离
-低位进入再起身
-转身换侧
-贴身桥接
-扫腿破支撑
-跌扑恢复
-```
+Runtime 真正消费的是可组合 Pattern，例如：外侧切入、沉身换位、支撑腿攻击、斜向穿步、轴线旋转脱离、低位进入再起身、转身换侧、贴身桥接、扫腿破支撑、跌扑恢复。
 
 原则：
 
@@ -301,7 +268,7 @@ Runtime 真正消费的是可组合 Pattern，例如：
 
 确认选择：**共享基础 Pattern + Specialist Expansion**，不为 Modern / Traditional Martial / Wuxia 各复制一整套知识库。
 
-推荐概念结构：
+概念结构：
 
 ```text
 combat-choreography-knowledge/
@@ -310,14 +277,12 @@ combat-choreography-knowledge/
 │  ├─ modern/
 │  ├─ traditional-martial/
 │  └─ wuxia/
-│
 ├─ technique-patterns/
 │  ├─ striking/
 │  ├─ kicking/
 │  ├─ grapple-control/
 │  ├─ throw-takedown/
 │  └─ weapon/
-│
 └─ transition-patterns/
    ├─ movement-to-technique/
    ├─ technique-to-movement/
@@ -331,25 +296,11 @@ combat-choreography-knowledge/
 
 ### 9.1 Shared 层
 
-保存跨战斗形式稳定成立的：
-
-- Footwork / Route / Axis；
-- Weight Transfer；
-- Level Change；
-- Position Transition；
-- Balance / Recovery；
-- Ground / Standing 基础转换；
-- Technique ↔ Movement 通用衔接。
+保存跨战斗形式稳定成立的 Footwork / Route / Axis、Weight Transfer、Level Change、Position Transition、Balance / Recovery、Ground / Standing 基础转换、Technique ↔ Movement 通用衔接。
 
 ### 9.2 Specialist 层
 
-Specialist 不复制 Shared，而是增加：
-
-- 允许的运动尺度；
-- 物理边界；
-- 专项动作语言；
-- 专项 Technique / Transition Pattern；
-- Pattern 选择倾向。
+Specialist 不复制 Shared，而是增加允许的运动尺度、物理边界、专项动作语言、专项 Technique / Transition Pattern、Pattern 选择倾向。
 
 ---
 
@@ -375,59 +326,13 @@ Wuxia
 
 ## 11. Wuxia Movement / 轻功与空中战斗扩展
 
-确认：Wuxia 不建立另一套知识架构，而是在同一：
+确认：Wuxia 不建立另一套知识架构，而是在同一 `Movement Pattern + Technique Pattern + Transition Pattern` 结构上扩展更高运动尺度。
 
-```text
-Movement Pattern
-+ Technique Pattern
-+ Transition Pattern
-```
-
-结构上扩展更高运动尺度。
-
-Wuxia Movement 可以覆盖：
-
-```text
-轻功
-├─ 踏墙
-├─ 借物腾跃
-├─ 连续点地 / 点物
-├─ 高低落差穿越
-└─ 长距离空中位移
-
-腾空动作
-├─ 起跳进入
-├─ 空中转体
-├─ 空中换向
-├─ 空中攻防
-└─ 落地衔接
-
-空中战斗
-├─ 空中追击
-├─ 空中格挡 / Counter
-├─ 武器空中交锋
-├─ 高低位交错
-└─ 落点争夺
-
-环境借力
-├─ 墙面
-├─ 屋檐
-├─ 栏杆
-├─ 树木
-└─ 场景物件 / 武器
-```
+Wuxia Movement 可以覆盖轻功、踏墙、借物腾跃、连续点地 / 点物、高低落差穿越、长距离空中位移、起跳进入、空中转体、空中换向、空中攻防、落地衔接、空中追击、武器空中交锋、高低位交错、落点争夺以及墙面 / 屋檐 / 栏杆 / 树木 / 场景物件借力。
 
 ### 11.1 Ground ↔ Air Transition 是关键知识
 
-空中战斗不能写成：
-
-```text
-跳起来
-→ 空中打两招
-→ 落地
-```
-
-需要显式知识：
+空中战斗不能写成 `跳起来 → 空中打两招 → 落地`，需要显式知识：
 
 ```text
 Ground Entry
@@ -440,12 +345,7 @@ Ground Entry
 → Landing Handoff
 ```
 
-避免：
-
-- 无原因漂浮；
-- 空中静止挥拳 / 挥剑；
-- 起跳与落地无因果；
-- 落地后动作状态 Reset。
+避免无原因漂浮、空中静止挥拳 / 挥剑、起跳与落地无因果、落地后动作状态 Reset。
 
 原则：
 
@@ -458,22 +358,13 @@ Ground Entry
 确认：
 
 ### Movement Pattern
-
-回答：
-
-> **身体怎么移动、换位、换轴、换高度、改变路线。**
+回答身体怎么移动、换位、换轴、换高度、改变路线。
 
 ### Technique Pattern
-
-回答：
-
-> **角色具体用什么攻击、防守、控制、摔投或兵器技术。**
+回答角色具体用什么攻击、防守、控制、摔投或兵器技术。
 
 ### Transition Pattern
-
-回答：
-
-> **前一个身体 / Contact / Range / Momentum 状态如何合法进入下一动作。**
+回答前一个身体 / Contact / Range / Momentum 状态如何合法进入下一动作。
 
 最终由 Choreography Runtime 组合：
 
@@ -494,7 +385,63 @@ Movement Pattern
 
 ---
 
-## 13. 当前已确认决策记录
+## 13. Pattern Schema 策略：共享小核心 + 专项扩展
+
+确认：Movement / Technique / Transition 三类 Pattern **不共用一套巨大的全字段 Schema**，而是采用：
+
+```text
+Shared Core Schema
++ Movement Extension
++ Technique Extension
++ Transition Extension
+```
+
+共享核心只保留跨三类 Pattern 真正稳定、有路由价值的字段，建议至少包括：
+
+```text
+id
+name
+type
+intent / function
+entry_conditions
+resulting_state
+applicable_range
+applicable_level
+physical_scale
+compatible_patterns
+incompatible_conditions
+source_tags
+```
+
+专项扩展字段按职责增加：
+
+```text
+Movement Extension
+→ route / axis / weight_transfer / level_change / support_base / spatial_effect
+
+Technique Extension
+→ contact_modality / target_area / attacking_surface_or_weapon / defensive_answer / force_or_control_effect
+
+Transition Extension
+→ from_state / trigger / handoff_basis / to_state / failure_or_fallback_path
+```
+
+字段名在实施阶段可以按实际 Markdown / Library Schema 调整，但结构原则不变。
+
+目的：
+
+- Shared Core 负责统一索引、检索和 Stage-2 Routing；
+- 专项字段负责真正生产 Concrete Action；
+- 不因为“统一”让 Movement Pattern 背负 Weapon 字段，也不让 Technique Pattern 背负所有 Route / Airborne 字段；
+- 新增 Specialist 能力时优先扩展对应 Pattern，而不是膨胀共享核心。
+
+原则：
+
+> **统一的是索引与路由语言，不是强迫所有动作知识长成同一种形状。**
+
+---
+
+## 14. 当前已确认决策记录
 
 | # | 决策 | 当前结论 |
 |---|---|---|
@@ -508,10 +455,11 @@ Movement Pattern
 | CK-08 | Wuxia 扩展 | 同一 Pattern 架构上允许轻功、腾空、空中攻防、环境借力与电影化运动尺度 |
 | CK-09 | Ground↔Air | Wuxia 需要显式 Ground → Air → Ground Transition，避免漂浮、静止空中打斗和落地 Reset |
 | CK-10 | Pattern Schema 方向 | Movement / Technique / Transition 职责分离，但共享统一基础 Schema 并允许互相引用，不建立万能大 Pattern |
+| CK-11 | Schema 组织方式 | 共享小核心 Schema + Movement / Technique / Transition 专项扩展字段；统一索引与路由语言，不建设巨型全字段 Schema |
 
 ---
 
-## 14. Anti-overdesign 边界
+## 15. Anti-overdesign 边界
 
 当前明确禁止：
 
@@ -521,7 +469,8 @@ Movement Pattern
 - 建立大型固定招式序列库；
 - 把 Wuxia 另做一套平行 Combat Engine；
 - 在 Stage-2 Routing 尚未验证前扩建大规模 Fighting Library；
-- 通过固定“每段必须几次踢腿 / 几次换位 / 几次腾空”配额保证丰富度。
+- 通过固定“每段必须几次踢腿 / 几次换位 / 几次腾空”配额保证丰富度；
+- 为了统一 Schema 把所有专项字段都塞进 Shared Core。
 
 原则：
 
@@ -529,16 +478,15 @@ Movement Pattern
 
 ---
 
-## 15. 当前未决设计树
+## 16. 当前未决设计树
 
-当前已经确认知识架构的大方向，下一步仍需 Grill Me 的关键问题包括：
+下一步仍需 Grill Me 的关键问题包括：
 
-1. 统一 Pattern 基础 Schema 具体需要哪些字段；
-2. Stage-2 Routing 如何从 Planning Context 选择 Movement / Technique / Transition Detail，而不一次加载过多知识；
-3. 一个 Action Phrase 默认应组合多少类知识，如何与 Action Execution Budget 协调；
-4. Pattern 的适用条件 / 禁用条件 / Range / Level / Contact / Environment / Physical Scale 如何表达；
-5. 传统武术来源知识如何研究、归纳和去门派模板化；
-6. Wuxia 的电影化物理尺度如何由 Specialist 约束，避免仙侠化或无重力漂浮；
-7. Regression 如何单独识别 Upper-body Technique Dominance、Static Standing Combat 与 Knowledge Diversity 是否真正改善。
+1. Stage-2 Routing 如何从 Planning Context 选择 Movement / Technique / Transition Detail，而不一次加载过多知识；
+2. 一个 Action Phrase 默认应组合多少类知识，如何与 Action Execution Budget 协调；
+3. Pattern 的适用条件 / 禁用条件 / Range / Level / Contact / Environment / Physical Scale 如何表达；
+4. 传统武术来源知识如何研究、归纳和去门派模板化；
+5. Wuxia 的电影化物理尺度如何由 Specialist 约束，避免仙侠化或无重力漂浮；
+6. Regression 如何单独识别 Upper-body Technique Dominance、Static Standing Combat 与 Knowledge Diversity 是否真正改善。
 
 本文在上述设计完成后，再进入 Implementation Plan；在此之前不直接扩建 Runtime Library。
