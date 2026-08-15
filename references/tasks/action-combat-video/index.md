@@ -35,6 +35,7 @@ core-playbook.md
 + 1 个当前专项 Playbook
 + Planning Gate
 + Stage-2 Pattern Hit Evidence Gate
++ Persistent Combat Signature Contract（存在明确 Character / Technique Identity 时必经）
 + subject-motion/control.md（短时 High Kinetic / Whole-body 条件命中时必经）
 + 按缺口选择的其余少量 Controls
 + 按需展开的少量 Library Detail
@@ -42,6 +43,7 @@ core-playbook.md
 + 可选 Model Adapter
 + prompt-assembly/control.md（Combat 必经）
 + Combat Final Preflight（必经）
++ Prompt QA / Self-Repair Gate（必经）
 + 当前输出模板 / Model Serialization
 ```
 
@@ -65,7 +67,7 @@ core-playbook.md
 
 负责 Stage-2 Pattern Hit Evidence、Motion / Energy Carry-over 与 Action ↔ Camera Bridge：关键 Cut / Reframe 为什么发生、Shot 如何从仍在发生的 Motion / Contact / Pressure / Recovery 中进入，以及 Camera 如何随 Fight-space / Initiative / Level / Support 的真实变化组织 Coverage。
 
-> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”。**
+> **Core 负责“打得对、接得上”；Choreography 负责“打得够、连续、丰富、具体、好看、有实感”；Persistent Combat Signature 负责“角色已确认的打法差异不能打一半就消失”；Subject Motion 负责在 High Kinetic 条件下把重心、支撑、惯性、受力与 Whole-body Driver 真正落实；Action–Camera Handoff 负责“动作怎样自然交给镜头、镜头怎样继续同一个动作”；Prompt Assembly 负责“把内部具体设计原样保真地序列化成模型可执行的最终 Prompt”；Prompt QA / Self-Repair 负责“交付前发现实现问题并自动修正”。**
 
 ---
 
@@ -117,6 +119,7 @@ Planning Context 只保留当前任务需要的轻量变量，例如：
 - Coverage；
 - Rhythm / Realism / Impact 等执行属性；
 - Character Identity 倾向；
+- **用户已确认的 Technique Identity / Persistent Combat Signature；**
 - Contact Modality；
 - Environment Importance；
 - Signature Moment Need；
@@ -129,6 +132,7 @@ Planning Gate 必须先检查：
 - Fighting Direction 是否已经由用户明确；若未明确且不同打法会显著改变成片，Interactive 应优先直接询问“怎么打”；
 - 是否过早锁定结局；
 - Character Identity 是否被职业、性别、年龄、外貌或体型快捷映射；
+- 用户已经明确的角色打法 / Technique Identity 是否被保留为后续 Persistent Combat Signature，而不是一次性标签；
 - 是否把系统应自动保证的质量条件错误变成用户问卷。
 
 ### Stage 2：Execution Knowledge — Gap-driven Routing
@@ -195,6 +199,70 @@ Stage-2 不能只完成“脑内判断”却没有真实 leaf knowledge hit。�
 
 此时提高 Movement Pattern Slot 的路由优先级，但**不使用“每段必须几次换位 / 踢腿”的固定配额**。
 
+#### Persistent Combat Signature Gate
+
+只要用户、Interactive 或高置信度 Planning 已经明确某个角色的 Technique Identity / 打法差异，就必须把它升级为：
+
+> **Persistent Combat Signature / 持续打法特征**
+
+它不是动作次数配额，也不是要求重复同一 Combo；它回答的是：
+
+> **这个角色持续通过什么动作逻辑创造下一状态、抢 Initiative、改变 Range / Support / Position？**
+
+内部至少从以下维度中选取当前真正有区分度的组合：
+
+- Entry / Range Creation：怎样进入或维持距离；
+- State-change Method：通过 Strike / Kick / Grapple / Throw / Weapon / Movement 如何改变 Guard、Support、Axis、Range、Position；
+- Initiative Method：怎样抢、续、夺回主动权；
+- Continuation Logic：前一动作后果怎样进入下一动作；
+- Recovery / Re-entry：受阻或被反制后怎样继续保持角色打法特征。
+
+例如用户明确：
+
+```text
+女方：拳腿组合
+男方：拳肘 + 抱摔
+```
+
+不能只实现成：
+
+```text
+女方出现一次低踢
+男方尝试一次 body lock
+→ 后续双方全部回到同一种前臂 / 抓臂 / 肩线短打
+```
+
+应让角色打法在 Combat Spine 的不同阶段持续改变状态，例如：
+
+```text
+拳法制造高位 Guard / Reaction
+→ 腿法攻击 Support / Range
+→ 借 Footwork / Angle 继续进入拳法
+```
+
+以及：
+
+```text
+短打 / 肘击压缩距离
+→ 创造 Clinch / Body-lock Entry
+→ 成功摔控、被反摔、被迫换位，或至少迫使对手改变 Support / Position
+→ 从这个结果继续下一次贴身进入
+```
+
+`Grapple / Throw` 不要求每次成功摔倒，但必须产生真实状态后果；只有“尝试抱住”而没有改变 Balance / Position / Range / Response，不算 Signature Realization。
+
+不做机械次数配额；判断标准是：
+
+- 角色打法是否在整条 Combat Spine 中持续可辨认；
+- Concrete Technique 可以变化，但创造状态和抢主动的逻辑不能中途蒸发；
+- Major Reversal 前后角色仍然以自己的方式解决问题，而不是双方长期塌成同一种 Counter 模板。
+
+失败判定：
+
+`Technique Identity Evaporation / Persistent Signature Collapse`
+
+修复：回到后续 Concrete Action Phrase / Transition 重写，让打法差异继续产生状态后果；**禁止只补一个孤立踢腿 / 抱摔词来“打卡”。**
+
 #### Subject Motion 条件必读 Gate
 
 当任务同时满足以下条件时，必须在 Concrete Action Phrase 定稿前读取：
@@ -220,6 +288,7 @@ Stage-2 读取之后必须进入：
 
 ```text
 Execution Knowledge
+→ Persistent Combat Signature Realization（如存在明确角色打法差异）
 → 必要时读取 subject-motion/control.md
 → Movement / Technique / Transition 按当前状态组合
 → Concrete Action Phrase Construction
@@ -243,7 +312,7 @@ Quick 与 Interactive 使用同一个 Combat Planning Graph 和同一套质量�
 
 > **Quick = Full Planning + Silent Resolution.**
 
-Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Contact Solidity、Environment、Signature Moment、Camera / Execution Budget、Stage-2 Execution Knowledge、条件命中的 Subject Motion、Concrete Action Phrase、State / Continuity Validation、Action–Camera Handoff、Final Assembly / Final Preflight。
+Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Persistent Combat Signature（如命中）、Contact Solidity、Environment、Signature Moment、Camera / Execution Budget、Stage-2 Execution Knowledge、条件命中的 Subject Motion、Concrete Action Phrase、State / Continuity Validation、Action–Camera Handoff、Final Assembly / Final Preflight、Prompt QA / Self-Repair。
 
 如果 Fighting Direction 未明确但当前只有一个明显合理方向，Quick 静默推导；如果存在多个方向，也不进入多轮问答，而按上下文选择基线方案。
 
@@ -257,7 +326,7 @@ Quick 不因输入简短而跳过：Coverage、Rhythm、Character Identity、Con
 
 `Fighting Direction / 怎么打` 是上游高价值候选问题：当用户未明确且不同打法会显著改变 Movement / Technique / Range / Physical Scale 时直接询问。候选答案至少 5 个，正常 6–8 个，复杂可到 10 个，并支持自定义；不与旧“核心动作风格 / Choreography Profile”重复询问。
 
-不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Stage-2 Evidence、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
+不把 Contact Solidity、Kinetic Scope、Temporal Packing、Motion Handoff、Action Sufficiency、Executable Granularity、Stage-2 Evidence、Persistent Combat Signature QA、Subject Motion Gate、Action–Camera Handoff、Camera Readability、Final Preflight 等基础质量机制变成固定问卷。
 
 Camera Intent 属于条件高价值节点：只有多个观看策略都合理且会显著改变成片时才暴露，不固定必问。
 
@@ -265,7 +334,7 @@ Camera Intent 属于条件高价值节点：只有多个观看策略都合理且
 
 ---
 
-## 7. Combat 必经 Final Assembly / Preflight
+## 7. Combat 必经 Final Assembly / Preflight / QA
 
 输入仍由 `references/inputs/` 判断，不在本任务复制素材规则；输出仍挂接现有 single-shot / multi-shot / model-adapted 模板，不建立平行 Combat 模板。
 
@@ -275,6 +344,7 @@ Action Combat 的最终运行链必须是：
 Combat Planning Context
 → Stage-2 Gap-driven Execution Knowledge
 → Stage-2 Pattern Hit Evidence Gate
+→ Persistent Combat Signature Realization（如命中）
 → 条件命中时读取 subject-motion/control.md
 → Concrete Action Phrase / Battle Beat
 → Core State Validation
@@ -285,8 +355,11 @@ Combat Planning Context
 → 读取并执行 prompt-assembly/control.md
 → Combat-aware Final Prompt Assembly
 → Combat Final Preflight
-→ FAIL：内部回到 Stage-2 Read / Subject Motion / Concrete Action Phrase / Pattern Selection / Character Identity / Action–Camera Handoff / Prompt Assembly，并重新检查
-→ PASS：挂接当前输出模板 / Model Adapter
+→ FAIL：内部回到 Stage-2 Read / Persistent Signature / Subject Motion / Concrete Action Phrase / Pattern Selection / Character Identity / Action–Camera Handoff / Prompt Assembly，并重新检查
+→ PASS：进入 Prompt QA / Self-Repair Gate
+→ QA FAIL（实现质量问题）：静默修复对应层并重新 QA
+→ QA FAIL（必须改变用户已确认创作决策）：Interactive 重新暴露当前唯一必要决策；Quick 不得偷改决策
+→ QA PASS：挂接当前输出模板 / Model Adapter
 → Delivery
 ```
 
@@ -299,15 +372,56 @@ Combat Planning Context
 3. **Stage-2 是否真的命中**：存在明显 Movement / Technique / Transition Gap 时是否真实读取 leaf knowledge，并把 Pattern / Detail 变成 Concrete Action；否则判 `Stage-2 Routing Evidence Missing`；
 4. **Subject Motion 是否按条件命中**：短时 High Kinetic / Whole-body Combat 命中 Gate 时是否真实读取 `subject-motion/control.md`；若没读，判 `Subject Motion Routing Missing`；
 5. **动作是否连续**：是否存在明显 Action Underpacking、Neutral Reset、Turn-taking Combat；Initiative 是否在动作链内转移；关键 Transition 是否有 Motion / Energy Carry-over；
-6. **角色是否真实区分**：Character Identity 是否由动作表现，且没有人口属性快捷模板；
+6. **Persistent Combat Signature 是否持续**：角色已确认的 Technique / Character Identity 是否在整条 Combat Spine 中持续通过不同的 State-change / Initiative / Continuation 逻辑体现；如果只在前段出现一次，后续双方塌成同一种打法，判 `Technique Identity Evaporation / Persistent Signature Collapse`；
 7. **Movement 是否真的在编排战斗**：High / Expert Combat 中若连续多个关键 Phrase 主要由上肢 Contact 主导，而 Movement 没有主动创造 Level / Route / Axis / Range / Position / Support / Ground-State 变化，则判 `Static Standing Combat / Upper-body Technique Dominance` FAIL；
 8. **动作是否有实感和空间后果**：Contact / Range / Position / Environment 是否真正改变下一拍；
 9. **镜头是否由动作触发并继续同一个运动**：关键 Cut / Reframe 是否有 Motion / Contact / Consequence / Initiative / Range / Level / Environment Trigger；Cut 后是否继承 Active Motion，而不只保持位置；否则判 `Action–Camera Decoupling / Dead-motion Cut / Kinetic Handoff Loss`；
-10. **Camera Coverage 是否跟着战斗空间走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；不机械形成 `Medium → Close → Medium → Close`；
-11. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography 与关键 Camera Handoff 不被 Prompt Assembly 压回抽象摘要；
-12. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项。
+10. **Camera Coverage 是否跟着战斗空间和观看体验走**：Stable ≠ Static；Action Continuity ≠ Shot Continuity；不机械形成 `Medium → Close → Medium → Close`；Perceptual Impact 不过少也不过密；Hard Constraint 不被违反；
+11. **最终序列化是否正确**：高密度 Combat 默认 Continuous Action Spine + Soft Time Anchors，Concrete Choreography、Persistent Signature 与关键 Camera Handoff 不被 Prompt Assembly 压回抽象摘要；
+12. **Prompt 是否 Action-first**：Negative 少而有依据，不添加用户未要求的剧情禁止项；
+13. **Model Execution Realizability 是否通过**：没有 Effective High Granularity Everywhere、Instruction Saturation 或明显 Prompt–Video Execution Divergence 高风险结构。
 
 任一关键项 FAIL，不允许直接交付。
+
+### Prompt QA / Self-Repair Gate
+
+Combat Final Preflight PASS 后仍执行最后一次成品级 QA。该 Gate 不是重复整个 Planning，而是检查**最终序列化后的成品 Prompt 是否重新引入了问题**。
+
+```text
+Final Prompt Draft
+→ QA
+→ PASS：Delivery
+→ FAIL：定位主失败项
+   ├─ 实现质量问题
+   │  → Silent Self-Repair
+   │  → Re-run QA
+   └─ 只有改变用户已确认 Creative Decision 才能修复
+      → 不得静默改
+      → Interactive：重新问当前唯一必要问题
+      → Quick：保留决策并输出约束内最佳结果 / 最简冲突说明
+```
+
+Combat QA 特别检查：
+
+- Stage-2 Pattern / Detail 是否在 Assembly 后消失；
+- Persistent Combat Signature 是否中后段蒸发；
+- Subject Motion / Whole-body Driver 是否又被压成上肢主导；
+- Action–Camera Handoff / Perceptual Impact 是否被压回一个泛化 Camera 段；
+- Base Viewing Priority 是否被错误固化成固定 Shot Pattern；
+- Camera Hard Constraint 是否被动态镜头偷偷违反；
+- Instruction Saturation 是否因为最终合并 Camera / Audio / Negative 再次出现；
+- Ending / Negative / Continuity 是否吞掉 Active Exchange；
+- 用户确认的 Technique Identity、Camera 选择和剧情约束是否有任何漂移。
+
+### Self-Repair 权限边界
+
+可以静默修：Phrase 组织、动作 / Camera Handoff 外显、Granularity、重复描述、Instruction Saturation、低价值 Negative / Camera / Audio、Ending 占比，以及已经确认内容在序列化中的遗漏。
+
+不能静默改：Fighting Direction、Persistent Combat Signature / Technique Identity、Base Viewing Priority、Camera Hard Constraint、人物身份、剧情关系、胜负 / Ending 意图、用户明确必须保留 / 禁止项。
+
+默认发现问题先执行 `1` 次静默修复并重新 QA；复杂依赖问题可再修一次，但不做无止境循环。
+
+> **质量问题修实现；创作决策要么保留，要么重新问。**
 
 ---
 
@@ -346,6 +460,7 @@ Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 
 
 > **State Machine Internalized, Choreography Externalized.**  
 > **Concrete Choreography In, Concrete Choreography Out.**  
+> **Persistent Combat Signature Across the Spine.**  
 > **Action Drives Camera; Camera Preserves Live Motion.**  
 > **时间码服从动作连续性，而不是动作服从时间码。**
 
@@ -356,8 +471,9 @@ Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 
 > **约束错误，不约束创作。**  
 > **Clarity Through Structure, Not Action Reduction.**  
 > **高信息密度，但低混乱度。**  
+> **质量问题自动修实现，已确认创作决策不偷改。**  
 > **少建运行时概念，多做高价值质量检查。**
 
-Battle Beat、Action Phrase、Pattern、Action–Camera Handoff、Golden Scenario 都不是固定动作 / 镜头模板。
+Battle Beat、Action Phrase、Pattern、Persistent Combat Signature、Action–Camera Handoff、Golden Scenario 都不是固定动作 / 镜头模板。
 
-禁止为了“清晰”默认削减有效攻防；复杂度优先通过结构、Phrase 切分、Camera Readability、Action-triggered Handoff 与模型执行预算处理。新增 Failure Signature 不自动意味着新增 Runtime 模块。
+禁止为了“清晰”默认削减有效攻防；复杂度优先通过结构、Phrase 切分、Camera Readability、Action-triggered Handoff、Persistent Signature 与模型执行预算处理。新增 Failure Signature 不自动意味着新增 Runtime 模块。
