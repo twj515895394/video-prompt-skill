@@ -29,7 +29,7 @@
 1. **Granularity Distribution**：如何保持动作可执行，同时让 15 秒容纳更多 Exchange；
 2. **Combat Diversity / Static Standing Combat**：如何避免长期上肢控制与“站着打”。
 
-当前设计重点主要在第 2 条；第 1 条已经先收敛为颗粒度分配规则，不继续过度扩展。
+当前设计重点主要在第 2 条；第 1 条已经收敛为轻量颗粒度预算规则，不再继续扩展。
 
 ---
 
@@ -53,6 +53,48 @@ Low Granularity
 > **关键因果动作具体，普通交换适度压缩，连接动作允许摘要。**
 
 该规则并入现有 `Action Execution Budget + Executable Granularity + Temporal Packing`，不新建 Granularity Engine。
+
+### 2.1 Lightweight Action Phrase Budget / 轻量动作短语预算
+
+确认：CK-01 的落地只定义 **什么时候该详细、什么时候该压缩**，不建立固定动作数量、固定字数、固定秒数或固定 Exchange 配额。
+
+运行时使用以下轻量判断：
+
+```text
+关键 Reversal / Initiative Theft / Signature Moment
+→ High Granularity
+→ 保留身体状态、具体动作、Contact、即时响应、位置 / 轴线 / Range 后果与下一入口
+
+普通 Exchange / Re-counter / Range Change
+→ Medium Granularity
+→ 保留动作因果与关键状态变化，但压缩次要身体细节
+
+纯连接 / 非关键过渡
+→ Low Granularity
+→ 只保留连续性所需信息，不展开成新的大段动作描写
+```
+
+额外规则：
+
+- 如果连续两个 Phrase 已经使用 High Granularity，后续普通 Exchange 应主动优先压缩为 Medium / Low，而不是继续堆第三个同等长度的大段；
+- High Granularity 不是“写得越长越好”，只对承担重大转折价值的信息展开；
+- Medium / Low 也不能退回“连续格挡 / 快速反制 / 持续缠斗”等不可执行抽象词，仍需保留基本动作因果；
+- Runtime 目标是给更多真实 Exchange 留执行空间，而不是追求更长 Prompt。
+
+明确禁止：
+
+```text
+15 秒必须 N 个动作
+每个 Phrase 必须 N 字
+每个 Exchange 必须 N 秒
+High / Medium / Low 固定数量占比
+```
+
+原则：
+
+> **颗粒度预算只控制“信息展开深度”，不控制“动作数量配额”。**
+
+至此，“颗粒度越细导致动作链越少”作为独立设计问题完成收口；后续只通过 Regression 验证实际 15 秒 Choreography Richness 是否改善。
 
 ---
 
@@ -477,6 +519,7 @@ Regression 关注结果：
 | CK-14 | Fighting Direction Options | 至少 5 个，正常 6–8 个、复杂可到 10 个；必须有实质动作差异并支持自定义 |
 | CK-15 | Static Standing Combat Gate | High / Expert Combat 连续关键 Phrase 上肢主导且 Movement 未创造有效状态 / 空间变化时判定失败 |
 | CK-16 | Fighting Direction 合并旧风格问法 | 原“核心动作风格 / Choreography Profile”不再作为独立 Interactive 问题；与“怎么打”合并为一个上游 Fighting Direction 节点，节奏 / 写实度 / 重量感等作为执行属性 |
+| CK-17 | Lightweight Action Phrase Budget | 只定义何时详细、何时压缩；连续高颗粒度后普通 Exchange 主动降为中 / 低颗粒度；不使用固定动作数、字数、秒数或占比配额 |
 
 ---
 
@@ -493,7 +536,8 @@ Regression 关注结果：
 - 固定 Stage-2 每次必须加载三槽；
 - 在 Interactive 已经可以直接获得高价值 Fighting Direction 时，用复杂自动推断替代一句清晰用户问题；
 - 把“候选答案 5–10 个”误解成固定凑数，产生同义选项；
-- 将“核心动作风格”和“Fighting Direction”拆成两轮高度重复交互。
+- 将“核心动作风格”和“Fighting Direction”拆成两轮高度重复交互；
+- 用固定动作数、字数、秒数或 Granularity 占比实现所谓“动作丰富度”。
 
 原则：
 
@@ -505,8 +549,7 @@ Regression 关注结果：
 
 当前分支已经接近收口。剩余需要 Grill Me 的关键问题主要是：
 
-1. 一个 Action Phrase 如何与 Granularity Distribution / Action Execution Budget 协调，避免 CK-01 只停留在原则；
-2. 是否需要在实施前补充最小 Pattern 样例集，用来验证 Stage-2 能真正打破 Upper-body Dominance；
-3. Implementation Plan 与 Regression 如何落地 CK-13～CK-16。
+1. 是否需要在实施前补充最小 Pattern 样例集，用来验证 Stage-2 能真正打破 Upper-body Dominance；
+2. Implementation Plan 与 Regression 如何落地 CK-13～CK-17。
 
 不再继续横向扩展新的武术知识分类，优先完成上述依赖后进入实施。
