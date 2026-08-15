@@ -152,7 +152,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 ### Action Combat Post-Planning Mandatory Path
 
-Fighting Direction、关键 Character Identity / Technique 差异和 Camera Intent（如需要）一旦由用户确认或静默确定，**不得直接跳到 Controls / Template / Final Prompt**。必须重新进入执行阶段：
+Fighting Direction、关键 Character Identity / Technique 差异、Camera Base Viewing Priority 与 Camera Hard Constraint（如需要）一旦由用户确认或静默确定，**不得直接跳到 Controls / Template / Final Prompt**。必须重新进入执行阶段：
 
 ```text
 Confirmed Combat Planning Context
@@ -175,7 +175,7 @@ Confirmed Combat Planning Context
 - `references/tasks/action-combat-video/action-camera-handoff-playbook.md`
 - `references/controls/prompt-assembly/control.md`
 
-其中 `action-camera-handoff-playbook.md` 负责 Stage-2 Evidence、Model Execution Realizability、Motion / Energy Carry-over 与 Action ↔ Camera Handoff；`prompt-assembly/control.md` 负责最终保真序列化。两者都不占普通 `0-3` Controls 配额。
+其中 `action-camera-handoff-playbook.md` 负责 Stage-2 Evidence、Model Execution Realizability、Motion / Energy Carry-over、Base Viewing Priority / Hard Constraint 协调与 Action ↔ Camera Handoff；`prompt-assembly/control.md` 负责最终保真序列化。两者都不占普通 `0-3` Controls 配额。
 
 #### Stage-2 leaf knowledge 条件必读
 
@@ -203,7 +203,7 @@ Combat 内部职责：
 - `core-playbook.md`：State / Continuity / Battle Runtime Skeleton；
 - `choreography-playbook.md`：Coverage / Rhythm / Action Phrase / Character Identity / Tactical Interaction / Contact Solidity / Signature Moment / Execution Budget / Kinetic / Temporal / Camera Mobility / Final Preflight Criteria；
 - 专项 Playbook：Modern / Wuxia 的具体动作语言与物理尺度；
-- `action-camera-handoff-playbook.md`：Stage-2 Evidence / Model Execution Realizability / Motion-Energy Carry-over / Action-triggered Camera Handoff；
+- `action-camera-handoff-playbook.md`：Stage-2 Evidence / Model Execution Realizability / Motion-Energy Carry-over / Base Viewing Priority / Camera Hard Constraint / Action-triggered Camera Handoff / Perceptual Impact；
 - `prompt-assembly/control.md`：把内部动作设计转成最终连续、Action-first、可执行的 Prompt，并执行 Negative / Temporal / Kinetic / Camera Handoff 外显检查。
 
 Combat 不新增独立 `combat-choreography` 全局 Control。
@@ -226,7 +226,7 @@ Combat 不新增独立 `combat-choreography` 全局 Control。
 - 冲突时自行裁决，只保留最符合主目标的路线；
 - 直接输出一份可复制 Prompt 或必要的 Prompt Pack。
 
-Combat Quick Mode 必须执行 **Full Planning + Silent Resolution**：内部仍推导 Combat Intent、Branch、Fighting Direction、Coverage、Rhythm、Character Identity、Environment、Contact Solidity、Signature Moment、Action / Camera Execution Budget、Battle Beat 与 State Contract；这些内部状态不默认展示。
+Combat Quick Mode 必须执行 **Full Planning + Silent Resolution**：内部仍推导 Combat Intent、Branch、Fighting Direction、Coverage、Rhythm、Character Identity、Environment、Contact Solidity、Signature Moment、Camera Base Viewing Priority、用户明确的 Camera Hard Constraint、Action / Camera Execution Budget、Battle Beat 与 State Contract；这些内部状态不默认展示。
 
 Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Contact Solidity 或 Signature Moment 质量标准；也不得跳过 Stage-2 Evidence / Action–Camera Handoff / Combat Final Assembly / Final Preflight。
 
@@ -261,9 +261,12 @@ Combat Interactive Mode 与 Quick Mode 共用同一 Combat Planning Graph 和质
 每轮候选项必须只回答当前 Primary Planning Node。特别是：
 
 - Fighting Direction / “怎么打”候选只能描述 Movement / Technique / Range / Physical Scale / 摔控比例 / 腿法比例 / 路线与节奏等打法差异；
-- **`一镜到底 / 固定机位 / 贴身手持 / 完整动作可读 / 电影冲击 Coverage` 属于 Camera Intent，禁止混入 Fighting Direction 候选；**
+- **`完整动作可读 / 电影冲击体验 / 贴身沉浸 / 空间关系 / 技巧细节` 属于 Camera Base Viewing Priority，禁止混入 Fighting Direction；**
+- **`一镜到底 / No Cut / 固定机位` 属于 Camera Hard Constraint，也禁止混入 Fighting Direction 或 Base Viewing Priority 候选池；**
 - Character Identity 候选只能决定双方“怎么以不同方式打”，不得顺手锁死 Camera / Ending；
-- Camera Intent 候选不得反向改变已经确认的 Fighting Direction / Technique Identity。
+- Base Viewing Priority 候选不得偷偷锁死 One-take / Fixed / No Cut 等 Hard Constraint；
+- Camera Hard Constraint 只限制摄影实现，不得反向改变已经确认的 Fighting Direction / Technique Identity / Combat Coverage；
+- Camera Base Viewing Priority 与 Camera Hard Constraint 不因为概念拆分而固定增加两轮问题；Hard Constraint 只有用户明确提出或本身成为高价值分叉时才暴露。
 
 用户完成最后一个高价值 Combat 选择后，必须执行上面的 **Action Combat Post-Planning Mandatory Path**，不能从 Interactive 直接跳到 Final Assembly。
 
@@ -462,7 +465,8 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 缺少声音时，只补有明确画面来源的环境音或拟音；
 - 多素材冲突时，为每个关键维度选择唯一主真源；
 - 主体动作强时通常降低无必要 Camera Complexity；**Action Combat 不因此自动降低 Camera Mobility**；
-- 用户选择“完整动作可读型”时，优先更宽、更少无意义 Cut，但**不得序列化成全程固定中大全景**；Camera 仍应随 Route / Level / Support / Initiative / Fight-space 的真实变化做有动机的跟随、降位、Reframe 或必要 Cut；
+- 用户选择“完整动作可读优先”时，默认优先 Whole-body / Footwork / Spatial Relationship 可读，但**不得序列化成全程固定中大全景**；在 Camera Hard Constraint 允许范围内，仍应随 Route / Level / Support / Initiative / Fight-space 与高价值 Perceptual Impact 做有动机的跟随、降位、Reframe、POV / Close-up 或必要 Cut；
+- 用户明确 One-take / No Cut / Fixed Camera 时视为 Camera Hard Constraint；Hard Constraint 优先于 Base Viewing Priority 与 Camera Accent，但只限制摄影实现，不反向削减 Combat Coverage / Fighting Direction；
 - 互斥风格只保留最符合核心观看目标的一种；
 - Combat 缺少流派时选择最符合 Character Identity、剧情和距离关系的低风险动作语言，不按职业强行套 Profile；
 - Combat Character Identity 不根据性别、年龄、外貌、体型直接套打法；这些只能作为能力 / 物理约束输入之一；
@@ -486,6 +490,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 - 高密度 Combat 默认使用 `Continuous Action Spine + Soft Time Anchors`，不把 Active Exchange 机械拆成每 1–3 秒一个独立动作盒；
 - Combat Final Prompt 由正向动作语言主导，状态术语尽量转译为可见动作、受力和空间后果；
 - Combat 的具体化必须通过 Model Execution Realizability：优先 `Whole-body Motor Driver → 关键 Technique → Opponent Response → Balance / Position Consequence → Continuation`，压描述复杂度而不是压动作连续性；
+- Combat Camera 序列化必须区分 `Base Viewing Priority` 与 `Camera Hard Constraint`：全局 Camera Baseline 只保留简短观看基线和真正硬约束，高价值 Action-triggered / Perceptual Camera Accent 直接锚在对应 Action Phrase；普通连接动作继续当前 Shot，不逐动作配镜头；
 - Combat Audio 与 Action / Camera 同一连续事件流设计，但 Audio Accent Density 不等于 Action Density；
 - Negative 只针对当前最危险失败模式，不默认追加通用禁止清单，也不添加用户未要求的剧情限制；
 - 最后一拍必须可自然停住。
@@ -517,8 +522,8 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 4. **角色是否合理且真实区分**：Combat Character Identity 是否能从改变状态的 Movement / Technique / Initiative 看出差异；用户已确认的“拳腿 / 拳肘抱摔”等差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
 5. **Model Execution Realizability 是否通过**：是否出现 Effective High Granularity Everywhere、Instruction Saturation、Upper-body Semantic Dominance；Feet-fixed Test 是否失败；
 6. **接触与状态是否成立**：Contact 是否有 Commitment、受力 / 压力、Reaction 与 Persistent Consequence；Range / Position / Advantage / Environment 是否影响下一拍；
-7. **镜头是否跟得上且由动作触发**：Camera Complexity 与 Camera Mobility 是否分离；完整动作可读型是否仍保留有动机的 Route / Level / Support / Initiative Reframe；关键 Cut / Reframe 是否继承 Active Motion；
-8. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；Action–Camera Handoff 是否没有被压成泛化 Camera 段；
+7. **镜头是否跟得上且尊重 Camera 决策层级**：Base Viewing Priority 是否仍允许高价值 Route / Level / Support / Initiative / Perceptual Accent；关键 Cut / Reframe 是否继承 Active Motion；用户明确 One-take / No Cut / Fixed Camera 时是否存在 `Camera Hard Constraint Violation`；
+8. **最终序列化是否正确**：高密度 Combat 是否保持 Continuous Action Spine + Soft Time Anchors；Hard Timeline 若存在是否有明确理由且跨块无 Reset；Action–Camera Handoff 是否没有被压成泛化 Camera 段；Camera Baseline 是否短、关键 Camera Accent 是否锚在具体 Action Moment；
 9. **Prompt 是否 Action-first**：是否由可见动作主导，Negative 是否少而有依据。
 
 任一关键项 FAIL：内部回到 Stage-2 Read / Pattern Selection / Action Phrase / Character Identity / Action–Camera Handoff / Prompt Assembly 对应层重写，重新执行 Gate，通过后才允许交付。
@@ -570,9 +575,12 @@ Combat 主诊断：
 - Combat 不使用固定 `2-4` / `2–4` 交互节点作为 Battle Beat 全局动作数量上限；
 - Combat 不为了“清晰”默认减少有效攻防；
 - Combat 不把职业、性别、年龄、外貌或体型直接映射固定打法；
-- Combat Fighting Direction 候选不混入 Camera Intent；
+- Combat Fighting Direction 候选不混入 Camera Base Viewing Priority 或 Camera Hard Constraint；
+- Combat 不把 Base Viewing Priority 写成固定 Shot Template；
+- Combat 不把 One-take / No Cut / Fixed Camera 当成“完整动作可读 / 电影冲击”等观看优先级；
+- Combat 不违反用户明确 Camera Hard Constraint；
 - Combat 不用 Camera Shake / 大音效代替真实 Contact；
-- Combat 不因“完整动作可读”自动锁成全程固定中大全景；
+- Combat 不因“完整动作可读优先”自动锁成全程固定中大全景；
 - Combat 不因通用单镜头模板自动把高密度连续战斗切成多个 Hard Time Blocks；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
 - 不暴露内部 Reference、目录、迁移和维护说明。
