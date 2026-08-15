@@ -171,9 +171,46 @@ Interactive 中所有高价值 Combat 决策完成后，包括已经需要暴露
 
 #### RF-22 Interactive Planning Completion Gate
 
+##### Pending User Decision Guard
+
+在任何 Completion Gate 判定、Runtime Direct READ 或 Post-Planning 派生之前，先检查当前是否存在**已经向用户提出、但尚未收到用户答复的高价值 Interactive 决策**。
+
+只要 assistant 已经明确向用户发出类似：
+
+```text
+请选择 A / B / C / D
+你选哪一项？
+请确认 Ending / Camera / Physical Scale / Combat System / Expression / Archetype
+```
+
+且用户尚未对该问题作答、取消该问题或明确授权 Runtime 自动决定，则该项必须保持：
+
+```text
+Pending User Decision = PRESENT
+→ corresponding Planning Field = unresolved
+→ Interactive Planning Completion Gate = FAIL
+```
+
+此时禁止：
+
+```text
+READ regression-fix-runtime-policy.md
+READ / 预加载任何仅服务 Post-Planning execution 的 Stage-2 / Camera Handoff / Prompt Assembly Reference
+Derived Choreography
+Duration Budget / Exchange Spine
+Stage-2 Gap / Pattern Selection
+Concrete Action Phrase
+Final Assembly
+```
+
+**已经把问题问给用户后，不允许在等待回复期间把该问题重新解释成“可默认 / 可继承 / none”，也不允许为了节省下一步时间预读下游 Runtime。** 只有用户实际回复、明确跳过，或明确授权“你帮我选 / 直接决定”后，才重新解析该字段并再次执行 Completion Gate。
+
+该 Guard 高于普通 `resolved by default / inherited / none` 推断：是否可以默认必须在**向用户提问之前**决定；一旦已向用户暴露为高价值选择，就必须等待这次选择闭合。
+
 在 Direct READ `regression-fix-runtime-policy.md` 之前，必须先检查当前 Interactive Planning Context 是否已经完成。至少逐项判断：
 
 ```text
+Pending high-value user decision = none?
 Combat System / required Refinement resolved?
 Character Combat Expression resolved?
 optional Cinematic Combat Archetype resolved as selected / inherited / none?
@@ -185,7 +222,7 @@ Physical Presentation Domain resolved?
 
 `resolved` 不等于“每一项都必须新增一轮问卷”。允许沿用当前 Interactive Policy 的 `Known → Refine`、高置信度继承、合法默认值、`none` 与条件暴露逻辑；本 Gate 只负责阻止**尚未 resolved 的高价值决策**被误判成 Planning Complete，不改变既有 UX 轮次设计。
 
-如果任一当前高价值项仍是 unresolved：
+如果任一当前高价值项仍是 unresolved，或存在 Pending User Decision：
 
 ```text
 Interactive Planning NOT Complete
@@ -194,7 +231,7 @@ Interactive Planning NOT Complete
 → 返回 Interactive，继续解决当前最上游的 unresolved 高价值决策
 ```
 
-只有全部当前高价值项 resolved 后：
+只有全部当前高价值项 resolved、且 `Pending User Decision = NONE` 后：
 
 ```text
 Interactive Planning Completion Gate PASS
@@ -228,6 +265,7 @@ Interactive Planning Completion Gate PASS
 - 不能只因为 Final Prompt 看起来符合其中规则就假定已经加载；
 - 不能使用历史任务的 Read 作为当前任务 Evidence；
 - 不能在 Interactive Planning Completion Gate PASS 之前提前读取；
+- 不能在 Pending User Decision 存在时预读；
 - 只有当前这一次执行中、Completion Gate PASS 之后真实发生的文件 READ 才有效。
 
 #### RF-22 Runtime Handoff Read Evidence Gate
@@ -235,12 +273,13 @@ Interactive Planning Completion Gate PASS
 在任何 Post-Planning 派生开始前检查：
 
 ```text
+Pending User Decision = NONE ?
 Interactive Planning Completion Gate = PASS ?
 Current Execution
 → actual READ regression-fix-runtime-policy.md after Completion Gate PASS ?
 ```
 
-如果两项 Evidence 都存在：
+如果三项 Evidence 都存在：
 
 ```text
 → PASS-NATIVE
@@ -256,7 +295,7 @@ Current Execution
 → 从本 Post-Planning Mandatory Path 入口重新执行
 ```
 
-如果 Runtime Policy 在 Completion Gate PASS 前已经被提前读取：
+如果 Runtime Policy 在 Completion Gate PASS 前、或 Pending User Decision 尚未闭合时已经被提前读取：
 
 ```text
 → Early Direct Read
@@ -290,17 +329,18 @@ Recovery 必须发生在 Stage-2 / Final Assembly 之前，并从 Confirmed Inte
 普通 Production UX 中该 Recovery 静默执行，不向用户暴露内部文件 / 路由细节。Regression / Debug 时保留内部 Evidence，用于区分：
 
 ```text
+Pending User Decision: NONE / PRESENT
 Planning Completion Gate: PASS / FAIL
 Runtime Policy Read Timing: after-complete / early / missing
 
 PASS-NATIVE
-= Completion Gate PASS 后 Direct READ 首次正常命中，未触发 Recovery
+= Pending User Decision NONE + Completion Gate PASS 后 Direct READ 首次正常命中，未触发 Recovery
 
 PASS-RECOVERED
 = Completion Gate PASS 后 Direct READ 漏掉，但 Handoff Gate 捕获并完整重置后恢复
 
 FAIL
-= Early Direct Read / 没有真实 READ / 未捕获 / 未作废旧派生 / 太晚补救 / 未从正确入口重启
+= Pending User Decision 存在时提前 Read / Early Direct Read / 没有真实 READ / 未捕获 / 未作废旧派生 / 太晚补救 / 未从正确入口重启
 ```
 
 `PASS-RECOVERED` 可以继续检查同一轮下游 RF-14～RF-20，但不能视为 Direct Routing 已关闭；RF-22 的关闭标准由 Regression Spec 管理。
@@ -416,7 +456,7 @@ Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准�
 每轮候选项必须只回答当前 Primary Planning Node。特别是：
 
 - **Round 1 = Per-Character Combat System / System Refinement / explicit Hybrid Refinement**：候选必须是真正的格斗 / 武术体系、`Chinese Cinematic Kung-fu Hybrid`，或已确认体系内部的技术偏向；不得把“职业杀手 / 特工 / 警察 / 年轻女性 / 年长男性”等身份作为 Combat System；当用户明确追求中国功夫电影 / 不站桩 / 明星型华语武打观感时，优先 whole-body-capable Chinese systems / Hybrid，MMA 保留但不机械首位；
-- **Round 2 = Per-Character Combat Expression / Performance Identity**：同一轮分开处理 `Character Combat Expression` 与 `optional Cinematic Combat Archetype`；不得预绑定“气质 + 明星型”套餐，不得偷换 Combat System，也不得直接塞固定 Combo / 具体 Technique Pattern；
+- **Round 2 = Per-Character Combat Expression / Performance Identity**：同一轮分开处理 `Character Combat Expression` 与 `optional Cinematic Combat Archetype`；不得预绑定“气质 + 明星型”套餐，不得偷换 Combat System，也不得直接塞固定 Combo / 具体 Technique Pattern；**当两个子维度都需要暴露时，必须遵守 `interactive-combat-policy.md` 的 Round 2 Atomic Interaction Contract，在同一条 assistant 消息中一次展示并要求一次回复；不得拆成下一轮，也不得新增 generic“电影动作表达参考”问卷。**
 - 用户选择 `Chinese Cinematic Kung-fu Hybrid` 后默认静默展开，不固定追加“具体混哪些门派”问卷；只有用户主动指定主 / 辅倾向时才记录为 Hybrid Refinement；
 - Cinematic Combat Archetype 当前可按需使用李连杰型、吴京型、甄子丹型、成龙型、李小龙型；执行语义读取 `references/libraries/combat-cinematic-archetypes/library.md`，Final Prompt 优先使用中性动作语义而不是只写明星姓名；
 - 1v1 同一轮同时处理双方，不机械拆成四轮；1vN 只对主角 / 关键对手独立，次要敌人允许分组；
@@ -428,7 +468,7 @@ Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准�
 - Camera Hard Constraint 只限制摄影实现，不得反向改变已经确认的 Combat System / System Refinement / Combat Expression / Technique Identity / Combat Coverage；
 - Camera Base Viewing Priority 与 Camera Hard Constraint 不因为概念拆分而固定增加两轮问题；Hard Constraint 只有用户明确提出或本身成为高价值分叉时才暴露。
 
-用户完成最后一个高价值 Combat 选择后，必须先通过上面的 **RF-22 Interactive Planning Completion Gate**；Gate PASS 后才允许执行 **Action Combat Post-Planning Mandatory Path** 的 Runtime Direct READ / Handoff Gate。不能从 Interactive 直接跳到 Runtime Read、Derived Choreography、Stage-2 或 Final Assembly。
+用户完成最后一个高价值 Combat 选择后，必须先通过上面的 **RF-22 Pending User Decision Guard + Interactive Planning Completion Gate**；只有 `Pending User Decision = NONE` 且 Gate PASS 后才允许执行 **Action Combat Post-Planning Mandatory Path** 的 Runtime Direct READ / Handoff Gate。不能从 Interactive 直接跳到 Runtime Read、Derived Choreography、Stage-2 或 Final Assembly。
 
 ## 第四步：按缺口读取控制页
 
@@ -766,6 +806,7 @@ Combat 主诊断：
 - Combat Interactive 不因“现代 / 杀手 / 警匪 / 办公室”机械默认 MMA；
 - Combat Interactive 不再暴露 legacy Fighting Direction 候选；
 - Combat Round 2 不把 Character Combat Expression 与 Cinematic Combat Archetype 预绑定成套餐；
+- Combat Round 2 在需要暴露 Expression + Archetype 时不得拆成两轮，也不得新增 generic“电影动作表达参考”独立问卷；
 - Combat 选择 `Chinese Cinematic Kung-fu Hybrid` 后不固定追问混哪些门派；
 - Combat 不把李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙型当成 Combat System；
 - Combat System / Combat Expression 候选不混入 Camera Base Viewing Priority 或 Camera Hard Constraint；
@@ -777,6 +818,7 @@ Combat 主诊断：
 - Combat 不因通用单镜头模板自动把高密度连续战斗切成多个 Hard Time Blocks；
 - Combat 不因 `Model Capability = Unverified` 自动删除 / 泛化高价值 Camera Handoff；
 - Combat Model Adapter 不得造成 `Camera Handoff Serialization Loss`；
+- Combat Interactive 不允许在 Pending User Decision 存在时读取 `regression-fix-runtime-policy.md` 或预加载仅服务 Post-Planning execution 的 Stage-2 / Camera Handoff / Prompt Assembly Reference；
 - Combat Interactive 不允许在 RF-22 Interactive Planning Completion Gate PASS 之前提前读取 `regression-fix-runtime-policy.md`；Early Direct Read 直接判 RF-22 FAIL；
 - Combat Interactive 不允许从最后一个高价值选择直接跳过 RF-22 Direct READ / Read Evidence Gate 进入 Derived Choreography、Stage-2 或 Final Assembly；
 - Combat Interactive 触发 RF-22 Recovery 后，不允许复用漏读状态下的 Post-Planning 派生骨架；
