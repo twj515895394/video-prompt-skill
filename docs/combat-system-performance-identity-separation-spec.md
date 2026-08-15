@@ -98,14 +98,61 @@ Combatant B → Combat System B
 
 角色的 Combat System 仍然不能由职业、性别、年龄、外貌、体型自动决定。
 
-## 6. 待确认设计分支
+## 6. 已确认：Performance Identity / Combat Expression 也属于角色级属性
+
+用户明确选择：**B — 每个角色独立定义 Performance Identity / Combat Expression。**
+
+因此第二轮不再只给整场战斗设置一个统一“职业杀手式 / 竞技式 / 街头式”气质，而是允许每个 Combatant 拥有独立的战斗表达：
+
+```text
+Combatant A
+→ Character / Narrative Identity A
+→ Combat System A
+→ Combat Expression A
+
+Combatant B
+→ Character / Narrative Identity B
+→ Combat System B
+→ Combat Expression B
+```
+
+例如双方即使都是职业杀手、也都使用太极，仍可以表现为：
+
+```text
+A：职业杀手 + 太极 + 冷静克制 / 诱导 / 借力后突然致命
+B：职业杀手 + 太极 + 主动压迫 / 连续抢攻 / 更凶狠直接
+```
+
+也允许身份相同但 Combat System 和 Combat Expression 都不同，例如：
+
+```text
+A：职业杀手 + 太极 + 冷静诱导
+B：职业杀手 + MMA + 强压迫抢攻
+```
+
+因此 Runtime 后续应维护角色级三元组：
+
+```text
+Character / Narrative Identity
+× Combat System / Technique Backbone
+× Combat Expression / Performance Identity
+```
+
+其中：
+
+- `Character / Narrative Identity` 回答“这个人是谁 / 在剧情里是什么身份”；
+- `Combat System` 回答“这个人主要用什么技法体系解决战斗”；
+- `Combat Expression` 回答“这个人怎样使用这套体系，表现出怎样的意图、节奏、主动权策略与人物气质”。
+
+三者互相影响最终 Choreography，但禁止任何一层直接吞并或替代另一层。
+
+## 7. 待确认设计分支
 
 当前仍需继续 Grill-Me：
 
-1. `Performance Identity / Combat Expression` 是整场统一气质，还是允许每个角色分别定义；
-2. 用户输入已经明确其中某一层时，固定两轮是否仍重复确认，还是把该轮改成确认 / 精炼；
-3. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
-4. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
-5. G01 回归基线如何迁移到新两轴结构。
+1. 用户输入已经明确其中某一层时，固定两轮是否仍重复确认，还是把该轮改成确认 / 精炼；
+2. Combat Branch（Modern / Wuxia）与 Combat System 的关系和路由顺序；
+3. Fighting Direction 旧概念是否重命名、拆解或降级为内部组合结果；
+4. G01 回归基线如何迁移到新两轴 / 角色级三元组结构。
 
 在上述依赖分支达成共识后，再统一修改 Runtime / Interactive Contract / Choreography / Router，避免边讨论边产生半完成语义。
