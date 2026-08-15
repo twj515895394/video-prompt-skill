@@ -1,687 +1,443 @@
 # Video Prompt Skill — Action Combat Current Handoff
 
-> 更新时间：2026-08-15 18:12（UTC+8）  
+> 更新时间：2026-08-15 18:54（UTC+8）  
 > 仓库：`twj515895394/video-prompt-skill`  
 > 分支：`main`  
-> 当前阶段：**Identity × Combat System 已通过真实 Interactive 验证；Advantage × Counterplay 已完成 Spec + Runtime；Action–Camera Realization × Preservation 已完成 Spec + Runtime / Assembly / Adapter 静态实施。下一步进入 G01 + 最小 Camera Priority 对照真实回归。**
+> 当前阶段：**Cinematic Combat Archetype + Chinese Cinematic Kung-fu Hybrid 已完成设计并接入 Interactive Runtime；下一步停止纸面扩设计，进入真实 Prompt / Video Regression。**
 
 ---
 
-## 0. 当前状态一句话
+## 0. 新会话先做什么
 
-**不要继续扩具体拳种、流派或 Camera Grammar。下一步唯一高价值动作是重新跑办公室 G01，同时验证 Advantage × Counterplay 与 Action–Camera Realization × Preservation；随后再跑 1 个不同 Camera Base Viewing Priority 的最小对照案例。**
+新会话不要重新 Grill 已确认结构，也不要继续扩完整拳种知识库。
 
-当前已有两条待真实回归的实施线：
+用户会带回：
+
+- 实际 Interactive 对话；
+- Read List / Runtime 读取证据；
+- 最终视频 Prompt；
+- 如果有，实际生成视频结果 / 用户主观反馈。
+
+优先按真实结果分析：
 
 ```text
-A. Advantage × Counterplay
-→ Spec + Runtime 已实施
-→ 需要验证劣势方是否真的会还手，而不是“准备 / 即将反击”
-
-B. Action–Camera Realization × Preservation
-→ Spec + Runtime / Assembly / Adapters 已实施
-→ 需要验证关键 Camera Moment 是否真正绑定具体动作，并在 Adapter 后仍保真
+1. Round 1 是否仍错误偏向 MMA
+2. Hybrid 是否真的减少了不必要门派追问
+3. Round 2 双子维度是否清晰生效
+4. Archetype 是否真正改变动作语言，而不是只留下明星标签
+5. Static Standing / Upper-body Dominance 是否改善
+6. Stage-2 / Action Phrase / Camera / Final Preflight 是否仍保持旧门禁
 ```
 
 ---
 
-## 1. 已完成上一批：Identity × Combat System
+## 1. 已确认的新结构 CA-01～CA-08
 
-上一批已经完成并经过真实 Interactive 测试：
+主设计 Spec：
+
+`docs/combat-cinematic-archetype-spec.md`
+
+### CA-01 — Cinematic Combat Archetype
+
+当前五种少量稳定电影武打表达参考：
+
+- 李连杰型｜轻灵流畅 / 武术线条；
+- 吴京型｜硬朗爆发 / 全身压迫；
+- 甄子丹型｜极速现代融合 / 近身连锁；
+- 成龙型｜环境互动 / 空间即武器；
+- 李小龙型｜爆发截击 / 节奏破坏 / 极简直接。
+
+这些是 **电影动作表达原型**，不是 Combat System。
+
+执行语义真源：
+
+`references/libraries/combat-cinematic-archetypes/library.md`
+
+### CA-02 — Archetype ≠ Combat System
+
+例如：
 
 ```text
-Character / Narrative Identity
-≠ Combat System
+截拳道 / JKD
+→ Combat System
 
-Round 1：Per-Character Combat System / System Refinement
-Round 2：Per-Character Combat Expression
-
-Physical Presentation Domain：条件暴露
-Derived Choreography Direction：Runtime 自动派生
-legacy Fighting Direction：只保留 compatibility execution slot
+李小龙型
+→ Cinematic Combat Archetype
 ```
 
-真实办公室 G01 与古代女剑客测试已经证明：
+```text
+MMA
+→ Combat System
 
-- “职业杀手 → Fighting Direction / 打法”混层明显改善；
-- Round 1 / Round 2 结构真实生效；
-- Physical Presentation Domain 与 Combat System 正交；
-- Stage-2 / Subject Motion / Action–Camera / Prompt Assembly 路由明显改善；
-- Final Prompt 的 Whole-body / Movement / Persistent Signature 比旧版本更好。
+甄子丹型
+→ Cinematic Combat Archetype
+```
 
-主 Spec：
+Archetype 不得覆盖已经确认的 Technique Backbone。
 
-`docs/combat-system-performance-identity-separation-spec.md`
+### CA-03 / CA-04 / CA-05 — Round 2 双子维度
 
-本轮不要回头重新 Grill 太极、MMA、咏春、八极、散打等具体流派细节。
+Action Combat Interactive 保持两个核心角色节点：
+
+```text
+Round 1：Combat System / Technique Backbone
+Round 2：Combat Expression / Performance Identity
+```
+
+Round 2 内部同一轮分成：
+
+```text
+子维度 A：Character Combat Expression
+→ 冷静 / 凶狠 / 克制 / 主动压迫 / 后发反制 / 节奏破坏 ...
+
+子维度 B：Cinematic Combat Archetype（optional）
+→ 李连杰型 / 吴京型 / 甄子丹型 / 成龙型 / 李小龙型 / 不指定 / 自定义
+```
+
+关键约束：
+
+- 不新增固定 Round 3；
+- 两个子维度分开展示；
+- 不预组合“冷静 + 李连杰型”“凶狠 + 吴京型”套餐；
+- 用户已明确 Archetype 时直接继承；
+- 用户不需要明星参考时 Archetype 可以为空。
+
+### CA-06 — Chinese cinematic intent 不再默认 MMA
+
+当用户明确要求：
+
+- 中国功夫电影 / 华语武打片；
+- 李连杰 / 吴京 / 甄子丹 / 成龙 / 李小龙式；
+- 不要站桩；
+- 更丰富身法 / 步法 / 腿法 / 高低位 / 路线 / 空间移动；
+
+Round 1 推荐排序必须优先考虑更有利于 Whole-body Movement 的合理中国武术体系。
+
+MMA 仍是合法候选，但：
+
+> **Modern / office / assassin / police ≠ MMA default.**
+
+用户明确要 MMA / cage fight / realistic MMA 时，MMA 仍可优先。
+
+### CA-07 — Chinese Cinematic Kung-fu Hybrid
+
+新增合法宽泛 Technique Backbone：
+
+> **中国功夫电影混合体系 / Chinese Cinematic Kung-fu Hybrid**
+
+用途：用户想要中国武打电影的完整动作语言，但不想被单一真实门派锁死。
+
+允许合理组合：
+
+- 拳 / 掌；
+- 腿法；
+- 身法 / 步法；
+- 转身 / 绕位；
+- 高低位；
+- 摔控 / 破平衡；
+- Range / Route / Axis / Support 变化。
+
+但 Hybrid 不是随机动作大杂烩，仍必须由 Stage-2 Movement / Technique / Transition Knowledge 具体化。
+
+### CA-08 — Hybrid 默认静默展开
+
+用户选择 Hybrid 后：
+
+```text
+默认
+→ 不再固定追问“具体混哪些拳种 / 门派？”
+→ Runtime 根据：
+   Cinematic Archetype
+   + Character Combat Expression
+   + Scene
+   + Range
+   + Environment
+   + 当前 Movement / Technique / Transition Gap
+→ 静默选择合理 Execution Knowledge
+```
+
+只有用户主动明确：
+
+```text
+以八极为主，混散打腿法
+长拳身法为主，近身加入咏春
+```
+
+才记录为 `Hybrid Refinement`。
 
 ---
 
-## 2. 已实施：Advantage × Counterplay
+## 2. 本批 Runtime 已实施
 
-主 Spec：
+### 2.1 新增 Interactive 专项 Runtime 叶子
 
-`docs/combat-advantage-counterplay-spec.md`
+文件：
 
-运行期正文真源：
-
-`references/tasks/action-combat-video/advantage-structure-contract.md`
-
-核心 Planning 结构：
-
-```text
-Advantage Structure
-├─ Outcome / Advantage
-├─ Counterplay Shape
-└─ Advantage Trajectory
-```
-
-核心原则：
-
-```text
-Advantage ≠ Attack Share
-Outcome ≠ Advantage Trajectory
-Disadvantaged ≠ Passive
-```
-
-推荐默认 Counterplay Shape：
-
-```text
-High Counterplay, Repeatedly Neutralized
-```
-
-即：
-
-```text
-优势方总体占优
-→ 劣势方多次真实 Attack / Counter / Re-entry
-→ 这些动作真实形成威胁或状态变化
-→ 优势方不断化解 / 截断 / 借势反制
-→ 总体 Advantage 仍属于优势方
-```
-
-Counterplay 只能在真实发生主动战斗行为并造成状态后果时算 Realized；“等待 / 准备 / 即将反扑”只能算 Setup。
-
-Ending 已降级为条件节点，不能吞掉主要 Combat Budget。
-
-当前重要 Failure Signatures：
-
-- `Counterplay Starvation`
-- `Initiative Starvation`
-- `Deferred Counterplay Collapse`
-- `Advantage-to-Passivity Shortcut`
-- `Outcome-Trajectory Collapse`
-
----
-
-## 3. 新增真实 Regression：Camera Intent 存在，但没有落到具体动作
-
-本次真实 Interactive 中，用户选择：
-
-```text
-Camera Base Viewing Priority = 电影冲击优先
-```
-
-最终 Prompt 却出现：
-
-```text
-“第一次真实接触发生时，镜头短暂切近……”
-```
-
-但：
-
-- 没有明确是哪一个具体 Action Moment 触发该切近；
-- Camera Change 没有与某一段正在发生的动作绑定；
-- 没有明确继承哪一类 live motion；
-- 后文又出现“从冲击近景重新拉回中景”等 Camera State 引用，而该状态没有被可靠建立。
-
-现有 `action-camera-handoff-playbook.md` 与 `prompt-assembly/control.md` 其实已经明确禁止“关键接触时短暂切近”这种泛化写法。
-
-因此本次问题正式定性为：
-
-> **Camera Handoff Realization / Preservation Regression，而不是缺 Camera 知识，也不是缺一个新的 Interactive 问题。**
-
----
-
-## 4. Action–Camera V2 Spec
-
-沿用既有 Spec，不建立第二份 Camera 设计真源：
-
-`docs/action-combat-video-action-camera-handoff-spec.md`
-
-已升级为 V2：
-
-`Camera Handoff Realization × Preservation`
-
-V2 核心新增：
-
-```text
-Realization Gate
-+
-Preservation Gate
-```
-
-Spec Commit：
-
-`ed454d5f145faf411c4435b89d5ba7ce8bfe71dc`
-
----
-
-## 5. 实施计划
-
-新增实施计划：
-
-`docs/action-combat-video-camera-realization-preservation-implementation-plan.md`
+`references/tasks/action-combat-video/interactive-combat-policy.md`
 
 Commit：
 
-`40124a6ce1aa161de104a381c4d2b697a6fec7a1`
-
-实施原则：
-
-- 只正式作用于 Action Combat；
-- 不建立平行 Camera Runtime；
-- 不增加固定字段 / 固定 Shot 数量；
-- 不把 Camera Gate 做成关键词计数；
-- 不因为 Model Capability = Unverified 就自动降级；
-- 不扩完整 Camera Benchmark；
-- 不扩具体武术 / 拳种知识。
-
----
-
-## 6. 双层 Gate 已确认并实施
-
-正式结构：
-
-```text
-Action–Camera Runtime
-→ Camera Handoff Realization Gate
-
-Prompt Assembly / Model Adapter
-→ Camera Handoff Preservation Gate
-```
+`4670356b6b9e6b1bc0ebc93a43f7f2371af4911a`
 
 职责：
 
-```text
-Realization Gate
-= 有没有真正设计并落到具体 Action Moment
+- Round 1 Combat System Recommendation Ordering；
+- Chinese cinematic kung-fu intent；
+- Chinese Cinematic Kung-fu Hybrid；
+- Hybrid 默认静默展开 / explicit Hybrid Refinement；
+- Round 2 Character Combat Expression；
+- optional Cinematic Combat Archetype；
+- 五种 Archetype 用户候选语义；
+- System / Archetype 分层；
+- Planning Context 输出；
+- G01 Regression 验收点。
 
-Preservation Gate
-= Assembly / Adapter 改写后，核心 Action–Camera 语义还在不在
+### 2.2 SKILL 主入口已 wiring
+
+文件：
+
+`SKILL.md`
+
+Commit：
+
+`d21500e0c1e70a8741871783a4149354b79c5375`
+
+Interactive Action Combat 现在额外固定读取：
+
+`references/tasks/action-combat-video/interactive-combat-policy.md`
+
+并明确：
+
+- 该 Policy 是 Action Combat Round 1/2 专项真源；
+- 通用 `mode-interactive-output-contract.md` 继续负责 One Question、High-value Budget、Decision Purity、Camera / Ending 条件暴露；
+- Policy 不占普通 Controls / Libraries 预算；
+- Round 2 = Character Combat Expression + optional Cinematic Combat Archetype；
+- Hybrid 不固定追问门派；
+- selected Archetype 最终应转成中性动作语义，而不是只写明星姓名。
+
+### 2.3 Archetype 执行语义库
+
+文件：
+
+`references/libraries/combat-cinematic-archetypes/library.md`
+
+已包含五类 Runtime 偏置：
+
+```text
+李连杰型
+→ Footwork / Route / Axis / Level / Kick / Whole-body Linkage
+
+吴京型
+→ Explosive Entry / Whole-body Drive / Hard Contact / Base Disruption
+
+甄子丹型
+→ Rapid Interception / Close-range Chain / Burst Footwork / Range Transition
+
+成龙型
+→ Environment Affordance / Route Change / Recovery / Obstacle Traversal
+
+李小龙型
+→ Interception / Stop-hit / Broken Rhythm / Explosive Entry / Exit / Range Control
 ```
 
-两层都是：
-
-> **语义合同，不是模板合同。**
-
-不要求固定字段、固定句式、固定顺序、固定 Camera Accent 数量。
+Final Prompt 应优先外显中性动作语言。
 
 ---
 
-## 7. Realization Gate 最小语义合同
+## 3. 仍然有效的旧 Combat 门禁
 
-对**已经被选中的高价值 Camera Moment**，语义上至少要求：
+这批设计没有替换 CK / Camera / Advantage 旧机制。
 
-```text
-Concrete Action Anchor
-+
-Camera Response / Viewer Task
-+
-Live Motion / State Continuation
-+
-Camera Hard Constraint Compliance
-```
+### Stage-2 / Concrete Choreography
 
-解释：
-
-### Concrete Action Anchor
-
-Camera Change 必须依附正在发生的具体动作 / 状态变化。
-
-以下不能单独判 PASS：
+仍然保留：
 
 ```text
-第一次接触时
-关键时刻
-高潮处
+Planning Gap
+→ Movement / Technique / Transition Slot
+→ leaf execution knowledge
+→ Concrete Action Phrase
+→ Executable Granularity
 ```
 
-### Camera Response / Viewer Task
+核心回归失败：
 
-要能理解 Camera 为什么此刻介入，以及主要要看见 / 感受到什么。
+- `Static Standing Combat`
+- `Upper-body Technique Dominance`
+- `Stage-2 Routing Evidence Missing`
+- `Technique Identity Evaporation / Persistent Signature Collapse`
+- `Non-executable Choreography Summary`
 
-### Live Motion / State Continuation
+### Archetype / Hybrid 不自动 PASS
 
-Camera Change 后必须继续至少一类活着的：
+选择：
 
-- Momentum；
-- Contact；
-- Pressure；
-- Rotation；
-- Support Transfer；
-- Forced Step；
-- Recovery；
-- unfinished motion。
+```text
+Hybrid
+李连杰型
+吴京型
+甄子丹型
+成龙型
+李小龙型
+```
 
-### Hard Constraint Compliance
+都不能替代：
 
-必须服从 One-take / No-cut / Fixed Camera 等用户明确边界。
+- Movement Realization；
+- Technique / Transition Knowledge；
+- Action Phrase 因果；
+- Opponent Response；
+- Range / Position / Axis / Support Consequence；
+- Final Preflight。
 
-注意：以上是语义合同，不要求输出为四字段。
+最终仍必须通过 Static Standing / Upper-body Dominance Gate。
+
+### Action–Camera
+
+仍然保留：
+
+```text
+Action–Camera Planning
+→ Camera Handoff Realization Gate
+→ Prompt Assembly
+→ Model Adapter
+→ Camera Handoff Preservation Gate
+→ Final Preflight
+```
+
+不要因为新增 Archetype 再建立第二套 Camera Runtime。
 
 ---
 
-## 8. Preservation Gate
+## 4. 下一轮真实 Regression 建议
 
-Prompt Assembly / Model Adapter 可以自由：
+优先重新跑固定办公室 G01，但这次测试目的变化为：
 
-- 改写句式；
-- 合并句子；
-- 把结构化描述压成自然段；
-- 使用目标模型更适合的 Camera 语言；
-- 在有可靠证据时降低实现复杂度。
+### Gate A — MMA Default Bias
 
-但核心语义必须存活：
+用户只说：
 
 ```text
-具体 Action Anchor
-+
-Action ↔ Camera 因果绑定
-+
-主要 Camera Task / Viewer Experience Intent
-+
-必要 Live Motion Continuation
+现代办公室
+两个职业杀手
+中国功夫电影式
+不喜欢站桩
 ```
 
-这叫：
+观察 Round 1：
+
+- 是否仍把 MMA 放第一推荐；
+- 是否出现散打 / 八极 / 长拳 / 咏春 / JKD / Hybrid 等合理方向；
+- 是否出现 `Chinese Cinematic Kung-fu Hybrid`。
+
+### Gate B — Hybrid UX
+
+如果选 Hybrid：
+
+- 下一轮不应固定追问“具体混哪些门派”；
+- 应直接进入 Round 2 或其他更高价值节点。
+
+### Gate C — Round 2 Double Sub-dimension
+
+检查同一轮是否分别展示：
 
 ```text
-Semantic Preservation
+Character Combat Expression
++
+optional Cinematic Combat Archetype
 ```
 
 而不是：
 
+- 变成 Round 3；
+- 变成“冷静李连杰 / 凶狠吴京”套餐。
+
+### Gate D — Archetype Realization
+
+最终 Prompt 中检查：
+
+- 李连杰型是否真实增加身法 / 步法 / 高低位 / 转身 / 腿法 / Route；
+- 吴京型是否真实增加爆发 Entry / Contact / Balance Disruption；
+- 甄子丹型是否真实增加快速 Interception / Range Transition，而不是 MMA 站桩；
+- 成龙型是否让 Environment 真正改变动作路线；
+- 李小龙型是否体现 Broken Rhythm / Stop-hit / in-out Footwork。
+
+不能只找到：
+
 ```text
-Textual Copy
+“李连杰风格”
+“吴京式”
 ```
+
+就判 PASS。
+
+### Gate E — Static Standing / Upper-body Dominance
+
+即使 Archetype Realization 看起来正确，仍检查：
+
+```text
+Movement 是否主动创造：
+Level
+Route / Angle
+Axis
+Range
+Position
+Support / Balance
+Ground / Standing 或 Ground / Air
+```
+
+如果仍是：
+
+```text
+前臂格挡
+抓手
+顶肩
+拳肘
++
+少量“转髋 / 脚步”修饰
+```
+
+仍判 FAIL。
 
 ---
 
-## 9. 新增唯一正式 Failure Signature
+## 5. 新会话建议提交的材料
 
-本批不扩大量 Failure Taxonomy。
+最好一次给出：
 
-Realization 失败继续复用：
-
-- `Action–Camera Decoupling`
-- `Perceptual Impact Underuse`
-- `Camera Strategy Overconstraint / Camera Mobility Underfill`
-- `Dead-motion Cut / Post-action Cut`
-- `Kinetic Handoff Loss`
-- `Camera Hard Constraint Violation`
-
-只新增：
-
-```text
-Camera Handoff Serialization Loss
-```
-
-定义：
-
-> 上游已经形成有效 Action–Camera Handoff，但经过 Prompt Assembly / Model Adapter 后，Action Anchor、Camera Intent、Viewer Experience 或 Live Motion Continuation 的关键语义被泛化、拆散或删除。
-
-Rewrite 路径：
-
-```text
-Action–Camera Decoupling / Realization FAIL
-→ 回 Action–Camera Runtime
-
-Camera Handoff Serialization Loss
-→ 只回 Prompt Assembly / 当前 Model Adapter
-→ 不重新设计 Choreography
-```
-
-Camera State 未建立却被后文引用，当前作为 Preservation / Continuity 检查维度，不新增独立 Failure Signature。
+1. 用户原始 Prompt；
+2. 完整 Interactive 对话；
+3. 每轮候选与用户选择；
+4. Read List；
+5. Pattern / Library Hit Evidence；
+6. Final Prompt；
+7. 使用的模型；
+8. 如果已经生成视频：
+   - 哪些动作好；
+   - 哪些地方仍站桩；
+   - 哪个 Archetype 看得出来 / 看不出来；
+   - Camera 是否帮助动作；
+   - 视频里最明显的失败点。
 
 ---
 
-## 10. 默认 Full-fidelity，不因 Unverified 自动降级
+## 6. 新会话不要做什么
 
-正式默认：
+除非真实 Regression 证明必要，否则不要：
 
-```text
-Full-fidelity Action–Camera Realization
-```
+- 扩完整中国武术百科；
+- 给每个明星建独立 Engine；
+- 给每个明星建 Combo Library；
+- 强制 Hybrid 指定几个门派；
+- 把 MMA 全局降级；
+- 把 Archetype 变成 Combat System；
+- 建新的 Lower-body Engine；
+- 建新的 Body Method State Machine；
+- 建第二套 Camera Runtime；
+- 用固定踢腿 / 换位次数解决 Static Standing。
 
-禁止：
+核心原则：
 
-```text
-Camera Complexity Capacity = Unverified
-→ 自动减少高价值 Camera Moment
-→ 自动回退保守中景
-```
+> **先用真实 Prompt / Video Regression 证明 Runtime 会不会用这批新语义，再决定是否需要扩 Knowledge。**
 
-只有存在以下证据时才允许：
-
-```text
-Intent-preserving Degradation
-```
-
-证据：
-
-- Verified Model Limitation；
-- 可靠专项 Benchmark；
-- 相同 Golden Scenario 的真实 Generated-video Regression Evidence。
-
-降级时：
-
-```text
-降低 Camera 实现复杂度
-≠
-删除 Camera Intent
-```
-
-低价值 / 装饰性 Accent 可以删除；高价值 Moment 优先保留 Anchor、Viewer Intent 与 Motion Continuation。
-
----
-
-## 11. Common Preservation Contract + Adapter-specific Expression
-
-共同真源：
-
-`references/controls/prompt-assembly/control.md`
-
-负责：
-
-```text
-What must survive
-```
-
-各 Model Adapter 负责：
-
-```text
-How it is expressed
-```
-
-Generic / Seedance 2.0 / LTX-2.3 都继承同一 Preservation Contract，不复制一套新的 Camera Runtime。
-
----
-
-## 12. 最终执行顺序已修正
-
-真正的 Action Combat Final Path 现在是：
-
-```text
-Confirmed Per-Character Combat Context
-→ Derived Choreography Direction
-→ Stage-2 Gap Detection
-→ Stage-2 Pattern Hit Evidence Gate
-→ 必要 leaf knowledge Read
-→ Concrete Action Phrase
-→ State / Continuity Validation
-→ Model Execution Realizability
-→ Motion / Energy Carry-over
-→ Action–Camera Handoff Planning
-→ Camera Handoff Realization Gate
-→ Camera / Spatial Coordination
-→ Prompt Assembly
-→ 当前 Model Adapter
-→ Camera Handoff Preservation Gate
-→ Combat Final Preflight（检查 Adapter 后实际 Final Prompt）
-→ Output Template / Delivery
-```
-
-核心变化：
-
-> **Adapter 之前的检查不再冒充真正 Final Preflight。真正 Final Preflight 必须检查最终实际交付 Prompt。**
-
----
-
-## 13. 本批已实际修改的 Runtime / Adapter
-
-### 13.1 Action–Camera Runtime
-
-`references/tasks/action-combat-video/action-camera-handoff-playbook.md`
-
-新增 / 强化：
-
-- Camera Handoff Realization Gate；
-- 4 类最小语义合同；
-- Full-fidelity default；
-- Unverified 不自动降级；
-- Runtime-stage Preflight 与 Final Preflight 分离；
-- Realization FAIL 回路。
-
-Commit：
-
-`599a3f5b4435b2d1bd91b978d23904f68a3f5df5`
-
-### 13.2 Prompt Assembly
-
-`references/controls/prompt-assembly/control.md`
-
-新增 / 强化：
-
-- Common Camera Handoff Preservation Contract；
-- Semantic Preservation；
-- `Camera Handoff Serialization Loss`；
-- Camera State Establishment / Reference Check；
-- Assembly-stage validation 与 Adapter 后 Final Preflight 分离；
-- Serialization Loss 只回 Assembly / Adapter。
-
-Commit：
-
-`339a0e5d40a57af4109882900afcba2917a35acf`
-
-### 13.3 SKILL 主路由
-
-`SKILL.md`
-
-新增 / 强化：
-
-- Realization Gate；
-- Model Adapter 后 Preservation Gate；
-- Final Preflight 后移；
-- Model Adapter Common Preservation Invariant；
-- Combat 自查增加 Realization / Preservation / Camera State；
-- `Unverified ≠ auto downgrade`。
-
-Commit：
-
-`cde212958534161de4480b25de7a997598b32abb`
-
-### 13.4 Generic Adapter
-
-`references/models/generic.md`
-
-Commit：
-
-`506aa32c8d4d573c0eff1f300eaec0f34626c8c2`
-
-### 13.5 Seedance 2.0 Adapter
-
-`references/models/seedance-2.md`
-
-Commit：
-
-`d4880e87ef28746192abd7bcb9e6a397439843ae`
-
-### 13.6 LTX-2.3 Adapter
-
-`references/models/ltx-2-3.md`
-
-Commit：
-
-`64463f607e8224409489c7bbe30d4e18243ce937`
-
-三个 Adapter 都已经明确：
-
-- 继承 Common Preservation Contract；
-- Adapter 可以灵活改写；
-- 不重新决定上游高价值 Camera Moment 是否值得存在；
-- `Unverified` 不自动触发 Camera 降级；
-- 发生 `Camera Handoff Serialization Loss` 时只回 Assembly / Adapter。
-
----
-
-## 14. 本批静态实施状态
-
-当前已完成：
-
-```text
-Spec V2
-✓
-Implementation Plan
-✓
-Action–Camera Realization Runtime
-✓
-Prompt Assembly Preservation Contract
-✓
-SKILL Mandatory Path
-✓
-Generic Adapter
-✓
-Seedance Adapter
-✓
-LTX Adapter
-✓
-```
-
-这只代表：
-
-> **Static Implementation PASS / Routing Contract 已接通。**
-
-不代表：
-
-- 真实 Interactive 已 PASS；
-- Final Prompt Runtime 已 PASS；
-- Generated Video 已 PASS。
-
----
-
-## 15. 下一轮固定 G01 Regression
-
-继续使用办公室职业杀手 15 秒场景。
-
-本次回归应同时验证两条实施线：
-
-### Advantage × Counterplay
-
-检查：
-
-- Advantage Structure 是否按条件暴露；
-- 劣势方 Counter / Re-entry 是否真实发生；
-- Counterplay 是否迫使优势方真实响应；
-- Ending 是否不再吞掉主要 Counterplay；
-- Outcome / Trajectory 是否没有 Collapse。
-
-### Action–Camera Realization × Preservation
-
-Camera Base Viewing Priority 继续使用：
-
-```text
-电影冲击优先
-```
-
-检查：
-
-- 高价值 Camera Moment 是否真正绑定具体 Action Moment；
-- 不再用“第一次真实接触时短暂切近”冒充 Handoff；
-- Camera Response 是否有明确 Viewer Task；
-- Camera Change 后是否继续 live motion；
-- Adapter 后 Action Anchor / Camera Intent / live-motion continuation 是否仍存在；
-- 是否出现 `Camera Handoff Serialization Loss`；
-- Camera State 是否先建立后引用；
-- Camera 增强没有挤压有效 Combat Coverage。
-
----
-
-## 16. 最小 Camera Priority 对照 Regression
-
-G01 之后，再选 1 个已有 Action Combat 场景。
-
-Camera Base Viewing Priority 改成：
-
-- `完整动作可读`；或
-- `贴身沉浸`。
-
-目标不是验证“有没有更多镜头”，而是验证双层 Gate 没有机械化。
-
-必须确认：
-
-- 不机械复用 G01 的 Near-lens / Close-up / Cut Pattern；
-- 普通连接动作继续当前 Shot；
-- Camera Accent 仍由 Action Information / Viewer Experience Value 决定；
-- 不设 Cut / Close-up 数量配额。
-
----
-
-## 17. 本批不要做的事
-
-在真实回归之前，不继续：
-
-- 扩 MMA / 散打 / 拳击 / 摔跤 / 太极 / 咏春 / 八极等具体知识；
-- 扩 Camera Grammar；
-- 新建第二套 Camera Runtime；
-- 为 Camera Moment 增加固定字段表；
-- 设置固定 Cut / POV / Close-up 数量；
-- 因 `Unverified` 主动降级所有 Adapter；
-- 把双层 Gate 扩散到所有普通视频任务；
-- 建完整 Model Camera Benchmark；
-- 新增更多 Camera Failure Signature。
-
-原则仍然是：
-
-> **先跑真实回归，再决定下一刀。**
-
----
-
-## 18. 下一会话行动顺序
-
-严格按以下顺序：
-
-```text
-1. 重新跑办公室 G01 Interactive
-2. 收集完整实际 Read List
-3. 检查 Advantage Structure Runtime
-4. 检查 Counterplay 是否真实发生
-5. 检查 Camera Handoff Realization Gate 是否真实生效
-6. 检查 Prompt Assembly / Model Adapter 后是否仍 Semantic Preservation
-7. 对最终实际 Prompt 执行 Combat Final Preflight
-8. Prompt-level PASS / FAIL
-9. PASS 后生成真实视频
-10. Generated-video PASS / FAIL
-11. 再跑 1 个不同 Camera Priority 的最小对照案例
-12. 再决定是否需要下一批修改
-```
-
-如果 Camera FAIL：
-
-```text
-Action–Camera Decoupling / Realization FAIL
-→ 回 Action–Camera Runtime
-
-Camera Handoff Serialization Loss
-→ 回 Prompt Assembly / 当前 Model Adapter
-
-Perceptual Accent Overuse
-→ 删除低价值 Accent
-
-Camera Strategy Overconstraint
-→ 重新按 Action Information / Viewer Experience 分配 Camera Task
-```
-
-不要直接扩 Camera 知识。
-
----
-
-## 19. 当前最终目标
-
-本轮真正要验证的不是：
-
-> “Prompt 里有没有写近景 / 特写 / POV”。
-
-而是：
-
-> **当某个 Action Moment 真正值得改变观看方式时，Camera 是否因为这个具体动作而变化；变化后是否继续同一条活着的运动链；并且这个导演意图是否能一路穿过 Prompt Assembly 与 Model Adapter，直到最终交付 Prompt。**
+> **用户负责高价值创作方向；Runtime 负责专业动作具体化。**
