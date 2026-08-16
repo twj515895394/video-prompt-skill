@@ -593,10 +593,10 @@ Human / Body
 核心链路：
 
 ```text
-Initial Clean / Prior State
+Initial Baseline State
 → Effective Contact / Force Event
 → Immediate Physical Response
-→ Visible State / Appearance Change is born here
+→ Event-caused Delta State is born here
 → Aftermath Lifetime Classification
 → Transient Decay / Persistent Continuity / Progressive Accumulation
 ```
@@ -616,32 +616,35 @@ Initial Clean / Prior State
 所有由本段 Combat 新产生的可见伤势，必须有**明确出生时刻**。Runtime 必须区分：
 
 ```text
-Pre-impact State
+Initial Injury Baseline
 → Triggering Contact
-→ Injury Onset
+→ Delta Injury Onset
+→ Updated Injury State
 → Post-impact Continuity
 ```
 
 默认规则：
 
-- 如果用户没有明确说明角色开场已经受伤，则开场人物脸部 / 身体默认**不存在后续 Combat 才会产生的血迹、淤青、擦伤、红肿、破皮**；
-- 伤势必须绑定到一个具体可见的 `Triggering Contact / Force Event`，例如某次拳掌命中、撞墙、摔地或摩擦；
-- 伤势只能从该 Trigger 发生后开始可见，不能因为 Final Prompt 后文写了“持续保持血迹 / 淤青”，就在首帧或受击前提前出现；
-- `Persistent / Progressive` 只表示**出生后持续 / 累积**，绝不表示从视频开始就存在；
-- 对渐进显现的伤势，例如轻度淤青，可以写成“命中后先泛红，随后在后续数拍逐渐转为轻度紫红”，但仍不得提前到命中之前。
+- 首帧继承已经由用户设定、参考图片 / 视频、上游剧情或前置片段明确成立的伤势状态；这些属于 `Pre-existing Injury / Initial Injury Baseline`，不得为了“打斗开始”而自动清除或重置；
+- 对于**尚未发生的后续 Combat 新伤**，首帧与 Trigger 之前不得提前出现对应的新血迹、淤青、擦伤、红肿、破皮；
+- 新伤必须绑定到一个具体可见的 `Triggering Contact / Force Event`，例如某次拳掌命中、撞墙、摔地或摩擦；
+- 新伤只能从该 Trigger 发生后作为 `Delta Injury` 加入当前状态，不能因为 Final Prompt 后文写了“持续保持血迹 / 淤青”，就在首帧或受击前提前加载；
+- `Persistent / Progressive` 只表示**该状态已经存在之后**继续保持 / 累积，绝不反向推导它在更早时间已经存在；
+- 对渐进显现的伤势，例如轻度淤青，可以写成“命中后先泛红，随后在后续数拍逐渐转为轻度紫红”，但新增部分仍不得提前到命中之前；
+- 如果已有旧伤和本段新伤发生在同一区域，必须维护为 `Baseline + Delta`：已有痕迹继续保留，新变化只从新 Trigger 后叠加，不允许把后续加深程度提前加载到首帧。
 
 推荐 Final Prompt 序列化方式：
 
 ```text
-初始状态：脸部干净完整，无预先伤痕 / 血迹。
+初始 Baseline：继承参考素材 / 上游剧情已经存在的伤势状态；不预加载本段后续攻击才会产生的新伤。
 → 某次具体攻击命中右侧嘴角 / 颧骨。
-→ 从这次命中后，嘴角才出现轻微破皮与少量血迹。
-→ 后续镜头保持这道已经形成的轻伤，不得在受击前提前出现，也不得无因消失。
+→ 从这次命中后，在已有 Baseline 之上新增轻微破皮与少量血迹。
+→ 后续镜头保持这道已经形成的新伤；更早镜头只保持当时已经成立的 Baseline，不得提前出现这个 Delta，也不得无因消失。
 ```
 
-对于额头 / 眉骨 / 脸颊等明显面部状态尤其要优先执行本 Contract，因为模型容易把这些高显著度外观特征误当成角色初始造型。
+对于额头 / 眉骨 / 脸颊等明显面部状态尤其要优先执行本 Contract，因为模型容易把这些高显著度外观特征误当成角色全程固定造型。
 
-如果人物在故事开始前本来就已经受伤，必须由用户设定或上游剧情明确写成 `Pre-existing Injury`；此时才允许首帧已有伤势，并与本段 Combat 新伤分开维护。
+`Pre-existing Injury` 不要求只能来自用户文字明说；只要参考素材、上游剧情、已有 Continuity State 或前置片段已经可靠表明该伤势存在，就应进入 `Initial Injury Baseline`。Runtime 不得擅自把它洗掉，也不得把尚未发生的后续 Delta 提前补上。
 
 #### B. Clothing / Wearable Aftermath
 
@@ -725,8 +728,10 @@ Pre-impact State
 规则：
 
 ```text
-由明确 Trigger 产生
-→ 从 Trigger 之后成为 Continuity State
+Baseline 中已存在
+或
+由明确 Trigger 新产生
+→ 从当前成立时刻进入 Continuity State
 → 后续保持
 → 只有画面内明确清理 / 修复 / 移动 / 遮挡等行为才能改变
 ```
@@ -764,7 +769,13 @@ Pre-impact State
 
 > **Premature Injury / Damage Preload**
 
-即：由本段 Combat 某次后续 Contact 才产生的血迹、淤青、擦伤、红肿、破皮或其他持久伤势，在该 Trigger 发生前就已经出现在首帧 / 开场人物外观 / 更早镜头中。
+即：由本段 Combat 某次后续 Contact 才产生的**新增 Delta** 血迹、淤青、擦伤、红肿、破皮或其他持久伤势，在该 Trigger 发生前就已经出现在首帧 / 开场人物外观 / 更早镜头中。已有 Baseline 伤势不属于此 Failure。
+
+也禁止：
+
+> **Baseline Injury Reset**
+
+即：参考素材、用户设定、上游剧情或已有 Continuity State 已经存在的旧伤 / 血迹 / 淤青，在开场或后续无因被“清洁化”、消失或恢复。
 
 也禁止：
 
@@ -780,16 +791,18 @@ Pre-impact State
 - Persistent / Progressive 对后续画面有持续价值时简洁保留；
 - 同一伤痕 / 破损 / 环境变化后续只需保持，不在每个段落重新解释来源；
 - 不为了“更真实”给每次击打机械添加一种新伤痕；
-- 面部 / 身体伤势若容易被模型当成初始造型，优先在最靠近 Trigger 的 Action Phrase 里写“从这次命中后才出现”，而不是只在人物总述或全局 Continuity 段声明最终伤势。
+- 面部 / 身体新伤若容易被模型当成初始造型，优先在最靠近 Trigger 的 Action Phrase 里写“从这次命中后才新增”，而不是只在人物总述或全局 Continuity 段声明最终伤势；
+- Baseline 伤势只需作为初始 Continuity 状态保持，不要把它误写成由本段某次攻击新产生。
 
 本 Gate 与 `Granularity Over-expansion` / `Serialization Deduplication` 同时生效：
 
-> **后果要真实存在，也要有正确出生时刻和寿命；描述只写到足以让模型在正确时点表现并保持它。**
+> **后果要真实存在，也要有正确 Baseline、出生时刻和寿命；描述只写到足以让模型在正确时点表现并保持它。**
 
 Failure 可判：
 
 - `Impact Aftermath Missing`：明显有效受创 / 抓扯 / 撞击却完全没有合理可见反馈；
-- `Premature Injury / Damage Preload`：后续攻击才产生的伤势在开场 / Trigger 前提前存在；
+- `Premature Injury / Damage Preload`：后续攻击才产生的新增伤势在 Trigger 前提前存在；
+- `Baseline Injury Reset`：已有伤势被无因清除 / 重置；
 - `Damage Continuity Reset`：Persistent / Progressive 伤痕或衣物损伤在后续无因消失；
 - `Environment State Reset`：Persistent 环境位移 / 损伤无因恢复；
 - `Transient Aftermath Over-persistence`：振动、余响、尘土、短暂痛缩等瞬态反馈无理由持续过久；
@@ -907,19 +920,21 @@ Prompt Assembly 后执行一次语义去重。
 
 不要在后面的 Continuity / Style / Avoid 段再重复解释同一件事。
 
-对于新产生的伤势，去重时必须保留**至少一个明确 Trigger 附近的 Onset 表达**。禁止为了压缩只剩：
+对于本段新产生的伤势，去重时必须保留**至少一个明确 Trigger 附近的 Onset 表达**。禁止为了压缩只剩：
 
 ```text
 人物设定 / Continuity：嘴角有血、脸颊淤青并持续保持
 ```
 
-而把“哪次命中后才出现”删掉。若只能保留一处，优先保留：
+而把“哪次命中后才新增”删掉。若只能保留一处，优先保留：
 
 ```text
 具体 Contact Phrase 中的 Injury Onset
 ```
 
-而不是全局人物外观中的结果状态。
+而不是全局人物外观中的最终 Delta 状态。
+
+已有 `Initial Injury Baseline` 则相反：它应作为开场已成立的 Continuity State 保留，不得为了套用 Injury Onset 规则而伪造一个本段 Trigger。
 
 目标：
 
@@ -1090,11 +1105,11 @@ Final Scan 的目标是**防止具体动作在序列化最后一公里重新变�
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
 9. **Concrete Technique Resolution + Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后实际 Final Prompt 是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法 / 低线干扰承重小腿 / 腿部绊阻破坏支撑 / 身体压迫改变朝向` 等 Abstract / Category-disguised Action Head？是否仍要求模型在多个不同 Mechanic 中自行任选？
-10. **Damage Onset Timing + Aftermath Lifetime / Continuity**：如果伤势不是用户明确的 Pre-existing Injury，开场是否保持无该伤势；每个新血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定了明确 Trigger；是否只从 Trigger 后出现；Persistent / Progressive 是否仅在出生后持续 / 累积；是否存在 Premature Injury / Damage Preload；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
+10. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
 11. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
 12. **Exchange Density**：是否因过度展开只剩少量大动作？
 13. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
-14. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的 Injury Trigger / Onset 表达，只留下全局伤势结果。
+14. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的新伤 Injury Trigger / Onset 表达，只留下全局最终伤势结果；也不能把 Baseline 旧伤误删或误改成新伤。
 15. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
 如果任何关键 Gate 失败，优先回到对应 Failure Layer 修复；不要第一反应扩知识库。
@@ -1118,4 +1133,4 @@ Final Scan 的目标是**防止具体动作在序列化最后一公里重新变�
 - 第二套 Camera Runtime；
 - 固定 Skeleton 模板。
 
-本轮目标是修复消费顺序、选择权重、动作密度、Concrete Technique 最终序列化、Aftermath 出生时刻与生命周期、Final Negative 边界与序列化，不是增加系统层数。
+本轮目标是修复消费顺序、选择权重、动作密度、Concrete Technique 最终序列化、Aftermath Baseline / Delta 出生时刻与生命周期、Final Negative 边界与序列化，不是增加系统层数。
