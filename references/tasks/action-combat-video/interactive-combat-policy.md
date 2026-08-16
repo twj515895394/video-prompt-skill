@@ -123,14 +123,29 @@ Relevance
 1. Chinese Cinematic Kung-fu Hybrid vs 散打
 2. 咏春 vs Wrestling / Grappling
 3. 八极 vs 散打
-4. JKD vs MMA
-5. 散打 vs MMA
-6. Hybrid vs Hybrid
-7. 其他当前场景高价值 Pairing
-8. 自定义双方体系
+4. 太极 vs 散打
+5. JKD vs MMA
+6. 散打 vs MMA
+7. Hybrid vs Hybrid
+8. 其他当前场景高价值 Pairing
+9. 自定义双方体系
 ```
 
 以上只是示意，禁止固化成固定候选表。
+
+其中 **八极与太极不能因为同属中国传统武术而互相替代**。它们承担不同的高价值 Combat Design Slot：
+
+```text
+八极
+→ 贴身爆发 / 崩靠 / 短劲 / 重接触 / Whole-body Drive
+→ 更偏 Pressure / Entry / Hard Contact
+
+太极
+→ 引化 / 借势 / 黏随 / 转轴 / 破重心 / 顺势反制
+→ 更偏 Defense / Counter / Reversal / Initiative Theft
+```
+
+当当前场景同时适合“硬碰硬重爆发”和“借力化劲反制”两种观看方向时，Recommendation Diversity Gate 应把它们视为两个不同的高价值候选，而不是只保留其中一种。
 
 每个 Pairing 的说明应回答：
 
@@ -165,6 +180,19 @@ Pairing 只是 Interactive Presentation，不是新的 Combat System 类型。
 - 自定义。
 
 候选池是知识来源，不是固定问卷。
+
+太极进入 Combat 候选时，不得退化成“慢动作 / 养生 / 只推手”的刻板表达。用于电影化实战时，应优先理解为：
+
+```text
+Incoming Force / Pressure
+→ 引化或让线
+→ 黏随 / 借势维持 Contact
+→ 转轴 / 改变 Route / Support / Balance
+→ 破重心或制造对手过伸
+→ 顺势 Counter / Reversal
+```
+
+这不是固定套路；具体动作仍由当前 Range / Contact / Opponent Action / State 与 Stage-2 Knowledge 实例化。
 
 ### 3.6 Chinese Cinematic Kung-fu Intent 推荐排序
 
@@ -885,7 +913,8 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 1. **Recommendation Breadth / Diversity**
    - Round 1 是否根据选题动态生成足够宽的高价值 Pairing；
    - 常见约 6～8 个，但没有机械凑数；
-   - 现代办公室 / 职业杀手不自动 MMA；中国角色也不自动只剩 Hybrid。
+   - 现代办公室 / 职业杀手不自动 MMA；中国角色也不自动只剩 Hybrid；
+   - 当场景同时适合重爆发与借力反制时，八极与太极是否被视为两个不同设计槽位，而不是互相替代；太极是否没有退化成“慢动作 / 养生 / 只推手”。
 
 2. **1v1 Pairing Presentation**
    - 是否用完整双方 Combat System 对战方向帮助用户选择；
