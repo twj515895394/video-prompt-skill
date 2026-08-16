@@ -85,6 +85,8 @@
 
 图片中的“核心关键词”不作为一级核心字段，降级为检索辅助 Metadata，可由条目内容自动归纳。
 
+随着 Grill 深入，Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile 等属于运行期高价值结构化属性；最终字段表会在设计收敛后统一重排，不受当前“10 个原始核心字段”编号限制。
+
 ---
 
 # C. 视觉媒介与动作物理解耦
@@ -382,7 +384,71 @@ A 打一下
 
 ---
 
-# H. 当前图片来源动作清单（待逐条知识化）
+# H. Risk / Commitment Profile / 风险与动作承诺度
+
+已确认增加 `Risk / Commitment Profile`。
+
+它回答：
+
+> **角色一旦开始执行这个动作，需要把多少身体状态、路线、重心或时间投入进去；如果被闪避、格挡或打断，会暴露多大的恢复窗口；命中后的回报又有多大。**
+
+该字段不记录固定成功率，也不把动作硬编码成“高风险一定失败”；它用于 Runtime 在当前 State 下理解动作的战术成本与反击机会。
+
+至少包含以下维度：
+
+```text
+Commitment: Low / Medium / High / Very High
+Miss / Block Risk
+Recovery Exposure
+Payoff
+```
+
+示意：
+
+```text
+侧身闪避走位
+Commitment: Low
+Miss / Block Risk: Low
+Recovery Exposure: Low
+Payoff: Route Change / Counter Window
+
+极速瞬身突袭
+Commitment: Medium
+Miss Risk: Medium
+Recovery Exposure: 前冲路线落空后可能短暂暴露
+Payoff: 快速压缩距离 / 抢 Entry / 形成 Pressure
+
+蓄力重拳冲击
+Commitment: High
+Miss / Block Risk: High
+Recovery Exposure: 蓄势与空挥后恢复较慢
+Payoff: High Impact / 强制位移 / Advantage Shift
+
+腾空旋转斩击
+Commitment: Very High
+Miss Risk: High
+Recovery Exposure: 空中路线难临时改变，落地存在 Recovery Window
+Payoff: Signature / Finisher / 高视觉收益
+```
+
+该属性与 Response Compatibility、State Transition、Tempo Profile 联动，可形成更自然的反击逻辑：
+
+```text
+High Commitment Attack
+→ Miss / Block / Evade
+→ Recovery Exposure Opened
+→ Counter / Initiative Theft 候选权重上升
+```
+
+因此，主动权翻转不再只依赖人为安排，而可以由动作本身的承诺度与失手代价产生。
+
+原则：
+
+> **动作越重、路线越难改、恢复越慢，越需要明确其失败后的反击窗口；动作越轻、越短、越可撤回，越不应自动制造夸张的大暴露。**
+
+---
+
+# I. 当前图片来源动作清单（待逐条知识化）
 
 当前 6 张来源图片共提供 18 个动作条目。原始名称如下：
 
@@ -410,18 +476,18 @@ A 打一下
 - 上述名称来自用户提供图片，只作为当前原始素材名；
 - 后续知识化时允许保留原名作为 Alias，并建立更中性的 Canonical Action Name；
 - 图片中的“气流、灵气、剑气、地裂、残影”等既可能是动作视觉实现，也可能是 P2/P3 风格表现，不应无脑写入 Core Action Mechanic；
-- 后续需要逐条区分：动作核、视觉表现、物理尺度、Combat Role、Response Compatibility、State Transition、Tempo Profile。
+- 后续需要逐条区分：动作核、视觉表现、物理尺度、Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile。
 
 ---
 
-# I. 已确认设计决策清单
+# J. 已确认设计决策清单
 
 截至当前 Grill，已确认：
 
 1. 知识库按战斗功能分类，不按 1～18 原编号平铺；
 2. 单动作模板是最小知识颗粒度，不再拆更细独立节点；
 3. 连招不作为基础条目，由前后衔接关系 + Runtime 动态组合形成；
-4. 单动作采用 10 个核心字段，关键词降级为 Metadata；
+4. 单动作采用 10 个基础核心字段，关键词降级为 Metadata；
 5. Visual Medium 与 Physical Realization Level 双轴解耦；
 6. P1 / P2 / P3 只描述动作物理 / 破坏 / 超现实尺度，不代表真人或动画；
 7. 真人写实媒介允许 P3 超现实武打；
@@ -431,11 +497,13 @@ A 打一下
 11. 增加 State Transition；
 12. 增加 Tempo Profile，使用相对节奏，不绑定固定秒数；
 13. Combat Role + Response Compatibility + State Transition 用于提高攻防匹配、反击、主动权转换和整体节奏感；
-14. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
+14. 增加 Risk / Commitment Profile，记录动作承诺度、失手 / 被挡风险、恢复暴露与命中回报；
+15. High Commitment 动作在 Miss / Block / Evade 后应自然提高 Counter / Initiative Theft 候选权重；
+16. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
 
 ---
 
-# J. 尚未确认 / 后续 Grill
+# K. 尚未确认 / 后续 Grill
 
 以下内容仍未确认，后续逐项 Grill：
 
@@ -443,9 +511,8 @@ A 打一下
 - Combat Role 的正式枚举边界；
 - Response Compatibility 的结构化维度；
 - State Transition 是描述式还是结构化 Before → After；
-- Tempo Profile 是否需要增加“节奏代价 / Recovery Cost”；
-- 动作是否需要 `Initiative Effect` 独立字段；
-- 动作是否需要 `Risk / Commitment`（空挥风险、落地恢复、暴露窗口）；
+- Tempo Profile 与 Risk / Commitment 的职责边界；
+- 动作是否需要 `Initiative Effect` 独立字段，还是由 State Transition + Risk / Commitment 推导；
 - 动作是否需要角色体型 / 柔韧 / 武器 / 环境条件；
 - P2 / P3 的 Environment Destruction 如何建模；
 - 18 个动作逐条知识化后的去重、Canonical Name 与 Alias；
@@ -464,3 +531,5 @@ A 打一下
 > **一攻一守不是轮流出招，而是 Incoming State → Compatible Response → State Transition → New Initiative。**
 >
 > **节奏不是固定秒数，而是动作之间 Burst / React / Pressure / Heavy / Recovery 的相对关系。**
+>
+> **高承诺动作的风险不是装饰字段，而应真实创造或关闭反击窗口。**
