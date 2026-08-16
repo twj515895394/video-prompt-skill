@@ -1,61 +1,72 @@
 # Combat Action Reference Catalog
 
-> 状态：**Implemented Knowledge / NOT Runtime-Wired**  
-> 来源：用户提供的 18 个国风漫剧打斗动作素材，经 Grill Me 抽象、去特效化与运行字段化整理。  
-> 目的：提供可复用的**单动作级 Concrete Action Reference**。本文件回答“一个具体动作怎样成立、适合何时使用、会造成什么状态变化”，不决定 Battle Beat、Exchange Spine、Camera 或最终胜负。
+> 状态：**Runtime-Wired Concrete Action Knowledge**  
+> 来源：用户提供的 6 张《AI漫剧打斗动作提示词大全》图片，共 **17 个**可见动作模板（1–17）。  
+> 目的：提供 Action Combat Stage-2 可按需读取的**单动作级 Concrete Action Reference**。本文件回答“现在适合用什么具体动作、为什么成立、会造成什么状态变化、以什么物理尺度表现”，不决定 Battle Beat、Exchange Spine、Camera 或最终胜负。
 
 ---
 
-# 1. 使用原则
+# 1. Runtime 使用原则
 
-## 1.1 最小知识颗粒度
+## 1.1 只在出现 Concrete Action Selection Gap 时读取
+
+本 Catalog 不是所有 Combat 请求的默认必读大词典。
+
+当 Stage-2 已知道当前需要的功能，但仍缺少一个**具体可执行动作**时读取，例如：
+
+```text
+Current Combat State
++ Combat Role Need
++ Incoming / Opponent Action
++ Physical Presentation Domain
+→ Concrete Action Selection Gap
+→ READ action-reference-catalog.md
+→ filter candidates
+→ select one concrete action
+→ realize into Action Phrase
+```
+
+优先过滤顺序：
+
+```text
+Prerequisites 合法
+→ Selected Physical Level 落在 Min / Max 区间
+→ Combat Role 匹配
+→ Response Compatibility 匹配
+→ State Transition 能产生当前 Exchange Spine 需要的结果
+→ Tempo / Risk / Initiative 与当前节奏一致
+```
+
+禁止为了“丰富”机械把 Catalog 动作塞入每个 Phrase。
+
+## 1.2 最小知识颗粒度
 
 最小颗粒度固定为：
 
 > **Single Action Template / 单动作模板**
 
-不把手、脚、肩胯、重心、支撑点继续拆成独立知识节点；它们属于动作内部机制。
+手、脚、肩胯、重心、支撑、接触点属于动作内部机制，不继续拆成独立节点。
 
-连招不是基础知识条目，只通过：
+连招不作为基础知识条目；连招由当前 State + Transition Compatibility + Runtime Exchange Spine 动态形成。
 
-- `Transition Compatibility`；
-- 当前 Combat State；
-- Runtime Exchange Spine；
+## 1.3 Visual Medium 与 Physical Level 解耦
 
-动态形成。
+真人写实影视、国风漫剧、2D、3D 等 Visual Medium 与动作物理尺度完全解耦。
 
-## 1.2 Visual Medium 与 Physical Level 解耦
+```text
+P1 Grounded
+= 现实人体物理为主，允许有限电影强化
 
-画面媒介与动作物理夸张程度完全独立。
+P2 Cinematic Exaggerated
+= 保留明确动作因果，强化速度、爆发、位移和环境反馈
 
-同一个动作可以出现在：
-
-- 真人写实影视；
-- 国风漫剧；
-- 2D 动画；
-- 3D 动画；
-
-只要 Selected Physical Level 落在该动作合法范围内。
-
-### P1｜Grounded
-
-现实人体物理为主，允许有限电影强化。
-
-### P2｜Cinematic Exaggerated
-
-保留明确动作因果，但强化速度、爆发、位移与环境反馈。
-
-### P3｜Hyper-Cinematic / Supernatural
-
-允许残影、超高速位移感、明显滞空、气劲、冲击波、剑气、地裂等超现实表现。
-
-原则：
+P3 Hyper-Cinematic / Supernatural
+= 允许残影、超高速位移感、明显滞空、气劲、冲击波、剑气、地裂等
+```
 
 > **降低 Physical Level 可以削弱表现强度，但不能偷偷改变 Core Action Mechanic。**
 
-## 1.3 Combat Role 固定枚举
-
-本 Catalog 只使用以下 8 个核心 Combat Role：
+## 1.4 Combat Role 固定为 8 个
 
 ```text
 Entry
@@ -68,11 +79,11 @@ Signature
 Finisher
 ```
 
-`Range Change / Route Change / Base Disruption` 等效果由 `State Transition` 表达，不重复作为 Role。
+Range / Route / Balance / Support 等变化由 `State Transition` 表达，不重复膨胀 Role 枚举。
 
-## 1.4 Response Compatibility
+## 1.5 轻量字段，不建立第二套状态机
 
-保持轻量半结构化：
+`Response Compatibility` 只使用：
 
 ```text
 Best Against
@@ -80,30 +91,25 @@ Poor Against
 Best State
 ```
 
-不建立复杂攻击方向 / 轨迹 / 速度状态机。
+`State Transition` 使用稀疏 Before → After，只写真正发生变化的维度。
 
-## 1.5 State Transition
-
-采用**稀疏 Before → After**。
-
-只写真正发生变化的状态，例如：
+`Initiative Effect` 使用：
 
 ```text
-Route: Frontal → Outside Angle
-Balance: Stable → Disrupted
-Initiative: Neutral → Steal
+Retain / Gain / Steal / Lose / Open Counter Window / Neutral
 ```
 
-没有变化的字段不写。
+只有明显必要时补一句条件说明，不为每个动作拆 On Hit / On Miss / On Block / On Evade 四套状态树。
 
 ---
 
 # 2. 单动作 Schema
 
-每个动作使用以下字段；无意义字段可省略，不机械填满。
+无意义字段可省略，不机械填满。
 
 ```text
 id
+source_id
 canonical_name
 aliases
 functional_category
@@ -119,7 +125,7 @@ initiative_effect
 tempo_profile
 risk_commitment: Commitment / Miss-Block Risk / Recovery Exposure / Payoff
 prerequisites
-transition_compatibility: Good Before / Good After
+transition_compatibility
 environment_impact
 risks_failure_modes
 metadata
@@ -131,65 +137,53 @@ metadata
 
 ## A01｜爆发瞬身接敌 / Explosive Burst Entry
 
-- **Aliases**：极速瞬身突袭、爆发突进、瞬步接敌
-- **Functional Category**：突进接敌
+- **Source ID / Alias**：01｜极速瞬身突袭
 - **Applicable Range**：mid → close
-- **Core Action Mechanic**：角色先压低重心，以一次爆发蹬地和短距离加速迅速压缩双方距离；P3 可表现为残影 / 瞬身感，但动作核仍是“高速接敌”。
-- **Body & Contact Relation**：起始阶段通常无接触；进入 close 后才产生拳、掌、肩、武器或抓控入口。
-- **Immediate Visible Result**：距离骤缩，对手必须立即封线、侧移、后撤或截击。
-- **Physical Level Range**：Min P2 / Default P2 / Max P3
+- **Core Action Mechanic**：压低重心后爆发蹬地，以短距离高速位移迅速压缩距离；P3 可产生残影 / 瞬身观感，但动作核仍是高速接敌。
+- **Immediate Visible Result**：对手必须立刻截击、封线、侧移或后撤。
+- **Physical Level**：Min P2 / Default P2 / Max P3
 - **Combat Role**：Entry / Re-entry / Pressure
-- **Response Compatibility**：
-  - Best Against：对手后撤、短暂失去攻击线、双方距离被拉开
-  - Poor Against：对手已建立稳定贴身控制；狭窄空间无前冲路线
-  - Best State：对手刚完成 Recovery，正面路线短暂开放
-- **State Transition**：Range: Mid → Close；Initiative: Neutral → Gain；Route: Open Lane → Direct Pressure Lane
+- **Response Compatibility**：Best Against：对手后撤、Recovery、路线短暂开放；Poor Against：已建立稳定贴身控制、无前冲路线；Best State：中距离且落脚区清楚。
+- **State Transition**：Range: Mid → Close；Initiative: Neutral → Gain
 - **Initiative Effect**：Gain；明显扑空时 Open Counter Window
-- **Tempo Profile**：Burst
-- **Risk / Commitment**：Commitment Medium；Miss Risk Medium；Recovery Exposure 为前冲惯性和回正窗口；Payoff 为快速夺取 Entry
-- **Prerequisites**：存在可用前冲 / 斜冲路线；落脚区可用
-- **Transition Compatibility**：Good Before：侧身闪避、后撤蓄力；Good After：短打、贴身缠斗、飞踢入口
-- **Environment Impact**：P2 可带脚步重响、纸张 / 衣摆受气流扰动；P3 可加明显残影、尘土拖尾，但不凭空传送
-- **Risks & Failure Modes**：不要写成无起点瞬移；必须保留起势、方向和落脚状态
-- **Metadata**：entry, burst, dash, re-entry
+- **Tempo**：Burst
+- **Risk / Commitment**：Medium；前冲惯性形成短 Recovery Exposure；Payoff 为快速夺取 Entry
+- **Prerequisites**：存在可用前冲 / 斜冲路线和落脚区
+- **Transition Compatibility**：适合接短打、贴身缠斗、飞踢或摔控入口
+- **Environment Impact**：P2 脚步重响、衣摆 / 纸张被气流扰动；P3 可强化残影和尘土拖尾
+- **Avoid**：无起点瞬移、无落脚状态
 
 ## A07｜低位滑步突入 / Low Slide Entry
 
-- **Aliases**：低空滑步突袭、低位滑入
-- **Functional Category**：突进接敌
+- **Source ID / Alias**：07｜低空滑步突袭
 - **Applicable Range**：mid → close / low line
-- **Core Action Mechanic**：角色降低重心，以一侧腿承重、另一侧腿引导滑步，从对手高线攻击下方或侧下方快速进入。
-- **Immediate Visible Result**：高低位发生变化，对手需要下压防线、换支撑或转轴。
-- **Physical Level Range**：Min P1 / Default P2 / Max P3
+- **Core Action Mechanic**：降低重心，以稳定支撑腿带动身体从高线攻击下方或侧下方滑入。
+- **Physical Level**：Min P1 / Default P2 / Max P3
 - **Combat Role**：Entry / Re-entry / Counter
-- **Response Compatibility**：Best Against：高线挥击、正面压迫、上肢封线；Poor Against：地面阻碍密集、支撑腿已被控制；Best State：对手上身前压且低线暂时开放
-- **State Transition**：Level: High/Mid → Low；Range: Mid → Close；Route: Frontal → Low Inside/Outside
+- **Response Compatibility**：Best Against：高线挥击、上肢封线、正面压迫；Poor Against：地面障碍密集、支撑腿被控制；Best State：对手上身前压且低线开放。
+- **State Transition**：Level: Mid/High → Low；Range: Mid → Close；Route: Frontal → Low Inside/Outside
 - **Initiative Effect**：Gain / Steal
-- **Tempo Profile**：Burst / Quick Reactive
-- **Risk / Commitment**：Medium；被截住时 Recovery Exposure 偏高；Payoff 为改变 Level + Entry
-- **Prerequisites**：地面连续、无大型障碍；有滑入与起身空间
-- **Transition Compatibility**：Good After：横扫腿击、贴身短打、摔控入口、轴线换位
-- **Environment Impact**：鞋底摩擦、尘土 / 水迹拖痕；P3 可强化低位气流拖尾
-- **Risks & Failure Modes**：不要让身体无支撑漂移；结束必须明确起身 / 单膝 / 低位支撑状态
+- **Tempo**：Burst / Quick Reactive
+- **Risk / Commitment**：Medium；被截住时低位恢复窗口偏大
+- **Prerequisites**：连续可滑入地面、起身空间可用
+- **Environment Impact**：鞋底摩擦、尘土 / 水迹拖痕；P3 可增强低位气流
+- **Avoid**：无支撑漂移；动作后必须有低位支撑或起身状态
 
-## A16｜跃步突入 / Agile Jump Entry
+## A11｜跃步突入 / Agile Jump Entry
 
-- **Aliases**：灵活跳跃突袭、跃步突进
-- **Functional Category**：突进接敌
+- **Source ID / Alias**：11｜灵活跳跃突袭
 - **Applicable Range**：mid → close
-- **Core Action Mechanic**：通过短助跑 / 蹬地跃步越过低障碍或改变攻击高度，在落点附近完成接敌。
-- **Immediate Visible Result**：Position / Height 改变，对手被迫抬线、转身或后退。
-- **Physical Level Range**：Min P1 / Default P2 / Max P2
+- **Core Action Mechanic**：短助跑或蹬地跃步改变高度 / 路线，在明确落点完成接敌。
+- **Physical Level**：Min P1 / Default P2 / Max P2
 - **Combat Role**：Entry / Re-entry / Signature
-- **Response Compatibility**：Best Against：低线封锁、矮障碍、对手视线集中地面；Poor Against：低顶空间、无安全落点；Best State：有明确落点且对手需要重新调整 Guard
+- **Response Compatibility**：Best Against：低线封锁、矮障碍、对手防线集中地面；Poor Against：低顶空间、无安全落点；Best State：落点明确且对手需要重新调整 Guard。
 - **State Transition**：Height: Grounded → Airborne → Grounded；Position: Original Lane → New Landing Lane
-- **Initiative Effect**：Gain；落点被读到时 Open Counter Window
-- **Tempo Profile**：Acceleration → Impact → Recovery
-- **Risk / Commitment**：High；空中路线难改；落地有 Recovery；Payoff 为明显空间换位
-- **Prerequisites**：足够起跳 / 落地空间
-- **Transition Compatibility**：Good After：凌空飞踢、落地重击、快速短打
-- **Environment Impact**：落地震动、衣物和头发惯性；P2 可有明显尘土 / 小物件震动
-- **Risks & Failure Modes**：不能无理由长时间滞空；必须交代落地
+- **Initiative Effect**：Gain；落点被预判时 Open Counter Window
+- **Tempo**：Acceleration → Impact → Recovery
+- **Risk / Commitment**：High；空中路线难改，落地存在 Recovery
+- **Prerequisites**：足够起跳和落地空间
+- **Environment Impact**：落地震动、衣物 / 头发惯性、轻微扬尘
+- **Avoid**：无理由长时间滞空
 
 ---
 
@@ -197,41 +191,34 @@ metadata
 
 ## A05｜侧移离线 / Lateral Evasion Step
 
-- **Aliases**：侧身闪避走位、侧切闪避
-- **Functional Category**：闪避走位
+- **Source ID / Alias**：05｜侧身闪避走位
 - **Applicable Range**：mid / close
-- **Core Action Mechanic**：攻击将到时先移重心，以短侧步 / 斜步让躯干离开攻击线，同时保留双脚支撑和反击姿态。
-- **Immediate Visible Result**：攻击落空或擦过，双方不再正面对线。
-- **Physical Level Range**：Min P1 / Default P1 / Max P2
+- **Core Action Mechanic**：攻击将到时先转移重心，以短侧步 / 斜步让躯干离开攻击线，同时保留支撑和反击姿态。
+- **Physical Level**：Min P1 / Default P1 / Max P2
 - **Combat Role**：Defense / Counter / Reversal
-- **Response Compatibility**：Best Against：直线拳、直线突进、正面抓抱入口；Poor Against：已建立贴身控制、大范围连续横扫；Best State：对方路线明确且仍有侧向落脚点
+- **Response Compatibility**：Best Against：直线拳、直线突进、正面抓抱入口；Poor Against：已建立贴身控制、大范围连续横扫；Best State：攻击路线清楚且侧向落脚点可用。
 - **State Transition**：Route: Frontal → Outside/Inside Angle；Axis: Face-to-face → Offset；Initiative: Opponent Pressure → Open Counter Window
 - **Initiative Effect**：Open Counter Window / Steal
-- **Tempo Profile**：Quick Reactive
-- **Risk / Commitment**：Low；Recovery Exposure Low；Payoff 为线路改变
-- **Prerequisites**：有侧向 / 斜向落脚空间
-- **Transition Compatibility**：Good After：短打截击、横扫腿、反手格挡后反击、拔刀斩
-- **Environment Impact**：轻微脚步摩擦；P2 可加衣物 / 发丝快速惯性
-- **Risks & Failure Modes**：不要只写“侧身躲开”而无脚步 / 轴线变化
+- **Tempo**：Quick Reactive
+- **Risk / Commitment**：Low；Recovery Exposure Low
+- **Prerequisites**：侧向 / 斜向落脚空间存在
+- **Environment Impact**：轻微脚步摩擦；P2 可加强衣物 / 发丝惯性
+- **Avoid**：只写“侧身躲开”却没有脚步和轴线变化
 
 ## A09｜后仰让线反击 / Lean-back Evade Counter
 
-- **Aliases**：后仰规避反击、后仰闪击
-- **Functional Category**：闪避走位
-- **Applicable Range**：close / striking mid-close
-- **Core Action Mechanic**：保持下肢支撑，骨盆和躯干后移让高线攻击掠过，随后借对方过伸或回收窗口迅速回正反击。
-- **Immediate Visible Result**：攻击擦空，对手短暂过伸；防守者仍在反击距离内。
-- **Physical Level Range**：Min P1 / Default P1 / Max P2
+- **Source ID / Alias**：09｜后仰规避反击
+- **Applicable Range**：close / mid-close
+- **Core Action Mechanic**：保持下肢支撑，骨盆与躯干后移让高线攻击掠过，随即借对手过伸或回收窗口回正反击。
+- **Physical Level**：Min P1 / Default P1 / Max P2
 - **Combat Role**：Defense / Counter / Reversal
-- **Response Compatibility**：Best Against：高线直拳、摆拳、掌击、部分横向挥击；Poor Against：低线扫腿、持续贴身压迫；Best State：双方距离很近但攻击线可读
-- **State Transition**：Upper-body Line: In Path → Outside Path；Initiative: Opponent → Steal opportunity
+- **Response Compatibility**：Best Against：高线直拳、摆拳、掌击；Poor Against：低线扫腿、持续贴身压迫；Best State：双方仍处反击距离且下肢支撑稳定。
+- **State Transition**：Upper-body Line: In Path → Outside Path；Initiative: Opponent → Steal Opportunity
 - **Initiative Effect**：Steal
-- **Tempo Profile**：Quick Reactive → Burst
-- **Risk / Commitment**：Low-Medium；后仰过大时 Balance Risk；Payoff 为不退出距离的即时 Counter
-- **Prerequisites**：脚下支撑稳定；后方无立即碰撞障碍
-- **Transition Compatibility**：Good After：短拳、掌根、前臂截击、低线踢
-- **Environment Impact**：通常轻微；P2 可强化擦击气流 / 衣物摆动
-- **Risks & Failure Modes**：不能把后仰写成失去重心的“Matrix”式悬停，除非 P3 另有明确动作
+- **Tempo**：Quick Reactive → Burst
+- **Risk / Commitment**：Low-Medium；后仰过大时 Balance Risk
+- **Prerequisites**：脚下支撑稳定、后方无立即碰撞障碍
+- **Avoid**：P1/P2 不写成失重式 Matrix 悬停
 
 ---
 
@@ -239,342 +226,287 @@ metadata
 
 ## A03｜反手拨挡 / Reverse-hand Parry
 
-- **Aliases**：反手格挡防御、反手拨架
-- **Functional Category**：格挡防御
+- **Source ID / Alias**：03｜反手格挡防御
 - **Applicable Range**：close / mid-close
-- **Core Action Mechanic**：用前臂 / 手掌从侧面接触来袭肢体并把攻击线拨离中心线，同时身体小幅转轴而非原地硬挡。
-- **Immediate Visible Result**：攻击线偏转，形成短暂侧向暴露。
-- **Physical Level Range**：Min P1 / Default P1 / Max P2
+- **Core Action Mechanic**：前臂 / 手掌从侧面接触来袭肢体，将攻击线拨离中心线，同时身体小幅转轴。
+- **Physical Level**：Min P1 / Default P1 / Max P2
 - **Combat Role**：Defense / Counter
-- **Response Compatibility**：Best Against：直拳、短打、直线抓入；Poor Against：重型大范围冲撞、已建立双手抱控；Best State：来招方向清楚、前臂可接触
-- **State Transition**：Attack Line: Center → Outside；Axis: Neutral → Slight Turn；Initiative: Opponent → Open Counter Window
-- **Initiative Effect**：Open Counter Window / Steal
-- **Tempo Profile**：Instant / Quick Reactive
-- **Risk / Commitment**：Low；Miss Risk 为拨挡过早 / 过大；Payoff 为保留近距反击
-- **Prerequisites**：来袭肢体可接触；防守手没有被固定
-- **Transition Compatibility**：Good After：短打、侧移、抓控入口
-- **Environment Impact**：通常无；强调肢体接触声和 Guard 变化
-- **Risks & Failure Modes**：不要写成手一挥对手整个人飞开，除非另有 P3 力量机制
+- **Response Compatibility**：Best Against：直拳、短掌、单线武器手臂进入；Poor Against：大范围重型双向冲击、已建立抱控；Best State：来袭肢体可接触且防守者仍有稳定支撑。
+- **State Transition**：Attack Line: Center → Off-line；Axis: Frontal → Slight Offset
+- **Initiative Effect**：Open Counter Window
+- **Tempo**：Quick Reactive
+- **Risk / Commitment**：Low；Payoff 是短反击窗口而非自动夺取全局优势
+- **Prerequisites**：来袭线路可读、接触手臂可达
+- **Avoid**：把轻拨挡写成夸张击飞
 
-## A08｜交叉臂硬架 / Cross-arm Guard
+## A08｜交叉架挡 / Cross-arm Guard
 
-- **Aliases**：双臂交叉防御、十字架挡
-- **Functional Category**：格挡防御
+- **Source ID / Alias**：08｜双臂交叉防御
 - **Applicable Range**：close / mid-close
-- **Core Action Mechanic**：双臂在头胸前交叉形成结构性防线，用下肢和躯干吸收正面冲击。
-- **Immediate Visible Result**：攻击被挡住，但防守者可能后退 / 下沉，通常不自动获得反击权。
-- **Physical Level Range**：Min P1 / Default P1 / Max P2
+- **Core Action Mechanic**：双臂交叉建立正面结构，用前臂和身体支撑吸收 / 分散正面重击。
+- **Physical Level**：Min P1 / Default P1 / Max P2
 - **Combat Role**：Defense
-- **Response Compatibility**：Best Against：正面重拳、下劈、爆发冲击；Poor Against：绕侧、低线攻击、贴身抱摔；Best State：无法及时侧移但仍有稳定支撑
-- **State Transition**：Contact: Incoming → Absorbed/Blocked；Position: Stable → Possible Back-step；Initiative: Opponent Retains Pressure
-- **Initiative Effect**：Neutral / Opponent Retains Pressure
-- **Tempo Profile**：Heavy / Pause-and-Absorb
-- **Risk / Commitment**：Medium；持续硬架会被压迫；Payoff 为保命 / 稳住结构
-- **Prerequisites**：双臂可自由抬起；脚下支撑存在
-- **Transition Compatibility**：Good After：后撤、侧移、下沉换位、短促 Counter
-- **Environment Impact**：P2 可有鞋底滑动、地面摩擦、身体撞近处物体
-- **Risks & Failure Modes**：不要让防守者格挡后瞬间无过渡切换到完全不同站位
+- **Response Compatibility**：Best Against：正面重拳、下劈、强冲击；Poor Against：侧后方攻击、持续抓抱、低线破支撑；Best State：正面对线且来袭方向明确。
+- **State Transition**：Contact: Incoming → Absorbed/Blocked；Range: Usually unchanged；Initiative: Opponent Pressure → Retain/Neutral
+- **Initiative Effect**：Neutral；通常对方仍可 Retain Pressure
+- **Tempo**：Heavy / Absorb Pause
+- **Risk / Commitment**：Medium；Payoff 为保住结构，不保证获得主动
+- **Prerequisites**：双臂可形成完整 Guard、支撑脚稳定
+- **Environment Impact**：P2 可带脚底滑移、衣物震动、近处小物件轻震
+- **Avoid**：成功防守后无因直接写成防守者占优
 
 ---
 
 # 6. 重击爆发类
 
-## A04｜蓄势重拳 / Charged Heavy Punch
+## A04｜蓄势重拳 / Loaded Power Punch
 
-- **Aliases**：蓄力重拳冲击、重拳爆发
-- **Functional Category**：重击爆发
-- **Applicable Range**：mid-close / close
-- **Core Action Mechanic**：先通过短暂蓄势将重心压入支撑脚，再由脚—髋—躯干—肩—拳完成一次高承诺直线 / 弧线重击。
-- **Immediate Visible Result**：命中时目标明显失衡 / 后退；落空时攻击者产生较大回收窗口。
-- **Physical Level Range**：Min P1 / Default P2 / Max P3
+- **Source ID / Alias**：04｜蓄力重拳冲击
+- **Applicable Range**：close / mid-close
+- **Core Action Mechanic**：短蓄势后由脚—髋—躯干—肩—拳形成完整动力链，沿明确路线输出一次重击。
+- **Physical Level**：Min P1 / Default P2 / Max P3
 - **Combat Role**：Pressure / Signature / Finisher
-- **Response Compatibility**：Best Against：对手被逼入可预测路线、Guard 已被打开、对手 Recovery；Poor Against：高速侧移、外侧角度、距离不足；Best State：攻击者已控制节奏并有完整发力空间
-- **State Transition**：On solid hit Balance: Stable → Disrupted；Position: Held → Forced Back；On miss Initiative: Retain/Gain → Open Counter Window
-- **Initiative Effect**：命中 Gain / Retain；明显落空 Lose / Open Counter Window
-- **Tempo Profile**：Build-up → Impact
+- **Response Compatibility**：Best Against：对手 Guard 已被打开、失衡、被环境限制；Poor Against：对手仍有清楚侧移路线、攻击者来不及蓄势；Best State：攻击窗口明确且能承担高 Commitment。
+- **State Transition**：On clean hit: Balance Stable → Disrupted；Position may shift；On miss: Initiative → Open Counter Window
+- **Initiative Effect**：命中 Retain / Gain；明显落空 Open Counter Window
+- **Tempo**：Build-up → Impact
 - **Risk / Commitment**：High；Miss / Block Risk High；Recovery Exposure High；Payoff High
-- **Prerequisites**：有完整发力路线和拳击距离
-- **Transition Compatibility**：Good Before：格挡压迫、逼退、假动作；Good After：追击 / Finisher 或落空后的防守恢复
-- **Environment Impact**：P2 可轰退目标撞墙 / 家具；P3 可强化局部破裂、冲击波，但拳必须有明确接触或命中机制
-- **Risks & Failure Modes**：不能把“蓄力”写成长时间静止；不要用模糊“能量拳”替代具体拳路
+- **Prerequisites**：有完整发力空间和目标窗口
+- **Environment Impact**：P2 可将对手轰退撞家具 / 墙面；P3 可扩大碎屑、墙体破坏和冲击波
+- **Avoid**：只有“重拳”名词而无蓄势、动力链、接触和受力结果
 
-## A12｜稳架爆发冲撞 / Braced Power Charge
+## A10｜霸体强冲 / Armored Power Rush
 
-- **Aliases**：蓄力霸体冲击、霸体冲撞
-- **Functional Category**：重击爆发
+- **Source ID / Alias**：10｜蓄力霸体冲击
 - **Applicable Range**：mid → close
-- **Core Action Mechanic**：角色先压低重心并收紧躯干结构，随后用肩胸 / 前臂 / 全身框架向前强势推进，以身体质量而非单手攻击打开空间。
-- **Immediate Visible Result**：目标被迫后退、转轴或失去站位；攻击者继续占据前进路线。
-- **Physical Level Range**：Min P2 / Default P2 / Max P3
+- **Core Action Mechanic**：角色先稳定下盘并集中身体整体惯性，以肩、躯干或前臂结构承压向前强行推进；“霸体”表示高抗打电影表现，不等于免疫一切攻击。
+- **Physical Level**：Min P2 / Default P2 / Max P3
 - **Combat Role**：Entry / Pressure / Signature
-- **Response Compatibility**：Best Against：对手 Guard 高但脚下空间有限、对手正在后撤；Poor Against：外侧闪避、借力转向、低位摔控；Best State：攻击者有正面推进通道
-- **State Transition**：Range: Mid → Close；Position: Neutral → Forward Occupation；Opponent Position: Held → Forced Back/Turned
-- **Initiative Effect**：Gain / Retain；被侧切后 Open Counter Window
-- **Tempo Profile**：Pause-and-Explode / Heavy
-- **Risk / Commitment**：High；Route Commitment High；Payoff 为强制位移
-- **Prerequisites**：前方有推进路线；支撑稳定
-- **Transition Compatibility**：Good After：贴身短打、墙边压迫、重拳；被化解后转 Re-entry
-- **Environment Impact**：P2 可撞动桌椅 / 门板；P3 可强化墙面裂纹、碎屑与冲击
-- **Risks & Failure Modes**：不要把“霸体”理解为绝对无敌；受击仍要有结构 / 惯性反馈
+- **Response Compatibility**：Best Against：对手轻型阻挡、空间退路有限；Poor Against：侧切、借力偏转、低线破支撑；Best State：正面路线开放且角色有足够加速距离。
+- **State Transition**：Range: Mid → Close；Position: Defender forced backward；Initiative: Neutral/Opponent → Gain
+- **Initiative Effect**：Gain；被侧移 / 借力时可能 Lose / Open Counter Window
+- **Tempo**：Build-up → Heavy Impact
+- **Risk / Commitment**：Very High；路线难改；Payoff 高位移 / 高压迫
+- **Prerequisites**：正面推进路线和落脚支撑可用
+- **Environment Impact**：P2 可撞移家具、撞墙；P3 可强化碎屑、地面反馈和冲击波
+- **Avoid**：把“霸体”解释成无反应无物理反馈
 
-## A14｜后撤蓄势重反击 / Retreat-load Heavy Counter
+## A17｜落地震地重击 / Ground-impact Slam
 
-- **Aliases**：后撤蓄力重击、撤步蓄力反击
-- **Functional Category**：重击爆发
-- **Applicable Range**：close → mid-close → close
-- **Core Action Mechanic**：先撤半步 / 一步让开来招并把重心装入后腿，随即前送髋肩释放一记重击。
-- **Immediate Visible Result**：防守与蓄势合成一拍，利用对手追入造成的前压完成重反击。
-- **Physical Level Range**：Min P1 / Default P2 / Max P2
-- **Combat Role**：Defense / Counter / Reversal / Signature
-- **Response Compatibility**：Best Against：对手连续前压、直线追击；Poor Against：对手不追、远距离停手、侧向进入；Best State：可安全撤出半步且对手仍在追入
-- **State Transition**：Range: Close → Mid-close → Close；Initiative: Opponent Pressure → Steal
-- **Initiative Effect**：Steal
-- **Tempo Profile**：Quick Retreat → Build-up → Impact
-- **Risk / Commitment**：Medium-High；若对手不追会落空 / 距离断裂；Payoff High Counter
-- **Prerequisites**：后方有撤步空间
-- **Transition Compatibility**：Good Before：交叉臂防御、后仰闪避；Good After：重拳 / 掌 / 肩撞后的追击
-- **Environment Impact**：P2 可产生明显脚步摩擦、目标撞物
-- **Risks & Failure Modes**：撤步与回击不能断成两个无关姿势
-
-## A18｜下落震地重击 / Descending Ground Impact
-
-- **Aliases**：落地震地重击、震地落击
-- **Functional Category**：重击爆发 / 空中动作
-- **Applicable Range**：airborne → ground / area around landing
-- **Core Action Mechanic**：角色从明确的腾空 / 下落状态聚集身体质量，以脚、膝、拳、武器或整体落地动作把下落动量传给地面。
-- **Immediate Visible Result**：落点产生强烈冲击；附近对手 / 环境因震动、碎屑或冲击波作出反馈。
-- **Physical Level Range**：Min P2 / Default P2 / Max P3
-- **Combat Role**：Signature / Finisher / Re-entry
-- **Response Compatibility**：Best Against：对手位于落点附近、需要制造区域压力；Poor Against：无前序腾空状态、脆弱地面无法合理承载；Best State：已有明确下落轨迹和可读落点
-- **State Transition**：Height: Airborne → Grounded；Environment: Stable → Impacted；Range: Vertical Separation → Local Close/Area Pressure
+- **Source ID / Alias**：17｜落地震地重击
+- **Applicable Range**：landing / close-to-area impact
+- **Core Action Mechanic**：从明确的腾空 / 下落状态把身体或攻击动作的向下动量集中到落地点，形成重落地冲击。
+- **Physical Level**：Min P2 / Default P2 / Max P3
+- **Combat Role**：Signature / Finisher / Pressure
+- **Response Compatibility**：Best Against：对手位于落点附近、已被逼到局部区域；Poor Against：没有前序下落、地面不允许落地；Best State：前序动作已经建立下降动量和清楚落点。
+- **State Transition**：Height: Airborne → Grounded；Environment: Stable → Impacted；Nearby Balance may be disrupted
 - **Initiative Effect**：Gain / Retain
-- **Tempo Profile**：Acceleration → Impact → Recovery
-- **Risk / Commitment**：Very High；落点可预测；Recovery Exposure Medium-High；Payoff Very High Visual
-- **Prerequisites**：必须存在前序腾空 / 下落；落点明确
-- **Transition Compatibility**：Good Before：跃步突入、空中连击；Good After：低位起身压迫 / Finisher Freeze
-- **Environment Impact**：P2 灰尘震起、小型家具震动；P3 地裂、碎石、冲击波扩散
-- **Risks & Failure Modes**：不能从站立状态无过渡“突然落地”；P3 地裂仍需围绕明确落点展开
+- **Tempo**：Acceleration → Impact → Recovery
+- **Risk / Commitment**：Very High；落地后存在 Recovery；Payoff 为高视觉重拍
+- **Prerequisites**：必须存在真实前序腾空 / 下落和落地点
+- **Environment Impact**：P2 扬尘、附近家具震动、材质合理的小裂纹；P3 可地裂、碎石和冲击波
+- **Avoid**：角色没有下落过程却突然“落地”；P2 不默认制造巨型陨石坑
 
 ---
 
 # 7. 腿法攻击类
 
-## A02｜凌空直线飞踢 / Airborne Driving Kick
+## A02｜凌空飞踢 / Jumping Flying Kick
 
-- **Aliases**：凌空飞踢、飞踢突击
-- **Functional Category**：腿法攻击 / 空中动作
+- **Source ID / Alias**：02｜凌空飞踢
 - **Applicable Range**：mid → close
-- **Core Action Mechanic**：助跑或短蹬地起跳，支撑腿离地后攻击腿沿明确直线 / 斜线伸展命中目标，随后回收并落地。
-- **Immediate Visible Result**：目标后退 / 失衡；攻击者必须进入落地 Recovery。
-- **Physical Level Range**：Min P1 / Default P2 / Max P2
+- **Core Action Mechanic**：短起跳后以单腿向目标延伸，支撑腿离地时间短，命中 / 掠过后立即进入明确落地恢复。
+- **Physical Level**：Min P1 / Default P2 / Max P2
 - **Combat Role**：Entry / Pressure / Signature
-- **Response Compatibility**：Best Against：目标位置相对固定、正面路线开放；Poor Against：低顶空间、对手已贴身、对手明显侧切；Best State：有清楚起跳距离和安全落点
-- **State Transition**：Height: Grounded → Airborne → Grounded；Range: Mid → Contact; Position: Start → Landing Point
-- **Initiative Effect**：命中 Gain；落空 Open Counter Window
-- **Tempo Profile**：Acceleration → Impact → Recovery
-- **Risk / Commitment**：High；空中路线难改；落地 Recovery High；Payoff High
-- **Prerequisites**：起跳 / 落地空间；目标在踢击轨迹内
-- **Transition Compatibility**：Good Before：爆发接敌、跃步；Good After：落地短打 / 侧移恢复
-- **Environment Impact**：落地脚步、目标撞物；P2 可强化击退
-- **Risks & Failure Modes**：必须写落地；不能让攻击者击中后继续无支撑漂浮
+- **Response Compatibility**：Best Against：对手后退、上身暴露、需要跨越短距离；Poor Against：低顶空间、目标已贴身、落点危险；Best State：有起跳和落地空间。
+- **State Transition**：Height: Grounded → Airborne → Grounded；Range: Mid → Close
+- **Initiative Effect**：Gain；被躲开时 Open Counter Window
+- **Tempo**：Burst → Impact → Recovery
+- **Risk / Commitment**：High；空中路线难改，落地恢复明显
+- **Prerequisites**：安全起跳 / 落地区域
+- **Environment Impact**：落脚声、衣物 / 发丝惯性；P2 可带明显受击位移
+- **Avoid**：长时间滞空或无落地
 
-## A10｜低位横扫 / Sweeping Leg Attack
+## A13｜横扫腿击 / Horizontal Sweep Kick
 
-- **Aliases**：横扫腿击、扫腿、低线扫击
-- **Functional Category**：腿法攻击
-- **Applicable Range**：close / mid-close
-- **Core Action Mechanic**：支撑脚转轴，髋部带动攻击腿沿低位弧线扫向对手小腿 / 脚踝 / 支撑线，目标是改变 Support Base 而非单纯造成疼痛。
-- **Immediate Visible Result**：对手被迫抬脚、补步、转身或失衡。
-- **Physical Level Range**：Min P1 / Default P1 / Max P2
-- **Combat Role**：Counter / Pressure / Reversal
-- **Response Compatibility**：Best Against：对手重心前压、承重脚明显、突进刚落脚；Poor Against：目标已腾空、距离过近无法展开；Best State：支撑线暴露
-- **State Transition**：Support: Stable → Disturbed；Balance: Stable → Forced Re-step/Off-balance；Initiative: Neutral/Opponent → Steal
-- **Initiative Effect**：Steal / Gain
-- **Tempo Profile**：Quick / Heavy depending execution
-- **Risk / Commitment**：Medium；被抬腿 / 后撤会空扫；Payoff 为 Base Disruption
-- **Prerequisites**：攻击腿有弧线路径；目标支撑区域可达
-- **Transition Compatibility**：Good Before：侧移、反手拨挡；Good After：短打、摔控、重击
-- **Environment Impact**：P1 鞋底摩擦 / 尘土；P2 对手失衡后撞翻近处物体
-- **Risks & Failure Modes**：不要只写“扫腿把人打飞”；必须体现支撑变化
+- **Source ID / Alias**：13｜横扫腿击
+- **Applicable Range**：close / mid-close / low line
+- **Core Action Mechanic**：支撑脚稳定转动，髋部带动另一腿沿低位横向弧线扫向目标承重腿 / 支撑线。
+- **Physical Level**：Min P1 / Default P1 / Max P2
+- **Combat Role**：Counter / Reversal / Pressure
+- **Response Compatibility**：Best Against：对手重心前压、承重脚暴露、突进刚落脚；Poor Against：对手腾空、支撑腿不可达；Best State：目标支撑关系清楚。
+- **State Transition**：Support: Stable → Disrupted；Balance: Stable → Forced Step/Fall Risk；Initiative: Opponent → Steal
+- **Initiative Effect**：Steal
+- **Tempo**：Quick Reactive / Heavy by context
+- **Risk / Commitment**：Medium；扫空后需要回收支撑
+- **Prerequisites**：目标腿部 / 支撑区域可达
+- **Environment Impact**：P1 脚底摩擦和补步；P2 可撞翻近处椅子 / 撞墙
+- **Avoid**：抽象写“低线攻击”而不明确扫击目标和支撑后果
 
 ---
 
 # 8. 空中动作类
 
-## A06｜腾空旋转斩 / Airborne Spinning Slash
+## A06｜腾空旋转斩 / Aerial Spinning Slash
 
-- **Aliases**：腾空旋转斩击、旋空斩
-- **Functional Category**：空中动作 / 武器攻击
-- **Applicable Range**：mid / close around arc
-- **Core Action Mechanic**：持刀 / 剑角色起跳后由髋肩带动身体旋转，武器沿一条可读弧线完成斩击，随后以明确姿态落地。
-- **Immediate Visible Result**：武器攻击覆盖角度扩大，对手需要后撤、架挡或改变轴线。
-- **Physical Level Range**：Min P2 / Default P2 / Max P3
+- **Source ID / Alias**：06｜腾空旋转斩击
+- **Applicable Range**：mid / weapon reach
+- **Core Action Mechanic**：持刃角色起跳后由躯干和髋部带动单次明确旋转，让武器沿可读弧线完成斩击并落地。
+- **Physical Level**：Min P2 / Default P2 / Max P3
+- **Combat Role**：Signature / Finisher / Pressure
+- **Response Compatibility**：Best Against：目标被限制路线、需要跨越高度差；Poor Against：无刀剑、狭窄低顶、目标已贴身抱控；Best State：武器状态明确、起跳和落点清楚。
+- **State Transition**：Height: Grounded → Airborne → Grounded；Attack Line: Linear → Rotational Arc
+- **Initiative Effect**：Gain；挥空 / 落点被读到时 Open Counter Window
+- **Tempo**：Acceleration → Impact → Recovery
+- **Risk / Commitment**：Very High；空中路线难改、落地暴露明显
+- **Prerequisites**：持有可斩击武器；有旋转和落地空间
+- **Environment Impact**：P2 风压、衣物和尘土扰动；P3 可出现强化剑气 / 碎屑，但须沿刀路
+- **Avoid**：无武器却“斩击”；旋转次数不受控
+
+## A12｜空中滞空连击 / Suspended Aerial Combo
+
+- **Source ID / Alias**：12｜空中滞空连击
+- **Applicable Range**：airborne / close aerial exchange
+- **Core Action Mechanic**：该动作的身份依赖明显超现实滞空：角色在非正常重力持续时间内保持空中控制并完成连续攻击，再结束于明确下落 / 落地。
+- **Physical Level**：Min P3 / Default P3 / Max P3
 - **Combat Role**：Pressure / Signature / Finisher
-- **Response Compatibility**：Best Against：需要跨越低障碍 / 扩大斩击角度；Poor Against：狭窄空间、无武器、贴身抱控；Best State：有起跳与旋转空间且对手位于弧线范围
-- **State Transition**：Height: Grounded → Airborne → Grounded；Axis: Forward → Rotated; Weapon Line: Ready → Sweeping Arc
-- **Initiative Effect**：Gain；落空或落地被读到时 Open Counter Window
-- **Tempo Profile**：Build-up → Rotation Burst → Recovery
-- **Risk / Commitment**：Very High；路线难改、落地 Recovery High；Payoff Very High Visual
-- **Prerequisites**：刀剑可用；足够旋转与落地空间
-- **Transition Compatibility**：Good Before：跃步 / 闪避换位；Good After：落地重击 / 防守恢复
-- **Environment Impact**：P2 武器带风、布料旋转；P3 可加入剑气 / 强气流，但真实武器轨迹仍需可读
-- **Risks & Failure Modes**：武器不得漂移 / 变长；不要用镜头旋转替代人物动作旋转
-
-## A11｜超现实滞空连击 / Supernatural Aerial Combination
-
-- **Aliases**：空中滞空连击、滞空连续攻击
-- **Functional Category**：空中动作
-- **Applicable Range**：airborne close / mid-close
-- **Core Action Mechanic**：角色在明显超现实的持续空中状态中，对同一目标完成连续可读攻击，并保持每次 Contact / Reaction 的方向连续。
-- **Immediate Visible Result**：目标在空中 / 近空中持续被压制，双方 Height 与 Momentum 成为主要战斗状态。
-- **Physical Level Range**：Min P3 / Default P3 / Max P3
-- **Combat Role**：Pressure / Signature / Finisher
-- **Response Compatibility**：Best Against：P3 武侠 / 超现实战斗，双方已进入空中状态；Poor Against：P1/P2 写实物理、无腾空入口；Best State：已有明确起跳 / 击飞 / 腾空来源
-- **State Transition**：Height: Grounded/Airborne → Sustained Airborne；Initiative: Gain → Retain under aerial pressure
+- **Response Compatibility**：Best Against：双方已进入超现实空中战斗或目标被击至空中；Poor Against：P1/P2 Grounded Combat、低顶空间；Best State：Physical Presentation 已明确允许 P3 滞空。
+- **State Transition**：Height: Airborne → Sustained Airborne → Landing/Fall；Initiative: Retain during combo
 - **Initiative Effect**：Retain / Gain
-- **Tempo Profile**：Sustained Rapid
-- **Risk / Commitment**：High；如果连击断裂，需要明确下落 / 换位；Payoff 为高密度空中 Signature
-- **Prerequisites**：Selected Physical Level 必须 P3；已有合理腾空入口
-- **Transition Compatibility**：Good Before：飞踢、击飞、跃步；Good After：下落震地 / 空中脱离
-- **Environment Impact**：气流、衣物、碎屑 / 烟尘随空中运动；不得让环境反馈与运动方向相反
-- **Risks & Failure Modes**：不能降级成 P2 后仍写长时间悬浮；每次攻击必须有具体动作头而不是“连续连击”四字
+- **Tempo**：Sustained Rapid → Recovery
+- **Risk / Commitment**：High；Payoff 是高视觉连续空中 Pressure
+- **Prerequisites**：Selected Physical Level = P3；存在空中状态和最终落点
+- **Environment Impact**：可有气流、衣物、碎屑随连续攻击方向变化
+- **Avoid**：在 P1/P2 偷偷把“滞空”降级成普通跳跃；若要普通短跳连击，应选其他动作
 
 ---
 
 # 9. 贴身缠斗 / 近身快打类
 
-## A17｜贴身快打链 / Close-range Flurry
+## A14｜贴身缠斗快打 / Close-range Rapid Exchange
 
-- **Aliases**：贴身缠斗快打、近身快攻
-- **Functional Category**：贴身缠斗 / 近身快打
-- **Applicable Range**：close
-- **Core Action Mechanic**：双方保持可读近身关系，攻击者以短拳、掌、前臂、肘等短距离动作连续抢线，对手同时封挡、偏轴、抓控或短反击；不是单方木桩连打。
-- **Immediate Visible Result**：高频攻防持续，Guard / Axis / Contact 不断变化但 Range 基本保持 close。
-- **Physical Level Range**：Min P1 / Default P2 / Max P2
-- **Combat Role**：Pressure / Counter / Re-entry
-- **Response Compatibility**：Best Against：已经进入贴身距离、双方 Guard 活跃；Poor Against：距离过远、其中一方已倒地且未重新建立关系；Best State：双方仍有持续交换能力
-- **State Transition**：Contact: Intermittent → Sustained Close Exchange；Axis: Repeated micro changes；Initiative: Can Retain / Steal dynamically
-- **Initiative Effect**：Retain / Steal depending exchange
-- **Tempo Profile**：Sustained Rapid
-- **Risk / Commitment**：Medium；持续近身会增加被抱控 / 低线反击风险；Payoff 为高 Exchange Density
-- **Prerequisites**：双方已处 close；必须允许对手真实回应
-- **Transition Compatibility**：Good Before：爆发接敌、格挡、摔控失败；Good After：侧移、摔控、重击、Reversal
-- **Environment Impact**：衣物、呼吸、脚步、墙边 / 家具小范围碰撞；不需要每一下都破坏环境
-- **Risks & Failure Modes**：避免“拳掌肘膝一串名词”；必须把关键 1-2 个动作具体化并让其造成状态后果
+- **Source ID / Alias**：14｜贴身缠斗快打
+- **Applicable Range**：close / clinch-adjacent
+- **Core Action Mechanic**：双方在持续近身压力中以短拳、肘、前臂、架挡、抓控拆解和小角度换位形成连续快速攻防；具体 Technique 必须结合 Combat System 收敛，不把“快打”本身当招式。
+- **Physical Level**：Min P1 / Default P1 / Max P2
+- **Combat Role**：Pressure / Defense / Counter / Re-entry
+- **Response Compatibility**：Best Against：已经进入近身、双方仍有手臂和躯干交换空间；Poor Against：双方仍在远距离、已进入完整地面控制；Best State：Contact 连续且没有 Neutral Reset。
+- **State Transition**：Contact: Intermittent → Sustained；Axis / Position: small continuous changes；Initiative: contested
+- **Initiative Effect**：Retain / Steal by realized action
+- **Tempo**：Sustained Rapid
+- **Risk / Commitment**：Medium；单动作低至中 Commitment，但持续交换累积风险
+- **Prerequisites**：已进入 close range；具体短打 / 控制动作必须符合角色 Combat System
+- **Environment Impact**：近处墙面 / 家具可限制路线或产生局部碰撞反馈
+- **Avoid**：最终 Prompt 只写“贴身缠斗快打”而不给具体动作；它必须实例化为真实短动作链
 
 ---
 
 # 10. 武器瞬杀类
 
-## A13｜侧身拔刀斩 / Draw-and-Slash
+## A15｜侧身拔刀斩 / Side-draw Quick Slash
 
-- **Aliases**：侧身拔刀斩、拔刀反斩
-- **Functional Category**：武器瞬杀
-- **Applicable Range**：mid-close / close
-- **Core Action Mechanic**：角色先通过侧身 / 斜切让出正面攻击线，同时一手稳定刀鞘 / 起始位置，另一手拔出刀刃并沿连续弧线完成一次斩击。
-- **Immediate Visible Result**：防守换位与武器攻击在同一动作链完成，对手被迫退让 / 架挡 / 改轴。
-- **Physical Level Range**：Min P1 / Default P2 / Max P3
-- **Combat Role**：Counter / Reversal / Signature / Finisher
-- **Response Compatibility**：Best Against：直线进入、对手攻击过伸、已有外侧角度；Poor Against：无刀剑、贴身抱控使拔刀空间不足；Best State：刀仍在鞘 / 起始位置且拔刀路径开放
-- **State Transition**：Weapon State: Sheathed/Ready → Drawn; Route: Frontal → Offset；Initiative: Opponent → Steal
+- **Source ID / Alias**：15｜侧身拔刀斩
+- **Applicable Range**：weapon draw range / close-mid
+- **Core Action Mechanic**：身体侧转让出刀路，一手稳定刀鞘 / 佩刀位置，另一手完成拔出并沿单一明确弧线斩击，随后控制余势和刀位。
+- **Physical Level**：Min P1 / Default P2 / Max P3
+- **Combat Role**：Counter / Signature / Finisher
+- **Response Compatibility**：Best Against：对手直线进入、暴露明确攻击线；Poor Against：没有佩刀 / 刀已在手却描述“拔刀”、贴身抱控导致无法出鞘；Best State：武器状态 = sheathed 且拔刀路线开放。
+- **State Transition**：Weapon State: Sheathed → Drawn；Attack Line: Closed → Slash Arc；Initiative: Neutral/Opponent → Steal
 - **Initiative Effect**：Steal / Gain
-- **Tempo Profile**：Instant → Burst
-- **Risk / Commitment**：Medium-High；拔刀失败会产生暴露；Payoff High
-- **Prerequisites**：真实刀剑 / 刀鞘状态；手部与武器位置连续
-- **Transition Compatibility**：Good Before：侧移、后仰闪避；Good After：武器压迫 / 收刀 / 继续斩击
-- **Environment Impact**：P2 刀风 / 布料响应；P3 可加入剑气 / 物件被斩开，但必须沿刀刃轨迹发生
-- **Risks & Failure Modes**：禁止武器凭空出现；刀长度 / 持握 / 鞘的位置必须连续
+- **Tempo**：Pause-and-Explode / Burst
+- **Risk / Commitment**：Medium-High；拔刀受阻时暴露明显
+- **Prerequisites**：存在可拔出的刀剑、鞘位和出鞘空间
+- **Environment Impact**：P2 可有衣摆 / 尘屑沿刀路变化；P3 可强化剑气，但方向必须来自实际斩击
+- **Avoid**：武器凭空出现、鞘 / 刀状态跳变
 
 ---
 
 # 11. 气劲 / 能量外放类
 
-## A15｜非接触震劲击退 / Non-contact Force Push
+## A16｜掌劲震退 / Non-contact Palm Shock
 
-- **Aliases**：抬手震气击退、掌劲震退、气劲推退
-- **Functional Category**：气劲 / 能量外放
-- **Applicable Range**：close → mid / mid
-- **Core Action Mechanic**：角色抬掌 / 推掌后，在**无身体接触**的情况下通过明确可见的超现实掌劲 / 气压 / 能量冲击把目标沿固定方向推退。
-- **Immediate Visible Result**：目标衣物、身体和脚步先受同一方向冲击，再被迫滑退 / 飞退；环境轻物体沿同方向响应。
-- **Physical Level Range**：Min P3 / Default P3 / Max P3
-- **Combat Role**：Defense / Counter / Reversal / Signature / Finisher
-- **Response Compatibility**：Best Against：对手正面压入、需要强制拉开距离；Poor Against：P1/P2 现实尺度、遮挡物完全阻隔且没有穿透设定；Best State：目标处于清楚掌劲方向线上
-- **State Transition**：Range: Close/Mid → Mid/Far；Position: Forward Pressure → Forced Back；Initiative: Opponent → Steal/Gain
+- **Source ID / Alias**：16｜抬手震气击退
+- **Applicable Range**：close-mid / non-contact supernatural reach
+- **Core Action Mechanic**：角色抬掌完成明确蓄力 / 发劲动作，在未直接接触目标的情况下以可见气劲 / 冲击波沿掌向把目标推退；非接触外放是该动作身份的一部分。
+- **Physical Level**：Min P3 / Default P3 / Max P3
+- **Combat Role**：Defense / Counter / Reversal / Finisher
+- **Response Compatibility**：Best Against：正面压迫、需要强制重置距离；Poor Against：P1/P2 Grounded Combat、目标被牢固环境固定；Best State：Physical Presentation 明确允许能量外放。
+- **State Transition**：Range: Close/Mid → Mid/Far；Position: Target → Forced Back；Initiative: Opponent → Steal/Gain
 - **Initiative Effect**：Steal / Gain
-- **Tempo Profile**：Pause-and-Explode
-- **Risk / Commitment**：Medium；动作本身短但 P3 表现强；Payoff Very High Range Reset
-- **Prerequisites**：Selected Physical Level = P3；题材允许非接触超现实力量
-- **Transition Compatibility**：Good Before：格挡 / 引诱 / 被压迫；Good After：脱离、远距对峙、瞬身追击
-- **Environment Impact**：纸张、衣摆、灰尘、小物件沿同一方向被推开；更高表现可加入冲击波 / 门窗震动
-- **Risks & Failure Modes**：不可为了适配 P2 改写成普通接触推掌；若需要接触推掌，应新建另一动作条目
+- **Tempo**：Pause-and-Explode
+- **Risk / Commitment**：Medium；Payoff 为强 Range Reset 和高视觉冲击
+- **Prerequisites**：Selected Physical Level = P3
+- **Environment Impact**：纸张、衣物、灰尘、小物件沿冲击方向被推动；可出现明确气浪 / 冲击波
+- **Avoid**：为了适配 P1/P2 偷改成普通接触推掌；那应视为另一个动作
 
 ---
 
-# 12. 归一化与去重说明
-
-## 12.1 与现有 Abstract Pattern 的关系
-
-本 Catalog 不替代 `minimum-validation-set.md`。
-
-示例映射：
+# 12. 原始来源映射（17 / 17）
 
 ```text
-minimum-validation-set T02 Low-line Base Disruption
-→ 可实例化为本 Catalog A10 低位横扫
-
-minimum-validation-set M01 Outside Angle Cut
-→ 可与本 Catalog A05 侧移离线组合
-
-minimum-validation-set T04 Whole-body Linked Counter
-→ 可实例化为 A14 后撤蓄势重反击，或其他符合当前 Combat System 的具体动作
+01 极速瞬身突袭 → A01 爆发瞬身接敌
+02 凌空飞踢     → A02 凌空飞踢
+03 反手格挡防御 → A03 反手拨挡
+04 蓄力重拳冲击 → A04 蓄势重拳
+05 侧身闪避走位 → A05 侧移离线
+06 腾空旋转斩击 → A06 腾空旋转斩
+07 低空滑步突袭 → A07 低位滑步突入
+08 双臂交叉防御 → A08 交叉架挡
+09 后仰规避反击 → A09 后仰让线反击
+10 蓄力霸体冲击 → A10 霸体强冲
+11 灵活跳跃突袭 → A11 跃步突入
+12 空中滞空连击 → A12 空中滞空连击
+13 横扫腿击     → A13 横扫腿击
+14 贴身缠斗快打 → A14 贴身缠斗快打
+15 侧身拔刀斩   → A15 侧身拔刀斩
+16 抬手震气击退 → A16 掌劲震退
+17 落地震地重击 → A17 落地震地重击
 ```
 
-Abstract Pattern 仍负责“解决什么 Gap”；本 Catalog 负责“具体动作怎样成立”。
-
-## 12.2 不做固定 Combo
-
-允许记录：
-
-```text
-A05 侧移离线
-→ Good After: A10 横扫腿 / A03 反手拨挡后的 Counter
-```
-
-但 Runtime 不得把它解释成：
-
-> A05 后永远必须接 A10。
-
-组合仍由 Current State / Combat System / Expression / Advantage / Exchange Spine 决定。
-
-## 12.3 Style 与 Physical Level
-
-`真人写实 + P3` 合法；`国风漫剧 + P1` 也合法。
-
-本 Catalog 不保存“真人版 / 漫画版”两套重复动作正文；视觉媒介由 Style / Visual Medium 决定，动作物理尺度由 P1-P3 决定。
+不存在来源动作 `18`；此前草稿中多计的“后撤蓄力重击”已删除，不进入 Runtime Knowledge。
 
 ---
 
-# 13. 当前 Runtime Freeze
-
-RF-22 关闭前：
+# 13. 与现有知识的职责边界
 
 ```text
-本文件可以被维护 / 审核 / 扩展
-但不得加入当前 Stage-2 Mandatory Read / Default Routing
+Combat System / Technique Backbone
+→ combat-fighting-profiles / combat-martial-profiles / combat-weapon-profiles
+
+Abstract Stage-2 Movement / Technique / Transition Pattern
+→ minimum-validation-set.md
+
+Concrete reusable single action + response/state/tempo/risk/physical realization
+→ action-reference-catalog.md
+
+Battle State / Exchange Spine / Advantage / Coverage
+→ Action Combat Task Playbooks / Contracts
+
+Environment Affordance
+→ combat-environment-patterns/library.md
+
+Visual Style
+→ references/styles/*
 ```
 
-禁止本轮修改：
+Catalog 不替代 Profile，也不替代 Abstract Pattern。Runtime 可以先由 Pattern 确定“需要哪类解决方案”，再由 Catalog 选择一个匹配当前 State 的具体动作；当当前 Gap 本身已经明确到具体动作级，也可直接由 Catalog 完成 Concrete Action Resolution。
 
-- `SKILL.md` Runtime Direct READ；
-- `references/tasks/action-combat-video/index.md` Stage-2 路由；
-- `regression-fix-runtime-policy.md`；
-- `minimum-validation-set.md`；
-- Quick Mode；
-- Camera Runtime。
+---
 
-RF-22 连续两次 PASS-NATIVE 后，再单独决定：
+# 14. Final Prompt Serialization Boundary
 
-- Catalog Selection Policy；
-- Pattern → Concrete Action 二阶段命中方式；
-- 是否占用现有 Library Detail Slot；
-- Regression Cases。
+Catalog 字段是内部选择知识，不应整表输出到最终 Prompt。
+
+最终只外显对视频模型有帮助的内容：
+
+```text
+具体动作
++ 起始身体 / 距离状态
++ 接触 / 闪避 / 拦截关系
++ 对手即时反馈
++ 必要的 Range / Axis / Position / Balance 后果
++ 下一动作入口
++ 当前 Physical Level 下必要的环境反馈
+```
+
+不要把 `Combat Role / Best Against / Commitment / Initiative Effect` 等内部标签原样序列化到 Final Prompt。
