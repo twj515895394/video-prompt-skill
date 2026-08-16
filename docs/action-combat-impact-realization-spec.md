@@ -148,17 +148,7 @@ Aftermath 维护血迹 / 红肿 / 擦伤 / 淤青、衣损、环境损伤、物�
 
 Impact Force Model 复用现有 Combat State 与当前 Concrete Action，只做一次性局部派生，不新增持久 Force State。
 
-禁止引入长期维护的：
-
-```text
-ImpactVelocity
-ImpactMass
-ForceVector
-ForceLevel
-BodyStiffness
-```
-
-也不引入牛顿数、精确速度等伪精确参数。
+禁止引入长期维护的 ImpactVelocity、ImpactMass、ForceVector、ForceLevel、BodyStiffness，也不引入牛顿数、精确速度等伪精确参数。
 
 局部可读取 / 推导：
 
@@ -279,37 +269,17 @@ Impact Accent Intent
 + optional Channel Eligibility
 ```
 
-其中：
-
 - **Concrete Impact Anchor**：必须绑定已成立的具体 Contact / Force Response，而不是抽象“重击”；
-- **Perceptual Goal**：描述观众这一刻需要感受到什么，例如短距离硬接触、动量传入整身、力量方向突然被重新导向；
-- **Channel Eligibility**：仅在有必要时指出 Camera / Audio / Timing 等哪些下游渠道可以参与，不指定实现方式。
+- **Perceptual Goal**：描述观众这一刻需要感受到什么；
+- **Channel Eligibility**：仅在必要时指出 Camera / Audio / Timing 等哪些下游渠道可以参与，不指定实现方式。
 
-Impact Realization 只回答：
+Impact Realization 回答 **What should be felt?**；Action–Camera Handoff / Audio / Timing 等既有下游机制回答 **How should it be perceived?**。
 
-> **What should be felt?**
-
-Action–Camera Handoff / Audio / Timing 等既有下游机制回答：
-
-> **How should it be perceived?**
-
-因此 Accent Intent 禁止直接写死 camera shake、push-in、slow motion、hit-stop、具体音效等实现。
-
-Accent Intent 也不与 I1 / I2 / I3 做机械映射：
-
-```text
-I1 ≠ 必然无 Accent
-I2 ≠ 必然有 Accent
-I3 ≠ Camera + Audio + Slow-mo 全开
-```
-
-是否生成 Accent Intent，应综合 Impact Salience、当前 Viewer Readability 与 Narrative / Rhythm Need。
+Accent Intent 禁止直接写死 camera shake、push-in、slow motion、hit-stop、具体音效等实现，也不与 I1 / I2 / I3 做机械映射。是否生成，应综合 Impact Salience、Viewer Readability 与 Narrative / Rhythm Need。
 
 ### Decision 13 — Impact as Motion Carry-over Conversion Node
 
 Impact Realization 是现有 Motion / Energy Carry-over 的**转换节点**，不是动作结束点。
-
-核心链路：
 
 ```text
 Incoming Motion
@@ -335,9 +305,47 @@ Post-impact Body / Range / Support State
 
 默认禁止 Contact 后自动回到 Neutral Reset。只有动作、风格、战术或真实 recovery 明确要求停顿 / 重置时，才允许运动趋势真正结束。
 
+> **Contact 应当改变运动，而不是默认终止运动。**
+
+### Decision 14 — Fuse Impact Into Existing Action Phrase
+
+Impact Realization 保持内部 Gate；Final Prompt 默认把必要 Force Causality **融合进现有 Concrete Action Phrase**，不新增固定 `Impact / Force` 独立段落。
+
+Runtime 内部可以完整执行：
+
+```text
+Concrete Technique
+→ Impact Realization
+→ Motion Carry-over
+→ Aftermath
+```
+
+但序列化时应尽量形成一条连续动作因果链：
+
+```text
+Concrete Technique
++ Contact
++ Readable Force Response
++ State Consequence
++ 必要 Follow-through / Motion Carry-over
++ Immediate Continuation Entry
+```
+
+Salience 只控制 Final Prompt 的保留密度：
+
+```text
+I1 → Contact + 最必要 Force Response / State Change
+I2 → 融合清晰 Force Response + Continuation
+I3 → 可额外保留 1–2 个最高价值 Force Transmission / Recovery / Perceptual Anchor
+```
+
+Impact Gate 决定“哪些语义不能丢”，不决定“必须新增一个段落”。禁止动作段、Impact 段、State 段重复描述同一次 Contact。
+
 原则：
 
-> **Contact 应当改变运动，而不是默认终止运动。**
+> **Impact Semantics Internalized, Force Causality Serialized.**
+
+这与既有 `State Machine Internalized, Choreography Externalized` 保持同一方向。
 
 ---
 
@@ -371,9 +379,8 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
-2. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
-3. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
-4. Regression Test / Failure Signature 的最小闭环。
+1. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
+2. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
+3. Regression Test / Failure Signature 的最小闭环。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
