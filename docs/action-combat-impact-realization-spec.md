@@ -305,6 +305,40 @@ I3 ≠ Camera + Audio + Slow-mo 全开
 
 是否生成 Accent Intent，应综合 Impact Salience、当前 Viewer Readability 与 Narrative / Rhythm Need。
 
+### Decision 13 — Impact as Motion Carry-over Conversion Node
+
+Impact Realization 是现有 Motion / Energy Carry-over 的**转换节点**，不是动作结束点。
+
+核心链路：
+
+```text
+Incoming Motion
+→ Contact / Force Exchange
+→ Motion 被保留 / 传递 / 改向 / 截停 / 吸收 / 反弹中的真实一种
+→ Post-impact Motion Carry-over
+→ Immediate Continuation Entry
+```
+
+Impact 必须回答：
+
+> **接触之后，双方原来的运动趋势去了哪里？**
+
+但不建立 Energy Meter、Momentum Meter 或新的持久 Motion State。`Post-impact Motion Carry-over` 只是当前 Force Event 结束后仍然存活的局部运动趋势语义，例如 continue、redirect、deflect、rebound、absorb / decelerate、transfer、collapse / support loss；这些不是固定枚举字段。
+
+下一拍 Choreography 应消费：
+
+```text
+Post-impact Body / Range / Support State
++ Post-impact Motion Carry-over
+→ Immediate Continuation Entry
+```
+
+默认禁止 Contact 后自动回到 Neutral Reset。只有动作、风格、战术或真实 recovery 明确要求停顿 / 重置时，才允许运动趋势真正结束。
+
+原则：
+
+> **Contact 应当改变运动，而不是默认终止运动。**
+
 ---
 
 ## 3. External Research Takeaways
@@ -337,10 +371,9 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. Impact 与 Motion / Energy Carry-over 的具体消费关系；
-2. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
-3. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
-4. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
-5. Regression Test / Failure Signature 的最小闭环。
+1. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
+2. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
+3. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
+4. Regression Test / Failure Signature 的最小闭环。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
