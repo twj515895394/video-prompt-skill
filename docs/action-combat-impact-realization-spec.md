@@ -491,7 +491,74 @@ Contract > 教程
 
 ---
 
-## 10. External Research Takeaways
+## 10. Impact Force Model
+
+### 10.1 Local Derived Evaluation, Not Persistent Force State
+
+**Confirmed Decision 09**
+
+Impact Force Model 采用**局部派生模型**，复用现有 Combat State 与当前 Concrete Action，不新增第二套持久 Force State。
+
+禁止为了 Impact 新增长期维护的：
+
+```text
+ImpactVelocity
+ImpactMass
+ForceVector
+ForceLevel
+BodyStiffness
+```
+
+也不引入牛顿数、精确速度或其他伪精确物理参数。
+
+Impact 在当前 Contact 局部读取或推导：
+
+```text
+Current Momentum / Motion
+Support / Balance
+Body Axis
+Range
+Contact Relationship
+Movement Direction
+Concrete Technique
+Physical Presentation Domain
+Narrative Salience
+```
+
+并形成一次性的局部评估：
+
+```text
+Contact Effectiveness
++ Incoming Momentum / Acceleration
++ Body Commitment
++ Contact Geometry
++ Receiver Support State
++ Narrative Salience
+→ I1 / I2 / I3
+→ Immediate Force Response
+```
+
+Impact 完成后只把真正影响后续动作的结果写回现有 Combat State，例如：
+
+```text
+Axis deviation
+Forced step
+Support transfer / loss
+Balance change
+Range / Position change
+Recovery Burden
+Opening / Pressure state
+```
+
+局部 Force 判断随后结束，不作为独立持久状态继续维护。
+
+原则：
+
+> **目标是让模型看懂力量，不是把 Combat Engine 变成物理模拟器。**
+
+---
+
+## 11. External Research Takeaways
 
 本轮 GitHub 调研只作为设计启发，不成为 Runtime 真源。
 
@@ -520,7 +587,7 @@ Contract > 教程
 
 ---
 
-## 11. Proposed Runtime Position
+## 12. Proposed Runtime Position
 
 当前推荐的最小插入点：
 
@@ -544,18 +611,17 @@ Impact Realization 不替代现有：
 
 ---
 
-## 12. Pending Design Questions
+## 13. Pending Design Questions
 
 以下仍未最终确认：
 
-1. Impact Force Model 最少需要哪些内部变量；
-2. I1 / I2 / I3 的推导边界是否需要更明确的 runtime heuristics；
-3. 各 Modality 的 Minimum Realization Contract 是否需要正式固定；
-4. Impact Accent Intent 的最小输出语义；
-5. Impact 与 Motion / Energy Carry-over 的具体消费关系；
-6. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
-7. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
-8. 哪些规则最终进入长期 Choreography Playbook，哪些只保留在 regression runtime；
-9. Regression Test / Failure Signature 的最小闭环。
+1. I1 / I2 / I3 的推导边界是否需要更明确的 runtime heuristics；
+2. 各 Modality 的 Minimum Realization Contract 是否需要正式固定；
+3. Impact Accent Intent 的最小输出语义；
+4. Impact 与 Motion / Energy Carry-over 的具体消费关系；
+5. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
+6. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
+7. 哪些规则最终进入长期 Choreography Playbook，哪些只保留在 regression runtime；
+8. Regression Test / Failure Signature 的最小闭环。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
