@@ -389,6 +389,54 @@ Design in Spec
 
 不得让 `regression-fix-runtime-policy.md` 永久成为长期能力的大杂烩。
 
+### Decision 17 — Independent Two-layer Impact Regression
+
+Impact Regression 独立于 RF-22，不把新的 Impact 验证并入现有 G01 Completion Gate。
+
+Impact Realization 的完成判定必须同时具备两层证据：
+
+```text
+Layer 1 — Prompt / Semantic Regression
++
+Layer 2 — Generated Video / Perceptual Regression
+→ Impact Regression PASS
+```
+
+**Prompt / Semantic Regression** 至少验证：
+
+- meaningful Contact 的 Minimum Contract 被保留；
+- Modality-specific Minimum Contract 成立；
+- 不出现 Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset；
+- I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 没被 Adapter 压缩掉；
+- Impact 与 Aftermath 不重复序列化。
+
+**Generated Video / Perceptual Regression** 至少验证：
+
+- **Contact Legibility**：有效接触发生的时刻与位置清楚可读；
+- **Force Causality**：受击、改向、失衡明显由该 Contact 导致，而不是自主反应；
+- **Whole-body Coherence**：局部反应与肩轴、重心、支撑、位移保持一致；
+- **Follow-through / Motion Carry-over**：命中不会无因停住，运动趋势能自然延续；
+- **Impact Differentiation**：普通 Contact 与关键 I3 不应视觉上完全同一重量；
+- **Accent Anchoring**：若存在 Camera / Timing / Audio 强调，应绑定真实 Force Event。
+
+初始验证不需要六类 Modality 全覆盖，先用少量代表场景验证核心机制跨 Contact 成立，例如：
+
+```text
+IR-01 — realistic strike / block / continuation
+IR-02 — force redirection / throw / non-strike contact
+```
+
+最小完成条件：
+
+```text
+Prompt-level PASS
++ Actual Video-level PASS
++ 至少覆盖 Strike 与 Non-strike Force Exchange
+→ Impact Realization validated
+```
+
+后续只有出现新的专项失败时，才扩展对应 Modality Regression，不预先铺满测试矩阵。
+
 ---
 
 ## 3. External Research Takeaways
@@ -421,7 +469,6 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. Regression Test / Failure Signature 的最小闭环；
-2. Spec 收口后，Runtime Integration 的最小改动清单与迁移顺序。
+1. Spec 收口后，Runtime Integration 的最小改动清单与迁移顺序。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
