@@ -367,3 +367,118 @@ Prompt 越具体越好
 ```
 
 最终验收以真实成片为准，而不是以 Prompt 文本复杂度为准。
+
+---
+
+## 13. Impact Regression Track
+
+本 Track 验证 `Impact Realization` 是否真正改善 meaningful Force-bearing Contact 的可读重量、受力因果与 Motion Carry-over。
+
+它与 RF-22 **独立验收**：
+
+```text
+RF-22
+= Post-Planning Runtime Routing / Handoff Reliability
+
+Impact Regression
+= Impact Realization Prompt + Generated-video Validation
+```
+
+不得用 RF-22 PASS 替代 Impact PASS，也不得把 Impact 新失败反向并入 RF-22 的 G01 Completion Gate。
+
+### 13.1 两层验收
+
+每个 IR Case 必须同时通过：
+
+```text
+Layer 1 — Prompt / Semantic Evidence
++
+Layer 2 — Generated Video / Perceptual Evidence
+→ Case PASS
+```
+
+#### Layer 1 — Prompt / Semantic Evidence
+
+至少检查：
+
+- meaningful Contact 是否保留 `Concrete Contact + Readable Force Response + Combat State Consequence`；
+- 是否符合当前 Contact Modality 的 Minimum Realization Contract；
+- 是否不存在 `Adjective-only Impact`；
+- Reaction 是否明显由 Contact 导致，不出现 `Self-propelled Reaction`；
+- Contact 后是否不存在无因 `Contact Freeze / Neutral Reset`；
+- Local Reaction 与 Axis / Support / Balance / Range / Opening 等状态变化是否保持一致；
+- Impact 与 Aftermath 是否没有重复规划同一 Immediate Physical Response；
+- 若为 I3，`Concrete Impact Anchor + highest-value Force Response + Motion Carry-over` 是否在 Final Prompt 仍被保留；
+- Adapter Final Scan 是否没有把 Force Causality 压扁成“猛烈击中 / 强力击退”等抽象结果。
+
+#### Layer 2 — Generated Video / Perceptual Evidence
+
+至少检查：
+
+- **Contact Legibility**：有效接触的时刻 / 位置可读；
+- **Force Causality**：受击、改向、失衡、支撑破坏明显由 Contact 导致；
+- **Whole-body Coherence**：局部受力与肩轴 / 重心 / 支撑 / 位移不脱节；
+- **Follow-through / Motion Carry-over**：Contact 后双方运动自然继续，不出现碰一下就停；
+- **Impact Differentiation**：普通有效 Contact 与关键 I3 不应视觉上完全同一重量；
+- **Accent Anchoring**：如果 Camera / Timing / Audio 产生强调，应绑定真实 Force Event，而不是独立装饰。
+
+Prompt-level PASS 不能抵消 Generated-video FAIL。
+
+### 13.2 Initial Representative Cases
+
+初始不铺满六类 Modality，只验证核心机制能否跨 Contact 成立：
+
+```text
+IR-01 — realistic strike / block / continuation
+IR-02 — force redirection / throw / non-strike contact
+```
+
+IR-01 至少覆盖：
+
+```text
+Strike
++ Block / Parry / Interception
++ Post-impact Continuation
+```
+
+IR-02 至少覆盖：
+
+```text
+Force Redirection 或 Throw / Takedown
++ 非单纯重击式的 Force Realization
++ Support / Axis / Range / Ground-state 中的真实状态后果
+```
+
+具体固定场景、角色体系与变量控制在正式执行前单独冻结；不得边生成边改变测试条件来追求 PASS。
+
+### 13.3 Impact Completion Gate
+
+Impact Realization 初始验证完成条件：
+
+```text
+IR-01 Prompt-level PASS
++ IR-01 Actual Video-level PASS
++ IR-02 Prompt-level PASS
++ IR-02 Actual Video-level PASS
+→ Impact Realization Initial Validation PASS
+```
+
+后续只有出现稳定、可复现的专项 Modality Failure 时，才扩展新的 IR Case；不预先建立完整 Modality Test Matrix。
+
+### 13.4 Diagnosis Rule
+
+如果 Prompt-level PASS 但 Generated-video FAIL，优先按已有 Generated-video 方法论排查：
+
+```text
+Instruction Saturation
+→ Force Causality 是否被描述成复杂解释而非清晰动作
+→ Whole-body / Motor Driver 是否被局部 Contact 语义淹没
+→ Motion Carry-over 是否真实可执行
+→ Camera / Audio 是否抢占或误读 Impact Accent Intent
+→ Model / Adapter Execution Gap
+→ 最后才考虑新增 Impact Knowledge
+```
+
+原则：
+
+> **独立 Completion Gate，共享 Generated-video Regression 方法论。**
