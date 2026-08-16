@@ -27,6 +27,8 @@ Concrete Action Reference
 - Movement / Technique / Transition 抽象 Pattern；
 - Pattern Hit Evidence；
 - Pattern-to-Action Resolution 基础约束；
+- **Concrete Action Selection Gap 检测与 Catalog Read 触发；**
+- **Single Concrete Action Gate：阻止 `/`、`或`、A/B 等同层动作候选泄漏进 Final Prompt；**
 - CK / RF 系列当前 G01 Regression 的 Stage-2 抽象知识证据。
 
 适用：
@@ -35,9 +37,10 @@ Concrete Action Reference
 Planning / Phrase Gap 仍停留在“需要什么类型的 Movement / Technique / Transition”
 → READ minimum-validation-set.md
 → select Pattern
+→ resolve Pattern toward a concrete action
 ```
 
-本轮不修改其正文，以便保留既有 RF-22 / RF-14～RF-20 回归基线知识。
+如果 Pattern Resolution 后仍存在两个以上互斥的具体动作 Head，必须继续触发 Concrete Action Selection Gap，而不是把选择交给模型。
 
 ---
 
@@ -63,7 +66,7 @@ Stage-2 已知道当前需要的战斗功能
 → Concrete Action Selection Gap
 → READ action-reference-catalog.md
 → filter by Prerequisites / Physical Level / Role / Response / Required Resulting State
-→ select one concrete action
+→ select ONE concrete action
 → realize into current Action Phrase
 ```
 
@@ -80,7 +83,8 @@ Stage-2 已知道当前需要的战斗功能
 - 机械轮换 17 个动作；
 - 用 Action Name 代替完整可执行动作句；
 - 把 Combat Role / Initiative / Commitment 等内部标签直接输出给视频模型；
-- 为了适配较低 Physical Level 改写动作核。
+- 为了适配较低 Physical Level 改写动作核；
+- Catalog 已读取后仍把 `侧踹/前蹬`、`短拳或掌缘` 之类互斥候选留在 Final Prompt。
 
 ---
 
@@ -95,6 +99,7 @@ Combat Planning Context / Exchange Spine
 → Pattern Selection
 
 如果缺具体动作：
+→ Concrete Action Selection Gap
 → action-reference-catalog.md
 → Concrete Action Selection
 
@@ -104,8 +109,10 @@ Pattern → Catalog Action
 也可在 Gap 已明确时：
 Catalog Action directly
 
+→ ONE Concrete Action Head
 → Concrete Action Phrase
 → State / Continuity Validation
+→ Single Concrete Action Gate
 → Final Prompt Serialization
 ```
 
@@ -128,9 +135,27 @@ Catalog 是按需 leaf knowledge，不新增“所有 Combat 必须多读一份 
 
 如果没有合适动作：
 
-> **不强用 Catalog。回到现有 Fighting / Martial / Weapon / Pattern 知识生成其他动作。**
+> **不强用 Catalog。回到现有 Fighting / Martial / Weapon / Pattern 知识生成其他动作，但仍必须由 Runtime 选定一个具体动作 Head。**
 
 Catalog 是新增候选知识，不是封闭动作全集。
+
+### Single Concrete Action Gate
+
+关键攻防 Phrase 在 Final Prompt 中不得保留未决的同层动作选择：
+
+```text
+A / B
+A 或 B
+A、B、C 任选其一
+```
+
+如果多个动作是真实同时发生，必须写清并发或先后关系，例如：
+
+```text
+左前臂拨开直拳，同时右掌根推击胸口
+```
+
+这种是复合动作，不是候选泄漏。
 
 ---
 
@@ -140,7 +165,7 @@ Catalog 是新增候选知识，不是封闭动作全集。
 Combat System / Technique Backbone
 → combat-fighting-profiles / combat-martial-profiles / combat-weapon-profiles
 
-Abstract Stage-2 Gap Pattern
+Abstract Stage-2 Gap Pattern + Concrete Selection Trigger
 → minimum-validation-set.md
 
 Concrete reusable single action
@@ -162,11 +187,13 @@ Battle State / Exchange Spine / Advantage / Coverage
 
 `action-reference-validation.md` 用于知识与接入验证，不是正常生成时必读 Reference。
 
-后续 RF-22 固定 G01 回归同时检查：
+后续 RF-22 固定 G01 / Integrated Regression 同时检查：
 
 - RF-22 Planning Completion / Runtime Read Timing；
 - 原有 RF-14～RF-20；
-- Catalog 是否只在 Concrete Action Selection Gap 时命中；
-- 是否产生具体动作而不是类别词泄漏；
+- Concrete Action Selection Gap 是否真的触发；
+- `action-reference-catalog.md` 是否出现真实 Read Evidence；
+- 是否留下 Selected Action ID / Canonical Name → Realized Phrase Trace；
+- Final Prompt 是否消除 `侧踹/前蹬`、`短拳或掌缘`、`掌根或拳面` 一类候选泄漏；
 - 是否遵守 Physical Level / Prerequisites / Response / State Transition；
 - 是否没有导致 Prompt 冗余和动作过载。
