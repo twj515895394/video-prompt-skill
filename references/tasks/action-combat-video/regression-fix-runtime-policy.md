@@ -1210,7 +1210,112 @@ Technique 或 Impact 任一失败时，修复必须是**局部恢复，不是扩
 → 只恢复已在 Impact Gate 成立的肩轴 / 支撑 / Motion Carry-over 因果，不新增第二次攻击或额外特效。
 ```
 
-Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化最后一公里重新变抽象**，不是扩大 Prompt，也不是建立第二套 Impact Runtime。
+#### D. No Unresolved Choice Leakage
+
+Final Prompt 的 Active Action / Contact Clause 必须是**已决执行句**，不能把 Runtime 已经应该做完的 Technique、Contact Surface、Target、Direction 或 Environment Target 再交给视频模型二选一。
+
+重点扫描：
+
+```text
+右肘/短拳
+掌缘/掌根
+面门/上胸
+大腿外侧/髋前
+墙/隔断
+踢或扫
+A 或 B
+```
+
+只有真正表示**同一连续身体区域**、不会改变动作机制或受力结果的自然范围描述才可保留；只要不同选项会改变 Contact Mechanic、Target Geometry、Force Response 或后续 State，就必须在 Final Scan 中收敛成一个。
+
+Failure：
+
+> **Unresolved Action Choice Leakage**
+
+修复：只解析当前 Clause 的未决选择，不新增动作、不改变 Combat Spine。
+
+#### E. No Hypothetical Aftermath Trigger
+
+Final Prompt 中新增 Injury / Clothing / Environment Delta 必须消费主 Action Flow 中**已经明确发生的 Validated Impact / Force Event**。
+
+禁止：
+
+```text
+若脸侧擦到……则出现红痕
+如果短拳命中……则衣物褶皱加重
+若办公椅被蹭到……则移位
+```
+
+如果主 Action Spine 没有明确建立该 Trigger，则：
+
+```text
+删除这条假设性 Aftermath
+```
+
+而不是为了保留 Aftermath 去反向新增一次 Contact。
+
+Failure：
+
+> **Hypothetical Aftermath Trigger**
+
+Aftermath 可以描述已发生 Trigger 的 Delta 与 Lifetime，但不能自己创造“可能发生”的 Contact 分支。
+
+#### F. Final Execution Density Compression
+
+Adapter Final Scan 还必须检查：Impact 变具体之后，是否把**几乎每个普通 I1 / I2 Contact 都写成 High-detail Force Chain**。
+
+默认序列化密度：
+
+```text
+I1
+→ Concrete Contact + minimum Force Response / State Change
+
+I2
+→ Concrete Contact + clear Force Response + one highest-value State Consequence + Continuation
+
+I3
+→ 允许额外保留 1–2 个 Force Transmission / Recovery / Perceptual Anchor，并保住 Motion Carry-over
+```
+
+若 15 秒短 Combat 中普通 Exchange 反复展开：
+
+```text
+脚步精确微移
++ 膝髋肩逐段说明
++ 多个 Contact Surface
++ 多个 Axis / Support 解释
++ 呼吸 / 衣料 / Camera / Audio 同窗并发
+```
+
+即使每句话都“正确”，仍判：
+
+> **Effective High Granularity Everywhere / Instruction Saturation**
+
+同时禁止默认出现：
+
+```text
+半寸 / 几厘米 / 精确角度 / 关节角度 / 厘米级位移
+```
+
+除非用户明确要求技术分解、教学、精确动作分析或模型已知依赖该尺度。
+
+Failure：
+
+> **Micro-biomechanics Serialization Leakage**
+
+修复顺序：
+
+```text
+先压普通 I1 / I2 的重复身体细节
+→ 保留 Concrete Action Head
+→ 保留最重要 Force Response / State Consequence
+→ 保留 Continuation
+→ I3 才保留较完整 Force Chain
+```
+
+不得通过删除有效 Exchange 或退回“双方高速连续攻防”来降密度。
+
+Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化最后一公里重新变抽象，同时防止所有 Impact 都被写成 High-detail**；不是扩大 Prompt，也不是建立第二套 Impact Runtime。
 
 ---
 
@@ -1248,12 +1353,12 @@ Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化
 6. **Stage-2 Traceability**：Regression / Debug 是否存在 Gap → Slot → Pattern → Phrase 证据？
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
-9. **Concrete Technique + Impact Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后是否仍要求模型在多个不同 Mechanic 中自行任选；meaningful Force-bearing Contact 的 Concrete Contact Anchor、Readable Force Response、关键 Combat State Consequence 是否仍在；是否出现 `Concrete Technique Serialization Leakage` 或 `Impact Force Causality Serialization Leakage`；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍保留？
+9. **Concrete Technique + Impact Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后是否仍要求模型在多个不同 Mechanic / Target 中自行任选，是否存在 `/`、`或` 等未决 Action Choice；meaningful Force-bearing Contact 的 Concrete Contact Anchor、Readable Force Response、关键 Combat State Consequence 是否仍在；是否出现 `Concrete Technique Serialization Leakage`、`Unresolved Action Choice Leakage` 或 `Impact Force Causality Serialization Leakage`；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍保留？
 10. **Impact Realization + Motion Carry-over**：meaningful Force-bearing Contact 是否满足 `Concrete Contact + Readable Force Response + Combat State Consequence`；是否通过对应 Modality PASS；是否出现 Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset、State-disconnected Reaction、Impact / Aftermath Duplication、Accent Without Anchor；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍存在？
-11. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
+11. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；是否出现 `Hypothetical Aftermath Trigger`，即 Aftermath 自己用“若 / 如果命中”创造主 Action Flow 中并未发生的 Contact；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
 12. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
-13. **Exchange Density**：是否因过度展开只剩少量大动作？
-14. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
+13. **Exchange Density / Final Execution Density**：是否因过度展开只剩少量大动作；是否普通 I1 / I2 也被写成完整 Force Chain，形成 `Effective High Granularity Everywhere / Instruction Saturation`；是否出现无必要的半寸 / 厘米 / 精确角度等 `Micro-biomechanics Serialization Leakage`？
+14. **Concrete Compression**：Medium / Low 是否短但仍明确可执行；I1 / I2 是否优先保留 Action Head + highest-value Force Response / State Consequence + Continuation，而把更完整 Force Chain 留给真正 I3？
 15. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的新伤 Injury Trigger / Onset 表达，只留下全局最终伤势结果；也不能把 Baseline 旧伤误删或误改成新伤。
 16. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
