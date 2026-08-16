@@ -1,188 +1,76 @@
 # Combat Action Reference Knowledge Spec
 
-> 状态：**Implementation Ready / Knowledge Implemented / Runtime Wiring Frozen**  
+> 状态：**Implemented + Runtime-Wired / Pending Integrated Regression**  
 > 日期：2026-08-16  
-> 来源：用户补充的 18 个国风漫剧打斗动作素材 + 本轮 Grill Me 已确认决策  
-> 目的：建立可被 Action Combat Stage-2 后续消费的“单动作级打斗参考知识库”设计真源。
+> 来源：用户提供的 6 张《AI漫剧打斗动作提示词大全》图片，共 **17 个**可见动作模板（1–17） + 本轮 Grill Me 已确认决策。  
+> 目的：定义 Action Combat 可按需消费的“单动作级 Concrete Action Reference”知识结构与运行边界。
 
 ---
 
-# 0. 当前实施边界
+# 0. 当前状态
 
-本 Spec 已完成设计收敛，并已进入**知识本体实施**。
+设计已经收敛，知识本体已经实施，并已按用户明确要求**直接接入 Runtime**。
 
-当前允许：
+当前正式叶子：
 
-- 建立 Concrete Action Reference Catalog；
-- 固化单动作 Schema；
-- 完成 18 个动作逐条知识化；
-- 建立本地目录索引；
-- 做静态知识验证与去重检查。
+```text
+references/libraries/combat-choreography-patterns/action-reference-catalog.md
+```
 
-RF-22 关闭前明确禁止：
+当前路由入口：
 
-- 修改 `SKILL.md` Runtime Direct READ；
-- 修改 Action Combat Task Router；
-- 修改 `regression-fix-runtime-policy.md`；
-- 修改当前 `minimum-validation-set.md`；
-- 把新 Catalog 加进 Stage-2 Mandatory Read；
-- 增加默认 Library 加载预算；
-- 修改 Quick Mode / Camera Runtime。
+```text
+references/libraries/index.md
+→ references/libraries/combat-choreography-patterns/index.md
+→ Concrete Action Selection Gap
+→ action-reference-catalog.md
+```
 
-核心实施原则：
+后续不再单独等待 RF-22 关闭；下一轮固定 G01 将同时验证：
 
-> **Knowledge First, Wiring Later.**
-
----
-
-# 1. 核心定位
-
-本知识库回答：
-
-> **在当前 Combat State / Combat Role / Response Need 下，有哪些具体单动作候选；它们需要什么前提，会如何改变战斗状态与主动权，并能以什么物理夸张尺度和环境反馈被表现。**
-
-它不是：
-
-- 固定 Combo；
-- 新 Battle Beat Engine；
-- 新 Combat State Machine；
-- Martial / Fighting Profile 的替代品；
-- Camera Runtime；
-- Visual Style Library；
-- Prompt 大全。
-
-它服务现有：
-
-- Exchange Spine；
-- Stage-2 Pattern Selection；
-- Movement Causality；
-- Per-Character Signature；
-- Advantage / Re-entry；
-- Concrete Action Phrase Resolution。
-
-设计约束：
-
-> **只保留能直接改善动作选择、动作因果、攻防节奏和最终画面执行的字段；不为了理论完整继续拆状态机。**
+```text
+RF-22 Runtime Handoff
++ RF-14～RF-20 existing regression checks
++ Concrete Action Catalog Routing / Realization
+```
 
 ---
 
-# 2. 知识颗粒度与分类
+# 1. 设计目标
 
-## 2.1 最小颗粒度
+本知识库不是固定连招大全，也不是新的 Combat Engine。
 
-固定为：
+它回答：
 
-> **Single Action Template / 单动作模板**
-
-手、脚、肩胯、重心、支撑、接触点、轴线等属于动作内部属性，不再拆成独立知识节点。
-
-连招不作为基础条目，只记录前后衔接关系，由 Runtime 按 Current State 动态组合。
+> **在当前 Combat State / Combat Role / Response Need 下，有哪些具体单动作可以成立，它们需要什么前提，会造成什么状态变化，并能以什么物理尺度表现。**
 
 原则：
 
-> **动作是积木，连招由 Runtime 编排。**
-
-## 2.2 一级分类
-
-按动作主要战斗功能导航：
-
-1. 突进接敌类；
-2. 闪避走位类；
-3. 格挡防御类；
-4. 重击爆发类；
-5. 腿法攻击类；
-6. 空中动作类；
-7. 贴身缠斗 / 近身快打类；
-8. 武器瞬杀类；
-9. 气劲 / 能量外放类。
-
-一级分类用于知识导航，不等于 Combat Role。
+> **动作是积木；Exchange / 连招仍由现有 Runtime 编排。**
 
 ---
 
-# 3. Visual Medium 与 Physical Level 双轴解耦
+# 2. 最小颗粒度
 
-## 3.1 Visual Medium
+最小知识颗粒度固定为：
 
-画面媒介与动作物理夸张程度完全独立。
+> **Single Action Template / 单动作模板**
 
-可包括：
+不继续拆手、脚、肩胯、重心等独立节点。
 
-- 真人写实影视；
-- 国风漫剧；
-- 2D 动画；
-- 3D 动画；
-- 其他风格化媒介。
+连招只由：
 
-以下组合均合法：
+- 当前 Combat State；
+- 前后 Transition Compatibility；
+- Exchange Spine；
 
-```text
-真人写实 + P1
-真人写实 + P2
-真人写实 + P3
-国风漫剧 + P1
-国风漫剧 + P3
-```
-
-即：
-
-> **真人写实画面不等于现实物理。**
-
-## 3.2 Physical Realization Level
-
-### P1｜Grounded
-
-- 现实人体重心、惯性、距离与受力为主；
-- 允许有限电影强化；
-- 不依赖明显气劲、长时间滞空或超自然位移。
-
-### P2｜Cinematic Exaggerated
-
-- 保留明确物理起点和动作因果；
-- 允许强化速度、爆发、击飞与环境反馈；
-- 可用于真人动作影视中的夸张武打。
-
-### P3｜Hyper-Cinematic / Supernatural
-
-- 允许残影、超高速位移感、明显滞空、长距离击飞、气劲、剑气、冲击波、地裂等；
-- 仍要求动作方向、目标、状态变化和因果可读。
-
-## 3.3 每个动作的 Physical Level Range
-
-固定记录：
-
-```text
-Min Physical Level
-Default Physical Level
-Max Physical Level
-```
-
-定义：
-
-- `Min`：不改变 Core Action Mechanic 时最低还能成立的等级；
-- `Default`：无额外要求时最自然的等级；
-- `Max`：不改变动作身份时允许强化到的最高等级。
-
-Runtime 只能在合法范围内调整。
-
-核心边界：
-
-> **降低表现等级可以削弱速度、击飞、破坏和特效，但不能偷偷改变 Core Action Mechanic。**
-
-例如：
-
-```text
-非接触震劲击退
-Min = P3
-```
-
-不能为了 P2 把它自动改写成普通接触推掌；如果需要普通推掌，应是另一个动作。
+动态形成。
 
 ---
 
-# 4. Combat Role
+# 3. Combat Role
 
-正式收敛为 8 个核心枚举：
+正式收敛为 8 个：
 
 ```text
 Entry
@@ -195,24 +83,11 @@ Signature
 Finisher
 ```
 
-它只回答：
-
-> **这一拍为什么现在需要这个动作？**
-
-不再把以下内容继续塞进 Role：
-
-- Range Change；
-- Route Change；
-- Base Disruption；
-- Recovery。
-
-这些已经由 State Transition / Tempo / Risk 表达。
-
-Combat Role 是动作选择标签，不是固定流程模板。
+`Range Change / Route Change / Base Disruption / Recovery` 不继续扩张 Role，分别交由 State Transition、Tempo、Risk / Commitment 表达。
 
 ---
 
-# 5. Response Compatibility
+# 4. Response Compatibility
 
 采用轻量半结构化：
 
@@ -222,103 +97,90 @@ Poor Against
 Best State
 ```
 
-目的：提高“一攻一守”的真实匹配，而不是：
+不继续拆攻击方向、攻击轨迹、速度等级、接触类型等复杂 taxonomy。
 
-```text
-A 发起攻击
-→ B 随机抽一个 Defense
-```
-
-目标：
+用途：
 
 ```text
 Incoming State
 → Response Need
-→ Compatible Action Candidate
+→ compatible candidate
 ```
-
-不继续拆攻击方向、轨迹、速度、接触类型等复杂子状态机。
 
 ---
 
-# 6. State Transition
+# 5. State Transition
 
-采用：
-
-> **Sparse Before → After / 稀疏状态变化**
-
-只记录动作真正改变的维度，例如：
+采用稀疏 Before → After，只写发生变化的维度，例如：
 
 ```text
 Route: Frontal → Outside Angle
-Balance: Stable → Disrupted
-Range: Mid → Close
+Support: Stable → Disrupted
 Initiative: Opponent → Steal
 ```
 
-没有变化的字段不写。
-
-可使用但不要求全部填写的维度：
-
-```text
-Range
-Route
-Axis
-Position
-Support
-Balance
-Contact
-Advantage
-Initiative
-Environment
-Height / Level
-Weapon State
-```
-
-核心链：
-
-```text
-Current State
-→ Action
-→ State Transition
-→ New Combat State
-→ Next Action Selection
-```
+没有变化的状态不写，不建立完整战斗状态矩阵。
 
 ---
 
-# 7. Initiative Effect
+# 6. Visual Medium × Physical Realization
 
-保留为轻量独立字段，正式值：
-
-```text
-Retain
-Gain
-Steal
-Lose
-Open Counter Window
-Neutral
-```
-
-只有动作确实存在明显条件差异时才加一句自然语言，例如：
+两轴完全解耦：
 
 ```text
-蓄势重拳：命中通常 Gain / Retain；明显落空时 Open Counter Window。
+Visual Medium
+= 真人写实影视 / 国风漫剧 / 2D / 3D / 其他
+
+Physical Realization
+= P1 Grounded
+  P2 Cinematic Exaggerated
+  P3 Hyper-Cinematic / Supernatural
 ```
 
-不要求每个动作建立 On Hit / On Block / On Miss / On Evade 四套状态。
+因此以下组合都合法：
 
-原则：
+```text
+真人写实 + P1
+真人写实 + P2
+真人写实 + P3
+漫剧 + P1
+漫剧 + P3
+```
 
-> **字段用于帮助选动作，不用于建立第二套战斗状态机。**
+真人画面不等于现实物理。
+
+---
+
+# 7. Min / Default / Max Physical Level
+
+每个动作记录：
+
+```text
+Min Physical Level
+Default Physical Level
+Max Physical Level
+```
+
+Runtime 只能在合法区间选择。
+
+核心约束：
+
+> **降低 Physical Level 只能削弱速度、击飞、破坏和特效，不能改变 Core Action Mechanic。**
+
+例如：
+
+```text
+非接触掌劲震退
+Min = P3
+```
+
+不能为了 P2 把它偷偷改成接触推掌。
 
 ---
 
 # 8. Tempo Profile
 
-使用相对节奏，不绑定固定秒数。
-
-当前可用表达包括：
+使用相对节奏，不绑定固定秒数：
 
 ```text
 Instant
@@ -332,25 +194,13 @@ Acceleration → Impact → Recovery
 Recovery
 ```
 
-目标是允许 Runtime 形成：
-
-```text
-Burst
-→ Quick Reactive
-→ Sustained Rapid
-→ Heavy Pause
-→ Reversal Burst
-```
-
-而不是机械的轮流出招。
+Tempo 用于支持 Dynamic Wave，而不是建立每招时长表。
 
 ---
 
 # 9. Risk / Commitment Profile
 
-记录动作投入程度与失手代价。
-
-至少包括：
+保留高价值战术成本：
 
 ```text
 Commitment: Low / Medium / High / Very High
@@ -359,72 +209,73 @@ Recovery Exposure
 Payoff
 ```
 
-核心联动：
+不记录固定成功率。
 
-```text
-High Commitment Attack
-→ Miss / Block / Evade
-→ Recovery Exposure
-→ Counter / Initiative Theft 候选权重提高
-```
-
-原则：
-
-> **动作越重、路线越难改、恢复越慢，失败后越应该形成真实反击窗口。**
+高 Commitment 动作在 Miss / Block / Evade 后可以自然提高 Counter / Initiative Theft 候选权重。
 
 ---
 
-# 10. Prerequisites
+# 10. Initiative Effect
 
-只保留一个统一字段，不拆体型、柔韧、武器、环境等多个子系统。
+保持轻量枚举：
 
-它回答：
+```text
+Retain
+Gain
+Steal
+Lose
+Open Counter Window
+Neutral
+```
 
-> **这个动作成立之前必须满足什么条件？**
+只有明显必要时才补一句条件说明，不要求每个动作拆 On Hit / On Miss / On Block / On Evade。
+
+---
+
+# 11. Prerequisites
+
+只用一个统一字段回答：
+
+> **动作成立前必须具备什么条件。**
 
 例如：
 
-- 拔刀斩：当前必须有可拔出的刀剑；
-- 腾空旋转斩：必须有起跳、旋转和落地空间；
-- 贴身快打：必须已经进入 Close Range；
-- 落地震地重击：必须存在前序腾空 / 下落状态。
+- 拔刀斩需要可拔出的刀剑和出鞘空间；
+- 飞踢需要起跳 / 落地区域；
+- 贴身快打需要已进入 close range；
+- 震地需要真实前序腾空 / 下落；
+- P3 滞空 / 掌劲需要 Selected Physical Level = P3。
 
-目的：阻止错误距离、无武器、无空间或无前序状态时硬塞动作。
+不拆成体型、柔韧、武器、环境多个复杂子系统。
 
 ---
 
-# 11. Environment Impact
+# 12. Environment Impact
 
-保留轻量字段，只回答：
+环境反馈只是动作结果的视觉延伸，不建立 Environment Destruction Engine。
 
-> **当前动作在不同 Physical Level 下，典型可以造成什么可见环境反馈。**
-
-不建立独立 Environment Destruction Engine，不建材质模拟器或破坏树。
-
-例如：
+典型：
 
 ```text
-重拳 P2
-→ 对手撞翻椅子 / 撞墙 / 局部裂纹
+P1
+→ 轻微摩擦 / 扬尘 / 小幅物体反应
 
-震地 P3
-→ 地面龟裂 / 碎石 / 冲击波
+P2
+→ 撞翻家具 / 撞墙 / 局部裂纹 / 明显位移
+
+P3
+→ 地裂 / 碎石 / 冲击波 / 强气流
 ```
 
-核心原则：
-
-> **环境反馈是动作结果的视觉延伸，不是独立表演。**
-
-持久后果必须遵守现有 Aftermath / Continuity，不能下一拍无因 Reset。
+必须与当前动作方向、Contact 和力度存在因果关系。
 
 ---
 
-# 12. 最终单动作 Schema
-
-正式 Schema：
+# 13. 正式单动作 Schema
 
 ```text
 id
+source_id
 canonical_name
 aliases
 functional_category
@@ -432,133 +283,137 @@ applicable_range
 core_action_mechanic
 body_contact_relation
 immediate_visible_result
-physical_level_range: Min / Default / Max
+physical_level_range
 combat_role
-response_compatibility: Best Against / Poor Against / Best State
+response_compatibility
 state_transition
 initiative_effect
 tempo_profile
-risk_commitment: Commitment / Miss-Block Risk / Recovery Exposure / Payoff
+risk_commitment
 prerequisites
-transition_compatibility: Good Before / Good After
+transition_compatibility
 environment_impact
 risks_failure_modes
 metadata
 ```
 
-要求：
-
-- 无意义字段允许省略；
-- 不机械填满；
-- Metadata 只负责辅助检索；
-- Final Prompt 不直接输出内部 Schema 名。
+字段可稀疏填写，不要求机械补满。
 
 ---
 
-# 13. 当前 18 个来源动作
+# 14. 来源动作清单（17 / 17）
 
-已纳入 Catalog：
+```text
+01 极速瞬身突袭
+02 凌空飞踢
+03 反手格挡防御
+04 蓄力重拳冲击
+05 侧身闪避走位
+06 腾空旋转斩击
+07 低空滑步突袭
+08 双臂交叉防御
+09 后仰规避反击
+10 蓄力霸体冲击
+11 灵活跳跃突袭
+12 空中滞空连击
+13 横扫腿击
+14 贴身缠斗快打
+15 侧身拔刀斩
+16 抬手震气击退
+17 落地震地重击
+```
 
-1. 极速瞬身突袭；
-2. 凌空飞踢；
-3. 反手格挡防御；
-4. 蓄力重拳冲击；
-5. 侧身闪避走位；
-6. 腾空旋转斩击；
-7. 低空滑步突袭；
-8. 双臂交叉防御；
-9. 后仰规避反击；
-10. 横扫腿击；
-11. 空中滞空连击；
-12. 蓄力霸体冲击；
-13. 侧身拔刀斩；
-14. 后撤蓄力重击；
-15. 抬手震气击退；
-16. 灵活跳跃突袭；
-17. 贴身缠斗快打；
-18. 落地震地重击。
-
-正式知识化正文见：
-
-`references/libraries/combat-choreography-patterns/action-reference-catalog.md`
+此前草稿误写为 18 个，并多出“后撤蓄力重击”；重新逐张核对后确认来源只有 1–17，该错误项已从 Runtime Catalog 删除。
 
 ---
 
-# 14. 与现有知识的职责边界
+# 15. Runtime Selection Policy
 
-## Combat Fighting / Martial / Weapon Profiles
+Catalog 只在：
 
-负责：
+> **Concrete Action Selection Gap**
 
-> 某 Combat System / Technique Backbone 通常怎样打。
+出现时按需读取。
 
-## `minimum-validation-set.md`
+选择顺序：
 
-负责：
+```text
+Prerequisites
+→ Physical Level legality
+→ Combat Role
+→ Response Compatibility
+→ required State Transition
+→ Tempo / Risk / Initiative
+```
 
-> 当前 Stage-2 Gap 可以用哪类 Movement / Technique / Transition Pattern 解决。
+没有匹配动作时，不强用 Catalog，继续由现有 Fighting / Martial / Weapon / Pattern Knowledge 生成其他动作。
 
-## Action Reference Catalog
-
-负责：
-
-> 一个具体单动作怎样成立、适合何时用、会造成什么状态变化。
-
-## Combat Environment Patterns
-
-负责：
-
-> 环境 Affordance 怎样改变路线 / Position / Range / Advantage。
-
-## Styles
-
-负责：
-
-> 画面长什么样。
-
-## Action Combat Task
-
-负责：
-
-> Battle State / Exchange Spine / Advantage / Coverage / Runtime 流程。
-
-原则：
-
-> **同一知识只保留一个正文真源。**
+Catalog 是开放候选库，不是动作全集。
 
 ---
 
-# 15. 当前实施结果
+# 16. 与现有知识的职责边界
 
-已创建：
+```text
+Combat System / Technique Backbone
+→ combat-fighting-profiles / combat-martial-profiles / combat-weapon-profiles
 
-- `references/libraries/combat-choreography-patterns/index.md`
-- `references/libraries/combat-choreography-patterns/action-reference-catalog.md`
-- `references/libraries/combat-choreography-patterns/action-reference-validation.md`
+Abstract Movement / Technique / Transition Pattern
+→ combat-choreography-patterns/minimum-validation-set.md
 
-当前故意未修改：
+Concrete reusable single action
+→ combat-choreography-patterns/action-reference-catalog.md
 
-- `SKILL.md`
-- `references/libraries/index.md` 的正式运行路由
-- `references/tasks/action-combat-video/index.md`
-- `references/tasks/action-combat-video/regression-fix-runtime-policy.md`
-- `references/libraries/combat-choreography-patterns/minimum-validation-set.md`
+Battle State / Exchange Spine / Advantage / Coverage
+→ Action Combat Task Playbooks / Contracts
 
-因此当前 Catalog：
+Environment Affordance
+→ combat-environment-patterns/library.md
 
-> **Implemented, indexed locally, statically validated, but NOT runtime-wired.**
+Visual Style
+→ references/styles/*
+```
 
 ---
 
-# 16. Runtime Wiring 前置条件
+# 17. Final Prompt Boundary
 
-只有 RF-22 固定 G01 连续两次 `PASS-NATIVE` 后，才进入下一实施分支：
+内部字段不能整表序列化给视频模型。
 
-1. Pattern → Concrete Action Selection Policy；
-2. Catalog Loading / Routing；
-3. Library Detail Budget；
-4. 与 Persistent Combat Signature 的权重关系；
-5. Runtime Regression Cases；
-6. Final Prompt Concrete Action Resolution 验证。
+最终只外显：
 
-RF-22 未关闭前不提前实施这些内容。
+```text
+具体动作
++ 起始身体 / Range 状态
++ Contact / Evasion / Interception
++ 对手即时反馈
++ 必要的 Range / Axis / Position / Balance 后果
++ 下一动作入口
++ 当前 Physical Level 下必要环境反馈
+```
+
+继续遵守：
+
+> **State Machine Internalized, Choreography Externalized.**
+
+---
+
+# 18. Integrated Regression
+
+下一轮固定 G01 继续保持原始固定输入与选择，不再增加新的交互变量。
+
+除原 RF-22 / RF-14～RF-20 外，新增观察项：
+
+```text
+Concrete Action Selection Gap
+Catalog Read Evidence
+Selected Action ID
+Response Compatibility
+Physical Level legality
+Prerequisite legality
+State Transition realization
+Concrete Action Phrase
+Prompt density / dedup impact
+```
+
+真实 Interactive Run 才能证明 Runtime 集成有效；静态文档和路由检查只证明 Wiring 存在。
