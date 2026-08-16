@@ -145,32 +145,63 @@ Visual Medium 不决定动作是否必须遵循现实物理。
 
 ---
 
-## C3. 每个动作的等级属性
+## C3. 每个动作的物理等级范围
 
-已确认：每个动作不是固定只属于一个等级，而增加：
+已确认：每个动作不是固定只属于一个等级，而使用完整的合法表现区间：
 
+- **Min Physical Level**
 - **Default Physical Level**
 - **Max Physical Level**
 
-这样同一个动作可以根据用户题材和表现需求被压低或拉高。
+三者职责：
+
+```text
+Min
+= 保持该动作 Core Action Mechanic 不变时，最低还能成立的物理表现等级
+
+Default
+= 无额外要求时，该动作最自然 / 最典型的表现等级
+
+Max
+= 不改变动作身份的前提下，允许被强化到的最高等级
+```
+
+Runtime 只能在：
+
+```text
+Min ≤ Selected Physical Level ≤ Max
+```
+
+范围内调整表现，不允许为了适配更低等级而偷偷把动作核改成另一个动作。
 
 示意：
 
 ```text
 侧身闪避走位
+Min: P1
 Default: P1
 Max: P2
 
 极速瞬身突袭
+Min: P1 或 P2（逐条知识化时根据动作核决定）
 Default: P2
 Max: P3
 
 落地震地重击
+Min: P2
 Default: P2
+Max: P3
+
+抬手震气击退
+如果 Core Mechanic 定义为“不接触目标，靠掌劲 / 气浪直接震退”
+Min: P3
+Default: P3
 Max: P3
 ```
 
-对于本身依赖超现实机制才能成立的动作，可以声明更高的最低可用等级；这一字段是否正式加入，尚未 Grill 确认。
+核心边界：
+
+> **降低表现等级可以削弱速度、破坏、特效与击飞程度，但不能把一个依赖非接触气劲的动作改写成普通接触推掌；一旦 Core Mechanic 改变，就应视为另一个动作条目或另一个 Canonical Action。**
 
 ---
 
@@ -476,7 +507,7 @@ High Commitment Attack
 - 上述名称来自用户提供图片，只作为当前原始素材名；
 - 后续知识化时允许保留原名作为 Alias，并建立更中性的 Canonical Action Name；
 - 图片中的“气流、灵气、剑气、地裂、残影”等既可能是动作视觉实现，也可能是 P2/P3 风格表现，不应无脑写入 Core Action Mechanic；
-- 后续需要逐条区分：动作核、视觉表现、物理尺度、Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile。
+- 后续需要逐条区分：动作核、视觉表现、Min / Default / Max Physical Level、Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile。
 
 ---
 
@@ -491,15 +522,16 @@ High Commitment Attack
 5. Visual Medium 与 Physical Realization Level 双轴解耦；
 6. P1 / P2 / P3 只描述动作物理 / 破坏 / 超现实尺度，不代表真人或动画；
 7. 真人写实媒介允许 P3 超现实武打；
-8. 每个动作记录 Default Physical Level + Max Physical Level；
-9. 增加多值 Combat Role；
-10. 增加 Response Compatibility；
-11. 增加 State Transition；
-12. 增加 Tempo Profile，使用相对节奏，不绑定固定秒数；
-13. Combat Role + Response Compatibility + State Transition 用于提高攻防匹配、反击、主动权转换和整体节奏感；
-14. 增加 Risk / Commitment Profile，记录动作承诺度、失手 / 被挡风险、恢复暴露与命中回报；
-15. High Commitment 动作在 Miss / Block / Evade 后应自然提高 Counter / Initiative Theft 候选权重；
-16. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
+8. 每个动作记录 Min + Default + Max Physical Level，Runtime 只能在合法区间内调节表现尺度；
+9. 降低 Physical Level 不允许改变 Core Action Mechanic；如果为了降级必须改变动作核，应视为另一个动作；
+10. 增加多值 Combat Role；
+11. 增加 Response Compatibility；
+12. 增加 State Transition；
+13. 增加 Tempo Profile，使用相对节奏，不绑定固定秒数；
+14. Combat Role + Response Compatibility + State Transition 用于提高攻防匹配、反击、主动权转换和整体节奏感；
+15. 增加 Risk / Commitment Profile，记录动作承诺度、失手 / 被挡风险、恢复暴露与命中回报；
+16. High Commitment 动作在 Miss / Block / Evade 后应自然提高 Counter / Initiative Theft 候选权重；
+17. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
 
 ---
 
@@ -507,7 +539,6 @@ High Commitment Attack
 
 以下内容仍未确认，后续逐项 Grill：
 
-- 动作是否需要 `Min Physical Level`，还是 Default + Max 足够；
 - Combat Role 的正式枚举边界；
 - Response Compatibility 的结构化维度；
 - State Transition 是描述式还是结构化 Before → After；
@@ -526,7 +557,7 @@ High Commitment Attack
 
 > **先确定动作在战斗中“为什么现在用”，再决定“用哪个动作”。**
 >
-> **先确定动作核，再决定真人 / 动画等视觉媒介，以及 P1 / P2 / P3 物理表现。**
+> **先确定动作核，再决定真人 / 动画等视觉媒介，以及合法的 Min → Default → Max 物理表现区间。**
 >
 > **一攻一守不是轮流出招，而是 Incoming State → Compatible Response → State Transition → New Initiative。**
 >
