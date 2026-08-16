@@ -1,6 +1,6 @@
 # Action Combat Impact Realization Spec
 
-> 状态：Design Active / Ready to Lock  
+> 状态：Design Locked  
 > 适用：Action Combat 的所有 meaningful force-bearing contact  
 > 目标：解决“动作具体、连续、可执行，但命中仍缺少重量与打击感”的 Runtime 设计缺口。  
 > 文档约束：长期 Compact Spec；单文件硬上限 1500 行，不演化成第二套 Combat Playbook。
@@ -114,7 +114,7 @@ Impact 负责即时受力与下一拍 Combat State Consequence；Condition 维�
 
 本文件是长期设计 Spec，不是 G01 Regression 的临时章节。
 
-只保存 Problem、Confirmed Decisions、Semantic Contracts、Runtime Integration Map 与少量待决项；不复制完整 Camera / Audio / Damage / Modality 教程。
+只保存 Problem、Confirmed Decisions、Semantic Contracts、Runtime Integration Map；不复制完整 Camera / Audio / Damage / Modality 教程。
 
 > **每个 Spec / Playbook / Runtime 单文件不超过 1500 行。**
 
@@ -443,8 +443,13 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ---
 
-## 5. Remaining Decision
+## 5. Design Lock
 
-当前架构分支已全部形成共识。剩余仅需确认：
+本 Spec 已完成 Grill 共识并正式锁定。
 
-> 是否将本 Spec 从 `Design Active / Ready to Lock` 切换为 `Design Locked`，随后按 Decision 18 开始 Runtime Integration。
+后续默认规则：
+
+- 不继续扩展新的 Impact 架构概念；
+- 实际落地问题优先归类为 implementation gap / regression evidence；
+- 只有证据证明本 Spec 的既有合同本身不成立或相互冲突时，才重新打开设计讨论；
+- Runtime Integration 按 Decision 18 的最小迁移顺序推进。
