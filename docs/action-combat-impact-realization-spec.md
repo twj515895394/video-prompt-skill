@@ -329,9 +329,65 @@ Final Preflight 至少检查：
 
 对于 I3，额外确认 `Concrete Impact Anchor + highest-value Force Response + Motion Carry-over` 未被最终压缩掉。
 
+> **少建新 Gate，多强化现有质量检查。**
+
+### Decision 16 — Layered Runtime Integration + Promotion Lifecycle
+
+Impact 规则按职责分层落地，不把整份 Spec 复制进 Runtime：
+
+```text
+Impact Spec
+= design semantics / Why + confirmed contracts
+
+Choreography Playbook
+= long-term generative principles
+
+Regression Runtime
+= execution order + gates + PASS logic
+
+Adapter Scan / Final Preflight
+= serialized-output preservation + observable failure signatures
+```
+
+长期 `choreography-playbook.md` 只吸收稳定的生成原则，例如：
+
+```text
+Meaningful Force-bearing Contact
+→ Readable Force Response
+→ Combat State Consequence
+
+Contact changes motion,
+not automatically terminates motion
+
+Post-impact Motion Carry-over
+→ Immediate Continuation Entry
+
+Impact Semantics Internalized,
+Force Causality Serialized
+```
+
+`regression-fix-runtime-policy.md` 在验证阶段承载执行层逻辑，例如 Impact Realization Gate、I1 / I2 / I3 heuristic、Minimum Contract PASS、Modality Contract PASS、I3 preservation requirement。
+
+Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset、State-disconnected Reaction、Impact / Aftermath Duplication、Accent Without Anchor 等主要进入既有 Adapter Scan / Final Preflight。
+
 原则：
 
-> **少建新 Gate，多强化现有质量检查。**
+> **Spec owns design semantics.  
+> Playbook owns generative principles.  
+> Runtime owns execution order and gates.  
+> Preflight owns observable failure signatures.**
+
+Impact Realization 的生命周期：
+
+```text
+Design in Spec
+→ Validate through Regression Runtime
+→ Regression Pass
+→ Promote stable thin Gate into long-term Action Combat Runtime
+→ Regression file retains only test history / regression-specific logic
+```
+
+不得让 `regression-fix-runtime-policy.md` 永久成为长期能力的大杂烩。
 
 ---
 
@@ -365,8 +421,7 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. 哪些 Impact 规则进入长期 Choreography Playbook，哪些只进入 regression runtime / preflight；
-2. Regression Test / Failure Signature 的最小闭环；
-3. Spec 收口后，Runtime Integration 的最小改动清单与迁移顺序。
+1. Regression Test / Failure Signature 的最小闭环；
+2. Spec 收口后，Runtime Integration 的最小改动清单与迁移顺序。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
