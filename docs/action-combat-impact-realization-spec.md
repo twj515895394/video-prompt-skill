@@ -2,7 +2,7 @@
 
 > 状态：Design Active / Grill In Progress  
 > 适用：Action Combat 的所有 meaningful force-bearing contact  
-> 目标：解决“动作已经具体、连续、可执行，但命中仍缺少重量与打击感”的 Runtime 设计缺口。  
+> 目标：解决“动作具体、连续、可执行，但命中仍缺少重量与打击感”的 Runtime 设计缺口。  
 > 文档约束：长期 Compact Spec；单文件硬上限 1500 行，不演化成第二套 Combat Playbook。
 
 ---
@@ -11,9 +11,7 @@
 
 当前 Action Combat 已具备 Concrete Technique、Action → Response → State Change → Next Action、Movement / Support / Range / Position 连续性、Impact Aftermath、Action–Camera Handoff 等能力。
 
-仍存在独立缺口：
-
-> Runtime 能说明“打中了什么”与“打中后留下什么”，但不一定能让视频模型理解“这一击为什么在接触瞬间有重量”。
+仍存在独立缺口：Runtime 能说明“打中了什么”与“打中后留下什么”，但不一定能让视频模型理解“这一击为什么在接触瞬间有重量”。
 
 典型失败：
 
@@ -21,7 +19,7 @@
 - 受击者像主动配合后退 / 后仰；
 - 攻击方命中点突然停住，缺少 follow-through / deceleration；
 - 局部受击与全身轴线、重心、支撑变化脱节；
-- Camera / Audio 只有装饰性“震一下 / 响一下”，没有真实 Contact 锚点。
+- Camera / Audio 只有装饰性强调，没有真实 Contact 锚点。
 
 因此引入轻量 **Impact Realization** 语义层。
 
@@ -33,19 +31,13 @@
 
 Impact Realization 是 Action Combat 的通用核心机制，不是电影化 / 动漫 / 强冲击风格才启用的可选增强。
 
-写实格斗同样需要可读受力、局部 recoil / deflection、支撑 / 轴线 / 重心变化、follow-through 与下一拍可继承的 Combat State。
-
 > Impact Realization ≠ 夸张化。
 
 ### Decision 02 — Semantic Ownership Only
 
-Impact Realization 负责判断：
+Impact Realization 负责判断“这一击应该被感知成什么样”，产出 Impact Salience、Force / Contact Semantics、Immediate Force Response、Combat State Consequence，以及必要的 Perceptual Accent Intent。
 
-> **这一击应该被感知成什么样。**
-
-它产出 Impact Salience、Force / Contact Semantics、Immediate Force Response、Combat State Consequence，以及必要的 Perceptual Accent Intent；但不直接控制 Camera / Audio，也不写死 camera shake、slow motion、hit-stop、BOOM 等实现。
-
-现有 Action–Camera Handoff / Audio Runtime 保留最终执行权。
+它不直接控制 Camera / Audio，也不写死 camera shake、slow motion、hit-stop、具体音效等实现。现有 Action–Camera Handoff / Audio Runtime 保留执行权。
 
 ### Decision 03 — Trigger Scope
 
@@ -65,13 +57,9 @@ Concrete Contact
 + Combat State Consequence
 ```
 
-最低回答：
+最低回答：什么接触了什么；为什么对方看起来真的受到了力；这个力改变了什么当前 Combat State。
 
-1. 什么接触了什么；
-2. 为什么对方看起来真的受到了力；
-3. 这个力改变了什么当前 Combat State。
-
-只有关键 Impact 才按需展开：
+关键 Impact 才按需展开：
 
 ```text
 Force Delivery / Commitment
@@ -84,7 +72,7 @@ Force Delivery / Commitment
 → New Combat State
 ```
 
-以上是可选维度，不是固定八步模板。
+这些是可选维度，不是固定八步模板。
 
 ### Decision 05 — Three-level Dynamic Salience
 
@@ -94,15 +82,15 @@ I2 — Standard
 I3 — Emphasized
 ```
 
-**I1**：真实受力，但主要是局部 deflection / pressure、小 State Change、连接性 Contact。  
-**I2**：普通有效 Contact，观众需要明确读懂其成立，并产生明显 Axis / Support / Balance / Range / Pressure / Opening 等状态后果。  
-**I3**：I2 基础上具有更高 Force / Tactical / Narrative Salience，例如高动量、明显 whole-body displacement / support loss、强 Recovery Burden、Initiative Reversal、Signature / Finisher、Environment Collision 或 major payoff。
+- **I1**：真实受力，但主要是局部 deflection / pressure、小 State Change、连接性 Contact。
+- **I2**：普通有效 Contact，观众需要明确读懂其成立，并产生明显 Axis / Support / Balance / Range / Pressure / Opening 等状态后果。
+- **I3**：I2 基础上具有更高 Force / Tactical / Narrative Salience，例如高动量、明显 whole-body displacement / support loss、强 Recovery Burden、Initiative Reversal、Signature / Finisher、Environment Collision 或 major payoff。
 
 Salience 不按动作名称硬编码。
 
 ### Decision 06 — One Core + Modality Branches
 
-统一：
+统一使用：
 
 ```text
 Impact Core
@@ -134,11 +122,7 @@ Aftermath 维护血迹 / 红肿 / 擦伤 / 淤青、衣损、环境损伤、物�
 
 本文件是长期设计 Spec，不是当前 G01 Regression 的临时章节。
 
-只保存：Problem、Confirmed Decisions、Semantic Contracts、Runtime Integration Map、Pending Questions。
-
-不复制完整 Camera / Audio / Damage / Strike / Grapple 教程或大量 Prompt 示例。
-
-项目硬约束：
+只保存 Problem、Confirmed Decisions、Semantic Contracts、Runtime Integration Map、Pending Questions；不复制完整 Camera / Audio / Damage / Strike / Grapple 教程或大量 Prompt 示例。
 
 > **每个 Spec / Playbook / Runtime 单文件不超过 1500 行。**
 
@@ -150,7 +134,7 @@ Impact Force Model 复用现有 Combat State 与当前 Concrete Action，只做�
 
 禁止引入长期维护的 ImpactVelocity、ImpactMass、ForceVector、ForceLevel、BodyStiffness，也不引入牛顿数、精确速度等伪精确参数。
 
-局部可读取 / 推导：
+局部读取 / 推导：
 
 ```text
 Current Momentum / Motion
@@ -184,8 +168,6 @@ Contact Effectiveness
 
 I1 / I2 / I3 使用定性、结果导向 Heuristic Gate，不做数值评分模型。
 
-推荐判断顺序：
-
 ```text
 Effective Contact?
 ↓
@@ -196,11 +178,11 @@ Major Force / Tactical / Narrative Salience?
 I1 / I2 / I3
 ```
 
-I3 不等于“伤害更大”。例如借对方高速来势完成破重心并直接反转 Initiative，即使没有重拳，也可以是 I3。
+I3 不等于“伤害更大”；借势破重心并直接反转 Initiative，即使没有重拳，也可以是 I3。
 
 ### Decision 11 — Modality Minimum Realization Contracts
 
-六类 Modality 各自固定一个**极薄的最小语义验收合同**。这些是 Runtime PASS 条件，不是固定 Prompt 字段、固定句式或动作模板。
+六类 Modality 各自固定一个极薄的最小语义验收合同；它们是 Runtime PASS 条件，不是固定 Prompt 字段或动作模板。
 
 #### Strike
 
@@ -215,7 +197,7 @@ Concrete Contact Point / Body Relationship
 ```text
 Force meets defensive structure
 + attack force 被截停 / 改向 / 吸收中的真实一种
-+ 至少一方结构 / attack line / support / opening 发生变化
++ 至少一方 structure / attack line / support / opening 发生变化
 ```
 
 #### Grapple / Clinch / Body Pressure
@@ -250,17 +232,11 @@ Body 与具体 material / object 的方向性碰撞
 + position / recovery consequence
 ```
 
-统一验收问题：
-
-> 删除“猛烈 / 强力 / 震撼 / 沉重”等形容词后，是否仍能读出该 Modality 特有的受力机制？
-
-如果不同 Contact 最终都退化成“受到强烈冲击 → 身体后仰 → 退一步”，判 Realization 不足。
+统一验收：删除“猛烈 / 强力 / 震撼 / 沉重”等形容词后，仍应能读出该 Modality 特有的受力机制。
 
 ### Decision 12 — Channel-agnostic Impact Accent Intent
 
-Impact Accent Intent 收敛成一个 **channel-agnostic Perceptual Intent**，而不是分别维护 Camera / Audio / Timing / Visual 四套输出槽位。
-
-最小语义：
+Impact Accent Intent 收敛成一个 channel-agnostic Perceptual Intent：
 
 ```text
 Impact Accent Intent
@@ -269,17 +245,17 @@ Impact Accent Intent
 + optional Channel Eligibility
 ```
 
-- **Concrete Impact Anchor**：必须绑定已成立的具体 Contact / Force Response，而不是抽象“重击”；
+- **Concrete Impact Anchor**：绑定已成立的具体 Contact / Force Response；
 - **Perceptual Goal**：描述观众这一刻需要感受到什么；
-- **Channel Eligibility**：仅在必要时指出 Camera / Audio / Timing 等哪些下游渠道可以参与，不指定实现方式。
+- **Channel Eligibility**：必要时指出 Camera / Audio / Timing 等哪些下游渠道可参与，但不指定实现方式。
 
-Impact Realization 回答 **What should be felt?**；Action–Camera Handoff / Audio / Timing 等既有下游机制回答 **How should it be perceived?**。
+Impact 回答 **What should be felt?**；Action–Camera Handoff / Audio / Timing 回答 **How should it be perceived?**。
 
-Accent Intent 禁止直接写死 camera shake、push-in、slow motion、hit-stop、具体音效等实现，也不与 I1 / I2 / I3 做机械映射。是否生成，应综合 Impact Salience、Viewer Readability 与 Narrative / Rhythm Need。
+Accent Intent 不与 I1 / I2 / I3 做机械映射。
 
 ### Decision 13 — Impact as Motion Carry-over Conversion Node
 
-Impact Realization 是现有 Motion / Energy Carry-over 的**转换节点**，不是动作结束点。
+Impact Realization 是 Motion / Energy Carry-over 的转换节点，不是动作结束点。
 
 ```text
 Incoming Motion
@@ -289,13 +265,9 @@ Incoming Motion
 → Immediate Continuation Entry
 ```
 
-Impact 必须回答：
+`Post-impact Motion Carry-over` 只是当前 Force Event 结束后仍然存活的局部运动趋势语义，不是新的持久 Motion State 或 Meter。
 
-> **接触之后，双方原来的运动趋势去了哪里？**
-
-但不建立 Energy Meter、Momentum Meter 或新的持久 Motion State。`Post-impact Motion Carry-over` 只是当前 Force Event 结束后仍然存活的局部运动趋势语义，例如 continue、redirect、deflect、rebound、absorb / decelerate、transfer、collapse / support loss；这些不是固定枚举字段。
-
-下一拍 Choreography 应消费：
+下一拍 Choreography 消费：
 
 ```text
 Post-impact Body / Range / Support State
@@ -303,24 +275,13 @@ Post-impact Body / Range / Support State
 → Immediate Continuation Entry
 ```
 
-默认禁止 Contact 后自动回到 Neutral Reset。只有动作、风格、战术或真实 recovery 明确要求停顿 / 重置时，才允许运动趋势真正结束。
+默认禁止 Contact 后自动 Neutral Reset。
 
 > **Contact 应当改变运动，而不是默认终止运动。**
 
 ### Decision 14 — Fuse Impact Into Existing Action Phrase
 
-Impact Realization 保持内部 Gate；Final Prompt 默认把必要 Force Causality **融合进现有 Concrete Action Phrase**，不新增固定 `Impact / Force` 独立段落。
-
-Runtime 内部可以完整执行：
-
-```text
-Concrete Technique
-→ Impact Realization
-→ Motion Carry-over
-→ Aftermath
-```
-
-但序列化时应尽量形成一条连续动作因果链：
+Impact Realization 保持内部 Gate；Final Prompt 默认把必要 Force Causality 融合进现有 Concrete Action Phrase，不新增固定 `Impact / Force` 独立段落。
 
 ```text
 Concrete Technique
@@ -335,17 +296,42 @@ Salience 只控制 Final Prompt 的保留密度：
 
 ```text
 I1 → Contact + 最必要 Force Response / State Change
-I2 → 融合清晰 Force Response + Continuation
+I2 → 清晰 Force Response + Continuation
 I3 → 可额外保留 1–2 个最高价值 Force Transmission / Recovery / Perceptual Anchor
 ```
 
-Impact Gate 决定“哪些语义不能丢”，不决定“必须新增一个段落”。禁止动作段、Impact 段、State 段重复描述同一次 Contact。
+> **Impact Semantics Internalized, Force Causality Serialized.**
+
+### Decision 15 — Preserve Through Existing Assembly / Scan / Preflight
+
+不新增独立 `Impact Preservation Gate`。Impact preservation / failure checks 分散嵌入现有三个节点：
+
+```text
+Prompt Assembly
+→ meaningful Contact 的 Minimum Contract 不得在压缩时丢失
+
+Adapter-output Final Scan
+→ Adapter 不得把具体 Force Causality 压扁成抽象形容词
+
+Final Preflight
+→ 检查高价值 Impact Failure Signatures
+```
+
+Final Preflight 至少检查：
+
+- **Adjective-only Impact**：只剩“猛烈 / 沉重 / 强力”，没有具体受力机制；
+- **Self-propelled Reaction**：受击者像主动后退 / 后仰，而不是由 Contact 导致；
+- **Contact Freeze**：命中后攻击肢体突然停止，缺少合理 follow-through / deceleration；
+- **Neutral Reset**：每次 Contact 后双方默认回到中立站姿再重新起手；
+- **State-disconnected Reaction**：局部受击与 axis / support / range 等身体状态变化脱节；
+- **Impact / Aftermath Duplication**：即时反应与持续损伤被重复序列化；
+- **Accent Without Anchor**：Camera / Timing / Audio 强调没有具体 Force Event 支撑。
+
+对于 I3，额外确认 `Concrete Impact Anchor + highest-value Force Response + Motion Carry-over` 未被最终压缩掉。
 
 原则：
 
-> **Impact Semantics Internalized, Force Causality Serialized.**
-
-这与既有 `State Machine Internalized, Choreography Externalized` 保持同一方向。
+> **少建新 Gate，多强化现有质量检查。**
 
 ---
 
@@ -379,8 +365,8 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
-2. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
-3. Regression Test / Failure Signature 的最小闭环。
+1. 哪些 Impact 规则进入长期 Choreography Playbook，哪些只进入 regression runtime / preflight；
+2. Regression Test / Failure Signature 的最小闭环；
+3. Spec 收口后，Runtime Integration 的最小改动清单与迁移顺序。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
