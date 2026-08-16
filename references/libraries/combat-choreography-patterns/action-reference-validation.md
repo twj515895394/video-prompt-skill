@@ -1,79 +1,91 @@
-# Combat Action Reference Catalog — Static Validation
+# Combat Action Reference Catalog — Validation
 
-> Scope: `action-reference-catalog.md` knowledge quality only.  
-> Runtime status: **NOT WIRED while RF-22 is open.**  
-> 本文件不证明任何视频模型真实生成效果，也不计入 RF-22 PASS-NATIVE。
+> Scope：`action-reference-catalog.md` 知识质量 + Runtime Wiring 静态验证。  
+> Runtime status：**WIRED / pending integrated RF-22 regression**。  
+> 本文件不证明视频模型真实生成效果，也不单独构成 RF-22 PASS-NATIVE。
 
 ---
 
 # 1. Validation Goals
 
-验证以下问题：
+验证：
 
-1. 单动作是否真正可执行，而不是只有招式名；
-2. Core Action Mechanic 是否与特效 / 风格解耦；
-3. Physical Level Range 是否不会偷偷改变动作身份；
-4. Combat Role 是否只使用已确认的 8 个核心枚举；
-5. Response Compatibility 是否能改善一攻一守匹配；
-6. State Transition 是否只记录真实发生的状态变化；
-7. High Commitment 动作是否留下合理 Recovery / Counter Window；
-8. Prerequisites 是否能阻止无武器、无空间、无前序状态的错误动作；
-9. Environment Impact 是否服务动作因果，而非独立堆特效；
-10. Catalog 是否与现有 Abstract Stage-2 Pattern / Combat Profile 保持职责分离。
+1. 17 个来源动作是否完整且无虚构第 18 项；
+2. 单动作是否具体可执行，而不是只有招式名；
+3. Core Action Mechanic 是否与视觉特效解耦；
+4. Physical Level Range 是否不会偷偷改变动作身份；
+5. Combat Role 是否只使用 8 个确认枚举；
+6. Response Compatibility 是否能改善攻防匹配；
+7. State Transition 是否使用稀疏 Before → After；
+8. Risk / Commitment 是否形成合理 Recovery / Counter Window；
+9. Prerequisites 是否阻止无武器、无空间、无前序状态的错误动作；
+10. Environment Impact 是否服务动作因果；
+11. Catalog 是否只在 Concrete Action Selection Gap 时按需读取；
+12. Catalog 是否不会替代 Fighting / Martial / Weapon Profile 或 Abstract Pattern；
+13. Final Prompt 是否只外显具体动作，不泄漏内部 Schema 标签；
+14. 新 Wiring 是否可以与 RF-22 一起执行集成回归。
 
 ---
 
-# 2. Schema Validation
+# 2. Source Inventory Check
 
-## V-S01｜Core Action Mechanic 可见
-
-PASS 条件：删除动作标题与 Alias 后，正文仍能回答：
+来源图片可见动作严格为 17 个：
 
 ```text
-角色从什么状态开始
-→ 身体怎样运动
-→ 通过什么接触 / 非接触机制作用于目标
-→ 目标产生什么立即结果
-→ 动作在哪里结束
+01 极速瞬身突袭
+02 凌空飞踢
+03 反手格挡防御
+04 蓄力重拳冲击
+05 侧身闪避走位
+06 腾空旋转斩击
+07 低空滑步突袭
+08 双臂交叉防御
+09 后仰规避反击
+10 蓄力霸体冲击
+11 灵活跳跃突袭
+12 空中滞空连击
+13 横扫腿击
+14 贴身缠斗快打
+15 侧身拔刀斩
+16 抬手震气击退
+17 落地震地重击
 ```
 
-Catalog 当前 18 条均满足最低要求。
-
-结果：**PASS-STATIC**
-
-## V-S02｜Visual Medium / Physical Level 解耦
-
-检查：
-
-- 没有把“漫剧”写成 P3 的必要条件；
-- 没有把“真人写实”写成只能使用 P1；
-- P3 只表示超现实物理表现，不表示媒介。
-
-结果：**PASS-STATIC**
-
-## V-S03｜Min / Default / Max 边界
-
-重点检查：
+Validation：
 
 ```text
-A15 非接触震劲击退
-Min = P3
-→ 不允许降级成普通推掌
-
-A11 超现实滞空连击
-Min = P3
-→ 不允许在 P2 继续长时间悬浮
-
-A18 下落震地重击
-Min = P2
-→ 必须保留前序下落与明确落点
+Catalog mappings = 17
+Missing source action = 0
+Invented source action = 0
 ```
 
-结果：**PASS-STATIC**
+此前草稿中的“后撤蓄力重击”不是来源图片动作，已删除。
 
-## V-S04｜Combat Role 枚举
+---
 
-允许值固定：
+# 3. Schema Check
+
+Catalog 允许按动作实际需要省略字段，但核心执行信息必须能回答：
+
+```text
+What action?
+From what Range / Body State?
+Against what current action/state?
+What prerequisites must hold?
+What Physical Level is legal?
+What visible result occurs?
+What State changes?
+What initiative / recovery consequence matters?
+What can logically follow?
+```
+
+结果：**PASS — schema is execution-oriented, not encyclopedia-oriented.**
+
+---
+
+# 4. Combat Role Check
+
+合法枚举仅：
 
 ```text
 Entry
@@ -86,346 +98,305 @@ Signature
 Finisher
 ```
 
-Catalog 未把 Range Change / Route Change / Base Disruption / Recovery 重新塞回 Combat Role。
+Range Change / Route Change / Base Disruption 等不再重复建 Role，而进入 State Transition。
 
-结果：**PASS-STATIC**
-
----
-
-# 3. Response Compatibility Validation
-
-## V-R01｜直线突进 → 侧移离线
-
-Input State：
-
-```text
-A 发起正面直线突进
-B 有侧向落脚空间
-```
-
-Candidate：A05 侧移离线
-
-Expected：
-
-```text
-Best Against = 直线进入
-Route: Frontal → Outside/Inside Angle
-Initiative: Opponent Pressure → Open Counter Window
-```
-
-结果：**PASS-STATIC**
-
-## V-R02｜重拳 → 双臂交叉防御
-
-Input State：
-
-```text
-A 正面重击
-B 无法及时脱线但支撑稳定
-```
-
-Candidate：A08 交叉臂硬架
-
-Expected：
-
-- 可以挡住；
-- 不自动抢回 Initiative；
-- B 可能后退 / 下沉；
-- A 可继续 Pressure。
-
-结果：**PASS-STATIC**
-
-## V-R03｜前压承重脚暴露 → 横扫腿
-
-Input State：
-
-```text
-A 重心前压
-一侧支撑明显
-B 位于 mid-close
-```
-
-Candidate：A10 低位横扫
-
-Expected：
-
-```text
-Support: Stable → Disturbed
-Balance: Stable → Forced Re-step / Off-balance
-Initiative → Steal
-```
-
-结果：**PASS-STATIC**
+结果：**PASS — no role over-expansion.**
 
 ---
 
-# 4. Tempo / Commitment Validation
+# 5. Response Compatibility Check
 
-## V-T01｜Burst → Quick Reactive → Counter
-
-Sequence Candidate：
+固定轻量结构：
 
 ```text
-A01 爆发瞬身接敌
-→ A05 侧移离线
-→ A10 低位横扫
+Best Against
+Poor Against
+Best State
 ```
 
-检查：
-
-- A01 = Burst / Medium Commitment；
-- A05 = Quick Reactive / Low Commitment；
-- A10 = Support Disruption / Medium Commitment；
-- 三者不是固定 Combo，只在当前 State 匹配时成立。
-
-结果：**PASS-STATIC**
-
-## V-T02｜High Commitment Miss → Counter Window
-
-Sequence Candidate：
+示例：
 
 ```text
-A04 蓄势重拳落空
-→ Recovery Exposure
-→ 对手 Counter Candidate 权重提高
+侧移离线
+Best Against: 直线突进 / 直拳 / 抓抱入口
+Poor Against: 已建立贴身控制
+Best State: 攻击路线清楚且侧向落脚点存在
 ```
 
-Catalog 明确：
+这足够支持：
 
 ```text
-Initiative Effect on clear miss = Lose / Open Counter Window
+Incoming State
+→ Response Need
+→ Candidate Filtering
 ```
 
-结果：**PASS-STATIC**
-
-## V-T03｜Airborne Action 必须落地
-
-检查：A02 / A06 / A16 / A18。
-
-要求：
-
-- 起跳来源可读；
-- 空中路线可读；
-- 有落点 / 下落状态；
-- Recovery 不被省略。
-
-结果：**PASS-STATIC**
+结果：**PASS — useful without building a second attack taxonomy.**
 
 ---
 
-# 5. Prerequisite Validation
+# 6. State Transition Check
 
-## V-P01｜无刀不得拔刀
+只写发生变化的状态：
 
-Candidate：A13 Draw-and-Slash
+```text
+横扫腿击
+Support: Stable → Disrupted
+Balance: Stable → Forced Step/Fall Risk
+Initiative: Opponent → Steal
+```
 
-没有真实刀剑 / 鞘状态：**REJECT CANDIDATE**
+不要求无变化字段填 `unchanged`。
 
-结果：**PASS-STATIC**
-
-## V-P02｜无下落不得震地
-
-Candidate：A18 Descending Ground Impact
-
-当前人物站在地面且无腾空 / 坠落前序：**REJECT CANDIDATE**
-
-结果：**PASS-STATIC**
-
-## V-P03｜P2 不得使用 literal 气劲击退
-
-Candidate：A15 Non-contact Force Push
-
-Selected Physical Level = P2：**REJECT CANDIDATE**
-
-不能自动改写成接触推掌。
-
-结果：**PASS-STATIC**
+结果：**PASS — sparse Before → After.**
 
 ---
 
-# 6. Environment Impact Validation
+# 7. Physical Level Check
 
-## V-E01｜环境反馈必须有动作来源
+关键边界：
 
-例如 A04 重拳：
+```text
+普通闪避 / 拨挡 / 扫腿
+→ P1 可成立
+
+爆发瞬身 / 霸体冲击 / 震地
+→ 主要 P2，可强化到 P3
+
+空中滞空连击
+→ Min P3
+
+非接触掌劲震退
+→ Min P3
+```
+
+必须保证：
+
+> **降级只能削弱表现，不能改变动作核。**
+
+例如：
+
+```text
+A16 掌劲震退 P3
+-X- 为了 P2 改成接触推掌
+```
+
+结果：**PASS — identity-preserving level ranges.**
+
+---
+
+# 8. Prerequisite Check
+
+必须阻止典型非法动作：
+
+```text
+无刀剑
+-X- 侧身拔刀斩
+
+无前序腾空 / 下落
+-X- 落地震地重击
+
+P1 / P2 Grounded
+-X- 空中滞空连击
+-X- 非接触掌劲震退
+
+无侧向落脚空间
+-X- 侧移离线
+```
+
+结果：**PASS.**
+
+---
+
+# 9. Risk / Commitment Check
+
+动作承诺度必须影响反击窗口，但不建立概率模型。
+
+```text
+Low Commitment
+→ 不自动制造巨大暴露
+
+High / Very High Commitment
+→ Miss / Evade / Block 后允许明显 Recovery Exposure
+→ Counter / Initiative Theft 候选权重提高
+```
+
+典型：
+
+- 侧移离线：Low；
+- 蓄势重拳：High；
+- 腾空旋转斩：Very High；
+- 落地震地重击：Very High。
+
+结果：**PASS.**
+
+---
+
+# 10. Environment Impact Check
+
+环境反馈属于动作结果，不是独立破坏系统。
 
 合法：
 
 ```text
-拳命中
-→ 对手后退撞墙
-→ 墙面局部裂纹 / 家具位移
+P2 重拳命中
+→ 对手撞翻椅子 / 撞墙
+
+P3 震地
+→ 地裂 / 碎石 / 冲击波
 ```
 
-不合法：
+非法：
 
 ```text
-拳尚未命中
-→ 周围墙体随机爆炸
+动作没有触碰或冲击来源
+→ 环境突然大范围爆炸
 ```
 
-除非题材 / P3 另有明确超自然机制。
-
-结果：**PASS-STATIC**
-
-## V-E02｜持久环境后果不得 Reset
-
-如果椅子已经被撞翻、墙体已裂、物体已移动，下一 Phrase 必须继承这一新环境状态，除非有明确恢复原因。
-
-结果：**PASS-CONTRACT**
+结果：**PASS.**
 
 ---
 
-# 7. Dedup / Single Source Validation
+# 11. Runtime Wiring Check
 
-## V-D01｜与 `minimum-validation-set.md` 的职责边界
-
-`minimum-validation-set.md`：
-
-> Abstract Movement / Technique / Transition Pattern + Stage-2 Pattern Hit Evidence
-
-`action-reference-catalog.md`：
-
-> Concrete reusable single action + Response / State / Tempo / Commitment / Physical realization
-
-允许存在语义映射，例如：
+正式入口：
 
 ```text
-T02 Low-line Base Disruption
-→ A10 低位横扫
+references/libraries/index.md
+→ combat-choreography-patterns/index.md
+→ Concrete Action Selection Gap
+→ action-reference-catalog.md
 ```
 
-但不复制 `minimum-validation-set.md` 的完整 Pattern Schema / Runtime Gate。
+推荐 Stage-2 链：
 
-结果：**PASS-STATIC**
+```text
+Combat Planning Context / Exchange Spine
+→ detect gap
 
-## V-D02｜与 Combat Fighting / Martial Profiles 的职责边界
+需要抽象 Movement / Technique / Transition 策略
+→ minimum-validation-set.md
 
-Profiles 决定：
+需要具体动作
+→ action-reference-catalog.md
 
-- 某 Combat System / Technique Backbone 通常偏好什么距离、发力、攻防语言；
+必要时
+→ Pattern → Catalog Action
 
-Catalog 决定：
+→ Concrete Action Phrase
+```
 
-- 某一个具体动作怎样成立。
+Catalog 不是默认全量读取，不新增机械 Library 配额。
 
-Catalog 不把动作归属强绑定到 Boxing / Sanda / Wing Chun / Baji 等单一流派。
-
-结果：**PASS-STATIC**
-
-## V-D03｜与 Environment Patterns 的职责边界
-
-Catalog 只写动作造成的轻量 Environment Impact；
-
-复杂空间 Affordance / 环境战术仍由 `combat-environment-patterns/library.md` 负责。
-
-结果：**PASS-STATIC**
+结果：**PASS — statically routed.**
 
 ---
 
-# 8. Minimum Choreography Assembly Cases
+# 12. Minimal Selection Cases
 
-这些 Case 只验证知识能否被组合，不定义固定 Runtime 流程。
-
-## C01｜高速攻防反转
+## Case A｜直线压迫 → 侧移 → Counter Window
 
 ```text
-A01 爆发瞬身接敌
-→ B05 侧移离线
-→ B10 低位横扫破坏支撑
-→ A 被迫补步
+Incoming: 直线突进
+Need: Defense / Counter
+Selected: A05 侧移离线
+Result: Route → Outside Angle
+Initiative: Open Counter Window
 ```
 
-验证目标：
+PASS。
 
-- 一攻一守不是轮流表演；
-- Response 与 State Transition 连续；
-- Initiative 可以自然翻转。
-
-结果：**PASS-STATIC**
-
-## C02｜重击风险制造反击
+## Case B｜前压承重明显 → 破支撑
 
 ```text
-A04 蓄势重拳
-→ B09 后仰让线
-→ A 重拳落空产生 Recovery
-→ B14 后撤蓄势重反击 / 其他 Context-compatible Counter
+Incoming: 对手前压，承重脚暴露
+Need: Counter / Reversal
+Selected: A13 横扫腿击
+Result: Support disrupted + Initiative Steal
 ```
 
-验证目标：High Commitment 的风险真实影响下一动作选择。
+PASS。
 
-结果：**PASS-STATIC**
-
-## C03｜P3 真人武侠式超现实动作
-
-Visual Medium：真人写实影视  
-Physical Level：P3
+## Case C｜正面重压但仍需保住结构
 
 ```text
-A15 非接触震劲击退
-→ 目标沿掌劲方向退开
-→ 纸张 / 衣物 / 灰尘同方向响应
-→ A01 P3 瞬身感重新接敌
+Incoming: 正面重击
+Need: Defense
+Selected: A08 交叉架挡
+Result: Contact absorbed; opponent may retain Pressure
 ```
 
-验证目标：真人视觉媒介与 P3 超现实物理解耦。
+PASS。防守成功不被错误等同主动权反转。
 
-结果：**PASS-STATIC**
-
-## C04｜空中动作因果闭环
+## Case D｜P3 真人武侠式非接触震退
 
 ```text
-A16 跃步突入
-→ A02 凌空飞踢
-→ 明确落地 / Recovery
+Visual Medium: live-action
+Physical Level: P3
+Need: Range Reset / Reversal
+Selected: A16 掌劲震退
 ```
 
-或 P3：
+PASS。真人画面与 P3 不冲突。
+
+## Case E｜P2 请求但动作核依赖 P3
 
 ```text
-已有腾空来源
-→ A11 超现实滞空连击
-→ A18 下落震地重击
+Physical Level: P2
+Candidate: A16 掌劲震退
 ```
 
-验证目标：任何 Airborne Action 都有进入、持续和退出状态。
+Result：Reject candidate，而不是改成普通推掌。
 
-结果：**PASS-STATIC**
+PASS。
 
 ---
 
-# 9. RF-22 Freeze Validation
+# 13. Final Prompt Boundary
 
-本次知识实施必须同时满足：
+Final Prompt 不应输出：
 
 ```text
-SKILL.md unchanged
-references/tasks/action-combat-video/index.md unchanged
-references/tasks/action-combat-video/regression-fix-runtime-policy.md unchanged
-references/libraries/combat-choreography-patterns/minimum-validation-set.md unchanged
-Quick Mode unchanged
-Camera Runtime unchanged
+Combat Role = Counter
+Commitment = Medium
+Best Against = ...
+Initiative Effect = Steal
 ```
 
-新文件当前只能由维护 / 审核显式读取，不能进入 G01 Runtime Read List。
+应转换为可见动作：
 
-结果：**PASS by implementation contract; verify with final diff review.**
+```text
+男方直线压上来时，女方短侧步切到他的外侧让冲势落空；他肩线尚未回正，她立刻从这个外侧角度接入下一次反击。
+```
+
+结果：**PASS — state machine internalized, choreography externalized.**
 
 ---
 
-# 10. Current Conclusion
+# 14. Integrated Regression Plan
 
-当前静态结论：
+用户已明确要求：**不再等待 RF-22 单独关闭，Catalog 直接接入，后续与 RF-22 一起验证。**
 
-- Knowledge Schema：PASS-STATIC
-- 18 Action Entries：PASS-STATIC
-- Physical Level boundaries：PASS-STATIC
-- Response / State causality：PASS-STATIC
-- Tempo / Commitment：PASS-STATIC
-- Prerequisites：PASS-STATIC
-- Environment Impact：PASS-STATIC
-- Single-source boundary：PASS-STATIC
-- Runtime integration：**NOT TESTED / INTENTIONALLY NOT WIRED**
-- Generated video quality：**NOT TESTED**
-- RF-22 close criteria：**UNAFFECTED / still requires fixed G01 ×2 PASS-NATIVE**
+因此下一轮固定 G01 仍保持原输入和固定选择，但测试解释升级为：
+
+```text
+Integrated Regression
+= RF-22 Runtime Handoff
++ RF-14～RF-20 existing checks
++ Concrete Action Catalog Routing / Realization
+```
+
+必须额外观察：
+
+```text
+Catalog Read Timing
+Concrete Action Selection Gap
+Selected Action ID / Source
+Why candidate is compatible
+Physical Level legality
+Prerequisite legality
+Realized Action Phrase
+Prompt density / dedup impact
+```
+
+只有真实 Interactive 执行才能证明 PASS-NATIVE；本静态文件不替代真实测试。
