@@ -9,29 +9,21 @@
 
 ## 0. 核心定位
 
-本知识库不是：
+本知识库不是固定连招模板、漫剧专属 Prompt 大全、武术门派百科，也不是新的 Combat Engine / Camera / Physics Runtime。
 
-- 固定连招模板；
-- 漫剧专属 Prompt 大全；
-- 武术门派百科；
-- 新的 Combat Engine；
-- 新的 Camera / Physics Runtime。
-
-本知识库回答的是：
+它回答：
 
 > **在当前 Combat State / Combat Role / Response Need 下，有哪些可执行的单动作候选，它们会如何改变战斗状态，并能以什么视觉媒介与物理夸张尺度被表现。**
 
-它应服务于现有 Action Combat 的 Exchange Spine / Stage-2 / Movement Causality / Per-Character Signature / Advantage / Re-entry 等机制，而不是取代它们。
+它服务现有 Exchange Spine / Stage-2 / Movement Causality / Per-Character Signature / Advantage / Re-entry，而不是取代这些机制。
 
 ---
 
-# A. 已确认的知识库结构
+# A. 知识库结构
 
 ## A1. 一级分类：按战斗功能分类
 
-已确认：不按来源图片 1～18 的编号直接平铺，而按动作在战斗中的主要功能组织。
-
-当前建议一级分类：
+当前一级分类：
 
 1. 突进接敌类；
 2. 闪避走位类；
@@ -43,24 +35,22 @@
 8. 武器瞬杀类；
 9. 气劲 / 能量外放类。
 
-说明：一级分类用于检索与知识导航，不等同于固定 Combat Role；同一动作可以在不同战斗状态下承担多个 Combat Role。
+一级分类用于检索和导航，不等同于固定 Combat Role；同一动作可以承担多个 Combat Role。
 
----
+## A2. 最小颗粒度：单动作模板
 
-## A2. 最小知识颗粒度：单动作模板
+> **知识库最小颗粒度固定为“单动作模板”，不再继续拆成手部、脚步、肩胯等更细独立节点。**
 
-已确认：
+脚步、接触面、重心、轴线、支撑、发力、目标部位等只作为单动作内部属性。
 
-> **知识库最小颗粒度固定为“单动作模板”，不再继续拆成更细的手部动作、脚步动作、肩胯动作等独立知识节点。**
-
-脚步、接触面、重心、轴线、支撑、发力、目标部位等属于单动作模板内部属性。
-
-连招 / 连续片段不作为基础知识条目，而作为：
+连招不作为基础知识条目，而由：
 
 - 可衔接前置动作；
 - 可衔接后续动作；
 - 常见组合关系；
-- Runtime 动态 Exchange 编排结果。
+- Runtime 动态 Exchange 编排；
+
+共同形成。
 
 原则：
 
@@ -68,24 +58,33 @@
 
 ---
 
-# B. 单动作条目字段标准
+# B. 单动作条目基础字段
 
-每个动作条目至少包含以下 10 个核心字段：
+基础字段至少包含：
 
-1. **动作名称 / Action Name**
-2. **别名 / Aliases**
-3. **动作功能分类 / Functional Category**
-4. **适用距离 / Applicable Range**
-5. **核心动作机制 / Core Action Mechanic**
-6. **关键身体 / 接触关系 / Body & Contact Relation**
-7. **立即可见结果 / Immediate Visible Result**
-8. **风格表现层 / Style Realization**
-9. **可衔接前置动作 / 后续动作 / Transition Compatibility**
-10. **使用风险 / 避免事项 / Risks & Failure Modes**
+1. Action Name / 动作名称
+2. Aliases / 别名
+3. Functional Category / 动作功能分类
+4. Applicable Range / 适用距离
+5. Core Action Mechanic / 核心动作机制
+6. Body & Contact Relation / 关键身体与接触关系
+7. Immediate Visible Result / 立即可见结果
+8. Style Realization / 风格表现
+9. Transition Compatibility / 可衔接前置与后续动作
+10. Risks & Failure Modes / 使用风险与避免事项
 
-图片中的“核心关键词”不作为一级核心字段，降级为检索辅助 Metadata，可由条目内容自动归纳。
+“核心关键词”降级为检索 Metadata，可由条目内容自动归纳。
 
-随着 Grill 深入，Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile 等属于运行期高价值结构化属性；最终字段表会在设计收敛后统一重排，不受当前“10 个原始核心字段”编号限制。
+随着 Grill 深入，下列属于高价值结构化属性，最终字段表会统一重排，不受最初 10 字段编号限制：
+
+- Physical Level Range
+- Combat Role
+- Response Compatibility
+- State Transition
+- Tempo Profile
+- Risk / Commitment Profile
+- Initiative Effect
+- Prerequisites
 
 ---
 
@@ -93,13 +92,9 @@
 
 ## C1. 双轴模型
 
-已确认：
+> **Visual Medium 与 Physical Realization Level 完全解耦。**
 
-> **Visual Medium（画面媒介）与 Physical Realization Level（动作物理表现等级）必须完全解耦。**
-
-### Visual Medium
-
-用于描述“画面是什么媒介 / 视觉表达”，例如：
+Visual Medium 只描述画面媒介，例如：
 
 - 真人写实影视；
 - 国风漫剧；
@@ -107,9 +102,7 @@
 - 三维动画；
 - 其他风格化媒介。
 
-Visual Medium 不决定动作是否必须遵循现实物理。
-
-例如以下组合均合法：
+因此以下组合均合法：
 
 ```text
 真人写实影视 + P1 Grounded
@@ -119,99 +112,81 @@ Visual Medium 不决定动作是否必须遵循现实物理。
 国风漫剧 + P3 Hyper-Cinematic / Supernatural
 ```
 
-即：真人影视完全可以承载高度夸张 / 超现实武打表现；不能把“真人写实画面”等价为“现实物理”。
-
----
+真人写实画面不等于只能使用现实物理。
 
 ## C2. Physical Realization Level
 
-当前确认三级：
+### P1｜Grounded
 
-### P1｜Grounded / 写实动作物理
+- 重心、惯性、距离、受力基本遵循现实人体物理；
+- 可电影化，但不出现明显超现实位移、滞空、气劲外放。
 
-- 重心、惯性、距离与受力基本遵循现实人体物理；
-- 可电影化，但不出现明显超现实位移 / 滞空 / 气劲外放。
+### P2｜Cinematic Exaggerated
 
-### P2｜Cinematic Exaggerated / 电影夸张
+- 仍有清晰物理起点和动作因果；
+- 允许显著强化速度、爆发、击飞、环境反馈和视觉冲击；
+- 仍保持真人动作片可感知的重量与接触感。
 
-- 动作仍有清晰物理起点和因果；
-- 允许明显强化速度、爆发、击飞、环境反馈与视觉冲击；
-- 可出现超出现实格斗但仍具有“真人动作片可接受”的重量感。
+### P3｜Hyper-Cinematic / Supernatural
 
-### P3｜Hyper-Cinematic / Supernatural / 超现实武打
+- 允许残影、超高速瞬移感、长距离击飞、滞空、气劲、冲击波、剑气、地面崩裂等非现实表现；
+- 仍必须保持方向、目标、动作前后因果和战斗状态可读。
 
-- 允许残影、超高速瞬移感、长距离击飞、明显滞空、气劲、冲击波、剑气、地面崩裂等非现实表现；
-- 仍要求动作前后因果、方向、目标与战斗状态可读，避免纯随机特效。
+## C3. 每个动作的合法物理区间
 
----
-
-## C3. 每个动作的物理等级范围
-
-已确认：每个动作不是固定只属于一个等级，而使用完整的合法表现区间：
+每个动作记录：
 
 - **Min Physical Level**
 - **Default Physical Level**
 - **Max Physical Level**
 
-三者职责：
+定义：
 
 ```text
 Min
-= 保持该动作 Core Action Mechanic 不变时，最低还能成立的物理表现等级
+= 保持 Core Action Mechanic 不变时，最低还能成立的表现等级
 
 Default
-= 无额外要求时，该动作最自然 / 最典型的表现等级
+= 无额外要求时最自然、最典型的等级
 
 Max
-= 不改变动作身份的前提下，允许被强化到的最高等级
+= 不改变动作身份时允许强化到的最高等级
 ```
 
-Runtime 只能在：
+Runtime 只能在合法区间内选级：
 
 ```text
 Min ≤ Selected Physical Level ≤ Max
 ```
 
-范围内调整表现，不允许为了适配更低等级而偷偷把动作核改成另一个动作。
-
 示意：
 
 ```text
 侧身闪避走位
-Min: P1
-Default: P1
-Max: P2
+Min P1 / Default P1 / Max P2
 
 极速瞬身突袭
-Min: P1 或 P2（逐条知识化时根据动作核决定）
-Default: P2
-Max: P3
+Min P1 或 P2（逐条知识化时确定） / Default P2 / Max P3
 
 落地震地重击
-Min: P2
-Default: P2
-Max: P3
+Min P2 / Default P2 / Max P3
 
 抬手震气击退
-如果 Core Mechanic 定义为“不接触目标，靠掌劲 / 气浪直接震退”
-Min: P3
-Default: P3
-Max: P3
+若 Core Mechanic 是“不接触目标、靠掌劲 / 气浪直接震退”
+Min P3 / Default P3 / Max P3
 ```
 
 核心边界：
 
-> **降低表现等级可以削弱速度、破坏、特效与击飞程度，但不能把一个依赖非接触气劲的动作改写成普通接触推掌；一旦 Core Mechanic 改变，就应视为另一个动作条目或另一个 Canonical Action。**
+> **降低 Physical Level 可以削弱速度、破坏、击飞和特效，但不能改变 Core Action Mechanic。若为了降级必须把气劲震退改成普通推掌，就已经是另一个动作。**
 
 ---
 
 # D. Combat Role / 战斗功能角色
 
-## D1. Combat Role 字段
+每个动作增加多值 `Combat Role`，用于描述它在当前 Exchange 中承担的战术作用。
 
-已确认：每个动作增加多值 `Combat Role`，用于描述该动作在一段 Exchange 中承担什么战术 / 节奏作用。
-
-当前候选角色包括但不限于：
+当前候选包括但不限于：
 
 ```text
 Entry
@@ -228,13 +203,13 @@ Finisher
 Recovery
 ```
 
-注意：
+规则：
 
-- 这是知识属性，不是固定 Battle Beat 模板；
-- 一个动作可以同时承担多个 Role；
-- Runtime 应依据 Current State 选择 Role，而不是为了“凑流程”机械轮换 Role。
+- 一个动作可以有多个 Role；
+- Role 是知识属性，不是固定 Battle Beat 模板；
+- Runtime 根据 Current State 选择 Role，不为凑流程机械轮换。
 
-核心意义：
+目标：
 
 > 从“随机挑一个好看的动作”升级为“当前战斗需要什么功能，再选动作”。
 
@@ -242,38 +217,29 @@ Recovery
 
 # E. Response Compatibility / 攻防响应关系
 
-已确认增加 `Response Compatibility`。
-
 它回答：
 
 > **这个动作最适合回应什么类型的攻击、接触关系或战斗状态？**
 
-例如：
+示意：
 
 ```text
 侧身闪避走位
 Role: Defense / Route Change
 优先响应：直线突进、重拳、正面抓抱入口
-不优先响应：已建立的贴身抱控、大范围封锁型横扫
+不优先：已经建立的贴身抱控、大范围封锁型横扫
 
 双臂交叉防御
 Role: Defense
 优先响应：正面重击、下劈、爆发冲击
-代价：通常保留正面对线，容易继续承受 Pressure
+代价：通常仍保留正面对线，容易继续承受 Pressure
 
 横扫腿击
 Role: Counter / Base Disruption
 优先条件：对方重心前压、承重脚明确、突进刚落脚
 ```
 
-该字段用于提高“一攻一守”的动作匹配准确度，避免：
-
-```text
-A 发起任意攻击
-→ B 随机抽一个 Defense
-```
-
-目标变成：
+目标链：
 
 ```text
 Incoming Attack / Current State
@@ -281,15 +247,18 @@ Incoming Attack / Current State
 → Compatible Action Candidate
 ```
 
+而不是：
+
+```text
+A 发起任意攻击
+→ B 随机抽一个 Defense
+```
+
 ---
 
 # F. State Transition / 战斗状态变化
 
-已确认增加 `State Transition`。
-
-一个动作执行后，应记录它真正改变了哪些战斗状态，而不是只描述“动作看起来怎么样”。
-
-可记录维度包括：
+一个动作执行后，只记录它真正改变的状态维度，例如：
 
 ```text
 Range
@@ -304,7 +273,7 @@ Initiative
 Environment
 ```
 
-无需每个动作全部填写，只记录实际发生变化的维度。
+无需每个动作全部填写。
 
 核心链：
 
@@ -320,42 +289,31 @@ Attack / Current State
 
 ```text
 侧身闪避走位
-Incoming: 正面直线突进
-Action: 侧移离开攻击线
-State Transition:
-- Route changed
-- Axis changed
-- Outside angle created
-- Counter window opened
+→ Route changed
+→ Axis changed
+→ Outside angle created
+→ Counter window opened
 
 双臂交叉防御
-Incoming: 正面重击
-State Transition:
-- Contact absorbed / blocked
-- Range mostly unchanged
-- Axis mostly unchanged
-- Defender may still be under pressure
+→ Contact absorbed / blocked
+→ Range mostly unchanged
+→ Axis mostly unchanged
+→ Defender may still be under pressure
 
 横扫腿击
-Incoming: 前压 + 承重脚暴露
-State Transition:
-- Support disrupted
-- Balance reduced
-- Forced step / fall risk
-- Initiative window opened
+→ Support disrupted
+→ Balance reduced
+→ Forced step / fall risk
+→ Initiative window opened
 ```
 
-该字段直接服务现有 Movement Causality / Exchange Spine / Advantage Runtime。
+该字段直接服务 Movement Causality / Exchange Spine / Advantage Runtime。
 
 ---
 
 # G. Tempo Profile / 节奏特征
 
-已确认增加 `Tempo Profile`。
-
-目的：让动作不仅按攻防功能匹配，还能参与整段战斗的速度 / 重拍 / 停顿 / 再爆发设计。
-
-不绑定固定秒数，不规定“一个动作必须 0.8s / 1.2s”。使用相对节奏类型。
+Tempo 不绑定固定秒数，只描述相对节奏作用。
 
 当前候选包括：
 
@@ -375,27 +333,22 @@ Recovery
 
 ```text
 侧身闪避走位
-Tempo: Quick Reactive
-→ 短、快，不明显打断高速交锋
+Quick Reactive
 
 极速瞬身突袭
-Tempo: Burst
-→ 突然提速并快速压缩距离
+Burst
 
 蓄力重拳冲击
-Tempo: Build-up → Impact
-→ 短暂蓄势后形成明显重拍
+Build-up → Impact
 
 贴身缠斗快打
-Tempo: Sustained Rapid
-→ 连续高频攻防，不完全 Reset
+Sustained Rapid
 
 落地震地重击
-Tempo: Acceleration → Impact → Recovery
-→ 明显峰值和落地后的余韵
+Acceleration → Impact → Recovery
 ```
 
-目标是允许 Runtime 形成动态节奏，例如：
+Runtime 可据此形成：
 
 ```text
 Burst
@@ -405,27 +358,17 @@ Burst
 → Reversal Burst
 ```
 
-而不是机械的：
-
-```text
-A 打一下
-→ B 打一下
-→ A 再打一招
-```
+而不是简单轮流出招。
 
 ---
 
 # H. Risk / Commitment Profile / 风险与动作承诺度
 
-已确认增加 `Risk / Commitment Profile`。
+该字段回答：
 
-它回答：
+> **角色一旦开始执行这个动作，需要投入多少路线、重心和恢复成本；如果被闪避、格挡或打断，会暴露多大的反击窗口；命中后的回报又有多大。**
 
-> **角色一旦开始执行这个动作，需要把多少身体状态、路线、重心或时间投入进去；如果被闪避、格挡或打断，会暴露多大的恢复窗口；命中后的回报又有多大。**
-
-该字段不记录固定成功率，也不把动作硬编码成“高风险一定失败”；它用于 Runtime 在当前 State 下理解动作的战术成本与反击机会。
-
-至少包含以下维度：
+至少包含：
 
 ```text
 Commitment: Low / Medium / High / Very High
@@ -439,15 +382,14 @@ Payoff
 ```text
 侧身闪避走位
 Commitment: Low
-Miss / Block Risk: Low
 Recovery Exposure: Low
 Payoff: Route Change / Counter Window
 
 极速瞬身突袭
 Commitment: Medium
 Miss Risk: Medium
-Recovery Exposure: 前冲路线落空后可能短暂暴露
-Payoff: 快速压缩距离 / 抢 Entry / 形成 Pressure
+Recovery Exposure: 前冲落空后可能短暂暴露
+Payoff: 快速压缩距离 / 抢 Entry / Pressure
 
 蓄力重拳冲击
 Commitment: High
@@ -458,11 +400,11 @@ Payoff: High Impact / 强制位移 / Advantage Shift
 腾空旋转斩击
 Commitment: Very High
 Miss Risk: High
-Recovery Exposure: 空中路线难临时改变，落地存在 Recovery Window
+Recovery Exposure: 空中路线难改，落地存在恢复窗口
 Payoff: Signature / Finisher / 高视觉收益
 ```
 
-该属性与 Response Compatibility、State Transition、Tempo Profile 联动，可形成更自然的反击逻辑：
+联动：
 
 ```text
 High Commitment Attack
@@ -471,17 +413,104 @@ High Commitment Attack
 → Counter / Initiative Theft 候选权重上升
 ```
 
-因此，主动权翻转不再只依赖人为安排，而可以由动作本身的承诺度与失手代价产生。
-
-原则：
-
-> **动作越重、路线越难改、恢复越慢，越需要明确其失败后的反击窗口；动作越轻、越短、越可撤回，越不应自动制造夸张的大暴露。**
+主动权翻转应尽量来自动作本身的承诺度和失手代价，而不是人为硬安排。
 
 ---
 
-# I. 当前图片来源动作清单（待逐条知识化）
+# I. Initiative Effect / 主动权影响
 
-当前 6 张来源图片共提供 18 个动作条目。原始名称如下：
+已确认增加，但必须保持**轻量**，不建立复杂结果状态机。
+
+基础枚举：
+
+```text
+Retain
+Gain
+Steal
+Lose
+Open Counter Window
+Neutral
+```
+
+用途：让 Runtime 快速判断动作通常怎样影响主动权，而不必每次从完整 State Transition 重新推导。
+
+示意：
+
+```text
+双臂交叉防御
+Initiative Effect: Opponent Retains Pressure / Neutral
+
+横扫腿击
+Initiative Effect: Steal
+
+后仰规避反击
+Initiative Effect: Steal / Gain
+```
+
+仅当动作确实存在非常明显的条件差异时，允许补一条简短自然语言条件，例如：
+
+```text
+蓄力重拳冲击
+通常命中：Retain / Gain
+明显落空：Open Counter Window / Lose
+```
+
+但**不要求每个动作机械拆成 On Hit / On Block / On Miss / On Evade 四套分支**。
+
+原则：
+
+> **Initiative Effect 是选动作的轻量辅助，不是第二套 Combat State Machine。**
+
+---
+
+# J. Prerequisites / 使用条件
+
+已确认增加一个统一的 `Prerequisites` 字段，不再拆成体型、柔韧、武器、环境等多套子字段。
+
+它只回答：
+
+> **这个动作成立之前，必须满足什么最小条件？**
+
+示意：
+
+```text
+侧身拔刀斩
+→ 当前持有 / 佩戴可拔出的刀剑
+
+腾空旋转斩击
+→ 有足够起跳、旋转与落地空间；需要对应武器
+
+贴身缠斗快打
+→ 已进入近身距离
+
+横扫腿击
+→ 目标腿部 / 支撑区域可达
+
+落地震地重击
+→ 当前存在落地阶段；环境材质允许当前 Physical Level 对应反馈
+
+凌空飞踢
+→ 有起跳空间与可落地区域
+```
+
+它用于避免：
+
+```text
+隔着很远 → 突然贴身缠斗
+没有刀 → 突然拔刀
+狭小空间 → 无条件巨大腾空旋转
+人物仍在地面 → 下一拍直接“落地震击”
+```
+
+原则：
+
+> **Prerequisites 只保存动作成立的必要条件，不演变成角色能力数值系统。**
+
+---
+
+# K. 当前图片来源动作清单（待逐条知识化）
+
+当前 6 张图片共提供 18 个原始动作：
 
 1. 极速瞬身突袭
 2. 凌空飞踢
@@ -502,53 +531,53 @@ High Commitment Attack
 17. 贴身缠斗快打
 18. 落地震地重击
 
-注意：
+后续知识化要求：
 
-- 上述名称来自用户提供图片，只作为当前原始素材名；
-- 后续知识化时允许保留原名作为 Alias，并建立更中性的 Canonical Action Name；
-- 图片中的“气流、灵气、剑气、地裂、残影”等既可能是动作视觉实现，也可能是 P2/P3 风格表现，不应无脑写入 Core Action Mechanic；
-- 后续需要逐条区分：动作核、视觉表现、Min / Default / Max Physical Level、Combat Role、Response Compatibility、State Transition、Tempo Profile、Risk / Commitment Profile。
+- 原图名可以保留为 Alias；
+- 可建立更中性的 Canonical Action Name；
+- 气流、灵气、剑气、地裂、残影等不能无脑写进 Core Mechanic；
+- 必须区分动作核、视觉表现、Physical Level、Combat Role、Response Compatibility、State Transition、Tempo、Risk / Commitment、Initiative Effect、Prerequisites。
 
 ---
 
-# J. 已确认设计决策清单
+# L. 已确认设计决策清单
 
-截至当前 Grill，已确认：
+截至当前 Grill：
 
-1. 知识库按战斗功能分类，不按 1～18 原编号平铺；
-2. 单动作模板是最小知识颗粒度，不再拆更细独立节点；
-3. 连招不作为基础条目，由前后衔接关系 + Runtime 动态组合形成；
-4. 单动作采用 10 个基础核心字段，关键词降级为 Metadata；
+1. 按战斗功能分类，不按 1～18 原编号平铺；
+2. 单动作模板是最小知识颗粒度；
+3. 连招由 Transition Compatibility + Runtime 动态组合；
+4. 关键词降级为 Metadata；
 5. Visual Medium 与 Physical Realization Level 双轴解耦；
-6. P1 / P2 / P3 只描述动作物理 / 破坏 / 超现实尺度，不代表真人或动画；
+6. P1/P2/P3 只描述动作物理与夸张尺度，不代表真人或动画；
 7. 真人写实媒介允许 P3 超现实武打；
-8. 每个动作记录 Min + Default + Max Physical Level，Runtime 只能在合法区间内调节表现尺度；
-9. 降低 Physical Level 不允许改变 Core Action Mechanic；如果为了降级必须改变动作核，应视为另一个动作；
+8. 每个动作记录 Min + Default + Max Physical Level；
+9. 降低 Physical Level 不允许改变 Core Action Mechanic；
 10. 增加多值 Combat Role；
 11. 增加 Response Compatibility；
 12. 增加 State Transition；
-13. 增加 Tempo Profile，使用相对节奏，不绑定固定秒数；
-14. Combat Role + Response Compatibility + State Transition 用于提高攻防匹配、反击、主动权转换和整体节奏感；
-15. 增加 Risk / Commitment Profile，记录动作承诺度、失手 / 被挡风险、恢复暴露与命中回报；
-16. High Commitment 动作在 Miss / Block / Evade 后应自然提高 Counter / Initiative Theft 候选权重；
-17. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
+13. 增加 Tempo Profile，不绑定固定秒数；
+14. Combat Role + Response Compatibility + State Transition 用于提高攻防匹配与节奏；
+15. 增加 Risk / Commitment Profile；
+16. High Commitment 动作失败后应自然提高 Counter / Initiative Theft 候选权重；
+17. 增加轻量 Initiative Effect；
+18. Initiative Effect 不拆成强制 On Hit / On Block / On Miss / On Evade 状态机；
+19. 增加统一 Prerequisites 字段，不拆多套能力 / 环境子系统；
+20. 本知识库服务现有 Combat Runtime，不新建第二套战斗 Engine。
 
 ---
 
-# K. 尚未确认 / 后续 Grill
+# M. 尚未确认 / 后续 Grill
 
-以下内容仍未确认，后续逐项 Grill：
+后续只讨论对实际动作生成有直接价值的分支，避免过度设计：
 
-- Combat Role 的正式枚举边界；
-- Response Compatibility 的结构化维度；
-- State Transition 是描述式还是结构化 Before → After；
-- Tempo Profile 与 Risk / Commitment 的职责边界；
-- 动作是否需要 `Initiative Effect` 独立字段，还是由 State Transition + Risk / Commitment 推导；
-- 动作是否需要角色体型 / 柔韧 / 武器 / 环境条件；
-- P2 / P3 的 Environment Destruction 如何建模；
+- Combat Role 的正式枚举是否需要继续收敛；
+- Response Compatibility 是否保持自然语言即可；
+- State Transition 是否保持轻量描述即可；
+- P2 / P3 的环境破坏如何表达；
 - 18 个动作逐条知识化后的去重、Canonical Name 与 Alias；
-- 该知识库最终放入 `references/libraries/` 的目录结构与 Runtime 加载预算；
-- 与现有 `combat-choreography-patterns` / fighting / martial libraries 的职责边界和去重策略；
+- 最终 `references/libraries/` 目录结构与加载预算；
+- 与现有 `combat-choreography-patterns` / fighting / martial libraries 的职责边界；
 - Regression / Minimum Validation Set。
 
 ---
@@ -557,10 +586,12 @@ High Commitment Attack
 
 > **先确定动作在战斗中“为什么现在用”，再决定“用哪个动作”。**
 >
-> **先确定动作核，再决定真人 / 动画等视觉媒介，以及合法的 Min → Default → Max 物理表现区间。**
+> **先确定动作核，再决定视觉媒介和合法的 Min → Default → Max 物理表现区间。**
 >
 > **一攻一守不是轮流出招，而是 Incoming State → Compatible Response → State Transition → New Initiative。**
 >
-> **节奏不是固定秒数，而是动作之间 Burst / React / Pressure / Heavy / Recovery 的相对关系。**
+> **节奏不是固定秒数，而是 Burst / React / Pressure / Heavy / Recovery 的相对关系。**
 >
-> **高承诺动作的风险不是装饰字段，而应真实创造或关闭反击窗口。**
+> **高承诺动作的风险应真实创造或关闭反击窗口。**
+>
+> **字段只保留能直接改善动作选择、动作因果和最终画面执行的内容；不为理论完整建立第二套复杂 Combat Engine。**
