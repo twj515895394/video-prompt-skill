@@ -433,23 +433,68 @@ IR-01 — realistic strike / block / continuation
 IR-02 — force redirection / throw / non-strike contact
 ```
 
-IR-01 至少覆盖：
+#### IR-01 — Frozen G01 Strike / Block Baseline
+
+直接复用现有固定 G01「15 秒现代办公室近身对决」作为 Strike / Block / Continuation 基线，不重新设计新场景。
+
+冻结原则：
+
+```text
+Same G01 scene / duration / character count / physical presentation domain
++ same selected combat branch and major user constraints for the compared run
++ same target model / adapter / generation settings where controllable
++ same camera policy unless a confirmed downstream Camera Gap is specifically under test
+→ Impact Runtime is the intended primary changed variable
+```
+
+IR-01 至少应真实包含并验证：
 
 ```text
 Strike
-+ Block / Parry / Interception
-+ Post-impact Continuation
+→ Block / Parry / Interception
+→ Effective Contact / Counter-contact
+→ Readable Force Response
+→ Post-impact Motion Carry-over
+→ Immediate Re-counter / Continuation
 ```
 
-IR-02 至少覆盖：
+不得为了让 Impact 更明显而临时把场景改成超重击、夸张飞人、特殊武器或环境大破坏；否则不能与现有 G01 历史基线形成有效对照。
+
+#### IR-02 — Frozen Non-strike Redirection / Throw Baseline
+
+IR-02 固定为与 IR-01 同等级复杂度的非单纯重击式 Force Exchange，核心链为：
 
 ```text
-Force Redirection 或 Throw / Takedown
-+ 非单纯重击式的 Force Realization
-+ Support / Axis / Range / Ground-state 中的真实状态后果
+Incoming Motion / Pressure
+→ Contact Establishment
+→ Momentum / Force Redirection
+→ Support / Axis Disruption
+→ Throw / Takedown / Control Consequence
+→ Post-impact Continuation
 ```
 
-具体固定场景、角色体系与变量控制在正式执行前单独冻结；不得边生成边改变测试条件来追求 PASS。
+推荐表现方向：**太极式借力改向 / 换轴 / 破支撑 → 摔投或控制位**。这里“太极式”用于验证 redirection / support-break 的 Force Realization，不要求夸张气功、隔空力或特效化冲击。
+
+冻结原则：
+
+```text
+No scene escalation to make the test easier
+No last-minute switch back to strike-heavy payoff
+No new Camera / Audio rules introduced only for IR-02
+No extra Impact knowledge added before evidence shows a specific gap
+```
+
+IR-02 的价值是证明：
+
+> **Impact Realization 不是“把拳打得更重”的 Strike 专用增强；非 Strike Force Exchange 也必须能通过 Contact、改向、支撑破坏与后续运动显示力量。**
+
+#### Shared Variable-control Rule
+
+两个 Case 都遵循：
+
+> **冻结测试条件，只让当前正在验证的 Runtime 变量变化。**
+
+如果测试过程中修改 Combat System、场景、时长、Physical Domain、Camera Strategy、模型或关键生成参数，必须把它记录为新的对照分支，不能直接与原 Case 结果合并判定。
 
 ### 13.3 Impact Completion Gate
 
