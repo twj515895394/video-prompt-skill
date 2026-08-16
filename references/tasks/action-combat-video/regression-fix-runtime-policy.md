@@ -40,7 +40,7 @@ Confirmed Per-Character Planning Context
 → Action–Camera Handoff（沿用现有 Runtime，不修改）
 → Prompt Assembly
 → Serialization Deduplication
-→ Adapter-output Concrete Technique Final Scan
+→ Adapter-output Concrete Technique + Impact Final Scan
 → Final Preflight
 ```
 
@@ -1118,15 +1118,18 @@ Failure：
 
 > **Unrequested Content-category Negative Injection**
 
-### 12.2 Adapter-output Concrete Technique Final Scan
+### 12.2 Adapter-output Concrete Technique + Impact Final Scan
 
-`Concrete Technique Resolution PASS` 不能只看 Stage-2 / Choreography 中间态。Prompt Assembly、压缩或 Model Adapter 可能把已经具体的动作重新泛化，所以在**实际要交付给用户的 Final Prompt**上必须再执行一次 Active Technique Scan。
+`Concrete Technique Resolution PASS` 与 `Impact Realization PASS` 都不能只看 Stage-2 / Choreography 中间态。Prompt Assembly、压缩或 Model Adapter 可能把已经具体的动作重新泛化，也可能把已经成立的 Force Causality 压扁成“猛烈击中 / 强力击退”这类抽象结果，所以在**实际要交付给用户的 Final Prompt**上只执行这一处合并 Final Scan，不新增第二个 Impact Scan Gate。
 
 扫描范围：
 
-- 只扫描真正承担攻击、防守、抱控、摔控、支撑破坏、路线改变、主动权转移的 Action Clause；
+- 扫描真正承担攻击、防守、抱控、摔控、支撑破坏、路线改变、主动权转移的 Action Clause；
+- 对其中形成 meaningful force-bearing contact 的 Clause，同时检查 Technique 与 Impact Preservation；
 - 不把人物总述里的“偏好低线腿法 / 擅长贴身控制 / 强调全身连动”等风格摘要误判为失败；
-- 不要求 Camera / Audio / Aftermath 描述通过 Technique Head Test。
+- Camera / Audio / Aftermath 描述不做 Technique Head Test；Accent 只检查是否有真实 Impact Anchor。
+
+#### A. Concrete Technique Preservation
 
 对每个 Active Technique Clause 依次问：
 
@@ -1154,16 +1157,46 @@ Failure：
 
 > **Concrete Technique Serialization Leakage**
 
-修复路径必须是**局部替换，而不是扩动作量**：
+#### B. Impact Force Causality Preservation
+
+对每个 meaningful Force-bearing Contact，再问：
 
 ```text
-定位当前漏网 Action Clause
+1. Concrete Contact Anchor 是否仍明确？
+2. Readable Force Response 是否仍存在？
+3. 最重要的 Combat State Consequence 是否仍存在？
+4. Reaction 是否仍可读为由当前 Contact 导致，而不是受击者自主后退 / 后仰 / 飞出？
+5. 是否只剩“猛烈 / 沉重 / 强力 / 震撼”等 adjective-only impact？
+6. 若上游为 I3，Concrete Impact Anchor + highest-value Force Response + Motion Carry-over 是否仍保留？
+```
+
+此处**不重新计算 I1 / I2 / I3，不重新做 Modality Selection，也不重新规划 Impact**。Final Scan 只验证上游已经成立的 Impact Semantics 有没有在 Assembly / Adapter 最后一公里丢失。
+
+若 Force Causality 被压坏，判：
+
+> **Impact Force Causality Serialization Leakage**
+
+典型 FAIL：
+
+```text
+上游：掌根推中上胸 → 肩轴被推偏 → 承重脚跨步 → 前冲趋势继续压入
+Adapter：她猛烈击中他，他被强力击退
+```
+
+#### C. Local Repair Only
+
+Technique 或 Impact 任一失败时，修复必须是**局部恢复，不是扩动作量**：
+
+```text
+定位漏网 Action Clause
 → 回看已确认 Combat System / Current State / Stage-2 Pattern Detail
-→ 选择一个已经合法的具体 Contact Mechanic
-→ 只重写当前句的动作 Head / 接触关系
+→ 对 Technique：恢复一个已经合法的具体 Contact Mechanic
+→ 对 Impact：恢复上游已经验证的 Contact / Force Response / State Consequence / 必要 Motion Carry-over
 → 保留原有 Result / Continuation / Camera Handoff
 → 不新增 Exchange
 → 不改变 Advantage / Ending
+→ 不重新计算 Impact Salience
+→ 不为了“打击感”自动添加 shake / slow motion / hit-stop / 音效
 → 不机械增加生物力学细节
 ```
 
@@ -1171,13 +1204,13 @@ Failure：
 
 ```text
 “低线干扰他的承重小腿，迫使他换支撑”
-→ 只把“低线干扰”解析成一个具体动作，不改后面的换支撑结果与 Action Spine。
+→ 只把“低线干扰”恢复为已经合法的具体动作，不改后面的换支撑结果与 Action Spine。
 
-“用腿部绊阻破坏她的支撑，形成摔控威胁”
-→ 只把“腿部绊阻”解析成当前 Grappling State 下的具体脚 / 小腿接触关系，不新增第二个摔法。
+“掌根命中后他被猛烈击退”
+→ 只恢复已在 Impact Gate 成立的肩轴 / 支撑 / Motion Carry-over 因果，不新增第二次攻击或额外特效。
 ```
 
-Final Scan 的目标是**防止具体动作在序列化最后一公里重新变抽象**，不是扩大 Prompt。
+Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化最后一公里重新变抽象**，不是扩大 Prompt，也不是建立第二套 Impact Runtime。
 
 ---
 
@@ -1215,7 +1248,7 @@ Final Scan 的目标是**防止具体动作在序列化最后一公里重新变�
 6. **Stage-2 Traceability**：Regression / Debug 是否存在 Gap → Slot → Pattern → Phrase 证据？
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
-9. **Concrete Technique Resolution + Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后实际 Final Prompt 是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法 / 低线干扰承重小腿 / 腿部绊阻破坏支撑 / 身体压迫改变朝向` 等 Abstract / Category-disguised Action Head？是否仍要求模型在多个不同 Mechanic 中自行任选？
+9. **Concrete Technique + Impact Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后是否仍要求模型在多个不同 Mechanic 中自行任选；meaningful Force-bearing Contact 的 Concrete Contact Anchor、Readable Force Response、关键 Combat State Consequence 是否仍在；是否出现 `Concrete Technique Serialization Leakage` 或 `Impact Force Causality Serialization Leakage`；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍保留？
 10. **Impact Realization + Motion Carry-over**：meaningful Force-bearing Contact 是否满足 `Concrete Contact + Readable Force Response + Combat State Consequence`；是否通过对应 Modality PASS；是否出现 Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset、State-disconnected Reaction、Impact / Aftermath Duplication、Accent Without Anchor；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍存在？
 11. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
 12. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
