@@ -128,6 +128,89 @@ attacking_surface_or_weapon: context-dependent
 
 修复只回当前 Pattern Realization，不扩知识库、不改 Exchange Spine、不机械增加动作数量。
 
+### 1.4 Concrete Action Selection Gap → Catalog Read
+
+当 Pattern-to-Action Resolution 已经知道“这一拍需要什么功能”，但仍存在 **两个或以上同层、互斥的具体动作 Head** 都看起来合理时，不允许把选择继续留给 Final Prompt 或视频模型。
+
+典型信号：
+
+```text
+侧踹 / 前蹬
+侧踢 / 低抽
+短拳或掌缘
+掌根或拳面
+勾扫 / 低踢 / 踩位三选一
+```
+
+此时正式判定：
+
+> **Concrete Action Selection Gap**
+
+并执行：
+
+```text
+Current State
++ Combat Role Need
++ Opponent Action / Response Need
++ Physical Presentation Domain
++ Required Resulting State
+→ READ action-reference-catalog.md
+→ filter by Prerequisites
+→ filter by Min / Default / Max Physical Level
+→ filter by Combat Role
+→ filter by Response Compatibility
+→ filter by State Transition / Initiative / Tempo / Risk
+→ select ONE concrete action
+→ realize into current Action Phrase
+```
+
+Catalog 路径：
+
+`references/libraries/combat-choreography-patterns/action-reference-catalog.md`
+
+Catalog 是候选知识，不是封闭动作全集。若 Catalog 没有合适条目：
+
+- 不强塞 Catalog 动作；
+- 回到当前 Fighting / Martial / Weapon / Pattern 专业知识；
+- 但 Runtime 仍必须自己选定一个具体动作 Head。
+
+#### Single Concrete Action Gate
+
+进入 Prompt Assembly 前，对所有承担关键攻防因果的 Technique Head 做一次扫描：
+
+```text
+是否仍存在 “A / B”
+是否仍存在 “A 或 B”
+是否仍存在 “A、B、C 任选”
+是否仍把多个互斥动作作为同一拍候选
+```
+
+若存在，判：
+
+> **Concrete Action Choice Leakage / RF-17 FAIL**
+
+必须回到当前 Concrete Action Selection，选定一个动作后再继续；禁止把这个决定交给模型。
+
+允许的不是“候选”，而是真实同时发生的复合动作，例如：
+
+```text
+左前臂拨开直拳，同时右掌根推击胸口
+```
+
+这里两个动作具有明确的并发关系，不属于 `A/B` 未决选择。
+
+Regression / Debug 时，如果触发 Catalog，至少留下：
+
+```text
+Concrete Action Selection Gap
+→ Catalog Read Evidence
+→ Candidate Filter Basis
+→ Selected Action ID / Canonical Name
+→ Realized Concrete Action Phrase
+```
+
+只读取 Catalog、但 Final Prompt 仍保留 `/`、`或` 等同层动作候选，不算 Catalog Wiring PASS。
+
 ---
 
 ## 2. Shared Core Schema
@@ -389,6 +472,7 @@ FAIL 示例逻辑：
 - 关键 Exchange 不再反复依赖“前臂偏转 → 肩线封堵 → 抓腕 / 顶肩”；
 - Pattern Hit 可以从 `Gap → Slot → Pattern → Detail → Concrete Phrase` 被追踪；
 - Technique Pattern 不得以 Pattern 名 / intent / 类别词直接进入 Final Prompt，必须完成 Pattern-to-Action Resolution；
+- **若 Pattern Resolution 仍有多个具体动作候选，必须触发 Concrete Action Selection Gap → Catalog Read → 单一动作选择；Final Prompt 不得保留 `/`、`或` 等同层动作候选。**
 - 不同角色已确认的 System / Expression / Archetype 不因共享本最小集而被同质化；
 - 仍保持 V2-49 的具体因果与 Motion / Initiative Handoff；
 - 不因为更具体而把 15 秒压缩回少量大 Phrase。
