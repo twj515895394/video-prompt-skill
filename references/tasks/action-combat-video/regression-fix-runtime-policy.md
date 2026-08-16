@@ -33,6 +33,7 @@ Confirmed Per-Character Planning Context
 → Pass 2: Selective Concrete Expansion
 → Movement Causality Check
 → Concrete Technique Resolution Gate
+→ Impact Realization Gate
 → Impact Aftermath / Damage Continuity Gate
 → Granularity / Exchange Density Check
 → Concrete Compression
@@ -578,9 +579,120 @@ Concrete 不等于把每个动作都写成生物力学说明书：
 
 > **先把“做什么”说具体，再按 Granularity 决定“解释多少”。**
 
-### 9.2 Impact Aftermath / Damage Continuity Gate
+### 9.2 Impact Realization Gate
 
-当 Concrete Action 中已经发生**有效打击、抓扯、摔撞、压迫、拖拽或环境碰撞**时，Runtime 不能只描述即时运动反应，还必须判断该接触是否会留下后续镜头可见的 **Aftermath State**。
+当 Concrete Technique 已形成 meaningful force-bearing contact 时，Runtime 必须在进入 Aftermath 前先完成即时受力语义。Impact 负责**当前 Force Event 的立即动力学与下一拍状态后果**；Aftermath 不再重新规划这一层。
+
+最低 PASS：
+
+```text
+Concrete Contact
++ Readable Force Response
++ Combat State Consequence
+```
+
+先做定性 Salience 判断，不做数值评分：
+
+```text
+Effective Contact?
+→ Meaningful Force / Combat State Consequence?
+→ Major Force / Tactical / Narrative Salience?
+→ I1 Minimal / I2 Standard / I3 Emphasized
+```
+
+展开深度自适应：
+
+- **I1**：保留接触 + 最必要 Force Response / State Change；
+- **I2**：清晰保留 Force Response + Continuation；
+- **I3**：在 I2 基础上可额外保留 1–2 个最高价值 Force Transmission / Recovery / Perceptual Anchor。
+
+不按 Technique 名称硬编码 Salience，也不建立 Force Meter / Momentum Meter / 物理数值模拟。
+
+六类 Contact 只做极薄的 Modality PASS：
+
+```text
+Strike
+→ concrete contact point / body relationship
++ local reaction
++ axis / support / balance / range / opening 中至少一种后果
+
+Block / Parry / Interception
+→ force meets defensive structure
++ force 被截停 / 改向 / 吸收中的真实一种
++ structure / attack line / support / opening 后果
+
+Grapple / Clinch / Body Pressure
+→ pressure / body relationship established
++ force 持续进入对方结构
++ forced step / rotation / range compression / support change 中至少一种
+
+Throw / Takedown
+→ balance / support 失效原因
++ body redirection / acceleration
++ landing / ground-state / recovery 即时后果
+
+Weapon Clash
+→ concrete weapon contact
++ deflection / bind / rebound / vibration 中真实一种
++ weapon line / opening / hand–arm–body structure 后果
+
+Body–Environment Collision
+→ body 与具体 material / object 的方向性碰撞
++ deceleration / rebound / compression 中真实一种
++ position / recovery consequence
+```
+
+统一验收：删除“猛烈 / 强力 / 沉重 / 震撼”等形容词后，仍应读得出该 Contact 的真实受力机制。
+
+#### Motion Carry-over
+
+Impact 是 Motion Handoff 的转换节点，不是动作结束点：
+
+```text
+Incoming Motion
+→ Contact / Force Exchange
+→ Motion 被保留 / 传递 / 改向 / 截停 / 吸收 / 反弹中的真实一种
+→ Post-impact Motion Carry-over
+→ Immediate Continuation Entry
+```
+
+默认禁止 Contact 后自动 Neutral Reset。下一拍必须消费仍然成立的 Body / Range / Support State 与 Motion Carry-over；只有真实 recovery、战术停顿或用户 / 风格明确要求时才允许运动趋势结束。
+
+#### Impact Accent Intent
+
+只有需要额外感知强调时才生成：
+
+```text
+Concrete Impact Anchor
++ Perceptual Goal
++ optional Channel Eligibility
+```
+
+Impact 只回答 **What should be felt?**，不直接指定 camera shake、slow motion、hit-stop、具体音效等实现；Camera / Audio Runtime 保留执行权。
+
+Impact Gate 不新增固定 Final Prompt Section。必要 Force Causality 应融合进现有 Concrete Action Phrase。
+
+Failure 可判：
+
+- `Adjective-only Impact`；
+- `Self-propelled Reaction`；
+- `Contact Freeze`；
+- `Neutral Reset`；
+- `State-disconnected Reaction`；
+- `Impact / Aftermath Duplication`；
+- `Accent Without Anchor`。
+
+对于 I3，最终至少保住：
+
+```text
+Concrete Impact Anchor
++ highest-value Force Response
++ Motion Carry-over
+```
+
+### 9.3 Impact Aftermath / Damage Continuity Gate
+
+当 Impact Realization 已确认有效 Contact / Force Event 后，本 Gate 只判断该事件是否形成**需要当前或后续镜头记住的可见 / 材质 / 环境 Delta State**。它消费 Impact 已经成立的 Contact、Immediate Force Response 与 Combat State Consequence，不再重新规划“身体如何被打动 / 改向 / 失衡”。
 
 本 Gate 覆盖三类可见对象：
 
@@ -594,9 +706,8 @@ Human / Body
 
 ```text
 Initial Baseline State
-→ Effective Contact / Force Event
-→ Immediate Physical Response
-→ Event-caused Delta State is born here
++ Validated Impact / Force Event
+→ Event-caused Visible Delta State is born here
 → Aftermath Lifetime Classification
 → Transient Decay / Persistent Continuity / Progressive Accumulation
 ```
@@ -609,7 +720,7 @@ Initial Baseline State
 - 额头 / 眉骨 / 脸颊受到明确撞击 → 局部泛红、擦伤或逐渐显现的轻度紫红淤痕；
 - 前臂 / 手背 / 膝部与墙面、地面发生明显摩擦或撞击 → 局部红印、擦痕或轻微磨伤。
 
-不是每次触碰都必须留下伤痕。轻微封挡、擦碰、无明显承伤的 Contact 可以只有运动 / 受力反馈；**只有动作本身已经被描述为有效命中、重撞或持续压迫时，才检查可见后果。**
+不是每次触碰都必须留下伤痕。轻微封挡、擦碰、无明显承伤的 Contact 可以只有 Impact 层的运动 / 受力反馈；**只有已验证 Force Event 足以产生可见后果时，才在本 Gate 创建 Aftermath Delta。**
 
 #### Damage Onset Timing / Injury Birth Contract
 
@@ -1105,12 +1216,13 @@ Final Scan 的目标是**防止具体动作在序列化最后一公里重新变�
 7. **Duration-aware Planning**：是否先考虑时长与 Active Coverage，再展开细节？
 8. **Exchange Spine**：是否先有完整轻量 Combat Spine，再做局部 High-detail？
 9. **Concrete Technique Resolution + Final Scan**：关键 Technique 是否已经从 Pattern / 类别词实例化成具体动作；Adapter 后实际 Final Prompt 是否仍出现 `全身连动短击 / 短促身体控制 / 低线腿法 / 低线干扰承重小腿 / 腿部绊阻破坏支撑 / 身体压迫改变朝向` 等 Abstract / Category-disguised Action Head？是否仍要求模型在多个不同 Mechanic 中自行任选？
-10. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
-11. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
-12. **Exchange Density**：是否因过度展开只剩少量大动作？
-13. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
-14. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的新伤 Injury Trigger / Onset 表达，只留下全局最终伤势结果；也不能把 Baseline 旧伤误删或误改成新伤。
-15. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
+10. **Impact Realization + Motion Carry-over**：meaningful Force-bearing Contact 是否满足 `Concrete Contact + Readable Force Response + Combat State Consequence`；是否通过对应 Modality PASS；是否出现 Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset、State-disconnected Reaction、Impact / Aftermath Duplication、Accent Without Anchor；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍存在？
+11. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
+12. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
+13. **Exchange Density**：是否因过度展开只剩少量大动作？
+14. **Concrete Compression**：Medium / Low 是否短但仍明确可执行？
+15. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的新伤 Injury Trigger / Onset 表达，只留下全局最终伤势结果；也不能把 Baseline 旧伤误删或误改成新伤。
+16. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 
 如果任何关键 Gate 失败，优先回到对应 Failure Layer 修复；不要第一反应扩知识库。
 
@@ -1128,9 +1240,10 @@ Final Scan 的目标是**防止具体动作在序列化最后一公里重新变�
 - 固定 Technique 动词白名单 / 固定招式字典；
 - 固定动作数 / Exchange 数；
 - 固定腿法 / 换位次数；
+- 固定 Force / Impact 数值模型或持久 Meter；
 - 固定受伤数量 / 固定流血次数 / 每击必留伤；
 - 固定衣物破损或环境破坏配额；
 - 第二套 Camera Runtime；
 - 固定 Skeleton 模板。
 
-本轮目标是修复消费顺序、选择权重、动作密度、Concrete Technique 最终序列化、Aftermath Baseline / Delta 出生时刻与生命周期、Final Negative 边界与序列化，不是增加系统层数。
+本轮目标是修复消费顺序、选择权重、动作密度、Concrete Technique 最终序列化、Impact Force Causality / Motion Carry-over、Aftermath Baseline / Delta 出生时刻与生命周期、Final Negative 边界与序列化，不是增加系统层数。
