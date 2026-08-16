@@ -9,6 +9,7 @@
 - Character Combat Expression；
 - optional Per-Character Cinematic Combat Archetype；
 - optional Combat Rhythm / Macro Tempo Strategy；
+- conditional Physical Presentation Domain / Scale Resolution；
 - Derived Choreography Direction 输入。
 
 它只负责 Interactive 决策暴露与推荐策略，不替代 `core-playbook.md`、`choreography-playbook.md`、Stage-2 Pattern Selection、Camera 或 Final Preflight。
@@ -651,6 +652,167 @@ Combat State = local tempo authority
 
 ---
 
+## 4B. Physical Presentation Resolution Gate（conditional）
+
+Physical Presentation 回答的是：
+
+> **这场战斗遵循什么物理 / 电影表现尺度？**
+
+它与 Combat System 正交：同一套太极、散打、MMA、Hybrid 或兵器体系，都可以在不同 Physical Presentation Domain 下呈现；不得由“现代 / 中国 / 杀手 / 武术门派”等身份或体系名称自动锁定物理尺度。
+
+### 4B.1 Resolution Timing
+
+Physical Presentation **不新增固定 Round 3 / Round 4**。在当前 Interactive 高价值链路中：
+
+```text
+Combat System / Expression / optional Archetype
+→ conditional Rhythm
+→ conditional Advantage / Ending
+→ Camera Base Viewing Priority
+→ Camera Hard Constraint（仅在用户指定或高价值歧义时）
+→ Physical Presentation Resolution Check
+→ RF-22 Interactive Planning Completion Gate
+→ Runtime Direct READ
+```
+
+也就是说，Physical Presentation Resolver 必须发生在 **Camera Base Viewing Priority 已 resolved 之后、Completion Gate 之前**。不得在 Camera 后直接以“规划已齐”为由跳过本 Check。
+
+### 4B.2 Resolution Paths
+
+Physical Presentation 只能通过以下三种合法来源进入 `resolved`：
+
+```text
+explicit
+= 用户当前明确选择 / 指定物理尺度
+
+inherited
+= 用户在更早输入中已经明确给出兼容且无冲突的物理尺度约束
+
+silent-default
+= 已执行本 Gate 的低歧义检查，且满足允许静默默认的条件
+```
+
+任何其他“根据题材感觉应该是……”的推断，不算 resolved。
+
+### 4B.3 MUST expose / High-value Ambiguity
+
+当用户尚未明确 Physical Presentation，且以下任一情况成立时，必须暴露给用户，不能静默默认：
+
+1. 当前 Specialist 内至少两个合理尺度都会明显改变人物的 **腾跃 / 支撑 / 惯性 / 受力 / 恢复成本 / Range / Environment Impact / Model Execution Realizability**；
+2. 用户明确要“电影片段 / 电影感 / 功夫电影 / 动作片”，但没有说明是严格写实、常规电影化还是强化动作尺度，而这些路线都会合理改变最终 Action Spine；
+3. 当前 Combat System / Archetype / Scene 同时支持 grounded 与明显更 cinematic 的两种高价值实现，例如 Hybrid / whole-body martial movement、环境动作、武侠身法等；
+4. 用户明确了 `无威亚 / 无超自然 / 写实` 等限制，但当前 Specialist 仍存在两个以上兼容且成片差异明显的尺度，需要用户决定更严格还是更电影化；
+5. 任何 Level 3 / 强化动作片 / 高武武侠方向是当前真实合理候选，而用户没有明确授权这种明显改变人体物理与身法上限的尺度。
+
+命中 MUST expose 时：
+
+```text
+Physical Presentation Resolution Evidence
+source = pending-user-selection
+specialist = current specialist
+level = unresolved
+status = unresolved
+
+→ 向用户提出当前一个 Physical Presentation 问题
+→ 等待用户选择 / 自定义 / 明确授权自动决定
+→ 未回复前 Pending User Decision = PRESENT
+→ RF-22 Completion Gate 必须 FAIL
+```
+
+### 4B.4 MAY resolve silently / Conservative Intent-driven Default
+
+只有不存在 4B.3 的高价值歧义时才允许静默 resolved。
+
+优先顺序：
+
+1. **用户明确写实 / 无威亚 / 无超自然 / 现实人体合理范围**
+   - 当前为 Modern Specialist：继承为 Modern Level 1；
+   - 当前为 Wuxia Specialist：继承为 Wuxia Level 1；
+   - `source = explicit` 或 `inherited`，不是 silent guess。
+
+2. **用户明确“电影化现代动作 / 现代动作片”且没有要求夸张人体物理**
+   - 可静默落到 Modern Level 2；
+   - `source = inherited` 或 `silent-default`，取决于是否已经形成明确可继承意图。
+
+3. **用户明确“电影武侠 / 武侠片”且没有要求高武 / 超自然**
+   - 可静默落到 Wuxia Level 2；
+   - `source = inherited` 或 `silent-default`。
+
+4. **普通现实题材，没有电影化尺度意图，也不存在其他高价值物理分叉**
+   - 默认 Modern Level 1；
+   - `source = silent-default`。
+
+5. **Level 3 永远不得仅凭题材静默推导**
+   - Modern Level 3 / Wuxia Level 3 必须由用户明确要求、明确选择，或用户明确授权 Runtime 在已经暴露的高价值分叉中代为决定；
+   - “电影 / 功夫 / 杀手 / 高手”本身都不足以自动升级到 Level 3。
+
+如果两个兼容 Level 会明显改变腾跃、受力、恢复、环境破坏、动作可执行性或整体 Action Spine，则不得使用 silent-default，必须回到 4B.3 暴露。
+
+### 4B.5 Candidate Source / Single Source of Truth
+
+当 Physical Presentation 必须暴露时，**不在本 Policy 复制一套固定 Level 文案**。
+
+候选必须从当前已经命中的 Specialist 真源动态生成：
+
+```text
+Modern Specialist
+→ references/tasks/action-combat-video/modern-combat-playbook.md
+→ 使用其当前 Level 1 / 2 / 3 电影化尺度定义
+
+Wuxia Specialist
+→ references/tasks/action-combat-video/cinematic-wuxia-playbook.md
+→ 使用其当前 Level 1 / 2 / 3 电影化物理尺度定义
+```
+
+本 Policy 只负责：
+
+- 决定是否暴露；
+- 过滤与用户硬限制冲突的候选；
+- 根据已确认 Intent 标注推荐；
+- 收集用户选择；
+- 生成 Resolution Evidence。
+
+例如用户明确 `无威亚 / 无超自然` 时，不得继续把与该硬限制冲突的高尺度实现作为合法候选；但也不能把“无超自然”错误解释成必须全程无电影化动作。
+
+### 4B.6 Physical Presentation Resolution Evidence
+
+`Physical Presentation Domain resolved?` 不能只靠模型主观判断。进入 RF-22 Completion Gate 前，内部必须存在本次执行的轻量 Evidence：
+
+```text
+Physical Presentation Resolution Evidence
+source: explicit | inherited | silent-default
+specialist: modern | wuxia
+level: 1 | 2 | 3
+constraints: 当前用户明确的相关硬限制（没有则 none）
+status: resolved
+```
+
+如果该 Evidence 不存在、`level = unresolved`、`status != resolved`，或 source 无法落在三种合法来源中：
+
+```text
+Physical Presentation Domain = unresolved
+→ Interactive Planning Completion Gate = FAIL
+→ DO NOT READ regression-fix-runtime-policy.md
+→ 返回 Interactive 解决该字段
+```
+
+特别禁止：
+
+```text
+Camera 已选择
+→ “规划已齐”
+→ 没有 Physical Presentation Resolution Evidence
+→ 直接 READ Runtime Policy
+```
+
+这仍属于：
+
+> **RF-22 Early Direct Read / Planning Completion Gate Failure**
+
+Resolution Evidence 是轻量 Gate Evidence，不要求对普通用户展示，也不建立完整状态机。
+
+---
+
 ## 5. Combat System 与 Cinematic Archetype 必须分层
 
 ```text
@@ -686,6 +848,12 @@ System Refinement / Hybrid Refinement（if explicit）
 Per-Character Combat Expression
 Per-Character Cinematic Combat Archetype（optional）
 Physical Presentation Domain
+Physical Presentation Resolution Evidence
+  - source: explicit | inherited | silent-default
+  - specialist: modern | wuxia
+  - level: 1 | 2 | 3
+  - constraints
+  - status: resolved
 Combat Rhythm / Macro Tempo Strategy（if exposed; otherwise Dynamic Wave）
 Tempo Adaptation = Adaptive by Combat State（default）
 Scene / Range / Environment / Intent
@@ -745,15 +913,23 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
    - 用户选择 Macro Strategy 后，受击、疼痛、抱控、摔倒、喘息、疲劳是否仍能合法改变 Local Tempo；
    - 是否没有把 Combat Tempo 与 Camera Cut Frequency / Active Coverage 混为一谈。
 
-8. **Post-Planning Handoff Boundary**
+8. **Physical Presentation Resolution Gate**
+   - Camera Base Viewing Priority resolved 后、RF-22 Completion Gate 前是否真实执行 Physical Presentation Resolution Check；
+   - 高价值物理 / 电影尺度歧义是否实际暴露，而不是凭“电影 / 杀手 / 功夫”静默默认；
+   - 低歧义静默默认是否遵守 Conservative Intent-driven Default；
+   - Level 3 是否从不因题材被静默升级；
+   - 暴露候选时是否使用当前 Specialist 的 Level 定义，而没有在本 Policy 复制第二套正文；
+   - Completion Gate 前是否存在合法 `Physical Presentation Resolution Evidence`；没有 Evidence 时不得判 Planning Complete。
+
+9. **Post-Planning Handoff Boundary**
    - 本 Policy 完成 Interactive 角色级决策后是否没有直接进入 Stage-2 / Final Assembly；
    - 是否交回 `SKILL.md` 主路由，由 RF-22 负责真实 Direct READ / Read Evidence Gate。
 
-9. **Archetype Consumption / Realization**
+10. **Archetype Consumption / Realization**
    - 选中 Archetype 后必须在 Post-Planning Runtime 中进入对应 Runtime Bias；
    - 不能只在 Prompt 写明星名字。
 
-10. **No Static Standing Shortcut**
+11. **No Static Standing Shortcut**
    - 选择 Hybrid 或任何 Archetype 不等于自动 PASS；
    - Final Preflight 仍必须检查 Static Standing Combat / Upper-body Technique Dominance / Movement Causality。
 
@@ -764,6 +940,9 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 不新增：
 
 - Round 3；
+- 固定 Physical Presentation 问卷；
+- 本 Policy 内复制 Modern / Wuxia Level 1 / 2 / 3 详细定义；
+- 因“电影 / 功夫 / 杀手 / 高手”静默升级到 Level 3；
 - generic `电影动作表达参考` 独立问卷；
 - 固定 Rhythm 百分比问卷；
 - 把 Macro Rhythm 曲线写成逐秒硬时间表；
@@ -781,6 +960,8 @@ Archetype 名称不得只作为标签丢给 Final Prompt；最终 Prompt 应优�
 > **用户决定高价值动作方向；Runtime 负责把专业动作知识补完整。**
 
 > **Macro Rhythm defines intent; Combat State controls local tempo.**
+
+> **Physical Presentation must be explicitly resolved, not assumed complete.**
 
 > **Dynamic recommendation breadth, not a fixed questionnaire.**
 
