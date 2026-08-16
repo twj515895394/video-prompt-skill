@@ -189,7 +189,26 @@ Current Body / Range State
 
 关键问题是：视频模型是否能从文字中理解当前身体 / Range、具体动作、Contact / Evasion、即时响应、空间 / 轴线后果，以及下一动作为什么可以立刻继续。
 
-### 5.2 Movement + Technique + Transition 构造
+### 5.2 Force / Impact Realization Contract
+
+所有 **meaningful force-bearing contact** 必须至少满足：
+
+```text
+Concrete Contact
+→ Readable Force Response
+→ Combat State Consequence
+```
+
+关键 Impact 可按需外显 Force Delivery / Transfer、Local / Whole-body Reaction、Follow-through / Recoil / Deceleration、Recovery Burden 与 Post-impact Motion Carry-over；这些是可选信息维度，不是固定步骤，也不建立独立 Physics State。
+
+Contact 之后必须能读出原有运动趋势如何被保留、传递、改向、截停、吸收或反弹，并让下一动作从新的 Body / Range / Support / Motion State 继续。除非真实动作或节奏明确要求停顿，否则不得默认 Neutral Reset。
+
+Final Prompt 默认把必要 Force Causality 融合进现有 Action Phrase，不新增固定 Impact 段；Camera / Audio / Timing 只能强化真实 Contact，不得替代它。
+
+> **Impact Semantics Internalized, Force Causality Serialized.**  
+> **Contact changes motion; it does not automatically terminate motion.**
+
+### 5.3 Movement + Technique + Transition 构造
 
 当 Stage-2 需要具体执行知识时，优先使用三类互补 Pattern：
 
@@ -208,7 +227,7 @@ Transition Pattern
 
 Movement 不能退化为“给上肢动作补一句脚步”；如果它真正参与 Choreography，应该主动改变至少一类 Level / Route / Axis / Range / Position / Support / Balance / Ground-State。
 
-### 5.3 抽象动作词只能做摘要，不能替代关键动作
+### 5.4 抽象动作词只能做摘要，不能替代关键动作
 
 以下表达可以用于 Derived Choreography Direction / Rhythm 摘要、次要过渡或局部压缩，但不能单独承担关键 Active Exchange：
 
@@ -224,7 +243,7 @@ Movement 不能退化为“给上肢动作补一句脚步”；如果它真正�
 
 如果删除“高速 / 连续 / 专业 / 高密度 / 反制 / 缠斗”等抽象词后，仍无法说清人物具体做了什么，这个 Phrase 颗粒度不足。
 
-### 5.4 细化不等于逐招机械枚举
+### 5.5 细化不等于逐招机械枚举
 
 禁止把颗粒度提升误实现成：
 
@@ -238,7 +257,7 @@ Movement 不能退化为“给上肢动作补一句脚步”；如果它真正�
 > **关键因果动作具体，次要过渡动作可以压缩。**  
 > **细节服务连续执行，不服务文字复杂度。**
 
-### 5.5 Lightweight Granularity Distribution
+### 5.6 Lightweight Granularity Distribution
 
 颗粒度控制的是**信息展开深度**，不是动作数量配额：
 
@@ -283,6 +302,8 @@ Active Exchange 时间窗不能用 3–4 秒只承载一个宏动作来假装高
 ### 6.2 Combat Action Interlock / Motion Handoff
 
 连续动作至少应继承一类当前状态：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position、Environment State。
+
+若前一动作形成 meaningful force-bearing contact，下一动作必须继承其 Post-impact Motion / Body / Range / Support consequence；不得把 Contact 默认解释成 Neutral Reset。Force / Impact 的长期语义真源见 `5.2 Force / Impact Realization Contract`。
 
 High Coverage / Expert Exchange 中，Neutral Reset 应是稀缺、有意图的节奏事件；禁止默认模式：
 
@@ -513,18 +534,7 @@ Environment 应尽量推动 fight-space 流动，而不是把人物永久锁在�
 
 ## 11. Combat Contact Solidity
 
-所有主要 Contact Event 服从通用实感链：
-
-```text
-Commitment
-→ Contact
-→ Force / Energy / Pressure Transfer
-→ Reaction Propagation
-→ State Consequence
-→ Recovery / Continuation
-```
-
-按 Strike、Grapple / Control、Takedown / Throw、Blunt Weapon、Blade、Weapon Clash、Environment Impact 等模态采用不同证据。
+Force / Impact 的长期生成语义真源见 `5.2 Force / Impact Realization Contract`。本节只补充不同 Contact Modality 的证据差异：Strike、Grapple / Control、Takedown / Throw、Blunt Weapon、Blade、Weapon Clash、Environment Impact 必须使用与自身机制一致的 Contact / Response / Consequence，而不能全部退化成同一种“受到强烈冲击 → 后退”。
 
 Camera / Audio 只能强化，不能替代真实接触、受力与后果。
 
