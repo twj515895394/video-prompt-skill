@@ -1,107 +1,140 @@
 # Combat Choreography Patterns Index
 
-> Runtime status: **RF-22 FREEZE / new action catalog is NOT runtime-wired**  
-> 本索引只负责本目录内部职责导航，不改变 `SKILL.md`、Action Combat Task Router、Stage-2 Mandatory Path 或当前 Library 加载预算。
+> Runtime status: **ACTIVE — Abstract Pattern + Concrete Action Reference 双层知识已接入**
 
-## 1. 目录职责
+本索引负责 Action Combat Stage-2 的动作生产知识路由，不定义 Battle Beat、Exchange Spine、Camera、Advantage 或最终胜负。
 
-本目录保存 Action Combat Stage-2 可用的“动作生产 / 具体动作参考知识”。
+---
 
-必须区分两种不同颗粒度：
+## 1. 双层知识结构
 
 ```text
 Abstract Choreography Pattern
-→ 告诉 Runtime 当前 Movement / Technique / Transition 缺口可以怎样被解决
+→ 回答当前 Movement / Technique / Transition 缺口可以怎样解决
 
 Concrete Action Reference
-→ 告诉 Runtime 一个具体单动作怎样成立、适合回应什么、会改变什么状态、具有怎样的节奏 / 风险 / 物理表现
+→ 回答当前 State 下具体可以选什么动作、该动作怎样成立、会造成什么状态变化
 ```
 
-两者互补，不互相复制正文。
+两层互补，不复制正文，也不要求每次同时加载。
 
 ---
 
-## 2. 当前文件
-
-### `minimum-validation-set.md`
-
-**当前正式 Runtime Leaf。**
+## 2. `minimum-validation-set.md`
 
 职责：
 
-- CK-18 / RF-22 当前 Stage-2 最小验证知识；
-- Movement / Technique / Transition 三类抽象 Pattern；
+- Movement / Technique / Transition 抽象 Pattern；
 - Pattern Hit Evidence；
-- Pattern-to-Action Resolution；
-- 当前 G01 Regression 的运行期知识证据。
+- Pattern-to-Action Resolution 基础约束；
+- CK / RF 系列当前 G01 Regression 的 Stage-2 抽象知识证据。
 
-RF-22 关闭前保持冻结。本轮不得为了新动作库修改其 Pattern、Schema、路由或样例。
-
-### `action-reference-catalog.md`
-
-**新建 Concrete Action Reference Knowledge；当前未接 Runtime。**
-
-职责：
-
-- 单动作模板作为最小知识颗粒度；
-- Combat Role / Response Compatibility / State Transition；
-- Physical Level Range；
-- Tempo / Commitment / Initiative；
-- Prerequisites / Environment Impact；
-- 前后动作衔接参考；
-- 把用户提供的 18 个动作素材抽象成可复用、模型无关的动作知识。
-
-它不是：
-
-- 固定 Combo；
-- Battle Beat Engine；
-- Camera Runtime；
-- Style Library；
-- Combat System / Martial Profile 的替代品。
-
-### `action-reference-validation.md`
-
-**静态知识验证文件；当前不参与生成。**
-
-职责：
-
-- Schema 完整性；
-- Core Action Mechanic 与视觉特效解耦；
-- Min / Default / Max Physical Level 合法性；
-- Combat Role 枚举约束；
-- Response / Transition 可执行性；
-- 去重与 Alias 检查；
-- 最小攻防链组合验证；
-- RF-22 Freeze 边界验证。
-
----
-
-## 3. 当前加载边界
-
-RF-22 关闭前：
+适用：
 
 ```text
-Stage-2 Runtime
-→ 继续按现有 Task Router 使用 minimum-validation-set.md
-
-Stage-2 Runtime
--X- 不读取 action-reference-catalog.md
+Planning / Phrase Gap 仍停留在“需要什么类型的 Movement / Technique / Transition”
+→ READ minimum-validation-set.md
+→ select Pattern
 ```
 
-本轮故意不做：
-
-- 不修改 `references/libraries/index.md` 的正式运行路由；
-- 不修改 `references/tasks/action-combat-video/index.md`；
-- 不修改 `SKILL.md`；
-- 不修改 `regression-fix-runtime-policy.md`；
-- 不增加默认 Library Detail Slot；
-- 不改变 G01 Regression 变量。
-
-RF-22 连续两次 PASS-NATIVE 后，再单独设计 Catalog Wiring / Selection Policy / Loading Budget。
+本轮不修改其正文，以便保留既有 RF-22 / RF-14～RF-20 回归基线知识。
 
 ---
 
-## 4. 单一真源边界
+## 3. `action-reference-catalog.md`
+
+职责：
+
+- 17 个来源动作知识化后的 Concrete Action Reference；
+- 8 个 Combat Role；
+- Response Compatibility；
+- 稀疏 State Transition；
+- Min / Default / Max Physical Level；
+- Tempo / Risk / Commitment / Initiative；
+- Prerequisites；
+- Environment Impact；
+- 前后动作衔接参考。
+
+适用：
+
+```text
+Stage-2 已知道当前需要的战斗功能
+但 Concrete Action 仍未确定
+→ Concrete Action Selection Gap
+→ READ action-reference-catalog.md
+→ filter by Prerequisites / Physical Level / Role / Response / Required Resulting State
+→ select one concrete action
+→ realize into current Action Phrase
+```
+
+也允许：
+
+```text
+当前 Gap 已经足够具体到单动作级
+→ 直接读取 Catalog 进行 Concrete Action Resolution
+```
+
+禁止：
+
+- 因为 Catalog 存在就每个 Phrase 都强塞一个 Catalog 动作；
+- 机械轮换 17 个动作；
+- 用 Action Name 代替完整可执行动作句；
+- 把 Combat Role / Initiative / Commitment 等内部标签直接输出给视频模型；
+- 为了适配较低 Physical Level 改写动作核。
+
+---
+
+## 4. Stage-2 推荐路由
+
+```text
+Combat Planning Context / Exchange Spine
+→ detect Execution Gap
+
+如果缺抽象解决策略：
+→ minimum-validation-set.md
+→ Pattern Selection
+
+如果缺具体动作：
+→ action-reference-catalog.md
+→ Concrete Action Selection
+
+必要时：
+Pattern → Catalog Action
+
+也可在 Gap 已明确时：
+Catalog Action directly
+
+→ Concrete Action Phrase
+→ State / Continuity Validation
+→ Final Prompt Serialization
+```
+
+Catalog 是按需 leaf knowledge，不新增“所有 Combat 必须多读一份 Library”的固定配额。
+
+---
+
+## 5. 选择顺序
+
+选择 Catalog 动作时按以下顺序过滤：
+
+```text
+1. Prerequisites 是否成立
+2. Selected Physical Level 是否在 Min / Max 内
+3. 当前需要的 Combat Role 是否匹配
+4. Incoming Action / Current State 是否符合 Response Compatibility
+5. State Transition 是否能产生 Exchange Spine 需要的下一状态
+6. Tempo / Risk / Initiative 是否符合当前局部节奏
+```
+
+如果没有合适动作：
+
+> **不强用 Catalog。回到现有 Fighting / Martial / Weapon / Pattern 知识生成其他动作。**
+
+Catalog 是新增候选知识，不是封闭动作全集。
+
+---
+
+## 6. 单一真源边界
 
 ```text
 Combat System / Technique Backbone
@@ -123,4 +156,17 @@ Battle State / Exchange Spine / Advantage / Coverage
 → Action Combat Task Playbooks / Contracts
 ```
 
-如果内容同时涉及多个层级，只在对应真源保存完整正文，其余位置只写引用关系。
+---
+
+## 7. 验证
+
+`action-reference-validation.md` 用于知识与接入验证，不是正常生成时必读 Reference。
+
+后续 RF-22 固定 G01 回归同时检查：
+
+- RF-22 Planning Completion / Runtime Read Timing；
+- 原有 RF-14～RF-20；
+- Catalog 是否只在 Concrete Action Selection Gap 时命中；
+- 是否产生具体动作而不是类别词泄漏；
+- 是否遵守 Physical Level / Prerequisites / Response / State Transition；
+- 是否没有导致 Prompt 冗余和动作过载。
