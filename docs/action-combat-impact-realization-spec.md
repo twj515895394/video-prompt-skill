@@ -43,17 +43,7 @@ Impact Realization 负责判断：
 
 > **这一击应该被感知成什么样。**
 
-它可以产出：
-
-```text
-Impact Salience
-Force / Contact Semantics
-Immediate Force Response
-Combat State Consequence
-Timing / Visual / Camera / Audio Accent Intent
-```
-
-但不直接控制 Camera / Audio，不写死 camera shake、slow motion、hit-stop、BOOM 等实现。
+它产出 Impact Salience、Force / Contact Semantics、Immediate Force Response、Combat State Consequence，以及必要的 Perceptual Accent Intent；但不直接控制 Camera / Audio，也不写死 camera shake、slow motion、hit-stop、BOOM 等实现。
 
 现有 Action–Camera Handoff / Audio Runtime 保留最终执行权。
 
@@ -61,14 +51,7 @@ Timing / Visual / Camera / Audio Accent Intent
 
 所有 meaningful force-bearing contact 都经过 Impact Realization Check，但展开深度自适应。
 
-典型适用：
-
-- Punch / Palm / Elbow / Knee / Kick；
-- Block / Parry / Interception；
-- Grapple / Clinch / Body Pressure；
-- Throw / Takedown / Slam；
-- Weapon Clash / Bind / Deflection；
-- Body–Environment Collision。
+典型适用：Punch / Palm / Elbow / Knee / Kick、Block / Parry / Interception、Grapple / Clinch / Body Pressure、Throw / Takedown / Slam、Weapon Clash / Bind / Deflection、Body–Environment Collision。
 
 通常不展开：纯佯攻、未接触闪避、无明显 Force Exchange 的轻触 / 探手。
 
@@ -283,6 +266,45 @@ Body 与具体 material / object 的方向性碰撞
 
 如果不同 Contact 最终都退化成“受到强烈冲击 → 身体后仰 → 退一步”，判 Realization 不足。
 
+### Decision 12 — Channel-agnostic Impact Accent Intent
+
+Impact Accent Intent 收敛成一个 **channel-agnostic Perceptual Intent**，而不是分别维护 Camera / Audio / Timing / Visual 四套输出槽位。
+
+最小语义：
+
+```text
+Impact Accent Intent
+= Concrete Impact Anchor
++ Perceptual Goal
++ optional Channel Eligibility
+```
+
+其中：
+
+- **Concrete Impact Anchor**：必须绑定已成立的具体 Contact / Force Response，而不是抽象“重击”；
+- **Perceptual Goal**：描述观众这一刻需要感受到什么，例如短距离硬接触、动量传入整身、力量方向突然被重新导向；
+- **Channel Eligibility**：仅在有必要时指出 Camera / Audio / Timing 等哪些下游渠道可以参与，不指定实现方式。
+
+Impact Realization 只回答：
+
+> **What should be felt?**
+
+Action–Camera Handoff / Audio / Timing 等既有下游机制回答：
+
+> **How should it be perceived?**
+
+因此 Accent Intent 禁止直接写死 camera shake、push-in、slow motion、hit-stop、具体音效等实现。
+
+Accent Intent 也不与 I1 / I2 / I3 做机械映射：
+
+```text
+I1 ≠ 必然无 Accent
+I2 ≠ 必然有 Accent
+I3 ≠ Camera + Audio + Slow-mo 全开
+```
+
+是否生成 Accent Intent，应综合 Impact Salience、当前 Viewer Readability 与 Narrative / Rhythm Need。
+
 ---
 
 ## 3. External Research Takeaways
@@ -315,11 +337,10 @@ Impact Realization 不替代 Movement Causality、Concrete Technique Resolution�
 
 ## 5. Pending Design Questions
 
-1. Impact Accent Intent 的最小输出语义；
-2. Impact 与 Motion / Energy Carry-over 的具体消费关系；
-3. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
-4. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
-5. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
-6. Regression Test / Failure Signature 的最小闭环。
+1. Impact 与 Motion / Energy Carry-over 的具体消费关系；
+2. Impact Realization 如何进入 Final Prompt，而不造成 Instruction Saturation；
+3. Prompt Assembly / Adapter / Final Preflight 需要新增哪些 preservation / failure checks；
+4. 哪些规则进入长期 Choreography Playbook，哪些只保留在 regression runtime；
+5. Regression Test / Failure Signature 的最小闭环。
 
 后续 Grill 每次只解决一个高依赖问题，并把已确认结论增量写回本 Spec。
