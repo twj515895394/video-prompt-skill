@@ -707,7 +707,7 @@ Final Draft
 
 - 用户已确认的创作决策、必须保留 / 必须修改 / 必须禁止项是否全部兑现；
 - Prompt 是否存在内部矛盾、动作 / 空间 / 时间 / 人物 / 道具 / 素材职责断裂；
-- 是否存在过度抽象、过度细化或 Instruction Saturation；
+- 是否存在过度抽象，或把画面维度写细误判为过载；独立主事件是否超出指定时长；
 - 主体动作与 Camera 是否有因果关系，Camera 是否抢走动作主体；
 - 多模态主真源与绑定是否在最终序列化中漂移；
 - Negative / Continuity 是否重复、过长或新增无依据限制；
@@ -727,7 +727,7 @@ Action Combat 还必须叠加：
 - Motion / Energy Carry-over；
 - Action–Camera / Perceptual Impact；
 - Camera Hard Constraint；
-- Instruction Saturation；
+- Main Event Overload（时长装不下过多独立主事件时提醒，不自动压缩细节）；
 - Combat Final Preflight。
 
 ### Silent Self-Repair 权限边界
@@ -738,7 +738,7 @@ Action Combat 还必须叠加：
 - 已确认内容在最终 Prompt 中的遗漏或弱化；
 - Derived Choreography Direction 的局部实现，只要不改变已确认角色级决策；
 - 动作、Camera、Continuity、Ending 的实现质量；
-- Instruction Saturation、重复描述、低价值 Camera / Audio / Negative；
+- 重复解释和空泛质量词，不删除已写清的画面维度；
 - 不改变高层决策的局部动作 / 镜头组织。
 
 不能静默改：

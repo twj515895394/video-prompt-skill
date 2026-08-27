@@ -280,9 +280,10 @@ Final Combat Prompt 遵循：
 - Combat 内部 Action / Camera / Audio 协同，但 Camera / Audio 不能替代 Choreography；
 - Combat 遵循 `Clarity Through Structure, Not Action Reduction`；
 - 多模态素材必须分配职责，禁止平均融合；
-- 一段视频必须有开始、推进和落点；
+- 一段视频必须有开始、推进和落点；默认生产单元 15 秒，细节靠结构密度而不是加长片长；
 - 全局固定项只写一次，动态部分只写变化；
 - 负向限制只针对当前最危险失败模式；
+- 同一镜头的画面、动作、光色、镜头写细不是过载；只有指定时长里独立主事件过多才提醒用户，不得自动压缩细节；
 - 不一次性读取整个目录；
 - 不把研究区 / source-cases 原始资料作为默认运行期 Reference。
 

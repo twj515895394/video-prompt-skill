@@ -12,7 +12,7 @@
 >
 > **Plan the whole exchange spine before expanding local detail.**
 >
-> **Concrete but compressed; rich in exchanges, not rich in redundant explanation.**
+> **Concrete and dimensionally detailed; overload is too many independent main events, not fine writing.**
 
 ---
 
@@ -36,7 +36,7 @@ Confirmed Per-Character Planning Context
 → Impact Realization Gate
 → Impact Aftermath / Damage Continuity Gate
 → Granularity / Exchange Density Check
-→ Concrete Compression
+→ Concrete Resolution（动作必须具体，不自动压缩画面维度）
 → Action–Camera Handoff（沿用现有 Runtime，不修改）
 → Prompt Assembly
 → Serialization Deduplication
@@ -262,11 +262,11 @@ Duration
 
 例如 15 秒 High Coverage Combat 的意义是：
 
-> **不能让所有普通 Exchange 都膨胀成 High-detail；需要给更多真实攻防来回留执行空间。**
+> **先规划这段时间能装下几件连续主事件；每件主事件的身体、光影、镜头都可以写细。**
 
 而不是：
 
-> “15 秒必须 8 招 / 6 个 Exchange”。
+> “15 秒必须 8 招 / 6 个 Exchange”，也不是“写细了就要自动压缩”。
 
 ---
 
@@ -566,18 +566,11 @@ PASS：女方以前臂横架男方胸口，外侧跨步带转，使他的肩线�
 
 这里不要求使用专业招式名。**清楚的普通身体语言优先于含糊的武术术语。**
 
-#### 防止反向过度展开
+#### 具体不等于过载
 
-Concrete 不等于把每个动作都写成生物力学说明书：
+先把“做什么”说具体。同一动作上的身体、光影、镜头、材质写细，不构成本 Gate 失败。
 
-- High Granularity 关键反转可以补必要 Footwork / Axis / Support / Force Chain；
-- Medium 只需一个具体 Technique + 对手响应 / 状态后果；
-- Low Connector 可以只保留明确动作与 Continuation Entry；
-- 不为了通过本 Gate，把每个普通 Exchange 都补齐脚、髋、肩、受力、恢复全过程。
-
-因此本 Gate 与 `Granularity Over-expansion` 同时生效：
-
-> **先把“做什么”说具体，再按 Granularity 决定“解释多少”。**
+只有把互不相关的新主事件硬塞进指定时长，才按 `prompt-assembly/control.md` 2.0 提醒用户。
 
 ### 9.2 Impact Realization Gate
 
@@ -905,9 +898,9 @@ Baseline 中已存在
 - 面部 / 身体新伤若容易被模型当成初始造型，优先在最靠近 Trigger 的 Action Phrase 里写“从这次命中后才新增”，而不是只在人物总述或全局 Continuity 段声明最终伤势；
 - Baseline 伤势只需作为初始 Continuity 状态保持，不要把它误写成由本段某次攻击新产生。
 
-本 Gate 与 `Granularity Over-expansion` / `Serialization Deduplication` 同时生效：
+本 Gate 与 `Serialization Deduplication` 同时生效：
 
-> **后果要真实存在，也要有正确 Baseline、出生时刻和寿命；描述只写到足以让模型在正确时点表现并保持它。**
+> **后果要真实存在，也要有正确 Baseline、出生时刻和寿命。可见痕迹可以写细，但不要重复解释同一件事。**
 
 Failure 可判：
 
@@ -941,36 +934,25 @@ Failure 可判：
 
 如果删除抽象形容词后仍不知道人物具体做了什么，Phrase 不可执行。
 
-### 10.2 Granularity Over-expansion
+### 10.2 Main Event Overload
 
-```text
-动作具体化增强
-→ 每个普通 Exchange 都展开脚步、髋、肩轴、受力、恢复等全部细节
-→ 单个 Phrase 吃掉过多信息 / 执行预算
-→ 15 秒只剩少量大 Exchange
-```
+过载只看**指定时长里独立主事件是否过多**，例如 15 秒再加换场、换主体、另一套完整高潮。
 
-判：
+同一 Exchange 写清脚步、接触、光影、镜头、尘土，不判过载，也不自动压缩。
 
-> **Granularity Over-expansion**
+若独立主事件明显装不下：
 
-Final Preflight 检查：
+> **Main Event Overload**
 
-- Active Exchange 是否明显过少；
-- 普通 Exchange 是否被错误展开为 High；
-- High / Medium / Low 是否有真实展开深度差异；
-- 是否因为文字细节而牺牲 Re-counter / Re-entry / Initiative Handoff；
-- 是否出现 `High → High → High → Ending` 的结构塌缩。
-
-禁止通过固定动作数 / 固定比例解决。
+提醒用户加时长、拆段或取舍，不静默删攻防，不把画面维度压糊。禁止用固定动作数 / 固定字数解决。
 
 ---
 
-## 11. Concrete Compression Gate
+## 11. Concrete Resolution Gate
 
-Medium / Low Phrase 可以更短，但不能重新模糊。
+动作必须具体可执行，但不为了更短而压糊。
 
-承担 Active Combat 的压缩 Phrase 至少保留当前必要组合：
+承担 Active Combat 的 Phrase 至少保留当前必要组合：
 
 ```text
 明确动作
@@ -999,11 +981,11 @@ Medium / Low Phrase 可以更短，但不能重新模糊。
 用身体改变朝向……
 ```
 
-应由 Runtime 先决策成一个明确可执行动作；压缩时可以删掉次要 Mechanics，但不能删掉动作 Head、目标和关键状态后果。
+应由 Runtime 先决策成一个明确可执行动作；不能删掉动作 Head、目标和关键状态后果，也不能把已写清的光影 / 镜头 / 身体反馈当成必须删掉的“次要 Mechanics”。
 
 原则：
 
-> **更短的动作句，不等于更模糊的动作句。**
+> **动作句必须具体；画面维度写细不是错误。**
 
 ---
 
@@ -1064,7 +1046,7 @@ Prompt Assembly 后执行一次语义去重。
 + Avoid 反向再解释
 ```
 
-Dedup 的目的不是单纯缩短，而是把 Prompt Information Budget 还给真实 Exchange。
+Dedup 的目的是去掉重复解释，不是把画面维度压短。
 
 ### 12.1 Final Negative Content-Neutral Contract
 
@@ -1120,7 +1102,7 @@ Failure：
 
 ### 12.2 Adapter-output Concrete Technique + Impact Final Scan
 
-`Concrete Technique Resolution PASS` 与 `Impact Realization PASS` 都不能只看 Stage-2 / Choreography 中间态。Prompt Assembly、压缩或 Model Adapter 可能把已经具体的动作重新泛化，也可能把已经成立的 Force Causality 压扁成“猛烈击中 / 强力击退”这类抽象结果，所以在**实际要交付给用户的 Final Prompt**上只执行这一处合并 Final Scan，不新增第二个 Impact Scan Gate。
+`Concrete Technique Resolution PASS` 与 `Impact Realization PASS` 都不能只看 Stage-2 / Choreography 中间态。Prompt Assembly 或 Model Adapter 可能把已经具体的动作重新泛化，也可能把已经成立的 Force Causality 压扁成“猛烈击中 / 强力击退”这类抽象结果，所以在**实际要交付给用户的 Final Prompt**上只执行这一处合并 Final Scan，不新增第二个 Impact Scan Gate。
 
 扫描范围：
 
@@ -1260,62 +1242,17 @@ Failure：
 
 Aftermath 可以描述已发生 Trigger 的 Delta 与 Lifetime，但不能自己创造“可能发生”的 Contact 分支。
 
-#### F. Final Execution Density Compression
+#### F. Final Execution Density
 
-Adapter Final Scan 还必须检查：Impact 变具体之后，是否把**几乎每个普通 I1 / I2 Contact 都写成 High-detail Force Chain**。
+Adapter Final Scan 检查的是：具体 Technique 与 Force Causality 有没有在最后一公里重新变抽象；以及指定时长里独立主事件是否过多。
 
-默认序列化密度：
+同一 Contact 上同时写清接触、受力、呼吸、衣料、镜头和声音，不判失败，也不自动压缩。
 
-```text
-I1
-→ Concrete Contact + minimum Force Response / State Change
+只有 15 秒里又叠加换场、换主体或另一套完整高潮时，才判：
 
-I2
-→ Concrete Contact + clear Force Response + one highest-value State Consequence + Continuation
+> **Main Event Overload**
 
-I3
-→ 允许额外保留 1–2 个 Force Transmission / Recovery / Perceptual Anchor，并保住 Motion Carry-over
-```
-
-若 15 秒短 Combat 中普通 Exchange 反复展开：
-
-```text
-脚步精确微移
-+ 膝髋肩逐段说明
-+ 多个 Contact Surface
-+ 多个 Axis / Support 解释
-+ 呼吸 / 衣料 / Camera / Audio 同窗并发
-```
-
-即使每句话都“正确”，仍判：
-
-> **Effective High Granularity Everywhere / Instruction Saturation**
-
-同时禁止默认出现：
-
-```text
-半寸 / 几厘米 / 精确角度 / 关节角度 / 厘米级位移
-```
-
-除非用户明确要求技术分解、教学、精确动作分析或模型已知依赖该尺度。
-
-Failure：
-
-> **Micro-biomechanics Serialization Leakage**
-
-修复顺序：
-
-```text
-先压普通 I1 / I2 的重复身体细节
-→ 保留 Concrete Action Head
-→ 保留最重要 Force Response / State Consequence
-→ 保留 Continuation
-→ I3 才保留较完整 Force Chain
-```
-
-不得通过删除有效 Exchange 或退回“双方高速连续攻防”来降密度。
-
-Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化最后一公里重新变抽象，同时防止所有 Impact 都被写成 High-detail**；不是扩大 Prompt，也不是建立第二套 Impact Runtime。
+并提醒用户，不靠删细节过关。不得通过删除有效 Exchange 或退回“双方高速连续攻防”来降密度。
 
 ---
 
@@ -1357,8 +1294,8 @@ Final Scan 的目标是**防止具体 Technique 与 Force Causality 在序列化
 10. **Impact Realization + Motion Carry-over**：meaningful Force-bearing Contact 是否满足 `Concrete Contact + Readable Force Response + Combat State Consequence`；是否通过对应 Modality PASS；是否出现 Adjective-only Impact、Self-propelled Reaction、Contact Freeze、Neutral Reset、State-disconnected Reaction、Impact / Aftermath Duplication、Accent Without Anchor；I3 的 Concrete Impact Anchor、highest-value Force Response、Motion Carry-over 是否仍存在？
 11. **Initial Injury Baseline + Delta Injury Onset + Aftermath Lifetime / Continuity**：首帧是否正确继承用户设定 / 参考素材 / 上游剧情已经存在的伤势，而没有无因清除；对于本段后续攻击才产生的新伤，Trigger 前是否保持“无该 Delta”，每个新增血迹 / 淤青 / 擦伤 / 红肿 / 破皮是否绑定明确 Trigger，并只从 Trigger 后叠加到 Baseline；是否出现 `Hypothetical Aftermath Trigger`，即 Aftermath 自己用“若 / 如果命中”创造主 Action Flow 中并未发生的 Contact；Persistent / Progressive 是否仅在状态成立后持续 / 累积；是否存在 Premature Injury / Damage Preload 或 Baseline Injury Reset；其他 Aftermath 是否仍正确区分 Transient / Persistent / Progressive，并避免 Reset / Over-persistence？
 12. **Final Negative Content Neutrality**：是否只保留当前真实生成风险；是否出现无来源的 `不要血腥 / no blood / no gore / no adult / no sexual content / no nudity` 等题材级 blanket Negative？如果有，且不是用户显式要求或上层规则要求，必须删除。
-13. **Exchange Density / Final Execution Density**：是否因过度展开只剩少量大动作；是否普通 I1 / I2 也被写成完整 Force Chain，形成 `Effective High Granularity Everywhere / Instruction Saturation`；是否出现无必要的半寸 / 厘米 / 精确角度等 `Micro-biomechanics Serialization Leakage`？
-14. **Concrete Compression**：Medium / Low 是否短但仍明确可执行；I1 / I2 是否优先保留 Action Head + highest-value Force Response / State Consequence + Continuation，而把更完整 Force Chain 留给真正 I3？
+13. **Exchange Density / Final Execution Density**：是否把画面维度写细误判为过载；指定时长里独立主事件是否过多却未提醒；是否为了“更短”把具体动作压回摘要？
+14. **Concrete Resolution**：动作 Head / 接触 / 后果是否仍明确可执行；已写清的光影 / 镜头 / 身体反馈是否被自动删掉？
 15. **Serialization Deduplication**：同一控制语义是否被多段重复？尤其不能在去重时删掉唯一的新伤 Injury Trigger / Onset 表达，只留下全局最终伤势结果；也不能把 Baseline 旧伤误删或误改成新伤。
 16. **Camera Preservation**：现有 Action–Camera Handoff 是否未被破坏？
 

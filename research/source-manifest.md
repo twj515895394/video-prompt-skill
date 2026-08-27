@@ -1,6 +1,6 @@
 # Source Manifest
 
-更新时间：2026-07-10
+更新时间：2026-08-27
 
 ## 状态说明
 
@@ -47,10 +47,17 @@
 |---|---|---|---|---|
 | O01 | LTX 官方《LTX-2.3 Prompt Guide》 | LTX 叙述方式、时序、镜头、动作、音频和图生视频写法 | 版本能力只进入模型适配页；通用部分经抽象后进入 controls | merged |
 
+## 社区成片结构
+
+| ID | 来源 | 主要用途 | 注意事项 | 状态 |
+|---|---|---|---|---|
+| X01 | X @lansenai 2026-08-26 图生动作成片 Prompt 结构 | 15 秒生产密度：首帧继承、媒介锁、场内摄影机、Beat 招式可读性、液体/饰品连续 | 只提炼合同，不复制人物剧情和原文；不把 30 秒片长写成能力 | extracted / merged |
+
 ## 提炼记录
 
 - Phase 0-3：任务、输入、控制与模型适配，见架构、迁移和进度文档。
 - Phase 4：`research/extraction-notes/phase4-library-style-extraction.md`。
+- 2026-08-27：`research/extraction-notes/i2v-15s-production-density.md`。
 
 ## 去重结果
 

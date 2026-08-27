@@ -11,12 +11,14 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 
 结果必须同时解决：
 
+- 开场有几个人、每人什么样子、穿着和当前状态（角色卡，不是形容词标签）；
 - 从什么画面和状态开始；
+- 空间、周边物件和光从哪里来；
 - 谁或什么在运动；
 - 动作如何按时间发展；
-- 镜头为什么动、怎样动、停在哪里；
+- 镜头为什么动、怎样动、停在哪里（景别不是运镜）；
 - 人物、场景、道具和运动如何保持连续；
-- 表演、对白、环境音、音效和音乐怎样与画面同步；
+- 表演、对白、环境音、音效和音乐怎样与画面同步；BGM 是明确决定，不是默认省略；
 - 最后一拍怎样自然收束；
 - Generic、Seedance 2.0 或 LTX-2.3 应采用什么表达方式。
 
@@ -50,8 +52,9 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - 除非用户明确要求讨论、脑暴、逐步设计或先提问，否则默认进入快速模式。
 - 快速模式零追问、零人工确认、零过程说明，直接输出可用结果。
 - 交互模式遵循 `grill-me`：每次只问一个最关键的问题，并给出推荐答案。
-- 先解决初始状态、主体运动、镜头任务、时间节拍和结束落点，再补风格。
-- 主体运动、镜头运动、环境变化和声音事件必须分别判断。
+- 先解决开场角色卡、空间物件、初始状态、主体运动、镜头任务、表演链、声音设计和结束落点，再补风格。
+- 同一镜头的画面、动作、光色、镜头、材质、声音写细，不是过载，不得自动压缩。只有指定时长里独立主事件过多时，才主动提醒用户加时长、拆段或取舍主内容。
+- 主体运动、镜头运动、环境变化和声音事件必须分别判断。景别不是运镜；情绪标签不是表演；不写 BGM 不等于无 BGM，必须显式决定加或不加。
 - 多模态素材必须分配职责；每个关键维度只能有一个主真源，禁止平均融合。
 - 同一知识只保留一个正文真源；索引可以多处引用，但禁止复制正文。
 - Reference 可以很多，但每次只读取当前任务真正需要的一条或几条路线。
@@ -423,7 +426,8 @@ Quick 不得因为输入简短而降低 Combat Coverage、Exchange Richness、Co
 
 - 无法判断用户要求处理哪份输入素材；
 - 同一关键维度存在两个互斥且同等强度的用户指定主参考；
-- 用户要求的平台能力与任务本身确定不兼容，且不存在合理降级方案。
+- 用户要求的平台能力与任务本身确定不兼容，且不存在合理降级方案；
+- 指定时长明显装不下用户要求的多件独立主事件（换场、换主体、另一套完整主动作等）。此时提醒加时长、拆段或取舍，不静默删主内容，也不把画面维度压糊。
 
 能做合理推断时仍然不追问。
 
@@ -472,7 +476,14 @@ Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准�
 
 ## 第四步：按缺口读取控制页
 
-读取 `references/controls/index.md`，按需加载 `0-3` 份控制页。
+读取 `references/controls/index.md`。普通有人对白 / 反应 / 环境的视频，最低先读这 4 份，不计入后面的按缺口名额：
+
+- `camera-direction/control.md`
+- `performance-expression/control.md`
+- `audio-visual-sync/control.md`
+- `spatial-blocking/control.md`
+
+再按当前最大缺口加载 `0-3` 份控制页。纯物体展示、无人物、无对白、无环境叙事时，可不读表演页，但仍须写运镜或固定机位声明、声音决定和环境来源。
 
 可选方向：
 
@@ -484,7 +495,7 @@ Combat Interactive Mode 与 Quick Mode 共用同一动作引擎和质量标准�
 - `performance-expression/control.md`：表演、微表情、呼吸、停顿和口型；
 - `audio-visual-sync/control.md`：对白、音效、BGM、节拍和音画同步；
 - `reference-binding/control.md`：多模态素材职责、主真源和冲突处理；
-- `prompt-assembly/control.md`：普通任务按需用于信息优先级、去重、压缩和最终组装；**Action Combat 固定读取，不计入本节 `0-3` 可选预算**；
+- `prompt-assembly/control.md`：普通任务按需用于信息优先级、去重和最终组装；**Action Combat 固定读取，不计入本节 `0-3` 可选预算**；
 - `realism-quality/control.md`：真实设备感、物理可信和去 AI 漂浮感。
 
 Combat Choreography Engine 属于 Task；通用 Controls 继续只提供跨任务能力。
@@ -621,7 +632,7 @@ Combat 不建立平行输出模板：先用 Combat Blueprint 判断单镜头 / �
 
 按需读取：
 
-- `0-3` 份 controls；
+- 普通人物 / 对白 / 环境视频先固定读取镜头、表演、音画、空间 4 份最低控制页，不占名额；再按缺口读取 `0-3` 份 controls；
 - `0-2` 份主要 libraries detail；
 - `0-1` 份 style；
 - `0-1` 份 model adapter；
@@ -669,7 +680,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 ## 自动补全与冲突裁决
 
-- 缺少时长时，按任务复杂度选择足以完成动作且不过载的最小合理时长；
+- 缺少时长时，默认 15 秒生产单元：简单任务可更短，复杂动作 / 图生 / 一镜到底用满 15 秒写细；不写 20–30 秒时间轴，更长叙事拆成多个 15 秒单元；
 - 缺少镜头时，普通任务优先使用固定机位、轻微推进或短距离跟拍；**Action Combat 则先看 Kinetic Scope：人物发生明显 Position / Range / Axis / Route 变化时，优先简单连续跟随，不把“稳定”自动解释为固定镜头**；
 - 缺少收尾时，为动作、视线、重心、镜头和声音补自然落点；
 - 缺少声音时，只补有明确画面来源的环境音或拟音；
@@ -686,22 +697,30 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 ## Prompt 组装原则
 
-- 先写任务和时长，再写素材职责；
+- 先写任务和时长，再写开场角色卡：几个人，每人一行外貌 / 穿着 / 当前状态，不用 perfect / beautiful 一类空词；Combat 时每人再加一句可见打法特长；
+- 再写空间最小模型：地点、前中后景、光的来源；简单场景至少 2–4 个有位置物件；首帧或复杂场面继承可见场景骨架，不压成两三个名词；
+- 图生首帧把继承清单（人、服装饰品、场景、光色构图、媒介）只写一次；画面已是动作中点则第 0 秒直接接续，不重新起架；
+- 15 秒高密度任务用 3–4 个 Beat 写细：每段有可见动作集合、接触点、镜头任务和环境反馈；Beat 之间不 Reset；
 - 先建立初始状态，再写运动；
 - 普通任务需要时间轴时分别写主体状态、镜头状态、表演 / 声音和结束状态；
+- 每镜运镜必须能拆成任务 + 起始 + 主运动 + 路线 + 速度 + 停止；只有景别 = FAIL；固定机位须写明无主动推拉；一镜到底时按场内摄影师写：水平线稳定、不穿人穿景、人物快于镜头、命中才短促冲击；
+- 用户锁了可见范围时，运镜写成 locked frame / micro-reframe only，并写 `frame never drops below [lock line]`；
+- 表演峰值人物必须写成可见信号链；情绪标签不是表演；
+- 主动作在画外时，先写一句画外原因，再写画内身体后果；禁止只写情绪，也禁止把裁掉的部位写进画面；
+- 声音必须显式写环境层、事件/拟音层、身体或对白层，以及 BGM 决定（加或不加都要写原因；若加，写进入 / 让位 / 退出，不能盖过对白和关键拟音）；
 - 全局固定项只写一次，本段只写变化；
 - 抽象情绪改写成眼神、呼吸、眉眼、嘴角、姿态和小动作；
 - 光影和声音必须有场景来源；
 - 每段视频只保留一个主镜头任务；
 - 多镜头必须写镜间承接和跨镜稳定项；
-- 图生视频减少静态画面复述，重点写从当前状态如何运动；
+- 图生视频把继承清单只写一次，重点写从当前状态如何运动；画面已是动作中点则直接接续；
 - Combat 先由 Core 保证 Action–Reaction、Range / Advantage / Condition / Target / Weapon / Environment 状态连续，再由 Choreography 保证 Coverage、Action Phrase、角色打法、Contact Solidity、Kinetic Scope、Temporal / Motion Continuity 与 Camera Mobility；
 - Combat Stage-2 Gate 命中的 Movement / Technique / Transition Detail 必须真正进入 Concrete Action Phrase；没有 leaf Read Evidence 时不得在 Prompt Assembly 阶段用语言润色伪装 Pattern Realization；
 - 用户明确确认的 Combat System / System Refinement / Hybrid Refinement / Technique Identity 必须通过**改变动作状态的可见行为**兑现；Character Combat Expression 应影响节奏、主动权与决策倾向；Cinematic Combat Archetype 应影响 Movement / Rhythm / Range / Environment / Transition 权重，但不能替代 Technique；
 - 被选中的 Cinematic Combat Archetype 在 Final Prompt 中优先转换为 `combat-cinematic-archetypes/library.md` 的中性动作语义，不只写明星姓名；
 - 高密度 Combat 默认使用 `Continuous Action Spine + Soft Time Anchors`，不把 Active Exchange 机械拆成每 1–3 秒一个独立动作盒；
 - Combat Final Prompt 由正向动作语言主导，状态术语尽量转译为可见动作、受力和空间后果；
-- Combat 的具体化必须通过 Model Execution Realizability：优先 `Whole-body Motor Driver → 关键 Technique → Opponent Response → Balance / Position Consequence → Continuation`，压描述复杂度而不是压动作连续性；
+- Combat 的具体化必须通过 Model Execution Realizability：优先 `Whole-body Motor Driver → 关键 Technique → Opponent Response → Balance / Position Consequence → Continuation`；动作、光影、镜头可以写细，不得为了“清晰”自动压缩；主事件过多时提醒用户；
 - Combat Camera 序列化必须区分 `Base Viewing Priority` 与 `Camera Hard Constraint`：全局 Camera Baseline 只保留简短观看基线和真正硬约束，高价值 Action-triggered / Perceptual Camera Accent 直接锚在对应 Action Phrase；普通连接动作继续当前 Shot，不逐动作配镜头；
 - 被选中的高价值 Camera Moment 在 Action–Camera Runtime 必须通过 Realization Gate；Assembly / Adapter 可以自由改写语言，但必须 Semantic Preservation，不得把具体 Handoff 压成“关键接触时切近”等泛化 Camera 摘要；
 - Combat Audio 与 Action / Camera 同一连续事件流设计，但 Audio Accent Density 不等于 Action Density；
@@ -719,10 +738,16 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 
 ### 画面与运动
 
-- 初始画面是否清楚；
+- 开场是否写清人数和每人角色卡（外貌 / 穿着 / 当前状态），而不是身份形容词；Combat 是否有打法特长；
+- 初始画面是否清楚；图生是否从动作中点接续而不是重新起架；
+- 空间是否有前中后景和有位置的周边物件 / 场景骨架，光是否有来源；
+- 是否锁在 15 秒内写细，而不是扩成 20–30 秒；
+- 画面、动作、光色、镜头是否写细，且没有被当成过载自动压短；
+- 独立主事件是否超出指定时长；若是，是否已提醒用户而不是静默删内容；
 - 主体运动和镜头运动是否分开；
 - 动作阶段、重心、接触和反馈是否成立；
-- 镜头是否有起点、方向、速度和停止点；
+- 镜头是否有任务、起点、主运动、路线、速度和停止点，而不是只写景别；
+- 用户锁了可见范围时，是否写了上下边界、禁止下探、无主动推拉出锁；
 - 空间、站位、朝向和道具状态是否连续。
 
 ### Combat 专项
@@ -734,7 +759,7 @@ Combat 的 `index + core + choreography + 一个专项分支` 视为同一主 Ta
 3. **动作是否够**：Coverage / Exchange Depth / Kinetic Scope 是否与观看目标相符，是否仍有长对峙、上半身锁死、动作被时间摊薄；
 4. **动作是否连续**：Action Phrase 是否通过 Contact / Momentum / Footwork / Axis / Range / Position 等继承，是否仍是一招一停、轮流出招；
 5. **角色是否合理且真实区分**：Combat System / Refinement / Expression / Archetype 是否能从改变状态的 Movement / Technique / Initiative / Rhythm / Environment Use 看出差异；用户已确认的技术差异是否真实兑现，而不是标签化或只出现一次未形成后果的尝试；
-6. **Model Execution Realizability 是否通过**：是否出现 Effective High Granularity Everywhere、Instruction Saturation、Upper-body Semantic Dominance；Feet-fixed Test 是否失败；
+6. **Model Execution Realizability 是否通过**：动作是否具体可执行；是否把画面维度写细误判为过载；Feet-fixed Test 是否失败；指定时长里独立主事件是否过多却未提醒；
 7. **接触与状态是否成立**：Contact 是否有 Commitment、受力 / 压力、Reaction 与 Persistent Consequence；Range / Position / Advantage / Environment 是否影响下一拍；
 8. **Camera Realization 是否成立**：被选中的高价值 Camera Moment 是否有具体 Action Anchor、匹配的 Camera Response / Viewer Task、Live Motion / State Continuation，并服从 Camera Hard Constraint；是否仍只是“第一次接触 / 关键时刻切近”；
 9. **Camera Preservation 是否成立**：Assembly / Model Adapter 后，关键 Handoff 是否仍保留 Action Anchor、Action↔Camera 因果、主要 Viewer Intent 与必要 live motion；Camera State 是否先建立后引用；是否出现 `Camera Handoff Serialization Loss`；
@@ -757,9 +782,11 @@ Camera Handoff Serialization Loss
 
 ### 表演与音画
 
-- 情绪是否转成可观察表演；
+- 情绪是否转成可观察表演链，表演峰值人物是否明确；
+- 主动作在画外时，是否写成画外原因 → 最先泄露的局部 → 呼吸/肩线 → 锁线内浮动 → 短峰值 → 余波；
 - 对白是否有说话人、停顿和身体动作；
-- 音效和音乐是否绑定画面节点；
+- 环境音、拟音、对白是否分层，并绑定画面节点；
+- BGM 是否显式决定：无 BGM 要写原因；有 BGM 要写进入 / 让位 / 退出，且不盖过对白和关键拟音；
 - 声音是否有来源和空间关系。
 
 ### 结构与模型
@@ -794,7 +821,8 @@ Combat 主诊断：
 - 不让多张图片、多个视频或音频平均融合；
 - 不用大量导演名、品牌名或质量词代替执行变量；
 - 不同时堆叠多个主运镜；
-- 不让动作、镜头、光影、特效和音乐同时满强度；
+- 不把多个互斥的独立主事件硬塞进同一秒；同一镜头的动作、光影、镜头、声音可以同时写细；
+- 不把画面维度写细误判为过载，也不自动压缩已写清的细节；
 - 不默认输出主版本、备选 A、备选 B；
 - 不默认展示“已自动补全项”；
 - 不伪造未支持模型的参数和语法；
@@ -823,4 +851,5 @@ Combat 主诊断：
 - Combat Interactive 不允许从最后一个高价值选择直接跳过 RF-22 Direct READ / Read Evidence Gate 进入 Derived Choreography、Stage-2 或 Final Assembly；
 - Combat Interactive 触发 RF-22 Recovery 后，不允许复用漏读状态下的 Post-Planning 派生骨架；
 - Combat 不建立独立 single-shot / multi-shot 模板副本；
+- 不把单段 15 秒任务写成 20–30 秒时间轴；
 - 不暴露内部 Reference、目录、迁移和维护说明。

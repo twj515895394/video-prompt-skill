@@ -458,7 +458,7 @@ Advantage / Counterplay 同样不使用次数配额；只要求用户确认的 C
 
 Combat 不建立独立 single-shot / multi-shot 模板副本，但**专项 Task 规则优先于通用模板默认规则**。
 
-高密度 Combat 默认继承 `Continuous Action Spine + Soft Time Anchors`；只有用户明确逐秒、外部同步、多镜头边界或 Model Adapter 有实测依据时才使用 Hard Time Blocks。即使使用 Hard Time Blocks，也必须跨块保持 Motion Handoff。
+高密度 Combat 默认继承 `Continuous Action Spine + Soft Time Anchors`，锁在 **15 秒** 内写细。图生 / 一镜到底可把软锚点写成 3–4 个 Beat 标题，但 Beat 内连续、Beat 间不 Reset。只有用户明确逐秒、外部同步、多镜头边界或 Model Adapter 有实测依据时才使用更碎的 Hard Time Blocks。即使使用 Hard Time Blocks，也必须跨块保持 Motion Handoff。不把单段写成 20–30 秒。
 
 如果 Final Prompt 包含关键 Cut / 景别变化 / Reframe，Camera 不能只在动作段后写一句“关键接触切近”；关键 Handoff 应锚定到具体 Action Moment，并保持 Action State / Active Motion 连续。
 

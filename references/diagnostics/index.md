@@ -17,7 +17,7 @@
 
 ### identity-drift
 
-现象：脸部、发型、服装、年龄感或主体身份跨帧漂移。
+现象：脸部、发型、服装、年龄感或主体身份跨帧漂移；或开场只有职业 / 身份词，没有每人角色卡。
 
 读取：`identity-drift/diagnostic.md`
 
@@ -35,7 +35,7 @@
 
 ### spatial-teleportation
 
-现象：人物、道具、背景、出入口或镜头位置在空间中瞬移。
+现象：人物、道具、背景、出入口或镜头位置在空间中瞬移；或场景只有地点名，没有前中后景、周边物件和光来源。
 
 读取：`spatial-teleportation/diagnostic.md`
 
@@ -63,13 +63,13 @@
 
 ### audio-visual-mismatch
 
-现象：声音节点与视觉事件错位，BGM、环境声、拟音或声音空间不匹配。
+现象：声音节点与视觉事件错位，BGM、环境声、拟音或声音空间不匹配；或没写 BGM 决定，整条声音空白。
 
 读取：`audio-visual-mismatch/diagnostic.md`
 
 ### prompt-overload-and-conflict
 
-现象：动作、运镜、风格、光影和限制互相竞争，核心目标被稀释。
+现象：指定时长里独立主事件过多，或互斥主目标互相竞争。同一镜头把画面、动作、光色、镜头写细不算本诊断。
 
 读取：`prompt-overload-and-conflict/diagnostic.md`
 
@@ -155,13 +155,16 @@
 ## 常见主因选择
 
 - 角色像换人：优先 identity-drift；
+- 开场没有角色卡、只剩身份词：优先 identity-drift；
 - 动作断裂但身份稳定：优先 motion-discontinuity；
 - 镜头乱导致主体不可读：优先 camera-chaos；
 - 人和道具位置跳变：优先 spatial-teleportation；
+- 场景只有地点名、没有周边物件或光来源：优先 spatial-teleportation；
 - 接触穿模或手部错误：优先 anatomy-contact-failure；
 - 所有运动普遍漂浮无重量：优先 physics-and-weightlessness；
 - 台词和嘴部错误：优先 lip-sync-and-dialogue-failure；
 - 卡点或声音错位：优先 audio-visual-mismatch；
+- 没写 BGM 决定或声音层空白：优先 audio-visual-mismatch；
 - Prompt 本身互相矛盾：优先 prompt-overload-and-conflict；
 - 多素材混合错误：优先 reference-role-conflict；
 - Combat Advantage / Condition / Target / Weapon / Beat State 前后无法同时成立：优先 combat-state-continuity-failure；

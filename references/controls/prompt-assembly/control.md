@@ -4,7 +4,7 @@
 
 把任务目标、素材职责、时间 / 动作、镜头、连续性、音画、风格和限制组织成一份清楚、无重复、可直接执行的导演方案。
 
-本页负责信息优先级、组装顺序、压缩、冲突裁决和输出完整性；具体模型语法由 Model Adapter 完成。
+本页负责信息优先级、组装顺序、去重、冲突裁决和输出完整性；具体模型语法由 Model Adapter 完成。不负责把已经写清的画面维度自动压短。
 
 对于 Action Combat，必须贯彻：
 
@@ -56,15 +56,89 @@
 
 1. 任务核心与输出目标；
 2. 素材职责 / 强保留边界；
-3. 全局稳定项；
-4. 场景、人物与初始状态；
-5. 动作 / 时间流；
-6. Camera Coverage / 表演 / Audio；
-7. 风格与质感；
-8. 少量高价值限制；
-9. Model Adapter 交接。
+3. 开场角色卡（人数 + 每人外貌 / 穿着 / 当前状态）；
+4. 空间最小模型（地点、前中后景、光来源；简单场景至少 2–4 个有位置物件；首帧或复杂场面继承可见场景骨架，不压成两三个名词）；
+5. 全局稳定项（身份 / 服饰饰品 / 媒介 / 摄影机纪律只写一次）；
+6. 动作 / 时间流（默认 15 秒生产单元）；
+7. Camera Coverage（任务 + 起始 + 主运动 + 路线 + 速度 + 停止，不是只写景别）；
+8. 表演链（峰值人物：起始 → 触发 → 可见信号 → 停顿 → 结束）；
 
-同一信息只写一次；动态变化不要误写成全局固定项。
+用户锁了可见范围时，Camera Coverage 必须写成 locked frame / micro-reframe only，并带上下边界。主动作在画外时，表演链先写一句原因，再写画内身体后果，不把裁掉的部位写进画面。
+9. Audio（环境 / 拟音 / 对白 + 显式 BGM 决定）；
+10. 风格与质感；
+11. 少量高价值限制；
+12. Model Adapter 交接。
+
+同一信息只写一次；动态变化不要误写成全局固定项。重复解释、内部状态表和空泛质量词可以删；**已经成立的画面、动作、光色、镜头、材质、声音描述不得因为“太细”被自动压缩。**
+
+### 2.0 画面维度密度 vs 主事件过载（通用）
+
+本规则对所有任务生效，不只对打斗。
+
+**画面维度密度不是过载。** 同一个镜头 / 同一段主内容里，把下列维度写细，默认都可以承载：
+
+- 人物外貌、服装、饰品、当前姿态；
+- 场景骨架、物件、材质；
+- 动作过程、接触、受力、身体反馈；
+- 光线、色彩、阴影；
+- 镜头任务、机位、路线、速度、停止；
+- 表演、声音、连续性。
+
+禁止把“这段 Prompt 很长 / 光影和镜头写得很具体”判成无法执行，也禁止为此静默删细节。
+
+**只有指定时长里独立主事件过多，才算过载。** 主事件指需要单独起承转合的主体内容，例如：
+
+- 另一套完整主动作；
+- 换场 / 换主体 / 新剧情单元；
+- 与当前动作链无关的新高潮；
+- 15 秒里再塞进显然完不成的第二场戏。
+
+同一动作链里的身体反馈、衣发响应、尘土、光线变化、摄影机走位，都不是新的主事件。
+
+主事件过载时：
+
+- 不要静默删用户要的主内容；
+- 不要靠把各维度写糊来“省容量”；
+- 按 `timeline-rhythm/control.md` **主动提醒用户**：当前时长装不下这些独立主事件，请加时长、拆成多段，或指定保留哪几件主内容。
+
+快速模式也适用这条提醒，它是少数允许开口的情况。
+
+### 2.1 15 秒生产密度合同
+
+当前正式生产单元默认 **15 秒**。用户未指定更短时长时，复杂动作 / 图生 / 一镜到底用满 15 秒写细，不把方案写成 20–30 秒。
+
+密度来自结构，不是来自更长片长：
+
+```text
+开头全局锁一次
+→ 3–4 个 Beat 只写本段变化
+→ 每 Beat 同时有动作任务、镜头任务、环境或身体反馈
+→ 最后 1–2 秒从最后状态收束
+```
+
+全局锁包括当前任务真正需要的项：
+
+- 人数与角色卡（Combat 时每人加一句可见打法特长）；
+- 首帧或开场继承：服装、饰品、场景骨架、光色、构图透视、媒介；
+- 摄影机纪律：机位高度、是否一镜到底、水平线、不穿人穿景；
+- 稳定项与禁止项。
+
+每个 15 秒 Beat 至少写清：
+
+1. 本段可见动作集合（具体招式或具体行动，不是“连续攻防”）；
+2. 至少一个接触点 / 受力方向，或一个清楚的空间变化；
+3. 镜头从哪到哪、为什么动、停在哪；
+4. 头发、饰品、布料、尘土、摊位或人群等反馈；
+5. 本段最危险的一种不可读失败（乱拳、瞬移、换侧、穿模）。
+
+Beat 与 Beat 之间必须继承姿态、动量、接触和环境状态。禁止：
+
+- 用 6–8 个硬时间盒把 15 秒切碎；
+- 每段重新起架；
+- 把同一动作拆成互不相关的新主事件；
+- 每个连接动作都另起一条新的主镜头事件。
+
+同一镜头里的光影、材质、身体反馈、摄影机走位可以写细。允许写后撤约一米、降到膝部、短弧换位这类走位尺度。
 
 ---
 
@@ -116,35 +190,23 @@ Current Body / Range State
 
 > **如果删除“高速 / 连续 / 专业 / 高密度 / 反制 / 缠斗”等抽象词后，仍无法清楚知道人物具体做了什么，则 Assembly 过度压缩。**
 
-Assembly 也不能走向另一极端：不要求逐拳逐脚编号、厘米级位移或关节角度。原则是：**关键因果动作具体，次要过渡压缩。**
+原则是：**动作必须具体可执行；同一动作的身体、光影、镜头、材质可以写细。** 不要把“写细”当成新的独立主事件，也不要为了字数把已有维度压糊。
 
-### 3.3 Granularity Distribution Preservation
+### 3.3 Granularity 不是压缩开关
 
-如果 Choreography 已经把 Phrase 标定为 High / Medium / Low Granularity，Assembly 必须保留这种**信息展开深度差异**，不得重新把所有 Phrase 展开成同等长度的大段，也不得把 Medium / Low 压成不可执行摘要。
+High / Medium / Low 只标记哪些是主转折事件，**不授权 Assembly 删除普通动作上的画面维度。**
 
-```text
-High Granularity
-→ Major Reversal / Initiative Theft / Signature Moment
-→ 保留完整关键因果、Contact / Response、空间 / 轴线后果与 continuation entry
+普通 Exchange 和连接动作同样可以写清接触、身体反馈、光线和镜头。禁止：
 
-Medium Granularity
-→ 普通 Exchange / Re-counter / Range Change
-→ 保留具体动作因果与关键状态变化，压缩次要身体细节
+- 因为标了 Medium / Low 就删身体、光影、镜头细节；
+- 因为 Prompt 变长就自动压短；
+- 把已经具体的动作压回“连续攻防 / 快速反制”。
 
-Low Granularity
-→ 纯连接 / 非关键过渡
-→ 只写连续性所需的具体连接，不膨胀成新的大段
-```
-
-组装规则：
-
-- 连续两个 High 后，后续普通 Exchange 优先维持 Medium / Low，不把其重新扩写成第三个同等体量的 High；
-- High 不等于“越长越好”，只展开承担重大转折的信息；
-- Medium / Low 不能退化成“继续快速攻防 / 双方不断换位”；
-- 不根据字数、动作数、秒数做机械配额；
-- 压缩目标是给更多真实 Exchange 留执行空间，而不是追求更短文字本身。
+若用户要在 15 秒里再塞入过多独立主转折，按 2.0 提醒，不靠削描述解决。
 
 ### 3.4 Fighting Direction Realization
+
+开场角色卡在 Combat 中每人追加 **一句可见打法特长**，例如擅长闪避短肘扫腿，或擅长直拳摆拳持续压迫。这是角色卡的一部分，不能替代后文具体 Action Phrase。
 
 如果用户已经明确或 Interactive 已确认 `Fighting Direction / 怎么打`，Final Prompt 必须通过**可观察的动作语言**兑现，而不是只在标题或风格段写一个标签。
 
@@ -161,9 +223,9 @@ Low Granularity
 
 ### 3.5 Continuous Action Spine
 
-高密度 Combat 默认使用 **Continuous Action Spine + Soft Time Anchors**。
+高密度 Combat 默认使用 **Continuous Action Spine + Soft Time Anchors**，并且锁在 **15 秒** 内写满，不扩成 20–30 秒。
 
-不要默认写成：
+不要默认写成每 1–2 秒一个独立动作盒：
 
 ```text
 0–1.5s：动作 A
@@ -177,14 +239,16 @@ Low Granularity
 优先写成：
 
 ```text
-First Contact（软时间锚点）
+First Contact（软时间锚点，约 0–3s）
 → 一条不中断的连续攻防主链
-→ Major Advantage Reversal（软时间锚点）
-→ 连续推进 / Signature Moment
-→ Ending（软时间锚点）
+→ Major Advantage Reversal（软时间锚点，约 3–8s）
+→ Signature Moment（约 8–13s）
+→ Ending（约 13–15s）
 ```
 
 时间锚点只定位重要阶段，不要求锚点前完整收势，也不要求锚点后重新起架。
+
+当任务同时是图生首帧、一镜到底或 15 秒高手对决时，可以把上述锚点写成 **3–4 个 Beat 标题**，每个 Beat 内部仍是连续动作链，并写本段可见招式集合。这是生产密度，不是把战斗切成互不相关的小视频。
 
 严格时间戳只在以下情况使用：
 
@@ -193,7 +257,7 @@ First Contact（软时间锚点）
 - Audio / Dialogue / 外部事件精确同步；
 - Model Adapter 有实测证据表明严格时间轴更稳定。
 
-即使使用 Hard Time Blocks，也必须写清跨块 Motion Handoff。
+即使使用 Hard Time Blocks / Beat 标题，也必须写清跨块 Motion Handoff。
 
 ### 3.6 Action Continuity ≠ Shot Continuity
 
@@ -242,7 +306,7 @@ Position / Left-Right
 
 而不是主要依赖“然后 / 随后 / 再次”。
 
-压缩时必须保留至少一类 Motion Handoff：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position。
+去重时必须保留至少一类 Motion Handoff：Contact、Reaction、Momentum、Footwork、Body Axis、Range / Position。
 
 当上游 `action-camera-handoff-playbook.md` 已形成 Motion / Energy Carry-over，Assembly 不能把它压缩成“随后继续攻击”。至少保留决定下一动作入口的 Momentum / Rotation / Support / Pressure / Recovery 之一。
 
@@ -513,7 +577,8 @@ High Coverage 短 Combat 中：
 - Ending 应继承最后一次 Contact / Position / Momentum / Advantage；
 - 不把人物重新摆成静态 Pose 后再长时间对视；
 - 不让呼吸、眼神、慢推镜等自动占用最后数秒；
-- 如果 Ending 文本比主要 Active Exchange 更细、更长，应优先压缩 Ending；
+- 默认不淡出、不定格、不突然黑屏；保持动态张力，除非用户明确要求；
+- Ending 的光影、尘土、呼吸和镜头可以写细，但不能再新增大段独立主事件去吞掉 Active Exchange；
 - 用户明确要求长悬停 / 情绪收尾时除外。
 
 Assembly 不新增“最后停几秒”的用户问题；这是内部 Coverage / Serialization 责任。
@@ -526,27 +591,24 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 
 - 具体 Action / Reaction / Contact / Consequence 是主体；
 - State / Continuity / Negative 只做支撑；
-- Camera / Audio 不抢走动作主体；
-- Meta 解释不能比真正动作更长；
-- **Camera / Audio 的细节不能明显高于主要身体动作的具体程度。**
+- Camera / Audio / 光色可以和动作写得同样细，但不能代替动作本身；
+- Meta 解释不能比真正动作更长。
 
-如果一段 Prompt 大部分在写“保持连续、不要瞬移、状态正确、符合物理”，或者 Camera / Audio 写得非常具体而真正攻防只剩几句概括，应判组装失败。
+如果一段 Prompt 大部分在写“保持连续、不要瞬移、状态正确、符合物理”，而真正动作只剩几句概括，应判组装失败。镜头和光色写细、动作也写清，不算失败。
 
 ---
 
-## 5. Preserve Causality During Compression
+## 5. 去重，不自动压缩画面维度
 
-压缩优先删除：
+只删除重复和空话，不删除已经成立的画面维度：
 
 1. 重复状态解释；
 2. 重复连续性提醒；
-3. 装饰性形容词；
+3. 空泛质量词；
 4. 重复 Negative；
-5. 不改变战斗关系的次要动作；
-6. 低价值 Camera Accent；
-7. Ending 中不必要的静态描述。
+5. 内部状态表 / Meta。
 
-最后才缩减有效攻防。
+禁止为了“更短 / 更清晰”删掉动作、光影、镜头、材质或声音细节。主事件过多时提醒用户，不静默砍内容。
 
 必须优先保留：
 
@@ -557,7 +619,6 @@ Combat Prompt 不设置机械字数比例，但语义上必须满足：
 - 关键 Footwork / Range / Position / Axis 变化；
 - Major Reversal / Signature 前后的因果；
 - Fighting Direction 在 Movement / Technique / Range / Physical Scale 上的真实差异；
-- High / Medium / Low Granularity 的信息层级差异；
 - 高价值 Action-triggered Camera Handoff / Perceptual Impact；
 - 跨 Shot 的 Action Direction / Contact / Momentum / Active Motion 继承；
 - Camera Handoff 的 Concrete Action Anchor / Viewer Intent / live-motion continuation；
@@ -595,15 +656,18 @@ Negative 只保留当前明确高风险项。
 - High / Medium Coverage 是否真的被 Action Flow 写满；
 - Fighting Direction 是否在动作语言而非标签中兑现；
 - **存在明显 Movement / Technique / Transition Gap 时，是否有真实 Stage-2 leaf knowledge hit / Pattern Realization Evidence；**
-- High / Medium / Low Granularity 是否保持不同信息展开深度；
-- 是否连续多个普通 Exchange 被重新展开成同等长度的大段，导致 Choreography Richness 被吃掉；
+- 是否把画面维度写细误判为过载并自动压短；
+- 是否存在指定时长装不下的过多独立主事件，却没有提醒用户；
 - **关键 Active Exchange 是否仍主要由“连续格挡 / 快速反制 / 贴身缠斗 / 不断换位”等摘要承担；**
 - **删除抽象动作形容词后，是否仍能清楚理解关键身体动作因果；**
 - 是否出现 3–4 秒只有一个宏动作的 Temporal Underpacking；
 - 是否出现每 1–2 秒归位再起手的 Action Segmentation；
 - Counter / Re-counter 是否在对方动作尚未完成时具体抢走 Initiative；
 - 关键 Transition 是否利用前一动作残余 Momentum / Contact / Support / Recovery / Axis，而不是只在逻辑上“接得上”；
-- 是否把高密度战斗切成多个硬时间盒；
+- 是否把 15 秒任务写成 20–30 秒，或把高密度战斗切成多个会 Reset 的硬时间盒；
+- 图生首帧是否只在开头锁继承清单，动态段是否只写变化；
+- 每个主 Beat 是否有可见招式集合，而不是“连续乱拳”；
+- 同一动作的身体、光影、镜头细节是否被保留；
 - Kinetic Scope 是否在最终文字中可见；
 - High / Expert Combat 是否仍主要由上肢 Contact 主导，而 Movement 没有创造 Level / Route / Axis / Range / Position / Support / Balance 变化；
 - Character Identity / Advantage / Initiative 是否通过动作外显；
@@ -620,7 +684,7 @@ Negative 只保留当前明确高风险项。
 - **是否机械形成 `Medium → Close → Medium → Close`，而没有信息变化动机；**
 - Cut 后 Position / Direction / Contact / Momentum / Axis / Range 是否连续；
 - Contact → Reaction → Consequence 是否可见；
-- Camera / Audio 是否比身体动作更具体；
+- 动作是否具体，光影 / 镜头是否被误当成必须压短的对象；
 - Negative 是否少而有针对性。
 
 触发 `Stage-2 Routing Evidence Missing` 时，先回到 Stage-2 真实读取 leaf knowledge 并重写 Phrase，不允许只润色已有动作。
@@ -637,7 +701,7 @@ Negative 只保留当前明确高风险项。
 
 触发 `Camera Accent Overmapping / Perceptual Accent Overuse` 时，删除低价值 Camera 指令，让普通连接动作重新继承当前 Shot。
 
-Assembly-stage 不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage / 压缩结构，再进入 Model Adapter。
+Assembly-stage 不通过时先内部重写 Pattern Selection / Action Spine / Concrete Phrase / Action–Camera Handoff / Camera Coverage，再进入 Model Adapter。主事件过载时提醒用户，不靠压描述过关。
 
 Model Adapter 完成后仍必须再次执行 Preservation Gate + Combat Final Preflight，才能交付。
 
@@ -646,12 +710,17 @@ Model Adapter 完成后仍必须再次执行 Preservation Gate + Combat Final Pr
 ## 8. 单视频单元组装骨架
 
 ```text
-视频目标：
-参考与稳定锚点：
+视频目标 / 15 秒：
+参考与稳定锚点 / 首帧继承清单：
+开场角色卡（Combat 含打法特长）：
+空间 / 场景骨架 / 光：
+媒介与摄影机纪律：
 场景 / 人物初始关系：
-连续且具体的动作主链（Combat 时为主体；关键 Camera Accent 直接嵌入对应 Action Phrase）：
+连续且具体的动作主链（Combat 时为主体；3–4 个 Beat 只写变化；关键 Camera Accent 直接嵌入对应 Action Phrase）：
 关键软时间锚点 / Turning Point：
-简短 Global Camera Baseline / 其他 Camera Coverage / Audio：
+Camera：任务 + 起始 + 主运动 + 路线 + 速度 + 停止：
+表演链：
+Audio：环境 / 拟音 / 对白 / BGM 决定：
 必要连续性与高风险限制：
 ```
 
@@ -663,6 +732,8 @@ Combat 不要求机械拆成每 1–2 秒一个独立小段，也不要求整段
 
 ```text
 全片目标与统一锚点：
+开场角色卡：
+空间 / 周边物件 / 光：
 素材职责：
 
 Segment 1：
@@ -675,7 +746,7 @@ Segment 2：
 - Action / Camera Flow
 - 结尾 Handoff State
 
-全片 Audio / Style / Continuity：
+全片 Audio（环境 / 拟音 / 对白 / BGM 决定） / Style / Continuity：
 Model Adapter 入口：
 ```
 
@@ -689,14 +760,15 @@ Model Adapter 入口：
 
 - fixed camera 与大幅空间追打冲突；
 - High Coverage 与大段站立 / Ending Pose 冲突；
-- 高 Exchange Depth + 高 Camera Complexity 超出模型承载；
+- 指定时长里独立主事件过多，却把画面维度写细误判为无法承载；
 - “稳定镜头”被误实现为“静态镜头”；
 - “动作连续”被误实现为“不能 Cut”；
 - “Action–Camera Coupling”被误实现为“每个动作必须配一个镜头”；
 - 高密度 Combat 被锁成全程中全景 / 中景；
+- 15 秒高密度任务被写成 20–30 秒，或反过来把细节压没；
 - 用户要求连续高手战，但时间结构是多个独立动作槽；
 - Choreography 已经具体，但 Assembly 为了缩短 Prompt 又退回抽象动作块；
-- Choreography 已分配 Granularity，但 Assembly 又把所有 Phrase 展开成同等体量；
+- 画面、光影、镜头已经写细，Assembly 却为了字数压糊；
 - Fighting Direction 已确认，但 Final Prompt 只保留标签、没有动作差异；
 - Action–Camera Handoff / Perceptual Impact 已规划，但 Assembly 又压回“关键接触切近 / 随后回中景”；
 - 上游 Handoff 已 Realize，但 Model Adapter 又造成 `Camera Handoff Serialization Loss`；
@@ -707,7 +779,7 @@ Model Adapter 允许改变素材引用、语言组织、同窗口复杂度、Cam
 
 `Unverified` 不构成自动 Camera 降级证据。只有 Verified Limitation / Benchmark / Generated-video Regression Evidence 才允许 Intent-preserving Degradation。
 
-模型确需降载时优先：删除次要分支 → 保留关键具体动作因果 → 保留 Granularity 层级 → 保留关键 Motion / Energy Carry-over → 删除低价值 Camera Accent → 降低无必要 Camera 实现复杂度 → 保留少数高价值 Action-triggered / Perceptual Coverage 及其 Anchor / Intent / live motion → 拆成无缝 Phrase；不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
+模型确需降载时，先判断是不是**独立主事件过多**：是则提醒用户加时长或拆段，不静默删用户要的主内容，也不把光影 / 镜头 / 动作细节压糊。不能直接把高手持续对决改成两三次简单交换，也不能把具体动作重新压成“连续攻防”。
 
 ---
 

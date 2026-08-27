@@ -100,21 +100,13 @@ Whole-body / Support / Route Driver
 
 `Upper-body Semantic Dominance / Static Standing Combat`
 
-### Instruction Saturation
+### 主事件过载，不是细节过载
 
-同一短窗口不要同时要求模型精确追踪过多独立肢体、Contact、State、Footwork、Camera、Audio、Negative。
+同一镜头同时写清身体、接触、光影、镜头和声音，不算无法执行。
 
-压缩优先：
+只有指定时长里又叠加了过多**独立主事件**（换场、另一套完整攻防、新主体）时，才按 `prompt-assembly/control.md` 2.0 提醒用户。
 
-```text
-重复局部细节
-→ 次要独立事件
-→ 重复 State 解释
-→ 低价值 Camera / Audio Accent
-→ 重复 Negative
-```
-
-必须优先保留：
+不要为了“指令更少”删除已写清的画面维度。仍须保留：
 
 ```text
 Motor Driver
@@ -126,8 +118,7 @@ Motor Driver
 
 失败可使用：
 
-- `Instruction Saturation / Micro-choreography Overconstraint`；
-- `Effective Granularity Flattening`；
+- `Main Event Overload`（独立主事件超出指定时长）；
 - `Upper-body Semantic Dominance`；
 - `Prompt–Video Execution Divergence / Generated Video Regression`。
 
@@ -233,7 +224,7 @@ Full-fidelity Action–Camera Realization
 
 只有存在可靠限制 / 回归证据时，才允许 `Intent-preserving Degradation`：优先降低 Camera 实现复杂度，同时尽量保留 Action Anchor、Viewer Intent 与 Motion Continuation。
 
-低价值 / 装饰性 Accent 可以在 Instruction Saturation 时合并或删除。
+低价值 / 装饰性 Accent 只有在它本身变成新的独立主事件、且时长装不下时才合并；不要因为画面写细就删。
 
 ### Realization FAIL
 
@@ -438,8 +429,12 @@ Final Prompt 的关键 Camera Handoff / Perceptual Accent 必须锚在具体 Act
 
 - 禁止 Editorial Cut；
 - Camera Movement / Reframe 仍由 Action State Change 触发；
+- 遵守 `camera-direction/control.md` 的场内摄影师纪律：水平线稳定、不穿人穿景、人物快于摄影机、命中才短促冲击；
 - 可使用 Near-lens、距离压缩、短促绕位、Camera Height / Relationship Angle Change；
+- 按动作需要选用后撤揭示、横移展示接触、短弧换位、擦镜跨步、贴地跟随、升降同步腾空落地、侧移在命中前露出接触点、结尾拉远；不是每场全用；
+- 擦镜换位必须通过可见移动完成，遮挡结束后双方仍同时可见；
 - Fight-space 改变时重新组织关系，不做无摩擦漂浮跟随。
+- 15 秒一镜到底把运镜预算花在 3–4 个动作驱动的路线变化上，不要用 30 秒才写得完的镜头清单。
 
 ### No Cut
 
@@ -469,7 +464,7 @@ Hard Constraint 不能反向削弱 Combat Coverage / Derived Choreography Direct
 
 ### B. Model Execution Realizability
 
-是否通过 Motor Driver / Feet-fixed / Instruction Saturation / Granularity 检查。
+是否通过 Motor Driver / Feet-fixed 检查；是否把画面维度写细误判为过载。
 
 ### C. Kinetic Handoff
 
@@ -518,7 +513,8 @@ Stage-2 Evidence FAIL
 → 补 Read / Pattern Realization
 
 Execution Realizability FAIL
-→ 重写 Motor Driver / 压缩局部描述 / 恢复 Granularity 层级
+→ 重写 Motor Driver，使动作具体可执行
+→ 不压缩已写清的画面维度
 
 Kinetic Handoff FAIL
 → 重写 Transition / Phrase

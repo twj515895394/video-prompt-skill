@@ -2,7 +2,14 @@
 
 控制层负责“怎么判断、怎么协调、怎么限制”，不负责罗列大量术语，也不替代任务 Playbook。
 
-每次按当前最大缺口读取 `0-3` 份控制页，不为了增加细节默认加载整个控制层。
+普通有人对白 / 反应 / 环境的视频，先固定读取下面 4 份最低控制页，不计入后面的按缺口名额：
+
+- `camera-direction/control.md`
+- `performance-expression/control.md`
+- `audio-visual-sync/control.md`
+- `spatial-blocking/control.md`
+
+然后再按当前最大缺口读取 `0-3` 份控制页，不为了增加细节默认加载整个控制层。纯物体展示、无人物、无对白、无环境叙事时，可不读表演页，但仍须写运镜或固定机位声明、声音决定和环境来源。
 
 ## timeline-rhythm
 
@@ -132,7 +139,8 @@
 - 通用导演方案的组织顺序；
 - 时间轴与全局约束如何组合；
 - 正向描述和负向限制的比例；
-- Prompt 压缩、去重和冲突裁决；
+- 画面维度密度与主事件过载的分界；
+- 去重和冲突裁决，不自动压缩细节；
 - 与模型适配层的交接边界。
 
 ## realism-quality
@@ -153,23 +161,28 @@
 
 ### 文生视频基础
 
+先读最低 4 份（镜头 / 表演 / 音画 / 空间），不占 `0-3` 名额；再按需：
+
 - `timeline-rhythm/control.md`
 - `prompt-assembly/control.md`
 
-按缺口再补主体运动、镜头或连续性。
+按缺口再补主体运动或连续性。不得只读时间轴和组装页，就把景别当成运镜、把身份词当成表演。
 
 ### 图生视频基础
 
 - `reference-binding/control.md`
 - `continuity-consistency/control.md`
 
-动作复杂时补 `subject-motion/control.md`，镜头易漂时补 `camera-direction/control.md`。
+动作复杂时补 `subject-motion/control.md`，镜头易漂或一镜到底时补 `camera-direction/control.md`。首帧任务必须锁继承清单和媒介，从动作中点接续，不把 15 秒写成 30 秒。
 
 ### 写实人物短片
 
-- `performance-expression/control.md`
+先读最低 4 份（已含表演、镜头、空间、音画），不占 `0-3` 名额；再按需：
+
 - `realism-quality/control.md`
 - `timeline-rhythm/control.md`
+
+按缺口再补连续性或主体运动。人物短片缺角色卡、空间物件、运镜公式、表演链或 BGM 决定 = 组装 FAIL，不是靠压词数修。
 
 ### 动作与体育
 

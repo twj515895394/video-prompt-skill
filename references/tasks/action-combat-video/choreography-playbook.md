@@ -227,7 +227,26 @@ Transition Pattern
 
 Movement 不能退化为“给上肢动作补一句脚步”；如果它真正参与 Choreography，应该主动改变至少一类 Level / Route / Axis / Range / Position / Support / Balance / Ground-State。
 
-### 5.4 抽象动作词只能做摘要，不能替代关键动作
+### 5.4 Beat 可读招式集合
+
+15 秒高密度 Combat 把 Active Exchange 收成 **3–4 个 Beat**，每个 Beat 内部仍是连续动作链。
+
+每个主 Beat 必须能回答：
+
+```text
+本段只允许哪些可见招式 / 行动
+→ 至少一个具体接触点与受力方向
+→ 对手如何立即响应
+→ 本段禁止哪种不可读失败
+```
+
+例如：本段只出现低扫、胫骨格挡、摆拳闪避、身体拳和膝击封挡；禁止无法辨认的连续乱拳。最后高潮可以锁成三连击，每击都可读。
+
+这是可读性合同，不是固定套路库。不要求每场使用同一套招，也不把 15 秒扩成 30 秒六段。
+
+角色卡里的打法特长必须在多个 Beat 里反复以可见动作出现，不能只在开头写一次。
+
+### 5.5 抽象动作词只能做摘要，不能替代关键动作
 
 以下表达可以用于 Derived Choreography Direction / Rhythm 摘要、次要过渡或局部压缩，但不能单独承担关键 Active Exchange：
 
@@ -243,41 +262,20 @@ Movement 不能退化为“给上肢动作补一句脚步”；如果它真正�
 
 如果删除“高速 / 连续 / 专业 / 高密度 / 反制 / 缠斗”等抽象词后，仍无法说清人物具体做了什么，这个 Phrase 颗粒度不足。
 
-### 5.5 细化不等于逐招机械枚举
+### 5.6 细化不等于新增大主事件
 
-禁止把颗粒度提升误实现成：
+禁止把“写细”误实现成：
 
-- 每拳每脚编号；
-- 厘米级位移或关节角度；
-- 为了“具体”把一个短 Phrase 塞满彼此独立动作；
-- 让动作说明复杂度超过当前 Action Execution Budget。
+- 把同一动作拆成互不相关的新主事件；
+- 在 15 秒里再塞入另一场完整戏。
 
-原则：
+同一招的接触点、头发、光影、镜头、尘土可以写细。通用过载判定见 `prompt-assembly/control.md` 2.0：画面维度写细不是过载。
 
-> **关键因果动作具体，次要过渡动作可以压缩。**  
-> **细节服务连续执行，不服务文字复杂度。**
+### 5.7 Lightweight Granularity Distribution
 
-### 5.6 Lightweight Granularity Distribution
+High / Medium / Low 只标记哪些是主转折，**不授权压缩普通动作的画面维度。**
 
-颗粒度控制的是**信息展开深度**，不是动作数量配额：
-
-```text
-Major Reversal / Initiative Theft / Signature Moment
-→ High Granularity
-
-普通 Exchange / Re-counter / Range Change
-→ Medium Granularity
-
-纯连接 / 非关键过渡
-→ Low Granularity
-```
-
-- High：保留完整关键因果和状态后果；
-- Medium：保留动作因果与关键状态变化，压缩次要身体细节；
-- Low：只保留连续性所需信息，不膨胀成新的大段；
-- 如果连续两个 Phrase 已经使用 High Granularity，后续普通 Exchange 优先压缩为 Medium / Low；
-- Medium / Low 仍必须具体，不能退回抽象动作块；
-- 禁止固定 Phrase 数、动作数、字数、秒数或 High / Medium / Low 比例。
+普通 Exchange 和连接动作同样可以写清身体、光影和镜头。若独立主转折多到指定时长装不下，提醒用户，不靠削描述过关。
 
 ---
 
@@ -315,13 +313,14 @@ Phrase-to-Phrase 同样优先使用前一 Payoff 直接启动下一 Phrase。
 
 ### 6.3 Continuous Action Spine + Soft Time Anchors
 
-高密度 Combat 的默认 Final Prompt 时间表达：**一条 Continuous Action Spine + 少量 Soft Time Anchors。**
+高密度 Combat 的默认 Final Prompt 时间表达：**一条 Continuous Action Spine + 少量 Soft Time Anchors**，锁在 **15 秒** 内。
 
-大部分 Active Exchange 连续书写；时间主要定位 Setup / First Contact、Major Advantage Reversal、Signature Moment、Ending，以及用户 / 模型确实要求精确同步的事件。
+大部分 Active Exchange 连续书写；时间主要定位 Setup / First Contact、Major Advantage Reversal、Signature Moment、Ending。图生 / 一镜到底时允许把这四个锚点写成 Beat 标题，但 Beat 内部不中断，Beat 之间不 Reset。
 
-默认不把 15 秒拆成多个硬动作盒。若模型明确更依赖严格时间戳，也必须保持跨块 Motion Handoff。
+默认不把 15 秒拆成每 1–2 秒一个硬动作盒，也不把方案写成 20–30 秒。若模型明确更依赖严格时间戳，也必须保持跨块 Motion Handoff。
 
 > **时间码服从动作连续性，而不是动作服从时间码。**
+> **15 秒写细，不靠加长片长装细节。**
 
 ---
 
@@ -577,24 +576,11 @@ Audio 作为动作因果、Contact、身体状态和空间变化的可听证据�
 
 ## 15. Action Execution Budget
 
-不设置 Battle Beat 全局固定动作数量上限。
+不设置 Battle Beat 全局固定动作数量上限，也不因为 Prompt 变长就自动压缩画面维度。
 
-限制的是**同一短时间窗口中模型需要同时理解和执行的复杂信息量**。
+真正要管的是**指定时长里有多少件独立主事件**。同一动作链的身体、光影、镜头、声音写细，不算超预算。
 
-颗粒度提升时遵循：
-
-1. 优先具体化关键因果动作；
-2. 使用 High / Medium / Low Granularity 分配信息展开深度；
-3. 连续两个 High 后，普通 Exchange 优先压缩为 Medium / Low；
-4. 次要过渡允许压缩，但保留基本因果；
-5. 删除重复 / 装饰性 / 无状态价值动作；
-6. 降低单 Phrase 次要 Tactical 分支；
-7. 降低无必要 Camera Complexity；
-8. 保留有信息价值的 Camera Coverage；
-9. 必要时拆成多个无缝连续 Phrase；
-10. 最后才缩减次要有效攻防。
-
-**Executable Granularity 不等于动作数量无限增长，也不应导致动作链数量因文字过细持续下降。**
+独立主事件过多时，按通用规则提醒用户加时长或拆段，不静默删攻防，也不把细节压糊。
 
 禁止用“15 秒必须 N 个动作 / 每 Phrase N 字 / 每 Exchange N 秒”等固定配额解决 Richness。
 
@@ -698,7 +684,7 @@ Final Prompt 必须转成：
 
 Ending 的**结果意图**可以由用户决定；Ending 占用多少时间、是否吞掉 Active Exchange 属于系统内部 Coverage / Assembly / Preflight 职责。
 
-High Coverage 短 Combat 默认继承最后一次 Contact / Position / Momentum / Advantage 后果；不提前让双方回到新 Pose 再长时间对视；不让呼吸、眼神、静止构图自动占用最后数秒。
+High Coverage 短 Combat 默认继承最后一次 Contact / Position / Momentum / Advantage 后果；不提前让双方回到新 Pose 再长时间对视；不让呼吸、眼神、静止构图自动占用最后数秒；默认不淡出、不定格、不突然黑屏。
 
 纯 Ending Pose 参考约 0.5–1s，属于软预算，不是硬配额。用户明确要求长悬停、慢镜、情绪 Ending 时可以扩大。
 
@@ -720,7 +706,7 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 - 关键数秒是否主要由抽象动作词承担；
 - 角色 System / Refinement / Expression 是否只有标签，没有具体动作 / Initiative 证据；
 - Action Phrase 是否能看出具体动作入口、即时响应、Footwork / Axis / Range / Position 后果和下一动作入口；
-- Camera / Audio 是否比身体动作本身写得更具体。
+- 是否把光影 / 镜头写细误判为失败。
 
 触发失败：**Abstract Action Block / Non-executable Choreography Summary**。
 
@@ -738,11 +724,12 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 - 长时间窗是否只有一个宏动作；
 - 动作是否通过 Motion Handoff 咬合；
 - Neutral Reset 是否过多；
-- 是否使用 Continuous Action Spine，而不是硬时间盒把战斗切碎；
-- 是否因为所有 Phrase 都高颗粒度展开，导致约 15 秒再次只剩少量巨大 Exchange；
+- 是否使用 Continuous Action Spine，而不是硬时间盒把战斗切碎，或把 15 秒写成 30 秒计划；
+- 每个主 Beat 是否有可见招式集合，而不是不可读乱拳；
 - 是否为了增加数量又退回抽象动作块。
+- 独立主事件是否多到 15 秒装不下，却没有提醒用户。
 
-失败时优先重新分配 High / Medium / Low 信息深度和拆分连续 Phrase，不使用固定动作数量配额。
+失败时优先检查是主事件过载还是动作不具体；不使用固定动作数量配额，也不靠压缩画面维度过关。
 
 ### E. Character Decision Realization / Derived Direction
 
@@ -822,8 +809,8 @@ Final Prompt 输出前必须过 Gate；失败时内部重写，再检查，不�
 最终原则：
 
 > **动作要足够多，但不是独立动词堆叠。**  
-> **关键因果动作要具体，但不是逐招机械枚举。**  
-> **颗粒度控制信息展开深度，不控制动作数量配额。**  
+> **关键因果动作要具体；同一镜头的光影、镜头、材质可以写细。**  
+> **过载只看独立主事件是否超出指定时长，不看描述细不细。**  
 > **身体本身就在打，Movement 不是给上肢动作补脚步说明。**  
 > **连续打斗不是动作排得更近，而是后一个动作从前一个动作的身体与空间状态里长出来。**  
 > **Initiative 要在动作链里被抢走，不是在“你的回合结束后”轮到下一方。**  

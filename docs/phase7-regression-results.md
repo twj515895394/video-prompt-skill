@@ -27,6 +27,7 @@
 | T08 | 动作戏与打击反馈 | 唯一 | 正确 | 无 | 通过 |
 | T09 | AI 漫剧角色一致性 | 唯一 | 正确 | 无 | 通过 |
 | T10 | 失败 Prompt 诊断与重写 | 唯一主诊断 | 正确 | 无 | 通过 |
+| T11 | 15 秒图生一镜到底动作密度 | 唯一 | 正确 | 无 | 结构通过，外部成片待实测 |
 
 ## 3. 场景结果
 
@@ -222,6 +223,23 @@ image / mixed input
 验证：诊断层已有十份可执行叶子；一次只选一个主诊断；先修结构主因，不仅追加负向词；最终仍输出可用修订 Prompt。
 
 结果：通过。
+
+### T11 15 秒图生一镜到底动作密度
+
+实际路线：
+
+```text
+inputs/single-image-input.md
+→ tasks/action-combat-video/（持续攻防）或 image-to-video
+→ continuity-consistency + camera-direction + spatial-blocking + subject-motion
+→ styles/anime-animation 或 cinematic-live-action
+→ prompt-assembly/control.md
+→ single-shot-video-template.md
+```
+
+结构验证：15 秒生产单元；首帧继承清单与媒介锁；动作中点接续；3–4 个连续 Beat；场内摄影师纪律；饰品 / 液体 / 围观者连续。不把社区 30 秒原文写入运行期。
+
+结果：结构通过。外部模型成片效果待实测。
 
 ## 4. 模型分流检查
 

@@ -463,22 +463,15 @@ Trajectory = A>B>A
 
 ## 14. Prompt Assembly Priority
 
-当本合同与通用 Prompt Assembly 的自动压缩发生冲突时：
+当本合同与通用 Prompt Assembly 发生冲突时：
 
 ```text
 用户明确 Advantage Structure
 > 本合同的 Counterplay / Trajectory Realization
-> 通用压缩与 Ending 美化
+> 去重与 Ending 收束
 ```
 
-压缩时优先删除：
-
-- 重复状态说明；
-- 装饰性 Camera / Audio；
-- 过细 Ending；
-- 重复 Negative；
-
-最后才删除用于兑现 Counterplay / Trajectory 的真实 Exchange。
+只删除重复状态说明和重复 Negative。Ending 的光影 / 尘土 / 镜头可以写细。禁止为了“更短”删掉用于兑现 Counterplay / Trajectory 的真实 Exchange，也禁止把画面维度压糊。
 
 ---
 
