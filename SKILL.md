@@ -61,6 +61,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - Reference 可以很多，但每次只读取当前任务真正需要的一条或几条路线。
 - 复杂战斗遵循“约束错误，不约束创作”：固定因果、连续性和物理底线，不固定招式、Beat 数量或镜头模板。
 - 复杂战斗同时遵循 **Clarity Through Structure, Not Action Reduction**：高信息密度允许存在，但必须用 Action Phrase、状态连续性、镜头可读性和执行预算组织清楚。
+- **影视级 Combat Camera Language**：打斗不是比赛录像；完整动作可读不等于全程固定全景。必须用动作触发的景别分工、单人起手、接触点、受击后果、空间路线和动作匹配剪辑组织观众视线；需要慢时只放慢高价值接触、受力、失衡或落地，不放慢整段攻防。复杂动作镜头任务明确时读取 `references/tasks/action-combat-video/cinematic-combat-camera-language.md`。
 - Combat Final Prompt 遵循 **State Machine Internalized, Choreography Externalized**：状态机制在内部运行，最终由可见动作、接触、受力和空间变化主导。
 - **Action Combat Interactive 的角色打斗决策必须把 Character / Narrative Identity、Combat System / Technique Backbone、System Refinement、Combat Expression 分开；职业 / 性别 / 年龄 / 外貌 / 体型不能直接替代 Combat System。**
 - **Action Combat Interactive 还必须执行 `references/tasks/action-combat-video/interactive-combat-policy.md`：中国功夫电影观感不得机械默认 MMA；Round 1 可使用 `Chinese Cinematic Kung-fu Hybrid`；Round 2 在同一 Primary Node 下分别处理 Character Combat Expression 与 optional Cinematic Combat Archetype；Hybrid 默认静默展开，不固定追问门派混合。**
@@ -155,6 +156,7 @@ description: 当用户需要根据文字、图片、视频或音频生成文生�
 - `references/tasks/action-combat-video/index.md`
 - `references/tasks/action-combat-video/core-playbook.md`
 - `references/tasks/action-combat-video/choreography-playbook.md`
+- `references/tasks/action-combat-video/cinematic-combat-camera-language.md`（当任务包含多镜头、影视化打斗、快速剪辑、景别切换、接触点特写或用户明确反对固定全景时）
 
 如果当前是 **Interactive Action Combat**，额外固定读取：
 
